@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+	<title>Cagliari Port 2020 | Passengers portal</title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- Web Fonts -->
+	<link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
+
+	<!-- CSS Global Compulsory -->
+	<link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+
+	<!-- CSS Header and Footer -->
+	<link rel="stylesheet" href="assets/css/headers/header-default.css">
+	<link rel="stylesheet" href="assets/css/footers/footer-v1.css">
+
+	<!-- CSS Implementing Plugins -->
+	<link rel="stylesheet" href="assets/plugins/animate.css">
+	<link rel="stylesheet" href="assets/plugins/line-icons/line-icons.css">
+	<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
+
+	<!-- CSS Page Style -->
+	<link rel="stylesheet" href="assets/css/pages/page_search_inner.css">
+
+	<!-- CSS Theme -->
+	<link rel="stylesheet" href="assets/css/theme-colors/default.css" id="style_color">
+	<link rel="stylesheet" href="assets/css/theme-skins/dark.css">
+
+	<!-- CSS Customization -->
+	<link rel="stylesheet" href="assets/css/custom.css">
+</head>
+
+<body>
+	<div class="wrapper">
+
+
+
+		<!--=== Search Block Version 2 ===-->
+		<div id="searchBox" class="search-block-v2">
+			<div class="container">
+				<div class="col-md-6 col-md-offset-3">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn-u" style="background-color:lightgrey" type="button" onclick="jQuery('#adv').toggle()"><i class="fa fa-cogs"></i></button>
+						</span>
+						<input id="qt" type="text" class="form-control" placeholder="Search words...">
+						<span class="input-group-btn">
+							<button class="btn-u" type="button" onclick="search();"><i class="fa fa-search"></i></button>
+						</span>
+					</div>
+				</div>
+
+      		</div>
+			<div id="adv" class="col-md-6 col-md-offset-3 animated fadeInDown" style="display:none;margin-top:8px;">
+
+				<ul class="list-inline">
+					<li>
+						<div id="categoriesDrop" class="dropdown">
+							<div class="dropdown-toggle" data-toggle="dropdown">Category
+								<span class="caret"></span>
+							</div>
+							<ul class="dropdown-menu"></ul>
+						</div>
+					</li>
+					<li>
+						<div class="dropdown">
+							<div class="dropdown-toggle" data-toggle="dropdown">Date
+								<span class="caret"></span>
+							</div>
+							<ul class="dropdown-menu">
+								<li><a href="#">HTML</a></li>
+								<li><a href="#">CSS</a></li>
+								<li class="divider"></li>
+								<li><a href="#">JavaScript</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+
+			</div>
+
+		</div><!--/container-->
+		<!--=== End Search Block Version 2 ===-->
+
+
+		<!--=== Search Results ===-->
+		<div class="container s-results margin-bottom-50">
+			<span class="results-number">About <span id="tot"></span> results</span>
+			<div id="searchresults"></div>
+			<div class="margin-bottom-30"></div>
+
+			<div class="text-left">
+				<ul class="pagination">
+					<li><a href="#">«</a></li>
+					<li class="active"><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">...</a></li>
+					<li><a href="#">157</a></li>
+					<li><a href="#">158</a></li>
+					<li><a href="#">»</a></li>
+				</ul>
+			</div>
+		</div><!--/container-->
+		<!--=== End Search Results ===-->
+
+	</div><!--/End Wrapepr-->
+
+	<!-- JS Global Compulsory -->
+	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
+	<!-- JS Implementing Plugins -->
+	<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
+	<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
+	<!-- JS Customization -->
+	<script type="text/javascript" src="assets/js/custom.js"></script>
+	<!-- JS Page Level -->
+	<script type="text/javascript" src="assets/js/app.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			App.init();
+			StyleSwitcher.initStyleSwitcher();
+		});
+	</script>
+	<!--[if lt IE 9]>
+	<script src="assets/plugins/respond.js"></script>
+	<script src="assets/plugins/html5shiv.js"></script>
+	<script src="assets/plugins/placeholder-IE-fixes.js"></script>
+	<![endif]-->
+
+	<script>
+        var searchItemTemplate = undefined;
+		var searchTemplate = undefined;
+
+        jQuery(document).ready(function() {
+            var source   = $("#entry-template").html();
+            searchItemTemplate = Handlebars.compile(source);
+
+            source = $("#categories").html();
+			searchTemplate = Handlebars.compile(source);
+
+			loadSearch();
+        });
+
+
+        function loadSearch() {
+            jQuery.ajax("http://localhost:3002/categories/")
+			.done(function(data) {
+			    var hcontext = {cats:data.categories};
+                jQuery("#searchBox #categoriesDrop ul").append(searchTemplate(hcontext));
+			})
+		}
+
+
+        function search() {
+            var q = jQuery("#qt").val();
+            jQuery.ajax('http://localhost:3001/search?q=' + q)
+                .done(function(data) {
+                    console.log(data);
+                    jQuery("#tot").html(data.metadata.totalCount);
+                    jQuery("#searchresults").empty();
+                    jQuery.each(data.contents, function(i, item) {
+                        var hcontext = {
+                            contentid: item._id,
+                            title: item.name,
+                            description: item.description
+                        };
+                        jQuery("#searchresults").append(searchItemTemplate(hcontext));
+                    });
+                });
+        }
+	</script>
+
+	<!-------------------------->
+	<!-- Handlebars templates -->
+	<!-------------------------->
+
+	<!-- Search result item -->
+	<script id="entry-template" type="text/x-handlebars-template">
+		<div class="inner-results">
+			<h3><a href="http://localhost:3002/contents/{{contentid}}">{{title}}</a></h3>
+			<ul class="list-inline up-ul">
+				<li class="btn-group">
+					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+						More<i class="fa fa-caret-down margin-left-5"></i>
+						<span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<ul role="menu" class="dropdown-menu">
+						<li><a href="#">Share</a></li>
+						<li><a href="#">Similar</a></li>
+						<li><a href="#">Advanced search</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Admin</a></li>
+			</ul>
+			<div class="overflow-h">
+				<img src="assets/img/testimonials/img1.jpg" alt="">
+				<div class="overflow-a">
+					<p>{{description}}</p>
+					<ul class="list-inline down-ul">
+						<li>
+							<ul class="list-inline star-vote">
+								<li><i class="color-green fa fa-star"></i></li>
+								<li><i class="color-green fa fa-star"></i></li>
+								<li><i class="color-green fa fa-star"></i></li>
+								<li><i class="color-green fa fa-star"></i></li>
+								<li><i class="color-green fa fa-star-half-o"></i></li>
+							</ul>
+						</li>
+						<li>11 months ago - By WrapBootstrap</li>
+						<li>2,092,675 views</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<hr />
+	</script>
+	<!-- End search result item -->
+
+	<!-- Categories drop -->
+	<script id="categories" type="text/x-handlebars-template">
+		{{#each cats}}
+		<li><a href="#" data-cat-id="{{this._id}}">{{this.name}}</a></li>
+		{{else}}
+		<li>No category found</li>
+		{{/each}}
+	</script>
+	<!-- End categories drop -->
+
+	</body>
+</html>
