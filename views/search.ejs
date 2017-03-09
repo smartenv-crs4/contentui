@@ -129,12 +129,7 @@
 	<script type="text/javascript" src="assets/js/custom.js"></script>
 	<!-- JS Page Level -->
 	<script type="text/javascript" src="assets/js/app.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function() {
-			App.init();
-			StyleSwitcher.initStyleSwitcher();
-		});
-	</script>
+
 	<!--[if lt IE 9]>
 	<script src="assets/plugins/respond.js"></script>
 	<script src="assets/plugins/html5shiv.js"></script>
@@ -169,7 +164,6 @@
             var q = jQuery("#qt").val();
             jQuery.ajax('http://localhost:3001/search?q=' + q)
                 .done(function(data) {
-                    console.log(data);
                     jQuery("#tot").html(data.metadata.totalCount);
                     jQuery("#searchresults").empty();
                     jQuery.each(data.contents, function(i, item) {
