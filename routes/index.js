@@ -7,6 +7,11 @@ router.get('/', function(req, res, next) {
 });
 
 
+router.get('/form', function(req, res, next) {
+  res.render('form_activity');
+});
+
+
 /* TODO Search in POST perche' non cacheabile? */
 router.get('/search', function(req, res, next) {
   let text = req.query.q;
