@@ -116,12 +116,15 @@
 		<!--=== End Search Results ===-->
 
 	</div><!--/End Wrapepr-->
-
+	<script type="text/javascript">
+		var baseUrl = '<%= baseUrl %>';
+		var contentsUrl = '<%= contentsUrl %>';
+	</script>
 	<!-- JS Global Compulsory -->
 	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
+	<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
 	<!-- JS Implementing Plugins -->
 	<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
 	<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
@@ -152,7 +155,7 @@
 
 
         function loadSearch() {
-            jQuery.ajax("http://localhost:3002/categories/")
+            jQuery.ajax(baseUrl + "/categories/")
 			.done(function(data) {
 			    var hcontext = {cats:data.categories};
                 jQuery("#searchBox #categoriesDrop ul").append(searchTemplate(hcontext));
@@ -162,7 +165,7 @@
 
         function search() {
             var q = jQuery("#qt").val();
-            jQuery.ajax('http://localhost:3001/search?q=' + q)
+            jQuery.ajax(baseUrl + '/search?q=' + q)
                 .done(function(data) {
                     jQuery("#tot").html(data.metadata.totalCount);
                     jQuery("#searchresults").empty();

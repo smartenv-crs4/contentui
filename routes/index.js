@@ -1,9 +1,16 @@
+var config = require('propertiesmanager').conf;
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
 
+let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + config.contentuiPort 
+          + ((config.contentuiApiGwBaseUrl && config.contentuiApiGwBaseUrl.length > 0) ? config.contentuiApiGwBaseUrl : '')
+          + ((config.contentuiApiVersion && config.contentuiApiVersion.length > 0) ? "/" + config.contentuiApiVersion : '')
+          + '/';
+
+
 router.get('/', function(req, res, next) {
-  res.render('search');
+  res.render('search', {baseUrl:baseUrl, contentsUrl:config.contentsUrl});
 });
 
 
