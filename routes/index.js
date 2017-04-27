@@ -8,9 +8,10 @@ let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + co
           + ((config.contentuiApiVersion && config.contentuiApiVersion.length > 0) ? "/" + config.contentuiApiVersion : '')
           + '/';
 
+let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/'); 
 
 router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentsUrl:config.contentsUrl});
+  res.render('search', {baseUrl:baseUrl, contentsUrl:contentsUrl});
 });
 
 
@@ -24,7 +25,7 @@ router.get('/search', function(req, res, next) {
   let text = req.query.q;
   let options = {
     method:'GET',
-    uri:'http://localhost:3002/contents?text=' + text,
+    uri:contentsUrl + 'contents?text=' + text,
     json:true
   }
   rp(options)
