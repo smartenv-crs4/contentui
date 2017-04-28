@@ -37,8 +37,9 @@
 	<link rel="stylesheet" href="assets/css/theme-colors/default.css" id="style_color">
 	<link rel="stylesheet" href="assets/css/theme-skins/dark.css">
 
-	<!-- CSS Customization -->
+	<!-- CP2020 CSS Customization -->
 	<link rel="stylesheet" href="assets/css/custom.css">
+	<link rel="stylesheet" href="css/custom_search.css">
 </head>
 
 <body>
@@ -59,12 +60,12 @@
 					</div>
 				</div>
       		</div>
-			<div id="adv" class="col-md-6 col-md-offset-3 animated fadeInDown" style="display:none;margin-top:8px;">
-
+      		<div style="clear:both"></div>
+			<div id="adv" class="col-md-6 col-md-offset-3 animated fadeInDown text-center" style="display:none;margin-top:8px;">
 				<ul class="list-inline">
 					<li>
 						<div id="categoriesDrop" class="dropdown">
-							<div class="dropdown-toggle" data-toggle="dropdown">Category
+							<div class="dropdown-toggle" data-toggle="dropdown">Categoria
 								<span class="caret"></span>
 							</div>
 							<ul class="dropdown-menu"></ul>
@@ -75,21 +76,36 @@
 							<div class="dropdown-toggle" data-toggle="dropdown">Date
 								<span class="caret"></span>
 							</div>
-							<ul class="dropdown-menu">
-								<li><a href="#">HTML</a></li>
-								<li><a href="#">CSS</a></li>
+							<ul class="dropdown-menu" role="menu" >
+								<li><a href="#" onclick="showToolShips()">Prossimo arrivo nave</a></li>
+								<li><a href="#">Prossimo mese</a></li>
 								<li class="divider"></li>
-								<li><a href="#">JavaScript</a></li>
+								<li><a href="#">Personalizzato</a></li>
+							</ul>
+						</div>
+					</li>
+					<li>
+						<div class="dropdown">
+							<div class="dropdown-toggle" data-toggle="dropdown">Tipo
+								<span class="caret"></span>
+							</div>
+							<ul class="dropdown-menu">
+								<li><a href="#">Promozione o evento</a></li>
+								<li><a href="#">Servizio</a></li>
 							</ul>
 						</div>
 					</li>
 				</ul>
 
+				<div id="toolNavi" style="display:none;" class="autocomplete animated fadeInDown">
+					<input class="typeahead form-control autocomplete" type="text" placeholder="Nave da crociera">
+				</div>
+				
 			</div>
 
 		</div><!--/container-->
-		<!--=== End Search Block Version 2 ===-->
 
+		<!--=== End Search Block Version 2 ===-->
 
 		<!--=== Search Results ===-->
 		<div class="container s-results margin-bottom-50">
@@ -108,9 +124,10 @@
 	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-	ù
+
 	<!-- CP2020 -->
 	<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
+	<script type="text/javascript" src="js/plugins/typeahead.bundle.min.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
 
 	<!-- JS Implementing Plugins -->
@@ -128,9 +145,8 @@
 	<![endif]-->
 
 
-	<!-------------------------->
+
 	<!-- Handlebars templates -->
-	<!-------------------------->
 
 	<!-- Search result item -->
 	<script id="entry-template" type="text/x-handlebars-template">
@@ -165,7 +181,7 @@
 							</ul>
 						</li>
 						<li>11 months ago - By WrapBootstrap</li>
-						<li>2,092,675 views</li>
+						<li>2,092,675 like</li>
 					</ul>
 				</div>
 			</div>
