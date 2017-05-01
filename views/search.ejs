@@ -46,7 +46,7 @@
 	<div class="wrapper">
 
 		<!--=== Search Block Version 2 ===-->
-		<div id="searchBox" class="search-block-v2">
+		<div id="searchBox">
 			<div class="container">
 				<div class="col-md-6 col-md-offset-3">
 					<div class="input-group">
@@ -60,52 +60,51 @@
 					</div>
 				</div>
       		</div>
-      		<div style="clear:both"></div>
-			<div id="adv" class="col-md-6 col-md-offset-3 animated fadeInDown text-center" style="display:none;margin-top:8px;">
-				<ul class="list-inline">
-					<li>
-						<div id="categoriesDrop" class="dropdown">
-							<div class="dropdown-toggle" data-toggle="dropdown">Categoria
-								<span class="caret"></span>
+      		
+      		
+			<div id="adv" class="animated fadeInDown text-center" style="display:none;margin-top:8px;">
+				<div>
+					<ul class="list-inline">
+						<li>
+							<div id="categoriesDrop" class="dropdown">
+								<div class="dropdown-toggle" data-toggle="dropdown">Categoria
+									<span class="caret"></span>
+								</div>
+								<ul class="dropdown-menu"></ul>
 							</div>
-							<ul class="dropdown-menu"></ul>
-						</div>
-					</li>
-					<li>
-						<div class="dropdown">
-							<div class="dropdown-toggle" data-toggle="dropdown">Date
-								<span class="caret"></span>
+						</li>
+						<li>
+							<div class="dropdown">
+								<div class="dropdown-toggle" data-toggle="dropdown">Date
+									<span class="caret"></span>
+								</div>
+								<ul class="dropdown-menu" role="menu" >
+									<li><a href="#">Oggi</a></li>
+									<li><a href="#">Domani</a></li>
+									<li><a href="#">Intervallo date</a></li>								
+									<li><a href="#" onclick="showToolShips()">Prossimo arrivo nave</a></li>
+								</ul>
 							</div>
-							<ul class="dropdown-menu" role="menu" >
-								<li><a href="#" onclick="showToolShips()">Prossimo arrivo nave</a></li>
-								<li><a href="#">Prossimo mese</a></li>
-								<li class="divider"></li>
-								<li><a href="#">Personalizzato</a></li>
-							</ul>
-						</div>
-					</li>
-					<li>
-						<div class="dropdown">
-							<div class="dropdown-toggle" data-toggle="dropdown">Tipo
-								<span class="caret"></span>
+						</li>
+						<li>
+							<div class="dropdown">
+								<div class="dropdown-toggle" data-toggle="dropdown">Tipo
+									<span class="caret"></span>
+								</div>
+								<ul class="dropdown-menu">
+									<li><a href="#">Promozione o evento</a></li>
+									<li><a href="#">Servizio</a></li>
+									<li><a href="#">Tutti</a></li>
+								</ul>
 							</div>
-							<ul class="dropdown-menu">
-								<li><a href="#">Promozione o evento</a></li>
-								<li><a href="#">Servizio</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-
-				<div id="toolNavi" style="display:none;" class="autocomplete animated fadeInDown">
-					<input class="typeahead form-control autocomplete" type="text" placeholder="Nave da crociera">
+						</li>
+					</ul>
 				</div>
-				
-			</div>
+				<div id="advtool" style="display:none;" class="animated fadeInDown">			
+				</div>
+			</div><!-- end adv -->
+		</div><!-- end searchtool -->
 
-		</div><!--/container-->
-
-		<!--=== End Search Block Version 2 ===-->
 
 		<!--=== Search Results ===-->
 		<div class="container s-results margin-bottom-50">
@@ -115,7 +114,9 @@
 		</div><!--/container-->
 		<!--=== End Search Results ===-->
 
-	</div><!--/End Wrapepr-->
+	</div><!--/End Wrapper-->
+
+
 	<script type="text/javascript">
 		var baseUrl = '<%= baseUrl %>';
 		var contentsUrl = '<%= contentsUrl %>';

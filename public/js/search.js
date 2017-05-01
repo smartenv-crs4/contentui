@@ -18,22 +18,51 @@ $('body').on('keypress', "#qt", function(args) {
     }
 });
 
-function showToolShips() {
-    var ships = ["Costa Crociere - Costa Diadema", "MSC Crociere - MSC Armonia"]
 
-    $('#toolNavi').toggle();
-
-
-    $('#toolNavi .typeahead').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-    },
-    {
-        name: 'ships',
-        source: substringMatcher(ships)
+function getShips(cb) {
+    $.ajax({
+        url: "http://smartenv.crs4.it/schedule/ships",
+        cache: false,
+        type: 'GET',
+        success: function(data){
+            var ships = [];
+            Object.keys(data).forEach(function(k,i) {
+                ships.push(data[k].company + ' - ' + data[k].name);
+            });
+            if(cb) cb(ships);
+        },
+        error: function(e) {
+            console.log(e);
+        }
     });
 }
+
+function showToolShips() {
+    getShips(function(ships) {
+        var input = document.createElement("input");
+        $(input).addClass("typeahead form-control cp-autocomplete");
+        $(input).attr("placeholder","Nome nave");
+        $('#advtool').empty();
+        $('#advtool').toggle();
+        $('#advtool').append(input);
+
+        $('#advtool .typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'ships',
+            source: substringMatcher(ships)
+        });
+
+        $("#advtool .typeahead").on("typeahead:select", function() {
+            
+        })
+    });
+}
+
+
 
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
