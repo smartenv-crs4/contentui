@@ -56,13 +56,39 @@ function showToolShips() {
             source: substringMatcher(ships)
         });
 
-        $("#advtool .typeahead").on("typeahead:select", function() {
-            
+        $("#advtool .typeahead").on("typeahead:select", function(e, o) {
+            var namecomp = o.split("-")
+            getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(last){
+                var start = new Date(last.ships[0].arrival);
+                var stop = new Date(last.ships[0].departure);
+                $("#advDate").text(moment(start).format("D/MM/YYYY") + " - " + moment(stop).format("D/MM/YYYY"))
+
+                //TODO set date in query!!!!!!!!!!!!!!!!!!
+                
+                $("#advtool").empty();
+                $("#advtool").toggle();
+            });
         })
     });
 }
 
+function getLastSchedule(name, company, cb) {
+    var qs = "?ship=" + name + "&company=" + company;
+    qs += "&sdate=" + new Date();
+    qs += "&limit=1&ord=asc"
 
+    $.ajax({
+        url: "http://smartenv.crs4.it/schedule/schedule" + qs,
+        cache: false,
+        type: 'GET',
+        success: function(data){
+            if(cb) cb(data);
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
 
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {

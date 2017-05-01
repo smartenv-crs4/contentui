@@ -53,7 +53,7 @@
 						<span class="input-group-btn">
 							<button class="btn-u" style="background-color:lightgrey" type="button" onclick="jQuery('#adv').toggle()"><i class="fa fa-cogs"></i></button>
 						</span>
-						<input id="qt" type="text" class="form-control" placeholder="Search words...">
+						<input id="qt" type="text" class="form-control" placeholder="Cerca...">
 						<span class="input-group-btn">
 							<button id="doSearch" class="btn-u" type="button" onclick="search();"><i class="fa fa-search"></i></button>
 						</span>
@@ -67,7 +67,8 @@
 					<ul class="list-inline">
 						<li>
 							<div id="categoriesDrop" class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">Categoria
+								<div class="dropdown-toggle" data-toggle="dropdown">
+									<span id="advCat">Categoria</span>
 									<span class="caret"></span>
 								</div>
 								<ul class="dropdown-menu"></ul>
@@ -75,20 +76,23 @@
 						</li>
 						<li>
 							<div class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">Date
+								<div class="dropdown-toggle" data-toggle="dropdown">
+									<span id="advDate">Date</span>
 									<span class="caret"></span>
 								</div>
 								<ul class="dropdown-menu" role="menu" >
 									<li><a href="#">Oggi</a></li>
 									<li><a href="#">Domani</a></li>
-									<li><a href="#">Intervallo date</a></li>								
+									<li><a href="#">Intervallo date</a></li>
+									<li class="divider"></li>
 									<li><a href="#" onclick="showToolShips()">Prossimo arrivo nave</a></li>
 								</ul>
 							</div>
 						</li>
 						<li>
 							<div class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">Tipo
+								<div class="dropdown-toggle" data-toggle="dropdown">
+								<span id="advType">Tipo</span>
 									<span class="caret"></span>
 								</div>
 								<ul class="dropdown-menu">
@@ -129,6 +133,7 @@
 	<!-- CP2020 -->
 	<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
 	<script type="text/javascript" src="js/plugins/typeahead.bundle.min.js"></script>
+	<script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
 
 	<!-- JS Implementing Plugins -->
