@@ -104,7 +104,7 @@ function showToolDates() {
             setFilterDates(start.toDate(), stop.toDate());
             resetAdvTool();
         }
-        else alert("error in date"); //TODO growl
+        else $.growl.error({message:"Specificare una data di inizio e una di fine"});
     })
 
     $('#intdates .cp-undo').click(function() {
@@ -134,6 +134,7 @@ function showToolShips() {
                     var start = new Date(last.ships[0].arrival);
                     var stop = new Date(last.ships[0].departure);                    
                 }
+                else $.growl.warning({ message: "Nessun arrivo previsto per la nave selezionata" })
                 setFilterDates(start, stop);                                
                 resetAdvTool();
             });
