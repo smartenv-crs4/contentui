@@ -36,9 +36,10 @@
 	<!-- CSS Theme -->
 	<link rel="stylesheet" href="assets/css/theme-colors/default.css" id="style_color">
 	<link rel="stylesheet" href="assets/css/theme-skins/dark.css">
+	<link rel="stylesheet" href="assets/css/custom.css">
 
 	<!-- CP2020 CSS Customization -->
-	<link rel="stylesheet" href="assets/css/custom.css">
+	<link rel="stylesheet" href="css/plugins/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="css/custom_search.css">
 </head>
 
@@ -51,11 +52,11 @@
 				<div class="col-md-6 col-md-offset-3">
 					<div class="input-group">
 						<span class="input-group-btn">
-							<button class="btn-u" style="background-color:lightgrey" type="button" onclick="jQuery('#adv').toggle()"><i class="fa fa-cogs"></i></button>
+							<button id="doAdv" class="btn-u btn-u-default" type="button"><i class="fa fa-cogs"></i></button>
 						</span>
 						<input id="qt" type="text" class="form-control" placeholder="Cerca...">
 						<span class="input-group-btn">
-							<button id="doSearch" class="btn-u" type="button" onclick="search();"><i class="fa fa-search"></i></button>
+							<button id="doSearch" class="btn-u" type="button"><i class="fa fa-search"></i></button>
 						</span>
 					</div>
 				</div>
@@ -63,49 +64,8 @@
       		
       		
 			<div id="adv" class="animated fadeInDown text-center" style="display:none;margin-top:8px;">
-				<div>
-					<ul class="list-inline">
-						<li>
-							<div id="categoriesDrop" class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">
-									<span id="advCat">Categoria</span>
-									<span class="caret"></span>
-								</div>
-								<ul class="dropdown-menu"></ul>
-							</div>
-						</li>
-						<li>
-							<div class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">
-									<span id="advDate">Date</span>
-									<span class="caret"></span>
-								</div>
-								<ul class="dropdown-menu" role="menu" >
-									<li><a href="#">Oggi</a></li>
-									<li><a href="#">Domani</a></li>
-									<li><a href="#">Intervallo date</a></li>
-									<li class="divider"></li>
-									<li><a href="#" onclick="showToolShips()">Prossimo arrivo nave</a></li>
-								</ul>
-							</div>
-						</li>
-						<li>
-							<div class="dropdown">
-								<div class="dropdown-toggle" data-toggle="dropdown">
-								<span id="advType">Tipo</span>
-									<span class="caret"></span>
-								</div>
-								<ul class="dropdown-menu">
-									<li><a href="#">Promozione o evento</a></li>
-									<li><a href="#">Servizio</a></li>
-									<li><a href="#">Tutti</a></li>
-								</ul>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<div id="advtool" style="display:none;" class="animated fadeInDown">			
-				</div>
+				<div id="advMenu"></div>
+				<div id="advtool" style="display:none;" class="animated fadeInDown text-center"></div>
 			</div><!-- end adv -->
 		</div><!-- end searchtool -->
 
@@ -134,6 +94,7 @@
 	<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
 	<script type="text/javascript" src="js/plugins/typeahead.bundle.min.js"></script>
 	<script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+	<script type="text/javascript" src="js/plugins/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
 
 	<!-- JS Implementing Plugins -->
@@ -150,6 +111,82 @@
 	<script src="assets/plugins/placeholder-IE-fixes.js"></script>
 	<![endif]-->
 
+	<script id="cp-ac" type="text/x-cp-snippet">
+		<input class="typeahead form-control cp-autocomplete adv" placeholder="Nome nave">
+	</script>
+
+
+	<script id="cp-advmenu" type="text/x-cp-snippet">
+		<ul class="list-inline">
+			<li>
+				<div id="categoriesDrop" class="dropdown">
+					<div class="dropdown-toggle" data-toggle="dropdown">
+						<span id="advCat">Categoria</span>
+						<span class="caret"></span>
+					</div>
+					<ul class="dropdown-menu"></ul>
+				</div>
+			</li>
+			<li>
+				<div class="dropdown">
+					<div class="dropdown-toggle" data-toggle="dropdown">
+						<span id="advDate">Periodo</span>
+						<span class="caret"></span>
+					</div>
+					<ul class="dropdown-menu" role="menu" >
+						<li><a href="#" data-cp-tm="d-today">Oggi</a></li>
+						<li><a href="#" data-cp-tm="d-tom">Domani</a></li>
+						<li><a href="#" data-cp-tm="d-int">Intervallo date</a></li>
+						<li class="divider"></li>
+						<li><a href="#" data-cp-tm="d-ship">Prossimo arrivo nave</a></li>
+					</ul>
+				</div>
+			</li>
+			<li>
+				<div class="dropdown">
+					<div class="dropdown-toggle" data-toggle="dropdown">
+					<span id="advType">Tipo</span>
+						<span class="caret"></span>
+					</div>
+					<ul class="dropdown-menu">
+						<li><a href="#">Promozione o evento</a></li>
+						<li><a href="#">Servizio</a></li>
+						<li><a href="#">Tutti</a></li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</script>
+
+
+	<script id="cp-datepicker" type="text/x-cp-snippet">
+		<div id="intdates" class="animated fadeInDown adv">
+			<div class="col-md-6">
+		        <div class="form-group pull-right">
+		            <div class='input-group date' id='dtp1'>
+		                <input type='text' class="form-control" readonly placeholder="Data inizio..." />
+		                <span class="input-group-addon">
+		                    <span class="glyphicon glyphicon-calendar"></span>
+		                </span>
+		            </div>
+		        </div>
+	        </div>
+	    	<div class="col-md-6">
+		        <div class="form-group pull-left">
+		            <div class='input-group date' id='dtp2'>
+		                <input type='text' class="form-control" readonly placeholder="Data fine..." />
+		                <span class="input-group-addon">
+		                    <span class="glyphicon glyphicon-calendar"></span>
+		                </span>		                
+		            </div>
+		        </div>
+		        <div class="pull-left" style="margin-left:10px;">
+		        	<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i></button>
+		        	<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i></button>
+		        </div>
+		    </div>
+		</div>
+	</script>
 
 
 	<!-- Handlebars templates -->

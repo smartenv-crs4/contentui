@@ -23,9 +23,12 @@ router.get('/form', function(req, res, next) {
 /* TODO Search in POST perche' non cacheabile? */
 router.get('/search', function(req, res, next) {
   let text = req.query.q;
+  let sdate = req.query.sdate;
+  let edate = req.query.edate;
+
   let options = {
     method:'GET',
-    uri:contentsUrl + 'contents?text=' + text,
+    uri:contentsUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
     json:true
   }
   rp(options)

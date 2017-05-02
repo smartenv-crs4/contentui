@@ -1,14 +1,55 @@
-var searchItemTemplate = undefined;
-var searchTemplate = undefined;
+var _searchItemTemplate = undefined;
+var _searchTemplate = undefined;
+var _filters = {
+    sdate: undefined,
+    edate: undefined,
+    category: undefined
+};
 
 $(document).ready(function() {
     var source   = $("#entry-template").html();
-    searchItemTemplate = Handlebars.compile(source);
+    _searchItemTemplate = Handlebars.compile(source);
 
     source = $("#categories").html();
-	searchTemplate = Handlebars.compile(source);
+	_searchTemplate = Handlebars.compile(source);
 
-	loadSearch();
+    $("#doSearch").click(function(e) {
+        search();
+    })
+
+    $("#doAdv").click(function(e) {
+        if($("#adv").is(":visible")) {            
+            resetFilters();
+            resetAdvTool();
+            $("#advMenu").empty();
+            $("#adv").hide();
+        }
+        else {
+            $("#adv").show();
+            $('#advMenu').html($("#cp-advmenu").html())
+            loadCat();
+            $("#advMenu .dropdown-menu a").click(function(e) {
+                var t = this.getAttribute('data-cp-tm');
+                switch(t) {
+                    case 'd-ship':
+                        showToolShips();
+                        break;
+                    case 'd-int':
+                        showToolDates();
+                        break;
+                    case 'd-today':
+                        setFilterDates(new Date(), new Date(moment().endOf('day')));
+                        break;
+                    case 'd-tom':
+                        setFilterDates(new Date(moment().add(1, 'day').startOf('day')), new Date(moment().add(1,'day').endOf('day')));
+                        break;
+                    default:
+                        break;
+                }
+            })
+        }
+    })
+
 });
 
 $('body').on('keypress', "#qt", function(args) {
@@ -18,6 +59,98 @@ $('body').on('keypress', "#qt", function(args) {
     }
 });
 
+
+
+function resetFilters() {
+    Object.keys(_filters).forEach(function(k,i) {
+        _filters[k] = undefined;
+    })
+}
+
+function resetAdvTool(appendSel) {    
+    $('.adv').hide();
+    $('#advtool').empty();
+    if(appendSel) {
+        $('#advtool').show();
+        $('#advtool').append($(appendSel).html());
+    }
+    else $('#advtool').hide();
+}
+
+
+function showToolDates() {
+    resetAdvTool("#cp-datepicker");
+    var opt = {
+        format: 'DD/MM/YYYY',
+        allowInputToggle: true,
+        ignoreReadonly: true
+    }
+    opt.useCurrent = true;
+    $('#dtp1').datetimepicker(opt);
+    opt.useCurrent = false;
+    $('#dtp2').datetimepicker(opt);
+
+    $("#dtp1").on("dp.change", function (e) {
+        $('#dtp2').data("DateTimePicker").minDate(e.date);
+    });
+    $("#dtp2").on("dp.change", function (e) {
+        $('#dtp1').data("DateTimePicker").maxDate(e.date);
+    });
+
+    $('#intdates .cp-ok').click(function() {
+        var start = $("#dtp1").data("DateTimePicker").date();
+        var stop = $("#dtp2").data("DateTimePicker").date();
+        if(start && stop) {
+            setFilterDates(start.toDate(), stop.toDate());
+            resetAdvTool();
+        }
+        else alert("error in date"); //TODO growl
+    })
+
+    $('#intdates .cp-undo').click(function() {
+        resetAdvTool();
+    })
+}
+
+
+function showToolShips() {
+    getShips(function(ships) {
+        resetAdvTool("#cp-ac");
+
+        $('#advtool .typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'ships',
+            source: substringMatcher(ships)
+        });
+
+        $("#advtool .typeahead").on("typeahead:select", function(e, o) {
+            var namecomp = o.split("-")
+            getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(last){                
+                if(last.ships.length == 1) {
+                    var start = new Date(last.ships[0].arrival);
+                    var stop = new Date(last.ships[0].departure);                    
+                }
+                setFilterDates(start, stop);                                
+                resetAdvTool();
+            });
+        })
+    });
+}
+
+function setFilterDates(start, stop) {
+    if(start && stop) {
+        var startstr = moment(start).format("D/MM/YYYY");
+        var stopstr = moment(stop).format("D/MM/YYYY");
+        var intervalstr = (startstr != stopstr) ? startstr + " - " + stopstr : startstr;
+        $("#advDate").text(intervalstr);
+        _filters.sdate = start;
+        _filters.edate = stop;
+    }
+}
 
 function getShips(cb) {
     $.ajax({
@@ -37,44 +170,9 @@ function getShips(cb) {
     });
 }
 
-function showToolShips() {
-    getShips(function(ships) {
-        var input = document.createElement("input");
-        $(input).addClass("typeahead form-control cp-autocomplete");
-        $(input).attr("placeholder","Nome nave");
-        $('#advtool').empty();
-        $('#advtool').toggle();
-        $('#advtool').append(input);
-
-        $('#advtool .typeahead').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        },
-        {
-            name: 'ships',
-            source: substringMatcher(ships)
-        });
-
-        $("#advtool .typeahead").on("typeahead:select", function(e, o) {
-            var namecomp = o.split("-")
-            getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(last){
-                var start = new Date(last.ships[0].arrival);
-                var stop = new Date(last.ships[0].departure);
-                $("#advDate").text(moment(start).format("D/MM/YYYY") + " - " + moment(stop).format("D/MM/YYYY"))
-
-                //TODO set date in query!!!!!!!!!!!!!!!!!!
-                
-                $("#advtool").empty();
-                $("#advtool").toggle();
-            });
-        })
-    });
-}
-
 function getLastSchedule(name, company, cb) {
     var qs = "?ship=" + name + "&company=" + company;
-    qs += "&sdate=" + new Date();
+    qs += "&sdate=" + encodeURIComponent(new Date());
     qs += "&limit=1&ord=asc"
 
     $.ajax({
@@ -114,18 +212,23 @@ var substringMatcher = function(strs) {
 
 
 
-function loadSearch() {    
+function loadCat() {    
     $.ajax(contentsUrl + "categories/")
 	.done(function(data) {
 	    var hcontext = {cats:data.categories};
-        $("#searchBox #categoriesDrop ul").append(searchTemplate(hcontext));
+        $("#searchBox #categoriesDrop ul").append(_searchTemplate(hcontext));
 	})
 }
 
 
 function search() {
     var q = $("#qt").val();
-    $.ajax(baseUrl + 'search?q=' + q)
+    var filterString = '';
+    Object.keys(_filters).forEach(function(k,i) {
+        if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
+    });
+
+    $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
         $("#tot").html(data.metadata.totalCount);
         $("#searchresults").empty();
@@ -135,7 +238,7 @@ function search() {
                 title: item.name,
                 description: item.description
             };
-            $("#searchresults").append(searchItemTemplate(hcontext));
+            $("#searchresults").append(_searchItemTemplate(hcontext));
         });
     });
 }
