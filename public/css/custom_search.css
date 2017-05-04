@@ -1,10 +1,17 @@
 .cp-autocomplete {
-	min-width:400px;
-	text-align:left;
+	width:100%;
+}
+
+.checkbox {
+    margin-left:20px;
 }
 
 #searchBox {
   margin:20px;
+}
+
+.twitter-typeahead {
+    width: 100%;
 }
 
 .tt-dropdown-menu {
@@ -20,7 +27,8 @@
 }
 
 .tt-hint {
-  color: #999
+    width: 100%;   
+    color: #999
 }
 
 .tt-menu {    /* used to be tt-dropdown-menu in older versions */
@@ -52,8 +60,4 @@
 
 .tt-suggestion p {
   margin: 0;
-}
-
-.date {
-  width:250px;
 }

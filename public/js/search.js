@@ -10,33 +10,24 @@ $(document).ready(function() {
     var source   = $("#entry-template").html();
     _searchItemTemplate = Handlebars.compile(source);
 
-    source = $("#categories").html();
-	_searchTemplate = Handlebars.compile(source);
+    showToolShips();
+    showToolDates();
 
     $("#doSearch").click(function(e) {
         search();
     })
 
     $("#doAdv").click(function(e) {
-        if($("#adv").is(":visible")) {            
-            resetFilters();
-            resetAdvTool();
-            $("#advMenu").empty();
+        if($("#adv").is(":visible")) {
+            //resetFilters();
             $("#adv").hide();
         }
         else {
             $("#adv").show();
-            $('#advMenu').html($("#cp-advmenu").html())
             loadCat();
-            $("#advMenu .dropdown-menu a").click(function(e) {
+            $(".advTimeMenu").click(function(e) {
                 var t = this.getAttribute('data-cp-tm');
                 switch(t) {
-                    case 'd-ship':
-                        showToolShips();
-                        break;
-                    case 'd-int':
-                        showToolDates();
-                        break;
                     case 'd-today':
                         setFilterDates(new Date(), new Date(moment().endOf('day')));
                         break;
@@ -67,19 +58,8 @@ function resetFilters() {
     })
 }
 
-function resetAdvTool(appendSel) {    
-    $('.adv').hide();
-    $('#advtool').empty();
-    if(appendSel) {
-        $('#advtool').show();
-        $('#advtool').append($(appendSel).html());
-    }
-    else $('#advtool').hide();
-}
 
-
-function showToolDates() {
-    resetAdvTool("#cp-datepicker");
+function showToolDates() {    
     var opt = {
         format: 'DD/MM/YYYY',
         allowInputToggle: true,
@@ -102,22 +82,19 @@ function showToolDates() {
         var stop = $("#dtp2").data("DateTimePicker").date();
         if(start && stop) {
             setFilterDates(start.toDate(), stop.toDate());
-            resetAdvTool();
         }
         else $.growl.error({message:"Specificare una data di inizio e una di fine"});
     })
 
     $('#intdates .cp-undo').click(function() {
-        resetAdvTool();
+        //TODO reimpostare
     })
 }
 
 
 function showToolShips() {
     getShips(function(ships) {
-        resetAdvTool("#cp-ac");
-
-        $('#advtool .typeahead').typeahead({
+        $('#collapse-Time .typeahead').typeahead({
             hint: true,
             highlight: true,
             minLength: 1
@@ -127,7 +104,7 @@ function showToolShips() {
             source: substringMatcher(ships)
         });
 
-        $("#advtool .typeahead").on("typeahead:select", function(e, o) {
+        $("#collapse-Time .typeahead").on("typeahead:select", function(e, o) {
             var namecomp = o.split("-")
             getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(last){                
                 if(last.ships.length == 1) {
@@ -135,8 +112,7 @@ function showToolShips() {
                     var stop = new Date(last.ships[0].departure);                    
                 }
                 else $.growl.warning({ message: "Nessun arrivo previsto per la nave selezionata" })
-                setFilterDates(start, stop);                                
-                resetAdvTool();
+                setFilterDates(start, stop);
             });
         })
     });
@@ -144,8 +120,8 @@ function showToolShips() {
 
 function setFilterDates(start, stop) {
     if(start && stop) {
-        var startstr = moment(start).format("D/MM/YYYY");
-        var stopstr = moment(stop).format("D/MM/YYYY");
+        var startstr    = moment(start).format("D/MM/YYYY");
+        var stopstr     = moment(stop).format("D/MM/YYYY");
         var intervalstr = (startstr != stopstr) ? startstr + " - " + stopstr : startstr;
         $("#advDate").text(intervalstr);
         _filters.sdate = start;
@@ -171,6 +147,7 @@ function getShips(cb) {
     });
 }
 
+
 function getLastSchedule(name, company, cb) {
     var qs = "?ship=" + name + "&company=" + company;
     qs += "&sdate=" + encodeURIComponent(new Date());
@@ -189,35 +166,33 @@ function getLastSchedule(name, company, cb) {
     });
 }
 
+
 var substringMatcher = function(strs) {
-  return function findMatches(q, cb) {
-    var matches, substringRegex;
+    return function findMatches(q, cb) {
+        var matches, substringRegex;
+        matches = [];
+        substrRegex = new RegExp(q, 'i');
+        $.each(strs, function(i, str) {
+            if (substrRegex.test(str)) {
+                matches.push(str);
+            }
+        });
 
-    // an array that will be populated with substring matches
-    matches = [];
-
-    // regex used to determine if a string contains the substring `q`
-    substrRegex = new RegExp(q, 'i');
-
-    // iterate through the pool of strings and for any string that
-    // contains the substring `q`, add it to the `matches` array
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
-      }
-    });
-
-    cb(matches);
-  };
+        cb(matches);
+    };
 };
 
 
-
 function loadCat() {    
+    $("#catDrop div").empty();
     $.ajax(contentsUrl + "categories/")
 	.done(function(data) {
-	    var hcontext = {cats:data.categories};
-        $("#searchBox #categoriesDrop ul").append(_searchTemplate(hcontext));
+	    var cats = data.categories;
+        var ctpl = $("#cp-cats").html();
+        for(var i=0; i<cats.length; i++) {
+            var col = i%3;            
+            $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name);
+        }
 	})
 }
 
