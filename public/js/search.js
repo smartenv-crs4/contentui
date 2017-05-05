@@ -23,7 +23,7 @@ $(document).ready(function() {
             $("#adv").hide();
         }
         else {
-            $("#adv").show();
+            $("#adv").show();            
             loadCat();
             $(".advTimeMenu").click(function(e) {
                 var t = this.getAttribute('data-cp-tm');
@@ -43,12 +43,33 @@ $(document).ready(function() {
 
 });
 
+
+$("#collapse-Map").on("shown.bs.collapse", function() {
+    console.log("XXX")
+    initMap();
+})
+
 $('body').on('keypress', "#qt", function(args) {
     if (args.keyCode == 13) {
         $('#doSearch').click();
         return false;
     }
 });
+
+
+function initMap() {
+    var map = new GMaps({
+        div: '#map',
+        scrollwheel: false,             
+        lat: 39.213230, 
+        lng: 9.105954
+    });
+
+    var marker = map.addMarker({
+        lat: 39.213230, 
+        lng: 9.105954
+    });
+}
 
 
 
