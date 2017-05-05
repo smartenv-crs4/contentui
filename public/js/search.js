@@ -45,7 +45,6 @@ $(document).ready(function() {
 
 
 $("#collapse-Map").on("shown.bs.collapse", function() {
-    console.log("XXX")
     initMap();
 })
 
@@ -68,6 +67,16 @@ function initMap() {
     var marker = map.addMarker({
         lat: 39.213230, 
         lng: 9.105954
+    });
+
+    $('#slider1-rounded').slider({
+        min: 500,
+        max: 80000,
+        step:500,
+        slide: function(event, ui)
+        {
+        $('#slider1-value-rounded').text(ui.value);
+        }
     });
 }
 

@@ -29,7 +29,8 @@
 	<link rel="stylesheet" href="assets/plugins/animate.css">
 	<link rel="stylesheet" href="assets/plugins/line-icons/line-icons.css">
 	<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
-
+	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
 	<!-- CSS Page Style -->
 	<link rel="stylesheet" href="assets/css/pages/page_search_inner.css">
 
@@ -145,7 +146,11 @@
 							</div>
 							<div id="collapse-Map" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 								<div class="panel-body">									
-									<div id="map" class="map"></div>		
+									<div id="map" class="map margin-bottom-30"></div>
+									<div class="sky-form label-rounded">										
+										<label class="label rounded-x">Seleziona un raggio (<span id="slider1-value-rounded">0</span>m)</label>
+										<div id="slider1-rounded" class="skyforms"></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -174,6 +179,7 @@
 	<!-- JS Global Compulsory -->
 	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 	<script type="text/javascript" src="assets/plugins/gmap/gmap.js"></script>
