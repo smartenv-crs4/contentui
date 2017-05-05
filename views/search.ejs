@@ -95,12 +95,15 @@
 								<div class="panel-body">
 
 									<div class="tab-v2">
-										<ul class="nav nav-tabs">											
-											<li class="active"><a href="#profile-1" class="advTimeMenu" data-cp-tm="d-int" aria-expanded="true" data-toggle="tab" aria-expanded="false">Intervallo</a></li>
-											<li class=""><a href="#messages-1" class="advTimeMenu" data-cp-tm="d-ship" data-toggle="tab" aria-expanded="false">Prossimo arrivo</a></li>
+										<ul class="nav nav-tabs">
+											<li class="active"><a href="#byship" class="advTimeMenu" data-cp-tm="d-ship" data-toggle="tab" aria-expanded="false">Prossimo arrivo</a></li>	
+											<li class=""><a href="#interval" class="advTimeMenu" data-cp-tm="d-int" aria-expanded="true" data-toggle="tab" aria-expanded="false">Intervallo</a></li>	
 										</ul>
 										<div class="tab-content">
-											<div class="tab-pane fade active in" id="profile-1">								
+											<div class="tab-pane fade active in" id="byship">								
+												<input class="typeahead form-control adv" placeholder="Nome nave">
+											</div>
+											<div class="tab-pane fade" id="interval">
 												<div id="intdates" class="adv">
 											        <div class="form-group">
 											            <div class='input-group date' id='dtp1'>
@@ -122,10 +125,7 @@
 											        	<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i> Imposta</button>
 											        	<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i> Reset</button>
 											        </div>
-												</div>
-											</div>
-											<div class="tab-pane fade" id="messages-1">								
-												<input class="typeahead form-control adv" placeholder="Nome nave">
+												</div>												
 											</div>
 										</div>
 									</div>
