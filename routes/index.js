@@ -2,6 +2,7 @@ var config = require('propertiesmanager').conf;
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
+var request = require('request');
 
 let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + config.contentuiPort 
           + ((config.contentuiApiGwBaseUrl && config.contentuiApiGwBaseUrl.length > 0) ? config.contentuiApiGwBaseUrl : '')
@@ -16,7 +17,12 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/form', function(req, res, next) {
-  res.render('form_activity');
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if(error)console.log("ERRR " + error);
+    console.log(body);
+    body=JSON.parse(body);
+    return res.render('form_activity', {baseUrl:baseUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
+  });
 });
 
 

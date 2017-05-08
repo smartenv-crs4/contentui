@@ -1,22 +1,29 @@
 <% include include/head.ejs %>
 
+<link rel="stylesheet" href="css/style.css">
+
+
+    <!--<script src="js/vendor/jquery.ui.widget.js"></script>-->
+    <!--&lt;!&ndash; The Load Image plugin is included for the preview images and image resizing functionality &ndash;&gt;-->
+    <!--<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>-->
+    <!--&lt;!&ndash; The Canvas to Blob plugin is included for image resizing functionality &ndash;&gt;-->
+    <!--<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>-->
+    <!--&lt;!&ndash; The Iframe Transport is required for browsers without support for XHR file uploads &ndash;&gt;-->
+    <!--<script src="js/jquery.iframe-transport.js"></script>-->
+    <!--&lt;!&ndash; The basic File Upload plugin &ndash;&gt;-->
+    <!--<script src="js/jquery.fileupload.js"></script>-->
+    <!--&lt;!&ndash; The File Upload processing plugin &ndash;&gt;-->
+    <!--<script src="js/jquery.fileupload-process.js"></script>-->
+    <!--&lt;!&ndash; The File Upload image preview & resize plugin &ndash;&gt;-->
+    <!--<script src="js/jquery.fileupload-image.js"></script>-->
+    <!--&lt;!&ndash; The File Upload validation plugin &ndash;&gt;-->
+    <!--<script src="js/jquery.fileupload-validate.js"></script>-->
+
 <body>
+
 <div class="wrapper">
 
-    <% include include/header.ejs %>
-
-    <!--=== Breadcrumbs ===-->
-    <div class="breadcrumbs">
-        <div class="container">
-            <h1 class="pull-left">Common Bootstrap Forms</h1>
-            <ul class="pull-right breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="">Features</a></li>
-                <li class="active">Common Bootstrap Forms</li>
-            </ul>
-        </div>
-    </div><!--/breadcrumbs-->
-    <!--=== End Breadcrumbs ===-->
+    <div> <%- header %> </div>
 
     <!--=== Content Part ===-->
     <div class="container content">
@@ -93,68 +100,54 @@
 
 
             <!-- Standard Form Controls -->
-            <div class="tag-box tag-box-v3 form-page">
-
+            <form class="tag-box tag-box-v3 form-page" name="activity-form">
 
                 <div class="headline"><h3>Inserimento Attività</h3></div>
                 <!--Inputs-->
                 <h4>Nome Attività</h4>
-                    <input id="nome_attivita" type="text" class="form-control" placeholder="es. Ristorante La Spigola">
+                    <input id="name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
                 <!--End Inputs-->
                 <div class="margin-bottom-20"></div>
                 <!--Textarea-->
                 <h4>Descrizione</h4>
-                    <textarea id="descrizione" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..."></textarea>
+                    <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
                 <!--End Textarea-->
                 <div class="margin-bottom-20"></div>
                 <hr>
-                <button class="btn-u btn-u-brown" type="button"><i class="fa fa-picture-o"></i> Add Picture</button>
-                <div class="margin-bottom-10"></div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="thumbnails thumbnail-style thumbnail-kenburn">
-                            <div class="thumbnail-img">
-                                <div class="overflow-hidden">
-                                    <img class="img-responsive" src="assets/img/main/img3.jpg" alt="">
-                                </div>
-                            </div>
-                            <button type="button" class="btn-u btn-u-xs btn-u-red rounded"  style="position: absolute;top: 0;right: 0;">×</button>
-                                <span ></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="thumbnails thumbnail-style thumbnail-kenburn">
-                            <div class="thumbnail-img">
-                                <div class="overflow-hidden">
-                                    <img class="img-responsive" src="assets/img/main/img4.jpg" alt="">
-                                </div>
-                            </div>
-                            <button type="button" class="btn-u btn-u-xs btn-u-red rounded"  style="position: absolute;top: 0;right: 0;">×</button>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="thumbnails thumbnail-style thumbnail-kenburn">
-                            <div class="thumbnail-img">
-                                <div class="overflow-hidden">
-                                    <img class="img-responsive" src="assets/img/main/img1.jpg" alt="">
-                                </div>
-                            </div>
-                            <button type="button" class="btn-u btn-u-xs btn-u-red rounded"  style="position: absolute;top: 0;right: 0;">×</button>
-                        </div>
-                    </div>
-                </div>
+                <!--<button class="btn-u btn-u-brown" type="button" ><i class="fa fa-picture-o"></i> Add Picture</button>-->
+
+
+                <button class="btn btn-success fileinput-button">
+                    <i class="fa fa-picture-o"></i>
+                    <span>Add pictures...</span>
+                    <input id="fileupload" type="file" name="files[]" multiple="multiple">
+                </button>
+
+                <!-- The container for the uploaded files -->
+
+                <div id="files" class="files"></div>
                 <div class="margin-bottom-10"></div>
                 <hr>
                 <div class="margin-bottom-10"></div>
+
+                <p id="latbox">--</p>
+                <p id="lngbox">--</p>
+                <p id="address">--</p>
+
                 <p>Clicca sulla mappa per indicare la posizione della tua attività</p>
                 <div id="map" class="map margin-bottom-50"></div>
                 <hr>
-                <button type="submit" class="btn-u btn-u-blue" onclick="addContent()">Submit</button>
-        </div>
-        <!-- End Content -->
+
+                <button id="addContent" class="btn btn-success" type="button">Add Activity</i></button>
+
+
+            </form>
+
+
+            <!-- End Content -->
 
     </div>
+
         <!-- Begin Sidebar Menu -->
         <div class="col-md-3">
             <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
@@ -176,9 +169,47 @@
     </div><!--/container-->
     <!--=== End Content Part ===-->
 
-    <% include include/footer.ejs %>
+    <div> <%- footer %> </div>
 
-</div><!--/End Wrapepr-->
+    </div><!--/End Wrapepr-->
+
+
+
+
+    <script type="text/javascript">
+      var baseUrl = '<%= baseUrl %>';
+      var contentsUrl = '<%= contentsUrl %>';
+    </script>
+    <!-- JS Global Compulsory -->
+
+    <script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- JS Implementing Plugins -->
+    <script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
+    <script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
+
+    <!-- JS Customization -->
+    <script type="text/javascript" src="assets/js/custom.js"></script>
+    <!-- JS Page Level -->
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
+    <script src="assets/js/plugins/google-map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initMap" async defer></script>
+
+    <script src="js/form.js"></script>      // form activity functions
+    <script src="js/plugins/bootbox.min.js"></script>
+
+
+
+    <script src="assets/plugins/respond.js"></script>
+    <script src="assets/plugins/html5shiv.js"></script>
+    <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+
+
+    <script src="<%- headerScript %>"></script>
+    <script src="<%- footerScript %>"></script>
+
 
 </body>
 </html>

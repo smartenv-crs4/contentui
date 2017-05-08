@@ -1,66 +1,62 @@
 
+
+function geocodeLatLng(lat, lng) {
+  let geocoder = new google.maps.Geocoder;
+  let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+  let address = null;
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === 'OK') {
+      if (results[1]) {
+        console.log(results[1].formatted_address);
+        address = results[1].formatted_address;
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+    document.getElementById("address").innerHTML = address;
+  });
+}
+
+
+
 var GoogleMap = function () {
 
-    var panorama1, panorama2;
+  return {
+    initGoogleMap: function (lat, lng, zoom) {
+      let latitude = lat;
+      let longitude = lng;
 
-    // Return
-    return {
+      let map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat:lat, lng:lng},
+        scrollwheel: false,
+        zoom: zoom
+      });
+      let marker = new google.maps.Marker({
+        position: {lat:lat, lng:lng},
+        map: map
+      });
 
-      //Basic Map
-      initGoogleMap: function () {
+      google.maps.event.addListener(map, "click", function (event) {
+        latitude = event.latLng.lat();
+        longitude = event.latLng.lng();
+        marker.setPosition(new google.maps.LatLng(latitude,longitude));
 
-        /* Map */
-        var fenway = {lat: 40.748866, lng: -73.988366};
+        document.getElementById("latbox").innerHTML = latitude;
+        document.getElementById("lngbox").innerHTML = longitude;
+        geocodeLatLng(latitude, longitude);
+      });
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: fenway,
-          scrollwheel: false,
-          zoom: 14
-        });
+      document.getElementById("latbox").innerHTML = latitude;
+      document.getElementById("lngbox").innerHTML = longitude;
+      geocodeLatLng(latitude, longitude);
 
-        var marker = new google.maps.Marker({
-          position: fenway,
-          map: map,
-          title: 'Company, Inc.'
-        });
-
-      },
-      // End Basic Map
-
-
-
-      // Basic Panorama Map 1
-      initPanorama1: function () {
-
-        panorama = new google.maps.StreetViewPanorama(
-          document.getElementById('pano1'),
-          {
-            position: {lat: 40.748866, lng: -73.988366},
-            pov: {heading: 165, pitch: 0},
-            zoom: 1
-          }
-        );
-
-      },
-      // End Basic Panorama Map 1
+    },
 
 
-      // Basic Panorama Map 2
-      initPanorama2: function () {
-
-        panorama = new google.maps.StreetViewPanorama(
-          document.getElementById('pano2'),
-          {
-            position: {lat: 42.345573, lng: -71.098326},
-            pov: {heading: 165, pitch: 0},
-            zoom: 1
-          }
-        );
-
-      },
-      // End Basic Panorama Map 2
-
-    };
-    // End Return
+  };
+  // End Return
 
 }();
+
