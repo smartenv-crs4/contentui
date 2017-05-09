@@ -98,14 +98,30 @@
                 <div class="margin-bottom-20"></div>
                 <hr>
 
-                <!-- File upload section-->
+                <!-- Image upload section-->
+
                 <button class="btn btn-success fileinput-button">
                     <i class="fa fa-picture-o"></i>
-                    <span>Add pictures...</span>
-                    <input id="fileupload" type="file" name="files[]" multiple="multiple">
+                    <span>Carica Immagini</span>
+                    <input id="fileUpload" type="file" name="files[]"  >
                 </button>
-                <div id="files" class="files"></div>
                 <div class="margin-bottom-10"></div>
+                <div id="imageContainer" class="row margin-bottom-10">
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20">
+                        <img id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+                    </div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20">
+                        <img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+                    </div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20">
+                        <img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+                    </div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20">
+                        <img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+                    </div>
+                </div>
+
+                <div id="files" class="files"></div>
                 <hr>
                 <div class="margin-bottom-10"></div>
 

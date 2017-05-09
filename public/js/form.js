@@ -18,11 +18,32 @@ $(document).ready(function() {
     search();
   });
 
+  $("#fileUpload").change(function() {
+    uploadImagePreview(this);
+  });
+
   App.init();
   loadCat();
   initMap();
 
 });
+
+
+function uploadImagePreview(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+
+      if ($('#previewHolder').length) {
+        $('#imageContainer').empty();
+      }
+
+      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <img class="img-responsive rounded-2x" src='+e.target.result+' alt=""> </div>');
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
 
 
 function geocodeLatLng(lat, lng) {
@@ -76,6 +97,39 @@ function initMap() {
 
 
 
+
+function uploadImagesToUploadms(images, _cb) {
+  var fd = new FormData();
+  fd.append( file.name.split(".")[0], file);
+
+  jQuery.ajax({
+    url: _userMsUrl + "/users/actions/uploadprofileimage",
+    data: fd,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    success: function(data){
+      jQuery('#ed-avatarButton').click();
+      jQuery('#ed-avatar').html(data.filecode).blur();
+      jQuery('#profileSave').click();
+    },
+    error: function(xhr, status)
+    {
+
+      var errType="error." + xhr.status;
+      var msg=i18next.t(errType);
+
+      try{
+        msg = msg + " --> " + xhr.responseJSON.error_message;
+      }
+      catch(err){ }
+      jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+    }
+  });
+}
+
+
+
 function addContent() {
 
   let name = $('#name').val();
@@ -96,7 +150,18 @@ function addContent() {
 
   console.log("category_array", category_array);
 
-  category_array = ["12","23"];
+
+  var images = $("#imageContainer").find("img").map(function() {
+    return this.src;
+  }).get();
+
+
+  uploadImagesToUploadms(images, function(error, res){
+
+  });
+
+
+  console.log("images", images);
 
   let data = {
     name: name,
@@ -104,22 +169,25 @@ function addContent() {
     description: description,
     published: true,
     town: town,
-    category: ["12","23"],
+    category: category_array,
     lat: lat,
     lon: lng
   };
 
-  console.log(data);
-
-  $.post(contentsUrl + "contents/"+TOKEN, data )
-    .done(function(msg){
-      console.log("RESPONSE DA post su contents: " + JSON.stringify(msg));
-      bootbox.dialog({ title: 'Success', message:"Content Added " + JSON.stringify(msg)});
-    })
-    .fail(function(xhr, status, error) {
-      console.log("ERROR DA post su contents: " +error);
-      bootbox.dialog({ title: 'Warning', message:"Error adding content " +error });
-    });
+  $.ajax({
+    url: contentsUrl + "contents/"+TOKEN,
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),            //stringify is important
+    success: function (response) {
+                console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
+                bootbox.dialog({ title: 'Success', message:"Content Added " + JSON.stringify(response)});
+              },
+    error: function (response) {
+              console.log("ERROR DA post su contents ");
+              bootbox.dialog({ title: 'Warning', message:"Error adding content " });
+            }
+  });
 
 
 }
@@ -141,9 +209,8 @@ function loadCat() {
         var col = i%4;
 
         $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append('<br><input name="category" type="checkbox" value="' + cats[i]._id + '" >').append(" " + cats[i].name + "   ");
-
-
-        //$("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name + "   ");
       }
     })
 }
+
+
