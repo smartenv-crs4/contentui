@@ -2,23 +2,6 @@
 
 <link rel="stylesheet" href="css/style.css">
 
-
-    <!--<script src="js/vendor/jquery.ui.widget.js"></script>-->
-    <!--&lt;!&ndash; The Load Image plugin is included for the preview images and image resizing functionality &ndash;&gt;-->
-    <!--<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>-->
-    <!--&lt;!&ndash; The Canvas to Blob plugin is included for image resizing functionality &ndash;&gt;-->
-    <!--<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>-->
-    <!--&lt;!&ndash; The Iframe Transport is required for browsers without support for XHR file uploads &ndash;&gt;-->
-    <!--<script src="js/jquery.iframe-transport.js"></script>-->
-    <!--&lt;!&ndash; The basic File Upload plugin &ndash;&gt;-->
-    <!--<script src="js/jquery.fileupload.js"></script>-->
-    <!--&lt;!&ndash; The File Upload processing plugin &ndash;&gt;-->
-    <!--<script src="js/jquery.fileupload-process.js"></script>-->
-    <!--&lt;!&ndash; The File Upload image preview & resize plugin &ndash;&gt;-->
-    <!--<script src="js/jquery.fileupload-image.js"></script>-->
-    <!--&lt;!&ndash; The File Upload validation plugin &ndash;&gt;-->
-    <!--<script src="js/jquery.fileupload-validate.js"></script>-->
-
 <body>
 
 <div class="wrapper">
@@ -93,9 +76,9 @@
             </div>
 
             <!--<div class="alert alert-info fade in">-->
-                <!--<button data-dismiss="alert" class="close" type="button">×</button>-->
-                <!--Individual form controls automatically receive some global styling. All textual <code>input</code>, <code>textarea</code>, and <code>select</code> elements with <code>.form-control</code> are set to <code>width: 100%;</code> by default. Wrap labels and controls in .form-group for optimum spacing.<br>-->
-                <!--<strong>You can find more example here:</strong> <a target="_blank" href="http://getbootstrap.com/css/#forms">http://getbootstrap.com/css/#forms</a>-->
+            <!--<button data-dismiss="alert" class="close" type="button">×</button>-->
+            <!--Individual form controls automatically receive some global styling. All textual <code>input</code>, <code>textarea</code>, and <code>select</code> elements with <code>.form-control</code> are set to <code>width: 100%;</code> by default. Wrap labels and controls in .form-group for optimum spacing.<br>-->
+            <!--<strong>You can find more example here:</strong> <a target="_blank" href="http://getbootstrap.com/css/#forms">http://getbootstrap.com/css/#forms</a>-->
             <!--</div>-->
 
 
@@ -105,39 +88,51 @@
                 <div class="headline"><h3>Inserimento Attività</h3></div>
                 <!--Inputs-->
                 <h4>Nome Attività</h4>
-                    <input id="name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
+                <input id="name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
                 <!--End Inputs-->
                 <div class="margin-bottom-20"></div>
-                <!--Textarea-->
+
+                <!-- Descrizione section-->
                 <h4>Descrizione</h4>
-                    <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
-                <!--End Textarea-->
+                <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
                 <div class="margin-bottom-20"></div>
                 <hr>
-                <!--<button class="btn-u btn-u-brown" type="button" ><i class="fa fa-picture-o"></i> Add Picture</button>-->
 
-
+                <!-- File upload section-->
                 <button class="btn btn-success fileinput-button">
                     <i class="fa fa-picture-o"></i>
                     <span>Add pictures...</span>
                     <input id="fileupload" type="file" name="files[]" multiple="multiple">
                 </button>
-
-                <!-- The container for the uploaded files -->
-
                 <div id="files" class="files"></div>
                 <div class="margin-bottom-10"></div>
                 <hr>
                 <div class="margin-bottom-10"></div>
 
+
+                <!-- Category Section -->
+
+                <h4>Categorie</h4>
+
+                <div class="row" id="catDrop">
+                    <div class="col-md-3" data-cp-cbox-pos="0"></div>
+                    <div class="col-md-3" data-cp-cbox-pos="1"></div>
+                    <div class="col-md-3" data-cp-cbox-pos="2"></div>
+                    <div class="col-md-3" data-cp-cbox-pos="3"></div>
+                </div>
+
+                <div class="margin-bottom-20"></div>
+                <hr>
+
+
+                <!-- Map Section -->
+
                 <p id="latbox">--</p>
                 <p id="lngbox">--</p>
                 <p id="address">--</p>
-
                 <p>Clicca sulla mappa per indicare la posizione della tua attività</p>
                 <div id="map" class="map margin-bottom-50"></div>
                 <hr>
-
                 <button id="addContent" class="btn btn-success" type="button">Add Activity</i></button>
 
 
@@ -146,7 +141,7 @@
 
             <!-- End Content -->
 
-    </div>
+        </div>
 
         <!-- Begin Sidebar Menu -->
         <div class="col-md-3">
@@ -171,45 +166,46 @@
 
     <div> <%- footer %> </div>
 
-    </div><!--/End Wrapepr-->
+</div><!--/End Wrapepr-->
 
 
 
 
-    <script type="text/javascript">
-      var baseUrl = '<%= baseUrl %>';
-      var contentsUrl = '<%= contentsUrl %>';
-    </script>
-    <!-- JS Global Compulsory -->
+<script type="text/javascript">
+  var baseUrl = '<%= baseUrl %>';
+  var contentsUrl = '<%= contentsUrl %>';
+</script>
+<!-- JS Global Compulsory -->
 
-    <script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <!-- JS Implementing Plugins -->
-    <script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
-    <script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
+<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
+<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="assets/plugins/gmap/gmap.js"></script>
+<!-- JS Implementing Plugins -->
+<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
+<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
 
-    <!-- JS Customization -->
-    <script type="text/javascript" src="assets/js/custom.js"></script>
-    <!-- JS Page Level -->
-    <script type="text/javascript" src="assets/js/app.js"></script>
-    <script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
-    <script src="assets/js/plugins/google-map.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initMap" async defer></script>
-
-    <script src="js/form.js"></script>      // form activity functions
-    <script src="js/plugins/bootbox.min.js"></script>
-
+<!-- JS Customization -->
+<script type="text/javascript" src="assets/js/custom.js"></script>
+<!-- JS Page Level -->
+<script type="text/javascript" src="assets/js/app.js"></script>
+<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
+<!--<script src="assets/js/plugins/google-map.js"></script>-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initMap" async defer></script>-->
 
 
-    <script src="assets/plugins/respond.js"></script>
-    <script src="assets/plugins/html5shiv.js"></script>
-    <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+<script src="assets/plugins/respond.js"></script>
+<script src="assets/plugins/html5shiv.js"></script>
+<script src="assets/plugins/placeholder-IE-fixes.js"></script>
 
 
-    <script src="<%- headerScript %>"></script>
-    <script src="<%- footerScript %>"></script>
+<script src="<%- headerScript %>"></script>
+<script src="<%- footerScript %>"></script>
 
+
+<script src="js/form.js"></script>      // form activity functions
+<script src="js/plugins/bootbox.min.js"></script>
 
 </body>
 </html>
