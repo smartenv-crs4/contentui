@@ -96,15 +96,11 @@
                 <h4>Descrizione</h4>
                 <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
                 <div class="margin-bottom-20"></div>
-                <hr>
 
                 <!-- Image upload section-->
 
-                <button class="btn btn-success fileinput-button">
-                    <i class="fa fa-picture-o"></i>
-                    <span>Carica Immagini</span>
-                    <input id="fileUpload" type="file" name="files[]"  >
-                </button>
+                <h4>Immagini</h4>
+
                 <div class="margin-bottom-10"></div>
                 <div id="imageContainer" class="row margin-bottom-10">
                     <div class="col-sm-3 col-xs-6 md-margin-bottom-20">
@@ -121,7 +117,13 @@
                     </div>
                 </div>
 
-                <div id="files" class="files"></div>
+                <button class="btn btn-success fileinput-button">
+                    <i class="fa fa-picture-o"></i>
+                    <span>Carica</span>
+                </button>
+                <input id="fileUpload" type="file" name="files[]"  >
+
+                <!--<div id="files" class="files"></div>-->
                 <hr>
                 <div class="margin-bottom-10"></div>
 
@@ -129,7 +131,7 @@
                 <!-- Category Section -->
 
                 <h4>Categorie</h4>
-
+                <div class="margin-bottom-10"></div>
                 <div class="row" id="catDrop">
                     <div class="col-md-3" data-cp-cbox-pos="0"></div>
                     <div class="col-md-3" data-cp-cbox-pos="1"></div>
@@ -142,6 +144,7 @@
 
 
                 <!-- Map Section -->
+                <h4>Mappa</h4>
 
                 <p id="latbox">--</p>
                 <p id="lngbox">--</p>
@@ -191,37 +194,47 @@
   var baseUrl = '<%= baseUrl %>';
   var contentsUrl = '<%= contentsUrl %>';
 </script>
+
+<script id="cp-cats" type="text/x-cp-snippet">
+    <label class="checkbox">
+        <input type="checkbox" value="">
+    </label>
+</script>
+
+
 <!-- JS Global Compulsory -->
+<script src="<%- headerScript %>"></script>
+<script src="<%- footerScript %>"></script>
 
 <script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
 <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript" src="assets/plugins/gmap/gmap.js"></script>
+
+
 <!-- JS Implementing Plugins -->
 <script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
 <script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
 
 <!-- JS Customization -->
-<script type="text/javascript" src="assets/js/custom.js"></script>
+<!--<script type="text/javascript" src="assets/js/custom.js"></script>-->
 <!-- JS Page Level -->
 <script type="text/javascript" src="assets/js/app.js"></script>
-<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
+<!--<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>-->
+
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="assets/plugins/gmap/gmap.js"></script>
 <!--<script src="assets/js/plugins/google-map.js"></script>-->
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initMap" async defer></script>-->
-
 
 <script src="assets/plugins/respond.js"></script>
 <script src="assets/plugins/html5shiv.js"></script>
 <script src="assets/plugins/placeholder-IE-fixes.js"></script>
 
 
-<script src="<%- headerScript %>"></script>
-<script src="<%- footerScript %>"></script>
-
-
 <script src="js/form.js"></script>      // form activity functions
 <script src="js/plugins/bootbox.min.js"></script>
+
+
 
 </body>
 </html>

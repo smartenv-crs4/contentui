@@ -30,7 +30,13 @@ $(document).ready(function() {
 
 
 function uploadImagePreview(input) {
+
+
+
   if (input.files && input.files[0]) {
+
+    console.log(URL.createObjectURL(input.files[0]));
+
     var reader = new FileReader();
     reader.onload = function(e) {
 
@@ -38,10 +44,46 @@ function uploadImagePreview(input) {
         $('#imageContainer').empty();
       }
 
-      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <img class="img-responsive rounded-2x" src='+e.target.result+' alt=""> </div>');
+      var _id = "img-"+input.files[0].name;
+      var objectURL = URL.createObjectURL(input.files[0]);
+      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <img id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div>');
+
+
+      var file = input.files[0];
+      var fd = new FormData();
+      fd.append( file.name.split(".")[0], file);
+
+      console.log(JSON.stringify(fd));
+
+
+      jQuery.ajax({
+        url: baseUrl + "actions/uploadprofileimage",
+        data: fd,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){
+          console.log("success");
+        },
+        error: function(xhr, status)
+        {
+
+          var errType="error." + xhr.status;
+          var msg=i18next.t(errType);
+
+          try{
+            msg = msg + " --> " + xhr.responseJSON.error_message;
+          }
+          catch(err){ }
+          jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+        }
+      });
+
     };
 
     reader.readAsDataURL(input.files[0]);
+
+
   }
 }
 
@@ -99,38 +141,53 @@ function initMap() {
 
 
 function uploadImagesToUploadms(images, _cb) {
-  var fd = new FormData();
-  fd.append( file.name.split(".")[0], file);
 
-  jQuery.ajax({
-    url: _userMsUrl + "/users/actions/uploadprofileimage",
-    data: fd,
-    processData: false,
-    contentType: false,
-    type: 'POST',
-    success: function(data){
-      jQuery('#ed-avatarButton').click();
-      jQuery('#ed-avatar').html(data.filecode).blur();
-      jQuery('#profileSave').click();
-    },
-    error: function(xhr, status)
-    {
+  var images = $("#imageContainer").find("img").map(function() {
+    return this.src;
+  }).get();
 
-      var errType="error." + xhr.status;
-      var msg=i18next.t(errType);
-
-      try{
-        msg = msg + " --> " + xhr.responseJSON.error_message;
-      }
-      catch(err){ }
-      jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
-    }
-  });
-}
+  var reader = new FileReader();
+  var fr1 = reader.readAsBinaryString(new Blob(images[0], {type: ''}));
 
 
+  console.log("images are: "+images);
+  console.log("fr2 is: "+fr1);
 
-function addContent() {
+
+  // var fd = new FormData();
+    // fd.append( file.name, file);
+//
+//     jQuery.ajax({
+//       url: _userMsUrl + "/users/actions/uploadprofileimage",
+//       data: fd,
+//       processData: false,
+//       contentType: false,
+//       type: 'POST',
+//       success: function(data){
+//         jQuery('#ed-avatarButton').click();
+// //            console.log(jQuery('#ed-avatar').html());
+//         jQuery('#ed-avatar').html(data.filecode).blur();
+//         jQuery('#profileSave').click();
+//       },
+//       error: function(xhr, status)
+//       {
+//
+//         var errType="error." + xhr.status;
+//         var msg=i18next.t(errType);
+//
+//         try{
+//           msg = msg + " --> " + xhr.responseJSON.error_message;
+//         }
+//         catch(err){ }
+//         jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+//       }
+//     });
+  }
+
+
+
+
+  function addContent() {
 
   let name = $('#name').val();
   let description = $('#description').val();
@@ -195,8 +252,6 @@ function addContent() {
 function loadCat() {
 
   $('#myModal-categories').modal('show');
-
-
   $("#catDrop div").empty();
   $.ajax(contentsUrl + "categories/")
     .done(function(data) {
@@ -208,7 +263,7 @@ function loadCat() {
       for(var i=0; i<cats.length; i++) {
         var col = i%4;
 
-        $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append('<br><input name="category" type="checkbox" value="' + cats[i]._id + '" >').append(" " + cats[i].name + "   ");
+        $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
       }
     })
 }

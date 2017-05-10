@@ -4,12 +4,20 @@ var router = express.Router();
 var rp = require('request-promise');
 var request = require('request');
 
+var multiparty = require('multiparty');
+var magic = require('stream-mmmagic');
+
+let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
+
+
 let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + config.contentuiPort 
           + ((config.contentuiApiGwBaseUrl && config.contentuiApiGwBaseUrl.length > 0) ? config.contentuiApiGwBaseUrl : '')
           + ((config.contentuiApiVersion && config.contentuiApiVersion.length > 0) ? "/" + config.contentuiApiVersion : '')
           + '/';
 
-let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/'); 
+let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/');
+
+let uploadmsUrl = config.uploadmsUrl + (config.uploadmsUrl.endsWith('/') ? '' : '/');
 
 router.get('/', function(req, res, next) {
   res.render('search', {baseUrl:baseUrl, contentsUrl:contentsUrl});
@@ -49,10 +57,16 @@ router.get('/search', function(req, res, next) {
 
 
 
-router.post('/actions/uploadimages', function(req, res) {
+router.post('/actions/uploadprofileimage', function(req, res) {
+
+  console.log("calling /actions/uploadprofileimage");
+
   readStream(["image"],req,function(err,stream){
 
     var formData = {};
+
+    console.log("\n\n\ndopo formdata ");
+
 
     formData[stream.tag]={
       value:stream.file,
@@ -63,13 +77,18 @@ router.post('/actions/uploadimages', function(req, res) {
       }
     };
 
+
     var options ={
-      url: uploadMsUrl + "/file",
+      url: uploadmsUrl+"file?access_token="+USER_TOKEN,
       method: "POST",
       formData:formData,
       preambleCRLF: true,
       postambleCRLF: true
     };
+
+    console.log("\n\n\n\n\n sending these options: ");
+    console.log(options);
+
 
     request.post(options,function(err,response,body){
       if(err)
@@ -86,6 +105,9 @@ router.post('/actions/uploadimages', function(req, res) {
 function readStream(allowedMime,req,callback){
 
   var form = new multiparty.Form();
+
+  console.log("dentro readstream");
+
 
   form.on('error', function(err){
     return callback({error:"InternalError", error_code:err.statusCode, error_message:err},null);

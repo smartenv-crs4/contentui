@@ -12,5 +12,21 @@
     "contentuiPort":"3000",
     "contentuiApiGwBaseUrl":"",
     "contentuiApiVersion":""
-  }
+    "uploadmsUrl":""
+  },
+  "dev": {
+      "enableCors":true,
+      "authProtocol":"http",
+      "authHost":"your_auth_service_host",
+      "authPort":"3000",
+      "decodedTokenFieldName": "contentms",
+      "auth_token":"your_auth_service_token",
+      "contentsUrl":"http://localhost:3001/",
+      "contentuiProtocol":"http",
+      "contentuiHost":"localhost",
+      "contentuiPort":"3000",
+      "contentuiApiGwBaseUrl":"",
+      "contentuiApiVersion":""
+      "uploadmsUrl":""
+    }
 }
