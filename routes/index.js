@@ -29,7 +29,7 @@ router.get('/form', function(req, res, next) {
     if(error)console.log("ERRR " + error);
     console.log(body);
     body=JSON.parse(body);
-    return res.render('form_activity', {baseUrl:baseUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
+    return res.render('form_activity', {baseUrl:baseUrl, uploadmsUrl:uploadmsUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
   });
 });
 
@@ -57,9 +57,9 @@ router.get('/search', function(req, res, next) {
 
 
 
-router.post('/actions/uploadprofileimage', function(req, res) {
+router.post('/actions/uploadimage', function(req, res) {
 
-  console.log("calling /actions/uploadprofileimage");
+  console.log("calling /actions/uploadimage");
 
   readStream(["image"],req,function(err,stream){
 
@@ -93,6 +93,8 @@ router.post('/actions/uploadprofileimage', function(req, res) {
     request.post(options,function(err,response,body){
       if(err)
         return res.status(500).send({error_code:500, error:"Internalerror", error_message:err});
+
+      console.log(body);
       res.status(201).send(JSON.parse(body));
     });
 

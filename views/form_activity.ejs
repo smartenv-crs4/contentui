@@ -83,7 +83,7 @@
 
 
             <!-- Standard Form Controls -->
-            <form class="tag-box tag-box-v3 form-page" name="activity-form">
+            <form class="tag-box tag-box-v3 form-page" name="activity-form" id="content-form">
 
                 <div class="headline"><h3>Inserimento Attività</h3></div>
                 <!--Inputs-->
@@ -120,8 +120,9 @@
                 <button class="btn btn-success fileinput-button">
                     <i class="fa fa-picture-o"></i>
                     <span>Carica</span>
+                    <input id="fileUpload" type="file" name="files[]"  >
+
                 </button>
-                <input id="fileUpload" type="file" name="files[]"  >
 
                 <!--<div id="files" class="files"></div>-->
                 <hr>
@@ -133,10 +134,10 @@
                 <h4>Categorie</h4>
                 <div class="margin-bottom-10"></div>
                 <div class="row" id="catDrop">
-                    <div class="col-md-3" data-cp-cbox-pos="0"></div>
-                    <div class="col-md-3" data-cp-cbox-pos="1"></div>
+                    <div class="col-md-3" data-cp-cbox-pos="0" ></div>
+                    <div class="col-md-3" data-cp-cbox-pos="1" ></div>
                     <div class="col-md-3" data-cp-cbox-pos="2"></div>
-                    <div class="col-md-3" data-cp-cbox-pos="3"></div>
+                    <div class="col-md-3" data-cp-cbox-pos="3" ></div>
                 </div>
 
                 <div class="margin-bottom-20"></div>
@@ -155,7 +156,11 @@
                 <button id="addContent" class="btn btn-success" type="button">Add Activity</i></button>
 
 
+
             </form>
+
+            <label id="image_array_url"></label>
+
 
 
             <!-- End Content -->
@@ -193,11 +198,12 @@
 <script type="text/javascript">
   var baseUrl = '<%= baseUrl %>';
   var contentsUrl = '<%= contentsUrl %>';
+  var uploadmsUrl = '<%= uploadmsUrl %>';
 </script>
 
 <script id="cp-cats" type="text/x-cp-snippet">
     <label class="checkbox">
-        <input type="checkbox" value="">
+        <input type="checkbox" value="" name="category">
     </label>
 </script>
 
@@ -233,6 +239,7 @@
 
 <script src="js/form.js"></script>      // form activity functions
 <script src="js/plugins/bootbox.min.js"></script>
+<!--<script src="js/plugins/async/async.js"></script>-->
 
 
 
