@@ -1,5 +1,5 @@
 
-<!-- <% include include/head.ejs %>-->
+<!-- <% include include/head.ejs %>
 
 
 <!DOCTYPE html>
@@ -102,6 +102,16 @@
         </div>
         <!-- End Sidebar Menu -->
 
+
+
+
+
+
+
+
+
+
+
         <!-- Begin Content -->
         <div class="col-md-7">
             <div class="row">
@@ -111,56 +121,56 @@
                 </div>
             </div>
 
-            <!--<div class="alert alert-info fade in">-->
-            <!--<button data-dismiss="alert" class="close" type="button">×</button>-->
-            <!--Individual form controls automatically receive some global styling. All textual <code>input</code>, <code>textarea</code>, and <code>select</code> elements with <code>.form-control</code> are set to <code>width: 100%;</code> by default. Wrap labels and controls in .form-group for optimum spacing.<br>-->
-            <!--<strong>You can find more example here:</strong> <a target="_blank" href="http://getbootstrap.com/css/#forms">http://getbootstrap.com/css/#forms</a>-->
-            <!--</div>-->
-
-
-            <!-- Standard Form Controls -->
             <form class="tag-box tag-box-v3 form-page" name="activity-form" id="content-form">
 
-                <div class="headline"><h3>Inserimento Attività</h3></div>
+                <!-- Standard Form Controls -->
+
+                <div class="headline">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <h3>Dettagli Attività</h3>
+                        </div>
+                        <div class="col-sm-3">
+                            <ul class="list-inline posted-info">
+                                <li>
+                                    <a href="#">
+                                        <i class="rounded-x icon-speech"></i>
+                                        <span>5</span>
+                                    </a>
+                                </li>
+                                <li><a href="#"><i class="rounded-x icon-share"></i></a></li>
+                                <li><a href="#"><i class="rounded-x icon-heart"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
                 <!--Inputs-->
                 <h4>Nome Attività</h4>
-                <input id="name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
+                <label id="name" type="text"    ></label>
                 <!--End Inputs-->
                 <div class="margin-bottom-20"></div>
 
+                <hr>
+
                 <!-- Descrizione section-->
                 <h4>Descrizione</h4>
-                <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
+                <label id="description"></label>
                 <div class="margin-bottom-20"></div>
 
                 <!-- Image upload section-->
 
+                <hr>
                 <h4>Immagini</h4>
 
                 <div class="margin-bottom-10"></div>
                 <div id="imageContainer" class="row margin-bottom-10">
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
                 </div>
 
-                <button class="btn-u fileinput-button">
-                    <i class="fa fa-picture-o"></i>
-                    <span>Carica Immagini</span>
-                    <input id="fileUpload" type="file" name="files[]"  >
-
-                </button>
-
-                <!--<div id="files" class="files"></div>-->
                 <hr>
                 <div class="margin-bottom-10"></div>
 
@@ -179,24 +189,7 @@
                 <div class="margin-bottom-20"></div>
                 <hr>
 
-
-                <!-- Map Section -->
-                <h4>Mappa</h4>
-
-                <p id="latbox">--</p>
-                <p id="lngbox">--</p>
-                <p id="address">--</p>
-                <p>Clicca sulla mappa per indicare la posizione della tua attività</p>
-                <div id="map" class="map margin-bottom-50"></div>
-                <hr>
-                <button id="addContent" class="btn-u" type="button">Add Activity</i></button>
-
-
-
             </form>
-
-            <label id="image_array_url"></label>
-
 
 
             <!-- End Content -->
@@ -217,6 +210,8 @@
                 <hr>
                 <button class="btn-u" type="button"><i class="fa fa-picture-o"></i> Nuova Promozione</button>
                 <hr>
+
+
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-8">
@@ -224,6 +219,7 @@
                         </div>
                     </div>
                 </div>
+
 
             </ul>
         </div>
@@ -242,13 +238,24 @@
   var baseUrl = '<%= baseUrl %>';
   var contentsUrl = '<%= contentsUrl %>';
   var uploadmsUrl = '<%= uploadmsUrl %>';
+  var activityBody = '<%- activityBody %>';
+  activityBody = JSON.parse(activityBody);
+
+  console.log(activityBody.name);
+</script>
+
+
+
+<script id="img-thumb" type="text/x-img-snippet">
+    <div>
+     <img id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+   </div>
 </script>
 
 <script id="cp-cats" type="text/x-cp-snippet">
-    <label class="checkbox">
-        <input type="checkbox" value="" name="category">
-    </label>
+    <label></label>
 </script>
+
 
 
 <!-- JS Global Compulsory -->
@@ -264,20 +271,11 @@
 <script type="text/javascript" src="../assets/plugins/back-to-top.js"></script>
 <script type="text/javascript" src="../assets/plugins/smoothScroll.js"></script>
 
-<!-- JS Customization -->
-<!--<script type="text/javascript" src="assets/js/custom.js"></script>-->
 <!-- JS Page Level -->
 <script type="text/javascript" src="../assets/js/app.js"></script>
-<!--<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>-->
 
+<script src="../js/plugins/bootbox.min.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript" src="../assets/plugins/gmap/gmap.js"></script>
-<!--<script src="assets/js/plugins/google-map.js"></script>-->
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initMap" async defer></script>-->
-
-<script src="../assets/plugins/respond.js"></script>
-<script src="../assets/plugins/html5shiv.js"></script>
-<script src="../assets/plugins/placeholder-IE-fixes.js"></script>
 
 
 <!-- CP2020 -->
@@ -286,9 +284,14 @@
 <script type="text/javascript" src="../js/plugins/moment-with-locales.min.js"></script>
 <script type="text/javascript" src="../js/plugins/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="../js/plugins/jquery.growl.js"></script>
-<script src="../js/form.js"></script>      // form activity functions
-<script src="../js/plugins/bootbox.min.js"></script>
+<script src="../js/view.js"></script>      // form activity functions
 
+
+
+
+<script src="../assets/plugins/respond.js"></script>
+<script src="../assets/plugins/html5shiv.js"></script>
+<script src="../assets/plugins/placeholder-IE-fixes.js"></script>
 
 
 </body>

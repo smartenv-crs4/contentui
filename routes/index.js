@@ -16,7 +16,6 @@ let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + co
           + '/';
 
 let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/');
-
 let uploadmsUrl = config.uploadmsUrl + (config.uploadmsUrl.endsWith('/') ? '' : '/');
 
 router.get('/', function(req, res, next) {
@@ -24,14 +23,51 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/form', function(req, res, next) {
+router.get('/activities/new', function(req, res, next) {
   request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
-    if(error)console.log("ERRR " + error);
+    if (error) console.log("ERRR " + error);
     console.log(body);
-    body=JSON.parse(body);
+    body = JSON.parse(body);
     return res.render('form_activity', {baseUrl:baseUrl, uploadmsUrl:uploadmsUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
   });
 });
+
+
+
+router.get('/activities/:id', function(req, res, next) {
+
+  var activity_id = req.params.id;
+
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if (error) console.log("ERRR " + error);
+    console.log(body);
+    var commonBody = JSON.parse(body);
+
+    console.log("\n\ncalling contents/ "+config.contentsUrl+"/contents/"+activity_id);
+
+    request.get(config.contentsUrl+"contents/"+activity_id, function (error, response, body) {
+      if (error) console.log("ERRR " + error);
+      console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
+      // var activityBody =
+
+      return res.render('view_activity', {
+        activityBody: body,  ///////////////////// da correggere e inserire più campi
+        baseUrl: baseUrl,
+        uploadmsUrl: uploadmsUrl,
+        contentsUrl: contentsUrl,
+        footer: commonBody.footer.html,
+        footerCss: commonBody.footer.css,
+        footerScript: commonBody.footer.js,
+        header: commonBody.header.html,
+        headerCss: commonBody.header.css,
+        headerScript: commonBody.header.js
+      });
+    });
+  });
+});
+
+
+
 
 
 /* TODO Search in POST perche' non cacheabile? */
@@ -91,10 +127,11 @@ router.post('/actions/uploadimage', function(req, res) {
 
 
     request.post(options,function(err,response,body){
-      if(err)
-        return res.status(500).send({error_code:500, error:"Internalerror", error_message:err});
+      console.log("body is: "+body);
 
-      console.log(body);
+      if(!body.hasOwnProperty('filecode'))  // this is an upload error
+        return res.status(500).send({error_code:body.statusCode, error:"Internalerror", error_message:body.message});
+
       res.status(201).send(JSON.parse(body));
     });
 

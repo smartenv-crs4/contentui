@@ -16,13 +16,20 @@ $(document).ready(function() {
     addContent();
   });
 
-  $("#doSearch").click(function(e) {
-    search();
-  });
 
   $("#fileUpload").change(function() {
     loadImagePreview(this);
+
   });
+
+  $('#datetimepicker12').datetimepicker({
+    inline: true,
+    format: 'DD/MM/YYYY',
+    allowInputToggle: true,
+    useCurrent : true
+  });
+
+
 
   App.init();
   loadCat();
@@ -33,6 +40,25 @@ $(document).ready(function() {
   global.images_array_URL = [];
 }(this));
 
+
+function removePicture(elem){
+  var id = $(elem).closest('.img-wrap').find('img').data('id');
+
+  bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
+    if (result) {
+      $(elem).parent().parent().remove();
+      for (var i = 0; i < images_array_fd.length; i++)
+        if (images_array_fd[i].id === id) {
+          images_array_fd.splice(i, 1);
+        }
+    }
+
+    console.log(JSON.stringify(images_array_fd));
+
+  });
+
+}
+
 function loadImagePreview(input) {
 
   if (input.files && input.files[0]) {
@@ -40,19 +66,22 @@ function loadImagePreview(input) {
     reader.onload = function(e) {
       if ($('#previewHolder').length) {$('#imageContainer').empty();}  // remove temp images
 
-      let _id = "img-"+input.files[0].name;
+      let _id = "img-"+input.files[0].name.replace(/\s/g,'');
       let objectURL = URL.createObjectURL(input.files[0]);
-      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <img id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div>');
+      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
 
       let file = input.files[0];
       let formData = new FormData();
       formData.append(file.name.split(".")[0], file);
 
-      images_array_fd.push(formData);
+      images_array_fd.push({id:_id, formData: formData});
+
+      console.log(JSON.stringify(images_array_fd));
 
     };
 
     reader.readAsDataURL(input.files[0]);
+    //input.files[0].value = '';
 
 
   }
@@ -143,22 +172,16 @@ function getUploadmsImageURL(image, cb) {
     type: 'POST',
     success: function(data){
       console.log("success");
-      //console.log("data "+JSON.stringify(data));
-
       cb(uploadmsUrl+"file/"+data.filecode);
-      //img_array_url.push(uploadmsUrl+"file/"+data.filecode);
-
-      //return uploadmsUrl+"file/"+data.filecode;
-
-      //console.log("added url: "+uploadmsUrl+"file/"+data.filecode);
+      console.log("added url: "+uploadmsUrl+"file/"+data.filecode);
     },
     error: function(xhr, status)
     {
       let errType="error." + xhr.status;
-      let msg=i18next.t(errType);
+      let msg = i18next.t(errType);
 
       try{
-        msg = msg + " --> " + xhr.responseJSON.error_message;
+        msg = msg + "Error uploading image! Check filesize. ";
       }
       catch(err){ }
       jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
@@ -202,7 +225,7 @@ function addContent() {
 
 
   images_array_fd.forEach(function(fd_img) {
-    getUploadmsImageURL(fd_img, function(img_url) {
+    getUploadmsImageURL(fd_img.formData, function(img_url) {
       contentData.images.push(img_url);
       console.log("url is: ", img_url);
 
@@ -229,57 +252,4 @@ function addContent() {
   });
 
 
-
-  //
-  // Promise.all(requests).then(() => console.log('done'));
-  //
-  //
-  // async.each(images_array_fd, function (fd_img, callback) {
-  //   uploadImagesToUploadms(fd_img, function (img_url) {
-  //     img_array_url.push(img_url);
-  //     console.log("images_array_URL from uploadImagesToUploadms", img_array_url);
-  //
-  //     //test = img_url;
-  //   });
-  //   callback(null, img_array_url);
-  // }, function (err, img_array_url) {
-  //   if (err) {
-  //     console.log('An image failed to process');
-  //   } else {
-  //     console.log('All images have been processed successfully');
-  //     console.log("images_array_URL ", img_array_url);
-  //     $('#image_array_url').text(JSON.stringify(img_array_url));
-  //
-  //
-  //     let data = {
-  //       name: name,
-  //       type: "eventa_promotions",
-  //       description: description,
-  //       published: true,
-  //       town: town,
-  //       category: category_array.slice(),
-  //       images: img_array_url,
-  //       lat: lat,
-  //       lon: lng
-  //     };
-  //
-  //     console.log("data is " + JSON.stringify(data));
-  //
-  //     $.ajax({
-  //       url: contentsUrl + "contents/" + TOKEN,
-  //       type: 'POST',
-  //       contentType: 'application/json',
-  //       data: JSON.stringify(data),            //stringify is important
-  //       success: function (response) {
-  //         console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
-  //         //bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
-  //       },
-  //       error: function (response) {
-  //         console.log("ERROR DA post su contents ");
-  //         //bootbox.dialog({title: 'Warning', message: "Error adding content "});
-  //       }
-  //     });
-  //   }
-  //
-  // });
 }
