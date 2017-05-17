@@ -255,7 +255,7 @@ function storeContentToContentms(contentData) {
       console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
       //go to the content page:
       bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
-      //window.location = baseUrl + "activities/" + response._id +TOKEN;
+      window.location = baseUrl + "activities/" + response._id +TOKEN;
     },
     error: function (response) {
       console.log("ERROR DA post su contents ");
