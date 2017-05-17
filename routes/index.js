@@ -129,7 +129,7 @@ router.post('/actions/uploadimage', function(req, res) {
     request.post(options,function(err,response,body){
       console.log("body is: "+body);
 
-      if(!body.hasOwnProperty('filecode'))  // this is an upload error
+      if(!JSON.parse(body).hasOwnProperty('filecode'))  // this is an upload error
         return res.status(500).send({error_code:body.statusCode, error:"Internalerror", error_message:body.message});
 
       res.status(201).send(JSON.parse(body));

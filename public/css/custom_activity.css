@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px !important;
+  direction: ltr;
+  cursor: pointer;
+}
+
+.img-wrap .deletebutton {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  z-index: 100;
+  background-color: red;
+  padding: 3px 3px 6px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: .7;
+  text-align: center;
+  font-size: 22px;
+  line-height: 10px;
+  border-radius: 50%;
+}
+.img-wrap:hover .deletebutton {
+  opacity: 1;
+}
+

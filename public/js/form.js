@@ -224,32 +224,42 @@ function addContent() {
 
 
 
-  images_array_fd.forEach(function(fd_img) {
-    getUploadmsImageURL(fd_img.formData, function(img_url) {
-      contentData.images.push(img_url);
-      console.log("url is: ", img_url);
-
-      if(contentData.images.length  === images_array_fd.length) {
-        console.log("contentData: ", JSON.stringify(contentData));
-
-        $.ajax({
-          url: contentsUrl + "contents/" + TOKEN,
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify(contentData),            //stringify is important
-          success: function (response) {
-            console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
-            bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
-          },
-          error: function (response) {
-            console.log("ERROR DA post su contents ");
-            bootbox.dialog({title: 'Warning', message: "Error adding content "});
-          }
-        });
-      }
-
+  if (images_array_fd.length > 0 ) {
+    images_array_fd.forEach(function (fd_img) {
+      getUploadmsImageURL(fd_img.formData, function (img_url) {
+        contentData.images.push(img_url);
+        console.log("url is: ", img_url);
+        if (contentData.images.length === images_array_fd.length) {
+          console.log("contentData: ", JSON.stringify(contentData));
+          storeContentToContentms(contentData);
+        }
+      });
     });
+  } else {
+    console.log("\n\n\n no images to upload");
+    storeContentToContentms(contentData);
+  }
+
+}
+
+function storeContentToContentms(contentData) {
+
+  console.log("\n\n\n storeContentToContentms");
+
+  $.ajax({
+    url: contentsUrl + "contents" + TOKEN,
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(contentData),            //stringify is important
+    success: function (response) {
+      console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
+      //go to the content page:
+      bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
+      //window.location = baseUrl + "activities/" + response._id +TOKEN;
+    },
+    error: function (response) {
+      console.log("ERROR DA post su contents ");
+      bootbox.dialog({title: 'Warning', message: "Error adding content "});
+    }
   });
-
-
 }

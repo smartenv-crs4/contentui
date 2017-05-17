@@ -28,7 +28,7 @@ $(document).ready(function() {
 
   for(let i=0; i<activityBody.images.length; i++) {
     let col = i % 4;
-    let img = $(imgThumb).find("img").attr("src", activityBody.images[0]);
+    let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
     $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
   }
 
