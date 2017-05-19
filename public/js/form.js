@@ -319,7 +319,13 @@ function loadContent(){
   for(let i=0; i<activityBody.images.length; i++) {
     let col = i % 4;
     let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
-    $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
+
+    $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> ' +
+      '<div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> ' +
+      '<img name="image" data-id='+activityBody.images[i].split('/').pop()+' class="img-responsive rounded-2x" src='+activityBody.images[i]+' > </div> ' +
+      '</div>');
+
+    // $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
   }
 
 }
