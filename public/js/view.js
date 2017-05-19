@@ -12,7 +12,13 @@ $(document).ready(function() {
 
   console.log(activityBody);
   $("#name").text(activityBody.name);
-  $("#description").text(activityBody.name);
+  $("#description").text(activityBody.description);
+  $("#editUrl").attr("href", activityBody._id+"/edit?action=edit");
+
+
+  $("#editContent").click(function(e) {
+    editContent();
+  });
 
 
   $('#datetimepicker12').datetimepicker({
@@ -45,11 +51,74 @@ $(document).ready(function() {
 
 
   App.init();
+  initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
+
 });
 
 
 
+function initMap(title, description, latitude, longitude) {
 
+  var map = new GMaps({
+    div: '#map',
+    scrollwheel: false,
+    lat: latitude,
+    lng: longitude,
+    zoom: zoom,
+    title: title,
+    infoWindow: {
+      content: '<p>HTML Content</p>'
+    }
+
+
+  });
+
+  var marker = map.addMarker({
+    lat: latitude,
+    lng: longitude
+  });
+
+  map.drawOverlay({
+    lat: latitude,
+    lng: longitude,
+    content: '<div class="overlay"><h3>'+title+'</h3></div>'
+  });
+
+  geocodeLatLng(latitude, longitude);
+}
+
+function geocodeLatLng(lat, lng) {
+  let geocoder = new google.maps.Geocoder;
+  let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+  let address = null;
+
+
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === 'OK') {
+      if (results[1]) {
+        console.log(results[1].formatted_address);
+        address = results[1].formatted_address;
+
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+    $("#address").html("Indirizzo: "+address);
+    console.log(address);
+
+
+  });
+}
+
+
+
+
+
+function editContent() {
+  window.location = baseUrl + "activities/" + response._id +TOKEN;
+}
 
 
 

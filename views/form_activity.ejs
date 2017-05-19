@@ -1,5 +1,5 @@
 
-<!-- <% include include/head.ejs %>-->
+
 
 
 <!DOCTYPE html>
@@ -33,9 +33,9 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin">
 
     <!-- CP2020 CSS Customization -->
-    <link rel="stylesheet" href="../css/plugins/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="../css/plugins/jquery.growl.css">
-    <link rel="stylesheet" href="../css/custom_activity.css">
+    <link rel="stylesheet" href="/css/plugins/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/css/plugins/jquery.growl.css">
+    <link rel="stylesheet" href="/css/custom_activity.css">
 </head>
 
 <body>
@@ -139,18 +139,10 @@
 
                 <div class="margin-bottom-10"></div>
                 <div id="imageContainer" class="row margin-bottom-10">
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-3 col-xs-6 md-margin-bottom-20">-->
-                        <!--<img class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">-->
-                    <!--</div>-->
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
+                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
                 </div>
 
                 <!--<button class="btn-u fileinput-button">-->
@@ -197,14 +189,16 @@
                 <p>Clicca sulla mappa per indicare la posizione della tua attività</p>
                 <div id="map" class="map margin-bottom-50"></div>
                 <hr>
-                <button id="addContent" class="btn-u" type="button">Add Activity</i></button>
 
 
 
             </form>
 
             <label id="image_array_url"></label>
+            <button id="addContentButton" class="btn-u" type="button">Add Activity</button>
+            <button id="updateContentButton" class="btn-u" type="button">Update Activity</button>
 
+            <button id="test" class="btn-u" type="button">TEST</button>
 
 
             <!-- End Content -->
@@ -250,11 +244,25 @@
   var baseUrl = '<%= baseUrl %>';
   var contentsUrl = '<%= contentsUrl %>';
   var uploadmsUrl = '<%= uploadmsUrl %>';
+  var params = '<%- params %>';
+  var query = '<%- query %>';
+  var activityBody = '<%- activityBody %>';
+  activityBody = JSON.parse(activityBody);
+
+  params = JSON.parse(params);
+  query = JSON.parse(query);
+
+</script>
+
+<script id="img-thumb" type="text/x-img-snippet">
+    <div>
+     <img name="image" id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
+   </div>
 </script>
 
 <script id="cp-cats" type="text/x-cp-snippet">
     <label class="checkbox">
-        <input type="checkbox" value="" name="category">
+        <input type="checkbox" value="" name="category" class=".ibtn">
     </label>
 </script>
 
@@ -263,38 +271,37 @@
 <script src="<%- headerScript %>"></script>
 <script src="<%- footerScript %>"></script>
 
-<script type="text/javascript" src="../assets/plugins/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="../assets/plugins/jquery/jquery-migrate.min.js"></script>
-<script type="text/javascript" src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/jquery/jquery-migrate.min.js"></script>
+<script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 
 <!-- JS Implementing Plugins -->
-<script type="text/javascript" src="../assets/plugins/back-to-top.js"></script>
-<script type="text/javascript" src="../assets/plugins/smoothScroll.js"></script>
+<script type="text/javascript" src="/assets/plugins/back-to-top.js"></script>
+<script type="text/javascript" src="/assets/plugins/smoothScroll.js"></script>
 
 <!-- JS Customization -->
 <!--<script type="text/javascript" src="assets/js/custom.js"></script>-->
 <!-- JS Page Level -->
-<script type="text/javascript" src="../assets/js/app.js"></script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
 <!--<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>-->
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"  ></script>
-<script type="text/javascript" src="../assets/plugins/gmap/gmap.js"></script>
-<!--<script src="assets/js/plugins/google-map.js"></script>-->
+<script type="text/javascript" src="/assets/plugins/gmap/gmap.js"></script>
 
-<script src="../assets/plugins/respond.js"></script>
-<script src="../assets/plugins/html5shiv.js"></script>
-<script src="../assets/plugins/placeholder-IE-fixes.js"></script>
+<script src="/assets/plugins/respond.js"></script>
+<script src="/assets/plugins/html5shiv.js"></script>
+<script src="/assets/plugins/placeholder-IE-fixes.js"></script>
 
 
 <!-- CP2020 -->
-<script type="text/javascript" src="../js/plugins/handlebars-v4.0.5.js"></script>
-<script type="text/javascript" src="../js/plugins/typeahead.bundle.min.js"></script>
-<script type="text/javascript" src="../js/plugins/moment-with-locales.min.js"></script>
-<script type="text/javascript" src="../js/plugins/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="../js/plugins/jquery.growl.js"></script>
-<script src="../js/form.js"></script>      // form activity functions
-<script src="../js/plugins/bootbox.min.js"></script>
+<script type="text/javascript" src="/js/plugins/handlebars-v4.0.5.js"></script>
+<script type="text/javascript" src="/js/plugins/typeahead.bundle.min.js"></script>
+<script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquery.growl.js"></script>
+<script type="text/javascript" src="/js/form.js"></script>      // form activity functions
+<script type="text/javascript" src="/js/plugins/bootbox.min.js"></script>
 
 
 

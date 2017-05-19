@@ -28,7 +28,19 @@ router.get('/activities/new', function(req, res, next) {
     if (error) console.log("ERRR " + error);
     console.log(body);
     body = JSON.parse(body);
-    return res.render('form_activity', {baseUrl:baseUrl, uploadmsUrl:uploadmsUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
+    return res.render('form_activity', {
+      activityBody: {},
+      params: JSON.stringify(req.params),
+      query: JSON.stringify(req.query),
+      baseUrl:baseUrl,
+      uploadmsUrl:uploadmsUrl,
+      contentsUrl:contentsUrl,
+      footer:body.footer.html,
+      footerCss:body.footer.css,
+      footerScript:body.footer.js,
+      header:body.header.html,
+      headerCss:body.header.css,
+      headerScript:body.header.js});
   });
 });
 
@@ -48,10 +60,9 @@ router.get('/activities/:id', function(req, res, next) {
     request.get(config.contentsUrl+"contents/"+activity_id, function (error, response, body) {
       if (error) console.log("ERRR " + error);
       console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
-      // var activityBody =
 
       return res.render('view_activity', {
-        activityBody: body,  ///////////////////// da correggere e inserire più campi
+        activityBody: body,
         baseUrl: baseUrl,
         uploadmsUrl: uploadmsUrl,
         contentsUrl: contentsUrl,
@@ -66,6 +77,44 @@ router.get('/activities/:id', function(req, res, next) {
   });
 });
 
+
+
+router.get('/activities/:id/edit', function(req, res, next) {
+
+  var activity_id = req.params.id;
+  var action = req.params.action;
+
+  console.log("action is "+action);
+
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if (error) console.log("ERRR " + error);
+    console.log(body);
+    var commonBody = JSON.parse(body);
+
+    console.log("\n\ncalling contents/ "+config.contentsUrl+"/contents/"+activity_id);
+
+    request.get(config.contentsUrl+"contents/"+activity_id, function (error, response, body) {
+      if (error) console.log("ERRR " + error);
+      console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
+      console.log("\n\nREQ QUERY: "+JSON.stringify(req.query));
+
+      return res.render('form_activity', {
+        params: JSON.stringify(req.params),
+        query: JSON.stringify(req.query),
+        activityBody: body,
+        baseUrl: baseUrl,
+        uploadmsUrl: uploadmsUrl,
+        contentsUrl: contentsUrl,
+        footer: commonBody.footer.html,
+        footerCss: commonBody.footer.css,
+        footerScript: commonBody.footer.js,
+        header: commonBody.header.html,
+        headerCss: commonBody.header.css,
+        headerScript: commonBody.header.js
+      });
+    });
+  });
+});
 
 
 

@@ -9,10 +9,19 @@ let zoom = 12;
 
 images_array_fd = [];
 img_array_url = [];
+action = 'new';
 
 $(document).ready(function() {
 
-  $("#addContent").click(function(e) {
+  if (!$.isEmptyObject(query)) {
+    if (query.hasOwnProperty('action')) {
+      action = query.action;
+    }
+  }
+
+  console.log("action is ", action);
+
+  $("#addContentButton").click(function(e) {
     addContent();
   });
 
@@ -29,12 +38,20 @@ $(document).ready(function() {
     useCurrent : true
   });
 
+  $("#updateContentButton").hide();
+  $("#addContentButton").show();
 
+  if (action === 'edit') {
+    loadContent();
+  }
 
   App.init();
-  loadCat();
-  initMap();
+  loadCat(action);
+  initMap(action);
+
+
 });
+
 
 (function(global) {
   global.images_array_URL = [];
@@ -52,11 +69,9 @@ function removePicture(elem){
           images_array_fd.splice(i, 1);
         }
     }
-
     console.log(JSON.stringify(images_array_fd));
 
   });
-
 }
 
 function loadImagePreview(input) {
@@ -64,11 +79,14 @@ function loadImagePreview(input) {
   if (input.files && input.files[0]) {
     let reader = new FileReader();
     reader.onload = function(e) {
-      if ($('#previewHolder').length) {$('#imageContainer').empty();}  // remove temp images
+
+      // if ($('#previewHolder').length && action !== 'edit') {
+      //   $('#imageContainer').empty();
+      // }  // remove temp images
 
       let _id = "img-"+input.files[0].name.replace(/\s/g,'');
       let objectURL = URL.createObjectURL(input.files[0]);
-      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
+      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img name="image" data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
 
       let file = input.files[0];
       let formData = new FormData();
@@ -89,7 +107,13 @@ function loadImagePreview(input) {
 
 
 
-function initMap() {
+function initMap(action) {
+
+
+  if (action === 'edit'){
+    latitude = activityBody.lat;
+    longitude = activityBody.lon;
+  }
 
     var map = new GMaps({
       div: '#map',
@@ -141,7 +165,7 @@ function geocodeLatLng(lat, lng) {
 
 
 
-function loadCat() {
+function loadCat(action) {
 
   $('#myModal-categories').modal('show');
   $("#catDrop div").empty();
@@ -154,10 +178,15 @@ function loadCat() {
 
       for(var i=0; i<cats.length; i++) {
         var col = i%4;
-
         $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
       }
-    })
+
+      if (i === cats.length && action === 'edit')
+        $.each(activityBody.category, function(i, val){
+          $("input[value='" + val + "']").prop('checked', true);
+        });
+    });
+
 }
 
 
@@ -171,9 +200,8 @@ function getUploadmsImageURL(image, cb) {
     contentType: false,
     type: 'POST',
     success: function(data){
-      console.log("success");
+      console.log("success uploading image");
       cb(uploadmsUrl+"file/"+data.filecode);
-      console.log("added url: "+uploadmsUrl+"file/"+data.filecode);
     },
     error: function(xhr, status)
     {
@@ -225,6 +253,7 @@ function addContent() {
 
 
   if (images_array_fd.length > 0 ) {
+
     images_array_fd.forEach(function (fd_img) {
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);
@@ -262,4 +291,128 @@ function storeContentToContentms(contentData) {
       bootbox.dialog({title: 'Warning', message: "Error adding content "});
     }
   });
+}
+
+
+
+
+
+function loadContent(){
+  $("#name").val(activityBody.name);
+  $("#description").val(activityBody.description);
+
+  $("#updateContentButton").show();
+  $("#addContentButton").hide();
+
+  $("#updateContentButton").text("Update Activity");
+  $("#updateContentButton").click(function(e) {
+     updateContent();
+  });
+
+  $("#test").click(function(e) {
+    updateContent();
+  });
+
+  var imgThumb = $("#img-thumb").html();
+  var imageContainer = document.getElementById("imageContainer");
+
+  for(let i=0; i<activityBody.images.length; i++) {
+    let col = i % 4;
+    let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
+    $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
+  }
+
+}
+
+
+
+
+function updateContent(){
+
+  // PUT in /contents/:id
+
+  var name = $('#name').val();
+  var description = $('#description').val();
+  var published = true;
+  var town = $('#address').innerHTML;
+  var [lat, lng] = [$('#latbox').text(), $('#lngbox').text()];
+  var category_array = $('input[name="category"]:checked').map(function () {
+    return this.value;
+  }).get();
+
+  var contentData = {
+    name: name,
+    type: "test_activity",
+    description: description,
+    published: true,
+    town: town,
+    category: category_array.slice(),
+    images:[],
+    lat: lat,
+    lon: lng
+  };
+
+  contentData.images = $('img[name="image"]').map(function () {
+    if (!this.src.match("^blob"))
+      return this.src;
+  }).get();
+
+  var oldImagesLength = contentData.images.length;
+
+  console.log("name: ", name);
+  console.log("description: ", description);
+  console.log("published: ", published);
+  console.log("town: ", town);
+  console.log("lat, lon: ", [lat, lng]);
+  console.log("category_array", category_array);
+  console.log("contentData.images", contentData.images);
+
+
+  if (images_array_fd.length > 0 ) {
+    console.log("images_array_fd.length > 0");
+
+    images_array_fd.forEach(function (fd_img) {
+      getUploadmsImageURL(fd_img.formData, function (img_url) {
+        contentData.images.push(img_url);
+        console.log("contentData: ", JSON.stringify(contentData));
+        console.log("contentData.images.length: ", contentData.images.length);
+        console.log("images_array_fd.length: ", images_array_fd.length);
+        console.log("oldImagesLength: ", oldImagesLength);
+        console.log("(contentData.images.length - images_array_fd.length) === oldImagesLength: ", (contentData.images.length - images_array_fd.length) === oldImagesLength);
+
+
+        if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte
+          console.log("contentData: ", JSON.stringify(contentData));
+          updateContentToContentms(contentData);
+        }
+      });
+    });
+  } else {
+    console.log("\n\n\n no images to upload");
+    updateContentToContentms(contentData);
+  }
+
+}
+
+function updateContentToContentms(contentData){
+  console.log("\n\n\n updateContentToContentms");
+
+  $.ajax({
+    url: contentsUrl + "contents/" + activityBody._id + TOKEN,
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(contentData),            //stringify is important
+    success: function (response) {
+      console.log("RESPONSE DA put su contents: " + JSON.stringify(response));
+      //go to the content page:
+      bootbox.dialog({title: 'Success', message: "Content Updated " + JSON.stringify(response)});
+      window.location = baseUrl + "activities/" + response._id +TOKEN;
+    },
+    error: function (response) {
+      console.log("ERROR DA put su contents ");
+      bootbox.dialog({title: 'Warning', message: "Error updating content "});
+    }
+  });
+
+
 }
