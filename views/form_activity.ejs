@@ -214,6 +214,7 @@
                     </div>
                 </div>
                 <hr>
+                <button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button>
                 <hr>
                 <div class="form-group">
                     <div class="row">
@@ -242,7 +243,8 @@
   var uploadmsUrl = '<%= uploadmsUrl %>';
   var params = '<%- params %>';
   var query = '<%- query %>';
-
+  var activityBody = '<%- activityBody %>';
+  activityBody = JSON.parse(activityBody);
 
   params = JSON.parse(params);
   query = JSON.parse(query);
