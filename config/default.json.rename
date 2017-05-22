@@ -11,7 +11,7 @@
     "contentUIProtocol":"http",
     "contentUIHost":"your_content_UI_host",
     "contentUIPort":"3052",
-    "contentUIApiGwBaseUrl":"",s
+    "contentUIApiGwBaseUrl":"",
     "commonUIUrl":"your_commonUI_url"
 
   },
