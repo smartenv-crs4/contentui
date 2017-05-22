@@ -6,27 +6,25 @@
     "authPort":"3000",
     "decodedTokenFieldName": "contentms",
     "auth_token":"your_auth_service_token",
-    "contentsUrl":"http://localhost:3001/",
-    "contentuiProtocol":"http",
-    "contentuiHost":"localhost",
-    "contentuiPort":"3000",
-    "contentuiApiGwBaseUrl":"",
-    "contentuiApiVersion":""
-    "uploadmsUrl":""
+    "uploadUrl":"your_upload_service_url",
+    "contentUrl":"your_content_service_url",
+    "contentUIProtocol":"http",
+    "contentUIHost":"your_content_UI_host",
+    "contentUIPort":"3052",
+    "contentUIApiGwBaseUrl":""
   },
   "dev": {
-      "enableCors":true,
-      "authProtocol":"http",
-      "authHost":"your_auth_service_host",
-      "authPort":"3000",
-      "decodedTokenFieldName": "contentms",
-      "auth_token":"your_auth_service_token",
-      "contentsUrl":"http://localhost:3001/",
-      "contentuiProtocol":"http",
-      "contentuiHost":"localhost",
-      "contentuiPort":"3000",
-      "contentuiApiGwBaseUrl":"",
-      "contentuiApiVersion":""
-      "uploadmsUrl":""
+    "enableCors":true,
+    "authProtocol":"http",
+    "authHost":"your_auth_service_host",
+    "authPort":"3000",
+    "decodedTokenFieldName": "contentms",
+    "auth_token":"your_auth_service_token",
+    "uploadUrl":"your_upload_service_url",
+    "contentUrl":"your_content_service_url",
+    "contentUIProtocol":"http",
+    "contentUIHost":"your_content_UI_host",
+    "contentUIPort":"3052",
+    "contentUIApiGwBaseUrl":""
     }
 }

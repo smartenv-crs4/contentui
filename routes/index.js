@@ -10,16 +10,15 @@ var magic = require('stream-mmmagic');
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
 
 
-let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + config.contentuiPort 
-          + ((config.contentuiApiGwBaseUrl && config.contentuiApiGwBaseUrl.length > 0) ? config.contentuiApiGwBaseUrl : '')
-          + ((config.contentuiApiVersion && config.contentuiApiVersion.length > 0) ? "/" + config.contentuiApiVersion : '')
+let baseUrl = config.contentUIProtocol + "://" + config.contentUIHost + ":" + config.contentUIPort
+          + ((config.contentUIApiGwBaseUrl && config.contentUIApiGwBaseUrl.length > 0) ? config.contentUIApiGwBaseUrl : '')
           + '/';
 
-let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/');
-let uploadmsUrl = config.uploadmsUrl + (config.uploadmsUrl.endsWith('/') ? '' : '/');
+let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
+let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 
 router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentsUrl:contentsUrl});
+  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl});
 });
 
 
@@ -28,7 +27,19 @@ router.get('/activities/new', function(req, res, next) {
     if (error) console.log("ERRR " + error);
     console.log(body);
     body = JSON.parse(body);
-    return res.render('form_activity', {baseUrl:baseUrl, uploadmsUrl:uploadmsUrl, contentsUrl:contentsUrl, footer:body.footer.html,footerCss:body.footer.css,footerScript:body.footer.js,header:body.header.html,headerCss:body.header.css,headerScript:body.header.js});
+    return res.render('form_activity', {
+      activityBody: {},
+      params: JSON.stringify(req.params),
+      query: JSON.stringify(req.query),
+      baseUrl:baseUrl,
+      uploadUrl:uploadUrl,
+      contentUrl:contentUrl,
+      footer:body.footer.html,
+      footerCss:body.footer.css,
+      footerScript:body.footer.js,
+      header:body.header.html,
+      headerCss:body.header.css,
+      headerScript:body.header.js});
   });
 });
 
@@ -43,15 +54,53 @@ router.get('/activities/:id', function(req, res, next) {
     console.log(body);
     var commonBody = JSON.parse(body);
 
+    console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
+
+    request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
+      if (error) console.log("ERRR " + error);
+      console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
+
+      return res.render('view_activity', {
+        activityBody: body,
+        baseUrl: baseUrl,
+        uploadUrl: uploadUrl,
+        contentUrl: contentUrl,
+        footer: commonBody.footer.html,
+        footerCss: commonBody.footer.css,
+        footerScript: commonBody.footer.js,
+        header: commonBody.header.html,
+        headerCss: commonBody.header.css,
+        headerScript: commonBody.header.js
+      });
+    });
+  });
+});
+
+
+
+router.get('/activities/:id/edit', function(req, res, next) {
+
+  var activity_id = req.params.id;
+  var action = req.params.action;
+
+  console.log("action is "+action);
+
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if (error) console.log("ERRR " + error);
+    console.log(body);
+    var commonBody = JSON.parse(body);
+
     console.log("\n\ncalling contents/ "+config.contentsUrl+"/contents/"+activity_id);
 
     request.get(config.contentsUrl+"contents/"+activity_id, function (error, response, body) {
       if (error) console.log("ERRR " + error);
       console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
-      // var activityBody =
+      console.log("\n\nREQ QUERY: "+JSON.stringify(req.query));
 
-      return res.render('view_activity', {
-        activityBody: body,  ///////////////////// da correggere e inserire più campi
+      return res.render('form_activity', {
+        params: JSON.stringify(req.params),
+        query: JSON.stringify(req.query),
+        activityBody: body,
         baseUrl: baseUrl,
         uploadmsUrl: uploadmsUrl,
         contentsUrl: contentsUrl,
@@ -69,7 +118,6 @@ router.get('/activities/:id', function(req, res, next) {
 
 
 
-
 /* TODO Search in POST perche' non cacheabile? */
 router.get('/search', function(req, res, next) {
   let text = req.query.q;
@@ -78,7 +126,7 @@ router.get('/search', function(req, res, next) {
 
   let options = {
     method:'GET',
-    uri:contentsUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
+    uri:contentUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
     json:true
   }
   rp(options)
@@ -115,7 +163,7 @@ router.post('/actions/uploadimage', function(req, res) {
 
 
     var options ={
-      url: uploadmsUrl+"file?access_token="+USER_TOKEN,
+      url: uploadUrl+"file?access_token="+USER_TOKEN,
       method: "POST",
       formData:formData,
       preambleCRLF: true,
@@ -129,7 +177,7 @@ router.post('/actions/uploadimage', function(req, res) {
     request.post(options,function(err,response,body){
       console.log("body is: "+body);
 
-      if(!body.hasOwnProperty('filecode'))  // this is an upload error
+      if(!JSON.parse(body).hasOwnProperty('filecode'))  // this is an upload error
         return res.status(500).send({error_code:body.statusCode, error:"Internalerror", error_message:body.message});
 
       res.status(201).send(JSON.parse(body));
@@ -198,6 +246,36 @@ function readStream(allowedMime,req,callback){
   form.parse(req);
 
 };
+
+
+
+
+
+// promotions
+
+router.get('/activities/:id_content/promotions/new', function(req, res, next) {
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if (error) console.log("ERRR " + error);
+    console.log(body);
+    body = JSON.parse(body);
+    return res.render('form_promotion', {
+      activityBody: {},
+      params: JSON.stringify(req.params),
+      query: JSON.stringify(req.query),
+      baseUrl:baseUrl,
+      uploadmsUrl:uploadmsUrl,
+      contentsUrl:contentsUrl,
+      footer:body.footer.html,
+      footerCss:body.footer.css,
+      footerScript:body.footer.js,
+      header:body.header.html,
+      headerCss:body.header.css,
+      headerScript:body.header.js});
+  });
+
+
+});
+
 
 
 
