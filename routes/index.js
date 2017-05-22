@@ -10,12 +10,15 @@ var magic = require('stream-mmmagic');
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
 
 
-let baseUrl = config.contentUIProtocol + "://" + config.contentUIHost + ":" + config.contentUIPort
+let baseUrl = config.contentuiUIProtocol + "://" + config.contentUIHost + ":" + config.contentUIPort
           + ((config.contentUIApiGwBaseUrl && config.contentUIApiGwBaseUrl.length > 0) ? config.contentUIApiGwBaseUrl : '')
           + '/';
 
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
+
+
+console.log("contentUrl : ", contentUrl);
 
 router.get('/', function(req, res, next) {
   res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl});
@@ -102,8 +105,8 @@ router.get('/activities/:id/edit', function(req, res, next) {
         query: JSON.stringify(req.query),
         activityBody: body,
         baseUrl: baseUrl,
-        uploadmsUrl: uploadmsUrl,
-        contentsUrl: contentsUrl,
+        uploadUrl:uploadUrl,
+        contentUrl: contentUrl,
         footer: commonBody.footer.html,
         footerCss: commonBody.footer.css,
         footerScript: commonBody.footer.js,
