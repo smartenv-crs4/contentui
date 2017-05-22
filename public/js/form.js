@@ -170,7 +170,7 @@ function loadCat(action) {
 
   $('#myModal-categories').modal('show');
   $("#catDrop div").empty();
-  $.ajax(contentsUrl + "categories/")
+  $.ajax(contentUrl + "categories/")
     .done(function(data) {
       var cats = data.categories;
       var ctpl = $("#cp-cats").html();
@@ -202,7 +202,7 @@ function getUploadmsImageURL(image, cb) {
     type: 'POST',
     success: function(data){
       console.log("success uploading image");
-      cb(uploadmsUrl+"file/"+data.filecode);
+      cb(uploadUrl+"file/"+data.filecode);
     },
     error: function(xhr, status)
     {
@@ -277,7 +277,7 @@ function storeContentToContentms(contentData) {
   console.log("\n\n\n storeContentToContentms");
 
   $.ajax({
-    url: contentsUrl + "contents" + TOKEN,
+    url: contentUrl + "contents" + TOKEN,
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify(contentData),            //stringify is important

@@ -10,16 +10,15 @@ var magic = require('stream-mmmagic');
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
 
 
-let baseUrl = config.contentuiProtocol + "://" + config.contentuiHost + ":" + config.contentuiPort 
-          + ((config.contentuiApiGwBaseUrl && config.contentuiApiGwBaseUrl.length > 0) ? config.contentuiApiGwBaseUrl : '')
-          + ((config.contentuiApiVersion && config.contentuiApiVersion.length > 0) ? "/" + config.contentuiApiVersion : '')
+let baseUrl = config.contentUIProtocol + "://" + config.contentUIHost + ":" + config.contentUIPort
+          + ((config.contentUIApiGwBaseUrl && config.contentUIApiGwBaseUrl.length > 0) ? config.contentUIApiGwBaseUrl : '')
           + '/';
 
-let contentsUrl = config.contentsUrl + (config.contentsUrl.endsWith('/') ? '' : '/');
-let uploadmsUrl = config.uploadmsUrl + (config.uploadmsUrl.endsWith('/') ? '' : '/');
+let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
+let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 
 router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentsUrl:contentsUrl});
+  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl});
 });
 
 
@@ -33,8 +32,8 @@ router.get('/activities/new', function(req, res, next) {
       params: JSON.stringify(req.params),
       query: JSON.stringify(req.query),
       baseUrl:baseUrl,
-      uploadmsUrl:uploadmsUrl,
-      contentsUrl:contentsUrl,
+      uploadUrl:uploadUrl,
+      contentUrl:contentUrl,
       footer:body.footer.html,
       footerCss:body.footer.css,
       footerScript:body.footer.js,
@@ -55,17 +54,17 @@ router.get('/activities/:id', function(req, res, next) {
     console.log(body);
     var commonBody = JSON.parse(body);
 
-    console.log("\n\ncalling contents/ "+config.contentsUrl+"/contents/"+activity_id);
+    console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
 
-    request.get(config.contentsUrl+"contents/"+activity_id, function (error, response, body) {
+    request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
       if (error) console.log("ERRR " + error);
       console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
 
       return res.render('view_activity', {
         activityBody: body,
         baseUrl: baseUrl,
-        uploadmsUrl: uploadmsUrl,
-        contentsUrl: contentsUrl,
+        uploadUrl: uploadUrl,
+        contentUrl: contentUrl,
         footer: commonBody.footer.html,
         footerCss: commonBody.footer.css,
         footerScript: commonBody.footer.js,
@@ -127,7 +126,7 @@ router.get('/search', function(req, res, next) {
 
   let options = {
     method:'GET',
-    uri:contentsUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
+    uri:contentUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
     json:true
   }
   rp(options)
@@ -164,7 +163,7 @@ router.post('/actions/uploadimage', function(req, res) {
 
 
     var options ={
-      url: uploadmsUrl+"file?access_token="+USER_TOKEN,
+      url: uploadUrl+"file?access_token="+USER_TOKEN,
       method: "POST",
       formData:formData,
       preambleCRLF: true,
