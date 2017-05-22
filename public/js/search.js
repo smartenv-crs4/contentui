@@ -215,7 +215,7 @@ var substringMatcher = function(strs) {
 
 function loadCat() {    
     $("#catDrop div").empty();
-    $.ajax(contentsUrl + "categories/")
+    $.ajax(contentUrl + "categories/")
 	.done(function(data) {
 	    var cats = data.categories;
         var ctpl = $("#cp-cats").html();

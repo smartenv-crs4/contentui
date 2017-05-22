@@ -41,7 +41,7 @@ $(document).ready(function() {
   var catBox = $("#cp-cats").html();
 
   for(let i=0; i<activityBody.category.length; i++) {
-     $.ajax(contentsUrl + "categories/"+activityBody.category[i]+TOKEN)
+     $.ajax(contentUrl + "categories/"+activityBody.category[i]+TOKEN)
        .done(function(cat) {
         var col = i%4;
         $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(catBox).append(cat.name));
