@@ -221,9 +221,50 @@ function loadCat() {
         var ctpl = $("#cp-cats").html();
         for(var i=0; i<cats.length; i++) {
             var col = i%3;            
-            $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name);
+            $("#catDrop div[data-cp-cbox-pos='" + col + "\']")
+                .append($(ctpl).find("input").attr("value", cats[i]._id))
+                .append(" " + cats[i].name + '<br>');
         }
+
+        $("#catDrop :checkbox").change(function(e) {
+            var cat = this.getAttribute("value");
+            var evcats = toDict(cats, '_id');
+
+            if(!_filters.category) _filters.category = [];
+
+            if(this.checked)
+                _filters.category.push(cat);
+            else {
+                var pos = _filters.category.indexOf(cat);
+                if(pos > -1) _filters.category.splice(pos, 1);
+            }
+            if(_filters.category && _filters.category.length > 0) {
+                var catStr = '';
+                var subCats = _filters.category.slice(0, 2)
+                for(var c in subCats) {
+                    catStr += (catStr.length > 0 ? ', ' : '') + evcats[subCats[c]].name
+                }
+                if(catStr.length > 0 && _filters.category.length > subCats.length)
+                    catStr += '... +' + (_filters.category.length - subCats.length)
+                $("#advCat").html(catStr);
+            }
+            else $("#advCat").empty();
+
+            console.log(_filters.category)
+        });
 	})
+}
+
+
+function toDict(objArray, prop) {
+    var retObj = {};
+    for(var i in objArray) {
+        var o = objArray[i];
+        if(o.hasOwnProperty(prop)) {
+            retObj[o[prop]] = o;
+        }
+    }
+    return retObj;
 }
 
 
