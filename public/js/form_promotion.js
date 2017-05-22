@@ -13,16 +13,20 @@ action = 'new';
 
 $(document).ready(function() {
 
-  if (!$.isEmptyObject(query)) {
-    if (query.hasOwnProperty('action')) {
-      action = query.action;
-    }
-  }
+  showToolDates();
 
-  console.log("action is ", action);
 
-  $("#addContentButton").click(function(e) {
-    addContent();
+  $.ajax(contentsUrl + "contents/"+params.id_content+TOKEN)
+    .done(function(activityBody) {
+      console.log("activity is: "+activityBody);
+
+      $("#name").text(activityBody.name);
+
+    });
+
+
+  $("#addPromotionButton").click(function(e) {
+    addPromotion();
   });
 
 
@@ -32,26 +36,65 @@ $(document).ready(function() {
 
 
 
-  $('#datetimepicker12').datetimepicker({
-    inline: true,
-    format: 'DD/MM/YYYY',
-    allowInputToggle: true,
-    useCurrent : true
-  });
 
-  $("#updateContentButton").hide();
-  $("#addContentButton").show();
+  $("#updatePromotionButton").hide();
+  $("#addPromotionButton").show();
 
   if (action === 'edit') {
     loadContent();
   }
 
   App.init();
-  loadCat(action);
   initMap(action);
 
 
 });
+
+
+
+function showToolDates() {
+  var opt = {
+    format: 'DD/MM/YYYY',
+    allowInputToggle: true,
+    ignoreReadonly: true
+  }
+  opt.useCurrent = true;
+  $('#dtp1').datetimepicker(opt);
+  opt.useCurrent = false;
+  $('#dtp2').datetimepicker(opt);
+
+  $("#dtp1").on("dp.change", function (e) {
+    console.log($('#dtp1').data("DateTimePicker").date());
+  });
+  $("#dtp2").on("dp.change", function (e) {
+    $('#dtp1').data("DateTimePicker").maxDate(e.date);
+  });
+
+  $('#intdates .cp-ok').click(function() {
+    var start = $("#dtp1").data("DateTimePicker").date();
+    var stop = $("#dtp2").data("DateTimePicker").date();
+    if(start && stop) {
+      setFilterDates(start.toDate(), stop.toDate());
+    }
+    else $.growl.error({message:"Specificare una data di inizio e una di fine"});
+  })
+
+  $('#intdates .cp-undo').click(function() {
+    //TODO reimpostare
+  })
+}
+
+
+function setFilterDates(start, stop) {
+  if(start && stop) {
+    var startstr    = moment(start).format("D/MM/YYYY");
+    var stopstr     = moment(stop).format("D/MM/YYYY");
+    var intervalstr = (startstr != stopstr) ? startstr + " - " + stopstr : startstr;
+    $("#advDate").text(intervalstr);
+    _filters.sdate = start;
+    _filters.edate = stop;
+  }
+}
 
 
 (function(global) {
@@ -166,30 +209,6 @@ function geocodeLatLng(lat, lng) {
 
 
 
-function loadCat(action) {
-
-  $('#myModal-categories').modal('show');
-  $("#catDrop div").empty();
-  $.ajax(contentsUrl + "categories/")
-    .done(function(data) {
-      var cats = data.categories;
-      var ctpl = $("#cp-cats").html();
-
-      console.log(cats.length);
-
-      for(var i=0; i<cats.length; i++) {
-        var col = i%4;
-        $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
-      }
-
-      if (i === cats.length && action === 'edit')
-        $.each(activityBody.category, function(i, val){
-          $("input[value='" + val + "']").prop('checked', true);
-        });
-    });
-
-}
-
 
 
 //---------- POST to actions/uploadprofileimage that goes to uploadms
@@ -220,36 +239,42 @@ function getUploadmsImageURL(image, cb) {
 }
 
 
-function addContent() {
+function addPromotion() {
 
-  var name = $('#name').val();
+  var name_promotion = $('#name_promotion').val();
   var description = $('#description').val();
-  var published = true;
-  var town = $('#address').innerHTML;
   var [lat, lng] = [$('#latbox').text(), $('#lngbox').text()];
-  var category_array = $('input[name="category"]:checked').map(function () {
-    return this.value;
-  }).get();
+  var price = $('#price').val();
+  var type = $('#type').val();
+
+  var date_start =  $('#datetimepicker1').val();
+  var date_end = $('#datetimepicker2').val();
+
   var img_array_url = [];
 
-  console.log("name: ", name);
+  console.log("name_promotion: ", name_promotion);
   console.log("description: ", description);
-  console.log("published: ", published);
-  console.log("town: ", town);
-  console.log("lat, lon: ", [lat, lng]);
-  console.log("category_array", category_array);
+  console.log("price: ", price);
+  console.log("startDate: ", date_start);
+  console.log("endDate: ", date_end);
 
-  var contentData = {
-    name: name,
-    type: "eventa_promotions",
+  console.log("lat, lon: ", [lat, lng]);
+
+
+  var promotionData = {
+    name: name_promotion,
     description: description,
-    published: true,
-    town: town,
-    category: category_array.slice(),
+    price: price,
+    startDate: date_start,
+
+    endDate: date_end,
+    type: type,
     images: [],
-    lat: lat,
-    lon: lng
+    position: [lat, lng]
   };
+
+
+  console.log(promotionData);
 
 
 
@@ -261,16 +286,18 @@ function addContent() {
         console.log("url is: ", img_url);
         if (contentData.images.length === images_array_fd.length) {
           console.log("contentData: ", JSON.stringify(contentData));
-          storeContentToContentms(contentData);
+          //storeContentToContentms(contentData);
         }
       });
     });
   } else {
     console.log("\n\n\n no images to upload");
-    storeContentToContentms(contentData);
+    //storeContentToContentms(contentData);
   }
 
 }
+
+
 
 function storeContentToContentms(contentData) {
 

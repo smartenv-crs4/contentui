@@ -15,18 +15,17 @@ $(document).ready(function() {
   $("#description").text(activityBody.description);
   $("#editUrl").attr("href", activityBody._id+"/edit?action=edit");
 
-
-  $("#editContent").click(function(e) {
-    editContent();
-  });
-
-
   $('#datetimepicker12').datetimepicker({
     inline: true,
     format: 'DD/MM/YYYY',
     allowInputToggle: true,
     useCurrent : true
   });
+
+  $('#addPromotionButton').click(function(e) {
+    addPromotion();
+  });
+
 
 
   var imgThumb = $("#img-thumb").html();
@@ -115,13 +114,6 @@ function geocodeLatLng(lat, lng) {
 
 
 
-
-function editContent() {
-  window.location = baseUrl + "activities/" + response._id +TOKEN;
+function addPromotion(){
+  window.location = baseUrl + "activities/" + activityBody._id + '/promotions/new'+TOKEN;
 }
-
-
-
-
-
-

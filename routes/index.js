@@ -250,6 +250,36 @@ function readStream(allowedMime,req,callback){
 
 
 
+
+
+// promotions
+
+router.get('/activities/:id_content/promotions/new', function(req, res, next) {
+  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    if (error) console.log("ERRR " + error);
+    console.log(body);
+    body = JSON.parse(body);
+    return res.render('form_promotion', {
+      activityBody: {},
+      params: JSON.stringify(req.params),
+      query: JSON.stringify(req.query),
+      baseUrl:baseUrl,
+      uploadmsUrl:uploadmsUrl,
+      contentsUrl:contentsUrl,
+      footer:body.footer.html,
+      footerCss:body.footer.css,
+      footerScript:body.footer.js,
+      header:body.header.html,
+      headerCss:body.header.css,
+      headerScript:body.header.js});
+  });
+
+
+});
+
+
+
+
 module.exports = router;
 
 /*
