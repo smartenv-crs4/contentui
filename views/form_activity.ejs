@@ -242,6 +242,10 @@
   var uploadUrl = '<%= uploadUrl %>';
   var params = '<%- params %>';
   var query = '<%- query %>';
+  var activityBody = '<%- activityBody %>';
+  activityBody = JSON.parse(activityBody);
+
+  console.log(activityBody);
 
   params = JSON.parse(params);
   query = JSON.parse(query);
