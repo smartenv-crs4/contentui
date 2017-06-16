@@ -275,11 +275,19 @@ router.get('/activities/:id_content/promotions/new', function(req, res, next) {
       headerCss:body.header.css,
       headerScript:body.header.js});
   });
-
-
 });
 
 
+/* GET environment info page. */
+router.get('/env', function(req, res) {
+    var env;
+    if (process.env['NODE_ENV'] === 'dev')
+        env='dev';
+    else
+        env='production';
+
+    res.status(200).send({env:env});
+});
 
 
 module.exports = router;
