@@ -116,7 +116,7 @@ function showToolDates() {
     })
 
     $('#intdates .cp-undo').click(function() {
-        //TODO reimpostare
+        setFilterDates();
     })
 }
 
@@ -143,7 +143,9 @@ function showToolShips() {
                 else $.growl.warning({ message: "Nessun arrivo previsto per la nave selezionata" })
                 setFilterDates(start, stop);
             });
-        })
+        });
+
+        $
     });
 }
 
@@ -155,6 +157,13 @@ function setFilterDates(start, stop) {
         $("#advDate").text(intervalstr);
         _filters.sdate = moment(start).format("YYYY-MM-DD");
         _filters.edate = moment(stop).format("YYYY-MM-DD");
+    }
+    else if(!(start && stop)) {
+        $("#advDate").text('');
+        _filters.sdate = undefined;
+        _filters.edate = undefined;
+        $('#dtp1').data("DateTimePicker").clear();
+        $('#dtp2').data("DateTimePicker").clear();
     }
 }
 
