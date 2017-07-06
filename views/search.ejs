@@ -125,7 +125,7 @@
 											        	<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i> Imposta</button>
 											        	<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i> Reset</button>
 											        </div>
-												</div>												
+												</div>
 											</div>
 										</div>
 									</div>
@@ -171,7 +171,9 @@
 	<script type="text/javascript">
 		var baseUrl = '<%= baseUrl %>';
 		var contentUrl = '<%= contentUrl %>';
+		var _scheduleShip = '<%= scheduleUrl %>';
 	</script>
+
 	<!-- JS Global Compulsory -->
 	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
@@ -217,26 +219,13 @@
 	<!-- Search result item -->
 	<script id="entry-template" type="text/x-handlebars-template">
 		<div class="inner-results">
-			<h3><a href="#{{contentid}}">{{title}}</a></h3>
-			<ul class="list-inline up-ul">
-				<li class="btn-group">
-					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
-						More<i class="fa fa-caret-down margin-left-5"></i>
-						<span class="sr-only">Toggle Dropdown</span>
-					</button>
-					<ul role="menu" class="dropdown-menu">
-						<li><a href="#">Share</a></li>
-						<li><a href="#">Similar</a></li>
-						<li><a href="#">Advanced search</a></li>
-					</ul>
-				</li>
-				<li><a href="#">Admin</a></li>
-			</ul>
+			<h3><a href="{{link}}">{{title}}</a></h3>
 			<div class="overflow-h">
 				<img src="assets/img/testimonials/img1.jpg" alt="">
 				<div class="overflow-a">
 					<p>{{description}}</p>
 					<ul class="list-inline down-ul">
+						<!--
 						<li>
 							<ul class="list-inline star-vote">
 								<li><i class="color-green fa fa-star"></i></li>
@@ -246,8 +235,19 @@
 								<li><i class="color-green fa fa-star-half-o"></i></li>
 							</ul>
 						</li>
-						<li>11 months ago - By WrapBootstrap</li>
-						<li>2,092,675 like</li>
+						-->
+						{{#if startDate}}
+							<li>Valido dal {{startDate}}
+						{{/if}}
+						{{#if endDate}}
+							 al {{endDate}}
+						{{else}}
+							{{#if startDate}}
+								</li>
+							{{/if}}
+						{{/if}}
+						<li>Inserito il {{pubDate}}</li>
+						<li>{{likes}} like</li>
 					</ul>
 				</div>
 			</div>

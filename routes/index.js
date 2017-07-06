@@ -11,12 +11,13 @@ let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiO
 let baseUrl = config.contentUIUrl + '/';
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
-
+let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
 
 console.log("contentUrl : ", contentUrl);
 
+
 router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl});
+  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl, scheduleUrl:scheduleUrl});
 });
 
 
@@ -40,7 +41,6 @@ router.get('/activities/new', function(req, res, next) {
       headerScript:body.header.js});
   });
 });
-
 
 
 router.get('/activities/:id', function(req, res, next) {
@@ -117,25 +117,10 @@ router.get('/activities/:id/edit', function(req, res, next) {
 
 
 /* TODO Search in POST perche' non cacheabile? */
-router.get('/search', function(req, res, next) {
-  let text = req.query.q;
-  let sdate = req.query.sdate;
-  let edate = req.query.edate;
-
-  let options = {
-    method:'GET',
-    uri:contentUrl + 'contents?text=' + text + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : ''), //TODO cercare promotion by default
-    json:true
-  }
-  rp(options)
-  .then((results) => {
-    res.json(results);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-});
-
+//////DINO/////
+router.get('/search',   require('./search').search);
+router.get('/likes',    require('./search').likes);
+///////////////
 
 
 
@@ -242,15 +227,11 @@ function readStream(allowedMime,req,callback){
     }
   });
   form.parse(req);
-
 };
 
 
 
-
-
 // promotions
-
 router.get('/activities/:id_content/promotions/new', function(req, res, next) {
   request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
     if (error) console.log("ERRR " + error);

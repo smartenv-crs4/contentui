@@ -3,7 +3,8 @@ var _searchTemplate = undefined;
 var _filters = {
     sdate: undefined,
     edate: undefined,
-    category: undefined
+    category: undefined,
+    type: 'promo' //TODO tick per ricerca contenuti in adv panel
 };
 
 $(document).ready(function() {
@@ -73,13 +74,11 @@ function initMap() {
         min: 500,
         max: 80000,
         step:500,
-        slide: function(event, ui)
-        {
-        $('#slider1-value-rounded').text(ui.value);
+        slide: function(event, ui) {
+            $('#slider1-value-rounded').text(ui.value);
         }
     });
 }
-
 
 
 function resetFilters() {
@@ -154,14 +153,14 @@ function setFilterDates(start, stop) {
         var stopstr     = moment(stop).format("D/MM/YYYY");
         var intervalstr = (startstr != stopstr) ? startstr + " - " + stopstr : startstr;
         $("#advDate").text(intervalstr);
-        _filters.sdate = start;
-        _filters.edate = stop;
+        _filters.sdate = moment(start).format("YYYY-MM-DD");
+        _filters.edate = moment(stop).format("YYYY-MM-DD");
     }
 }
 
 function getShips(cb) {
     $.ajax({
-        url: "http://smartenv.crs4.it/schedule/ships",
+        url: _scheduleShip + "ships",
         cache: false,
         type: 'GET',
         success: function(data){
@@ -184,7 +183,7 @@ function getLastSchedule(name, company, cb) {
     qs += "&limit=1&ord=asc"
 
     $.ajax({
-        url: "http://smartenv.crs4.it/schedule/schedule" + qs,
+        url:  _scheduleShip + "schedule" + qs,
         cache: false,
         type: 'GET',
         success: function(data){
@@ -249,8 +248,6 @@ function loadCat() {
                 $("#advCat").html(catStr);
             }
             else $("#advCat").empty();
-
-            console.log(_filters.category)
         });
 	})
 }
@@ -267,9 +264,10 @@ function toDict(objArray, prop) {
     return retObj;
 }
 
-
+// /promotion/:id
 function search() {
-    var q = $("#qt").val();
+    var dateFmt = 'DD/MM/YYYY';
+    var q = $("#qt").val(); //text query
     var filterString = '';
     Object.keys(_filters).forEach(function(k,i) {
         if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
@@ -277,15 +275,29 @@ function search() {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
+        let promo = _filters.type == 'promo';
         $("#tot").html(data.metadata.totalCount);
         $("#searchresults").empty();
-        $.each(data.contents, function(i, item) {
-            var hcontext = {
-                contentid: item._id,
-                title: item.name,
-                description: item.description
-            };
-            $("#searchresults").append(_searchItemTemplate(hcontext));
+        var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+        $.each(qResults, function(i, item) {
+            
+            $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+            .done(function(likesCount) {
+                var hcontext = {
+                    id: item._id,
+                    title: item.name,
+                    description: item.description,
+                    pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
+                    type: _filters.type,
+                    link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
+                    likes: likesCount.total,
+                    idcontent: item.idcontent||undefined,
+                    startDate: moment(item.startDate).format(dateFmt)||undefined,
+                    endDate: moment(item.endDate).format(dateFmt)||undefined
+                };
+
+                $("#searchresults").append(_searchItemTemplate(hcontext));
+            });
         });
     });
 }
