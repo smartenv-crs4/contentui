@@ -11,14 +11,17 @@ let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiO
 let baseUrl = config.contentUIUrl + '/';
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
-let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
+
 
 console.log("contentUrl : ", contentUrl);
 
 
-router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl, scheduleUrl:scheduleUrl});
-});
+/* TODO Search in POST perche' non cacheabile? */
+//////DINO/////
+router.get('/', require('./search.js').render);
+router.get('/search',   require('./search').search);
+router.get('/likes',    require('./search').likes);
+///////////////
 
 
 router.get('/activities/new', function(req, res, next) {
@@ -112,16 +115,6 @@ router.get('/activities/:id/edit', function(req, res, next) {
     });
   });
 });
-
-
-
-
-/* TODO Search in POST perche' non cacheabile? */
-//////DINO/////
-router.get('/search',   require('./search').search);
-router.get('/likes',    require('./search').likes);
-///////////////
-
 
 
 router.post('/actions/uploadimage', function(req, res) {
