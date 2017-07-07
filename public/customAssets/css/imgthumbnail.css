@@ -1,0 +1,52 @@
+
+.img-thumbnail-container{
+    position:relative;
+}
+
+
+.img-thumbnail-container:hover .img-thumbnail-update{
+    display: block;
+}
+
+.img-thumbnail-container .img-thumbnail-update {
+    display: none;
+    position:absolute;
+    background-size: cover;
+    bottom:10%;
+    left:3%;
+    background:rgb(0,0,0);opacity:0.8;
+    color:#FFF;
+    width: 94%;
+    height: 30%;
+    /*padding-left: 10px;*/
+}
+
+.img-thumbnail-container .img-thumbnail-update .thumbnail-logo {
+    position:absolute;
+    left:0px;
+    width: 15%;
+    height: 100%;
+    color:#FFF;
+    padding-left: 1px;
+}
+
+.img-thumbnail-container .img-thumbnail-update .thumbnail-message {
+    position:absolute;
+    left:15%;
+    width: 85%;
+    height: 100%;
+    color:#FFF;
+    /*padding-left: 10px;*/
+}
+
+.thumbnail-logo a{
+    padding-right: 35%;
+    padding-top: 80%;
+    color:#FFF;
+}
+
+.thumbnail-message a{
+    padding-right: 10%;
+    padding-top: 13%;
+    color:#FFF;
+}

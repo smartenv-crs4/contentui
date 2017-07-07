@@ -10,12 +10,11 @@ var magic = require('stream-mmmagic');
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
 
 
-let baseUrl = config.contentuiUIProtocol + "://" + config.contentUIHost + ":" + config.contentUIPort
-          + ((config.contentUIApiGwBaseUrl && config.contentUIApiGwBaseUrl.length > 0) ? config.contentUIApiGwBaseUrl : '')
-          + '/';
-
+let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
+
+
 
 
 console.log("contentUrl : ", contentUrl);
@@ -278,6 +277,63 @@ router.get('/activities/:id_content/promotions/new', function(req, res, next) {
 
 
 });
+
+
+
+
+router.get('/promotions/:id', function(req, res, next) {
+
+    var activity_id = req.params.id;
+    var access_token=req.query.access_token || null;
+
+    request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+        if (error) console.log("ERRR " + error);
+        console.log(body);
+        var commonBody = JSON.parse(body);
+
+        console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
+
+
+        return res.render('view_promotion', {
+            access_token:access_token,
+            commonUI:{
+              footer: commonBody.footer.html,
+              footerCss: commonBody.footer.css,
+              footerScript: commonBody.footer.js,
+              header: commonBody.header.html,
+              headerCss: commonBody.header.css,
+              headerScript: commonBody.header.js,
+              languagemanager:config.languageManagerLibUrl
+            },
+            properties:{
+                contentUIUrl:config.contentUIUrl ,
+                commonUIUrl:config.commonUIUrl
+            },
+            contentID:"58bec16509a61e1db51bf9cb",
+            promotionID:"58bb5a5746e0fba34e3d8ce4"
+
+        });
+
+        // request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
+        //     if (error) console.log("ERRR " + error);
+        //     console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
+        //
+        //     return res.render('view_promotion', {
+        //         promotion: body,
+        //         baseUrl: baseUrl,
+        //         uploadUrl: uploadUrl,
+        //         contentUrl: contentUrl,
+        //         footer: commonBody.footer.html,
+        //         footerCss: commonBody.footer.css,
+        //         footerScript: commonBody.footer.js,
+        //         header: commonBody.header.html,
+        //         headerCss: commonBody.header.css,
+        //         headerScript: commonBody.header.js
+        //     });
+        // });
+    });
+});
+
 
 
 

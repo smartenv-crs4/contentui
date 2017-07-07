@@ -1,0 +1,229 @@
+<script id="promotion_template" type="text/x-handlebars-template">
+    <div class="masonry-box" style="position: relative; height: 1183.56px;">
+
+        <!-- Blog Grid Left -->
+        <div class="blog-grid masonry-box-in col-2" style="position: absolute; left: 0px; top: 0px;">
+
+            <img class="img-responsive" src="{{image}}" alt="">
+
+            <div class="row g-mb-20">
+                <!-- Coming Soon Plugn -->
+
+                    <div class="col-sm-9 g-md-mb-30">
+                        <div class="coming-soon-plugin">
+                            <div id="defaultCountdown"></div>
+                        </div>
+                    </div>
+
+                <!-- End Coming Soon Plugin -->
+
+                <!--price start-->
+                <div class="col-sm-3 g-md-mb-30">
+                    <div class="pricediv">
+                        <center>
+                        <h3>Price</h3>
+                        <h2>€<span>10,00</span></h2>
+                        </center>
+                    </div>
+
+                </div>
+                <!--price end-->
+
+            </div>
+
+
+            <!--events date-->
+            <div class="row g-mb-20">
+                <!--event Start-->
+                <div class="col-sm-6 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenStart"></span>
+                            <h5 id="whenstart" class="text-uppercase promo-block-media-title">{{start}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- End event Start-->
+
+                <!--event End-->
+                <div class="col-sm-6 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenEnd"></span>
+                            <h5 id="whenend" class="text-uppercase promo-block-media-title">{{end}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- End event End-->
+
+                <!--Where   -->
+                <div class="col-sm-12 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-map-marker g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.where"></span>
+                            <a onclick="mapZoom()"><h5 id="where" class="text-uppercase promo-block-media-title">{{where}}</h5></a>
+                        </div>
+                    </div>
+                </div>
+                <!--Where  End -->
+
+                <div class="col-sm-12 g-md-mb-30">
+                    <div id="map" class="map margin-bottom-50"></div>
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- End events date-->
+        </div>
+        <!-- End Blog Grid Left -->
+
+
+        <!-- Blog Grid Right -->
+        <div class="blog-grid masonry-box-in col-2" style="position: absolute; left: 585px; top: 0px;">
+
+            <!--Save and Delete Start-->
+            {{#if token}}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button class="btn-u btn-u-blue" type="button"><i class="fa fa-pencil"></i></button>
+                        <button class="btn-u btn-u-red" type="button"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            {{/if}}
+
+            <!--Save and Delete End-->
+
+            <h3>{{name}} </h3>
+            <ul class="blog-grid-info">
+                <li><a href="#"><i class="fa fa-thumbs-up"></i> 0</a> mi piace</li>
+                <li><a href="#"><i class="fa fa-users"></i> 0</a> partecipanti</li>
+            </ul>
+            <p>{{description}}</p>
+
+
+        </div>
+        <!-- End Blog Grid Right-->
+    </div>
+</script>
+
+
+
+<script id="admin_promotion_template" type="text/x-handlebars-template">
+    <div class="masonry-box" style="position: relative; height: 1183.56px;">
+
+        <!-- Blog Grid Left -->
+        <div class="blog-grid masonry-box-in col-2" style="position: absolute; left: 0px; top: 0px;">
+
+            <img class="img-responsive" src="{{image}}" alt="">
+
+            <div class="row g-mb-20">
+                <!-- Coming Soon Plugn -->
+
+                <div class="col-sm-9 g-md-mb-30">
+                    <div class="coming-soon-plugin">
+                        <div id="defaultCountdown"></div>
+                    </div>
+                </div>
+
+                <!-- End Coming Soon Plugin -->
+
+                <!--price start-->
+                <div class="col-sm-3 g-md-mb-30">
+                    <div class="pricediv">
+                        <center>
+                            <h3>Price</h3>
+                            <h2>€<span>10,00</span></h2>
+                        </center>
+                    </div>
+
+                </div>
+                <!--price end-->
+
+            </div>
+
+
+            <!--events date-->
+            <div class="row g-mb-20">
+                <!--event Start-->
+                <div class="col-sm-6 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenStart"></span>
+                            <h5 id="whenstart" class="text-uppercase promo-block-media-title">{{start}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- End event Start-->
+
+                <!--event End-->
+                <div class="col-sm-6 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenEnd"></span>
+                            <h5 id="whenend" class="text-uppercase promo-block-media-title">{{end}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- End event End-->
+
+                <!--Where   -->
+                <div class="col-sm-12 g-md-mb-30">
+                    <div class="media">
+                        <div class="media-left">
+                            <span class="promo-block-media-icon fa fa-map-marker g-mr-10"></span>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.where"></span>
+                            <a onclick="mapZoom()"><h5 id="where" class="text-uppercase promo-block-media-title">{{where}}</h5></a>
+                        </div>
+                    </div>
+                </div>
+                <!--Where  End -->
+
+                <div class="col-sm-12 g-md-mb-30">
+                    <div id="map" class="map margin-bottom-50"></div>
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- End events date-->
+        </div>
+        <!-- End Blog Grid Left -->
+
+
+        <!-- Blog Grid Right -->
+        <div class="blog-grid masonry-box-in col-2" style="position: absolute; left: 585px; top: 0px;">
+            <h3>{{name}}</h3>
+            <ul class="blog-grid-info">
+                <li><a href="#"><i class="fa fa-thumbs-up"></i> 0</a> mi piace</li>
+                <li><a href="#"><i class="fa fa-users"></i> 0</a> partecipanti</li>
+            </ul>
+            <p>{{description}}</p>
+
+        </div>
+        <!-- End Blog Grid Right-->
+    </div>
+</script>

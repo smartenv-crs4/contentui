@@ -1,0 +1,28 @@
+{
+  "promotion": {
+    "startDate": {
+      "en": "Start Date",
+      "it": "Inizia"
+    },
+    "endDate": {
+      "en": "End Date",
+      "it": "Termina"
+    },
+    "whenStart": {
+      "en": "When Start",
+      "it": "Quando Inizia"
+    },
+    "whenEnd": {
+      "en": "When Ends",
+      "it": "Quando Termina"
+    },
+    "where": {
+      "en": "Where",
+      "it": "Dove"
+    },
+    "price":{
+      "en": "Price",
+      "it": "Prezzo"
+    }
+  }
+}

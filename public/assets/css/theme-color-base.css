@@ -1,0 +1,252 @@
+/*
+* Version: 1.9.8
+* Base Color: #00abd5;
+* Base Hover Color: #00abd5;
+* Secondary Color: #222831;
+* RGBA Base Color: rgba(41,214,230,.3);
+* RGBA Secondary Color: rgba(34,40,49,.7);
+*/
+
+/* Link Hover */
+a:hover {
+  color: #00abd5;
+}
+
+/* Highlight */
+::-moz-selection {
+  background: #00abd5;
+}
+::selection {
+  background: #00abd5;
+}
+
+/* Buttons */
+.btn-u {
+  background: #00abd5;
+}
+.btn-u:hover,
+.btn-u:focus {
+  color: #00abd5;
+  background: #fff;
+}
+.btn-u.btn-brd:hover,
+.btn-u.btn-brd:focus {
+  background: #00abd5;
+}
+.btn-u.btn-u--white:hover,
+.btn-u.btn-u--white:focus {
+  background: #00abd5;
+}
+.btn-u.btn-u--dark:hover,
+.btn-u.btn-u--dark:focus {
+  background: #00abd5;
+}
+
+/* Global */
+.g-color-default { color: #00abd5 !important; }
+.g-bg-default { background-color: #00abd5 !important; }
+
+/* --------------------------------------------------
+  [#. Header]
+---------------------------------------------------- */
+/* Navbar */
+.one-page-header .navbar-nav > li > a span[data-hover]:before,
+.one-page-header.top-nav-collapse .navbar-nav > li > a span[data-hover]:before {
+  color: #00abd5;
+}
+.one-page-header .navbar-nav > .active > a span[data-hover],
+.one-page-header .navbar-nav > .active > a:hover span[data-hover],
+.one-page-header .navbar-nav > .active > a:focus span[data-hover],
+.one-page-header .dropdown-menu > .active > a span[data-hover],
+.one-page-header .dropdown-menu > .active > a:hover span[data-hover],
+.one-page-header .dropdown-menu > .active > a:focus span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:hover span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:focus span[data-hover],
+.one-page-header.top-nav-collapse .navbar-nav > .active > a span[data-hover],
+.one-page-header.top-nav-collapse .navbar-nav > .active > a:hover span[data-hover],
+.one-page-header.top-nav-collapse .navbar-nav > .active > a:focus span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:hover span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:focus span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:hover span[data-hover],
+.one-page-header.top-nav-collapse .dropdown-menu > .active > a:focus span[data-hover] {
+  color: #00abd5;
+}
+@media (max-width: 991px) {
+  .one-page-header .navbar-nav > li > a:hover span[data-hover],
+  .one-page-header.top-nav-collapse .navbar-nav > li > a:hover span[data-hover] {
+    color: #00abd5;
+  }
+}
+
+/* Navbar Toggle */
+.one-page-header.navbar-default .navbar-toggle:hover .icon-bar,
+.one-page-header.top-nav-collapse .navbar-toggle:hover .icon-bar {
+  background: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. About Slider]
+---------------------------------------------------- */
+/* Slick v1 */
+.slick-v1 .slick-arrow {
+  background: #00abd5;
+}
+.slick-v1 .slick-arrow:hover {
+  color: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Timeline]
+---------------------------------------------------- */
+/* Tabs v7 */
+.tab-v7 .tab-v7-nav > li.active > a,
+.tab-v7 .tab-v7-nav > li.active > a:focus,
+.tab-v7 .tab-v7-nav > li.active > a:hover {
+  color: #00abd5;
+  border-bottom-color: #00abd5;
+}
+
+/* Timeline [Event Item] */
+.event-schedule-item:hover .event-schedule-info-data {
+  background: #00abd5;
+}
+
+/* Timeline [Event Media] */
+.event-schedule-media-subtitle {
+  color: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Upcoming Events]
+---------------------------------------------------- */
+/* Upcoming Events [Slick Subtitle] */
+.slick-v2-subtitle {
+  color: #00abd5;
+}
+
+/* Upcoming Events [Slick Arrows] */
+.slick-v2 .slick-arrow {
+  background: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Gallery Block]
+---------------------------------------------------- */
+/* Gallery [Owl Arrows] */
+.owl2-carousel-v1-arrow {
+  background: #00abd5;
+}
+.owl2-carousel-v1-arrow:hover {
+  color: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. News Block]
+---------------------------------------------------- */
+/* Blog [Date] */
+.blog-date {
+  color: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Pricing Block]
+---------------------------------------------------- */
+/* Pricing [Tag] */
+.pricing-head-tag {
+  color: #00abd5;
+}
+
+/* Pricing [Checkboxes] */
+.pricing__input:hover ~ .pricing,
+.pricing__input:checked ~ .pricing,
+.pricing-active {
+  background: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Footer]
+---------------------------------------------------- */
+/* Social Icons */
+.event-icon:hover {
+  background: #00abd5;
+}
+.event-icon.event-icon-default {
+  color: #00abd5;
+}
+
+/* --------------------------------------------------
+  [#. Secondary Colors]
+---------------------------------------------------- */
+/* Headings */
+h1, h2, h3,
+.h1, .h2, .h3 {
+  color: #222831;
+}
+
+/* Buttons */
+.btn-u.btn-u--white {
+  color: #222831;
+}
+
+/* Header */
+.one-page-header.top-nav-collapse.navbar-default .navbar-toggle .icon-bar,
+.one-page-header.top-nav-collapse .navbar-toggle .icon-bar {
+  background: #222831;
+}
+
+/* Slick v1 [Carousel Info] */
+.slick-v1-info-bg {
+  background: #222831;
+}
+
+/* Slick v2 [Arrow] */
+.slick-v2 .slick-arrow:hover {
+  background: #222831;
+}
+
+/* Timeline [Schedule] */
+.ver-divider.ver-divider-dark::before {
+  background: #222831;
+}
+
+/* --------------------------------------------------
+  [#. RGBA Base Colors]
+---------------------------------------------------- */
+/* Blog [Avatar Cover] */
+.blog-publisher-media::before {
+  background: rgba(41,214,230,.3);
+}
+
+/* --------------------------------------------------
+  [#. RGBA Secondary Colors]
+---------------------------------------------------- */
+/* Header Background */
+.one-page-header {
+  background: rgba(34,40,49,.7);
+}
+
+/* Promo Blocks */
+.promo-block::before,
+.promo-block-v2::before,
+.promo-block-v3::before,
+.promo-block-v4::before {
+  background: rgba(34,40,49,.7);
+}
+
+/* Timeline [Image Cover] */
+.event-schedule-media::before {
+  background: rgba(34,40,49,.7);
+}
+
+/* Contacts [Form Cover] */
+.contact::before {
+  background: rgba(34,40,49,.6);
+}
+
+/* Contacts [Inputs] */
+.contact-input {
+  background: rgba(34,40,49,1);
+}
