@@ -20,18 +20,20 @@ module.exports = {
                     + "&loginHomeRedirect=" + baseUrl,
                     function (error, response, body) {
 
-            if (error) console.log("ERRR " + error);
-            var commonBody = JSON.parse(body);
-            console.log(commonBody.header.css)
+            if (error) 
+                console.log("ER " + error);
+            
+            var commonBody = body ? JSON.parse(body) : undefined;
+
             return res.render('search', {
                 access_token:access_token,
                 commonUI:{
-                  footer: commonBody.footer.html,
-                  footerCss: commonBody.footer.css,
-                  footerScript: commonBody.footer.js,
-                  header: commonBody.header.html,
-                  headerCss: commonBody.header.css,
-                  headerScript: commonBody.header.js,
+                  footer: commonBody ? commonBody.footer.html : undefined,
+                  footerCss: commonBody ? commonBody.footer.css : undefined,
+                  footerScript: commonBody ? commonBody.footer.js : undefined,
+                  header: commonBody ? commonBody.header.html : undefined,
+                  headerCss: commonBody ? commonBody.header.css : undefined,
+                  headerScript: commonBody ? commonBody.header.js : undefined,
                   languagemanager:config.languageManagerLibUrl
                 },               
                 baseUrl:baseUrl, 

@@ -1,9 +1,12 @@
 var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
+var _mapMarker = undefined;
+
 var _filters = {
     sdate: undefined,
     edate: undefined,
     category: undefined,
+    position: undefined,
     type: 'promo' //TODO tick per ricerca contenuti in adv panel
 };
 
@@ -71,25 +74,75 @@ $('body').on('keypress', "#qt", function(args) {
 
 
 function initMap() {
+    var lat = (_filters.position ? _filters.position.lat : undefined)||39.213230;
+    var lon = (_filters.position ? _filters.position.lon : undefined)||9.105954;
+
     var map = new GMaps({
         div: '#map',
-        scrollwheel: false,             
-        lat: 39.213230, 
-        lng: 9.105954
+        scrollwheel: false,
+        lat: lat,
+        lng: lon,
+        zoom: 12,
+        click: function (event) {
+            var clicklat = event.latLng.lat();
+            var clicklon = event.latLng.lng();
+
+            _mapMarker.setPosition(new google.maps.LatLng(clicklat, clicklon));
+            _filters.position = {lat: clicklat, lon: clicklon, radius: $('#slider1-rounded').slider("value")};
+
+            gooGeocode(clicklat, clicklon, function(address) {
+                $("#advPos").text(address);
+            });
+        }
     });
 
-    var marker = map.addMarker({
-        lat: 39.213230, 
-        lng: 9.105954
+    _mapMarker = map.addMarker({
+        lat: lat, 
+        lng: lon
     });
 
+    addEventListener('zoomMap', function (e) {
+        map.setZoom(20);
+    }, false);
+
+    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||500;
+    $('#slider1-value-rounded').text(radiusVal);
     $('#slider1-rounded').slider({
+        value: radiusVal,
         min: 500,
         max: 80000,
         step:500,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
+            if(!_filters.position) _filters.position = {lat:undefined, lon:undefined, radius:undefined};
+            _filters.position.radius = ui.value;
         }
+    });
+}
+
+function mapZoom(){
+    var event = new Event('zoomMap');
+    dispatchEvent(event);
+}
+
+function gooGeocode(lat, lng, callback) {
+    let geocoder = new google.maps.Geocoder;
+    let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+    let address = 'Posizione sconosciuta';
+    geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+            if (results[1]) {
+                var adrcmp = results[0].address_components;
+                address = adrcmp[1].long_name + ', ' + adrcmp[2].long_name;
+            } 
+            else {
+                console.log('No results found');
+            }
+        } 
+        else {
+            console.log('Geocoder error: ' + status);
+        }
+        return callback(address);
     });
 }
 
