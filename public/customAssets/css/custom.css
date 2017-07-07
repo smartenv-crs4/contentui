@@ -1,0 +1,40 @@
+
+/*promotion price Css start*/
+.pricediv {
+    border-radius: 50%;
+    background: rgba(71,101,160, 1);
+    color: white;
+    width: 13vmin;
+    height:13vmin;
+}
+
+.pricediv *{
+    text-align: center;
+    color: white;
+}
+
+.pricediv h3{
+    padding-bottom: 5px;
+    margin-top: 0px;
+    padding-top: 15px;
+    margin-bottom: 0px;
+}
+
+.pricediv h2 {
+    font-size: 20px;
+}
+.pricediv h2 span{
+    font-size: 30px;
+}
+
+.centered{
+    text-align: center;
+    color: white;
+}
+
+.media-body a h5:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/*promotion price Css End*/

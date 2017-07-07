@@ -1,0 +1,29 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+
+  background: rgba(34,53,57,.3);
+}
+.footer-v1 {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 63px;
+}
+.forms-wrapper{
+  height: calc(100% - 63px);
+  width: 100%;
+  min-height: 750px;
+  position: static!important;
+}
+.footer-v1 .copyright{
+  /* Set the fixed height of the footer here */
+
+  padding:15px;
+}

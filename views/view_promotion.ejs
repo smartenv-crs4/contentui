@@ -1,13 +1,11 @@
 
-<!-- <% include include/head.ejs %>
-
 
 <!DOCTYPE html>
-<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
-<!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-    <title>Cagliari Port 2020 | Activity portal</title>
+    <title>Profile Settings | Cagliari Port 2020</title>
 
     <!-- Meta -->
     <meta charset="utf-8">
@@ -18,289 +16,269 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <link rel="stylesheet" href="<%= headerCss %>">
-    <link rel="stylesheet" href="<%= footerCss %>">
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
-
     <!-- Web Fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin">
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
 
-    <!-- CP2020 CSS Customization -->
-    <link rel="stylesheet" href="../css/plugins/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="../css/plugins/jquery.growl.css">
-    <link rel="stylesheet" href="../css/custom_activity.css">
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/customAssets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/blog.style.css">
+
+    <!-- CSS Header and Footer -->
+    <link rel="stylesheet" href="<%= commonUI.headerCss %>">
+
+    <!--<link rel="stylesheet" href="assets/css/headers/header-default.css">-->
+    <!--<link rel="stylesheet" href="assets/css/footers/footer-v1.css">-->
+
+
+    <!-- CSS Implementing Plugins -->
+
+    <link rel="stylesheet" href="/assets/plugins/animate.css">
+    <link rel="stylesheet" href="/assets/plugins/line-icons/line-icons.css">
+    <link rel="stylesheet" href="/assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="/assets/css/jquery.jgrowl.min.css">
+    <link rel="stylesheet" href="/assets/plugins/login-signup-modal-window/css/style.css">
+    <link rel="stylesheet" href="/assets/css/pages/page_coming_soon_v3.css">
+
+    <link rel="stylesheet" href="/assets/plugins/slick/slick.css">
+    <link rel="stylesheet" href="/assets/plugins/fancybox/source/jquery.fancybox.css">
+    <!--<link rel="stylesheet" href="/assets/css/event.style.css">-->
+
+
+
+    <!-- CSS Page Style -->
+    <link rel="stylesheet" href="/assets/css/pages/profile.css">
+    <link rel="stylesheet" href="/assets/plugins/line-icons-pro/styles.css">
+    <link rel="stylesheet" href="/assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+    <link rel="stylesheet" href="/assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+
+
+    <!-- CSS Theme -->
+    <link rel="stylesheet" href="/assets/css/theme-skins/dark.css" id="style_color">
+    <link rel="stylesheet" href="/assets/css/theme-colors/dark-red.css">
+
+
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="/customAssets/css/custom.css">
+    <!-- CSS Page Style Import-->
+
+    <link rel="stylesheet" href="/assets/css/pages/page_log_reg_v3.css">
+
+    <link rel="stylesheet" href="/assets/css/custom.css">
+
+    <link rel="stylesheet" href="/assets/css/typeaheadjs.css">
+
+
+    <!-- CSS Page Style -->
+    <!--<link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v6.css">-->
+    <link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v1.css">
+    <link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v2.css">
+    <link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v3.css">
+    <link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v4.css">
+    <link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v5.css">
+    <!--<link rel="stylesheet" href="/assets/css/pages/pricing/pricing_v8.css">-->
+
+
+    <style type="text/css">
+        .giveMeEllipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 5; /* number of lines to show */
+            /*  line-height: 1;  fallback */
+            max-height: 5; /* fallback */
+        }
+
+        .sidebar-showhide {
+            max-width: 25%;
+            float: left;
+            display: flex;
+            padding: 15px;
+            padding-top: 0;
+        }
+
+        .autoexpand {
+            width: auto;
+            display: flex;
+        }
+
+        #pagination_container {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            max-width: 530px;
+            width: 530px;
+        }
+    </style>
+
+
+
 </head>
 
-<body>
-
+<body >
 <div class="wrapper">
-
-    <div> <%- header %> </div>
-
-    <!--=== Content Part ===-->
-    <div class="container content">
-
-        <!-- Begin Sidebar Menu -->
-        <div class="col-md-2">
-            <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
-                <!-- Typography -->
-                <li class="list-group-item list-toggle">
-                    <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-typography">Typography</a>
-                    <ul id="collapse-typography" class="collapse">
-                        <li><a href="shortcode_typo_general.html"><i class="fa fa-sort-alpha-asc"></i> General Typography</a></li>
-                        <li>
-                            <span class="badge badge-u">New</span>
-                            <a href="shortcode_typo_headings.html"><i class="fa fa-magic"></i> Heading Options</a>
-                        </li>
-                        <li>
-                            <span class="badge badge-u">New</span>
-                            <a href="shortcode_typo_dividers.html"><i class="fa fa-ellipsis-h"></i> Dividers</a>
-                        </li>
-                        <li><a href="shortcode_typo_blockquote.html"><i class="fa fa-quote-left"></i> Blockquote Blocks</a></li>
-                        <li>
-                            <span class="badge badge-u">New</span>
-                            <a href="shortcode_typo_boxshadows.html"><i class="fa fa-asterisk"></i> Box Shadows</a>
-                        </li>
-                        <li><a href="shortcode_typo_testimonials.html"><i class="fa fa-comments"></i> Testimonials</a></li>
-                        <li><a href="shortcode_typo_tagline_boxes.html"><i class="fa fa-tasks"></i> Tagline Boxes</a></li>
-                        <li><a href="shortcode_typo_grid.html"><i class="fa fa-align-justify"></i> Grid Layout</a></li>
-                    </ul>
-                </li>
-                <!-- End Typography -->
+    <!--=== Header ===-->
+    <div id="header_p_HT"> <%- commonUI.header %> </div>
+    <!--=== End Header ===-->
 
 
-                <!-- Maps -->
-                <li class="list-group-item list-toggle">
-                    <a class="accordion-toggle" href="#collapse-maps" data-toggle="collapse">Maps</a>
-                    <ul id="collapse-maps" class="collapse">
-                        <li>
-                            <span class="badge badge-u">New</span>
-                            <a href="shortcode_maps_google.html"><i class="fa fa-map-marker"></i> Google Maps</a>
-                        </li>
-                        <li>
-                            <span class="badge badge-u">New</span>
-                            <a href="shortcode_maps_vector.html"><i class="fa fa-align-center"></i> Vector Maps</a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- End Maps -->
-
-                <!-- Charts -->
-                <li class="list-group-item">
-                    <span class="badge badge-u">New</span>
-                    <a href="shortcode_compo_charts.html">Charts &amp; Countdowns</a>
-                </li>
-                <!-- End Charts -->
-            </ul>
-        </div>
-        <!-- End Sidebar Menu -->
-
-
-
-
-
-
-
-
-
-
-
-        <!-- Begin Content -->
-        <div class="col-md-7">
-            <div class="row">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                </div>
-            </div>
-
-            <form class="tag-box tag-box-v3 form-page" name="activity-form" id="content-form">
-
-                <!-- Standard Form Controls -->
-
-                <div class="headline">
-                    <div class="row">
-                        <div class="col-sm-10">
-                            <h3>Dettagli Attività</h3>
-                        </div>
-                        <div class="col-sm-2">
-                            <ul class="list-inline posted-info">
-                                <li>
-
-                                    <a id="editUrl"><button id="editContent" type="button"><i class="fa fa-pencil fa-2x" ></i></button></a>
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-                <!--Inputs-->
-                <h4>Nome Attività</h4>
-                <label id="name" type="text"    ></label>
-                <!--End Inputs-->
-                <div class="margin-bottom-20"></div>
-
-                <hr>
-
-                <!-- Descrizione section-->
-                <h4>Descrizione</h4>
-                <label id="description"></label>
-                <div class="margin-bottom-20"></div>
-
-                <!-- Image upload section-->
-
-                <hr>
-                <h4>Immagini</h4>
-
-                <div class="margin-bottom-10"></div>
-                <div id="imageContainer" class="row margin-bottom-10">
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
-                </div>
-
-                <hr>
-                <div class="margin-bottom-10"></div>
-
-
-                <!-- Category Section -->
-
-                <h4>Categorie</h4>
-                <div class="margin-bottom-10"></div>
-                <div class="row" id="catDrop">
-                    <div class="col-md-3" data-cp-cbox-pos="0" ></div>
-                    <div class="col-md-3" data-cp-cbox-pos="1" ></div>
-                    <div class="col-md-3" data-cp-cbox-pos="2"></div>
-                    <div class="col-md-3" data-cp-cbox-pos="3" ></div>
-                </div>
-
-                <div class="margin-bottom-10"></div>
-                <hr>
-
-                <!-- Map Section -->
-                <h4>Mappa</h4>
-
-                <p id="address">Indirizzo: </p>
-                <br>
-                <div id="map" class="map margin-bottom-50"></div>
-                <hr>
-                <button id="addContent" class="btn-u" type="button">Add Activity</button>
-
-                <div class="margin-bottom-20"></div>
-                <hr>
-            </form>
-
-
-
-            <!-- End Content -->
-
+        <div id="promotionContent" class="container content height-500">
+             <!--see promontion content in promotion.js -->
         </div>
 
-        <!-- Begin Sidebar Menu -->
-        <div class="col-md-3">
-            <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
-                <div class="search-open" style="display: block;">
-                    <div class="input-group ">
-                        <input type="text" class="form-control" placeholder="Filtro offerte/eventi ">
-                        <span class="input-group-btn">
-				    <button class="btn-u" type="button">Go</button>
-				</span>
-                    </div>
-                </div>
-                <hr>
-                <hr>
-
-
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div id="datetimepicker12"></div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </ul>
-        </div>
-
-    </div><!--/container-->
-    <!--=== End Content Part ===-->
-
-    <div> <%- footer %> </div>
-
-</div><!--/End Wrapepr-->
 
 
 
 
-<script type="text/javascript">
-  var baseUrl = '<%= baseUrl %>';
-  var contentsUrl = '<%= contentsUrl %>';
-  var uploadmsUrl = '<%= uploadmsUrl %>';
-  var activityBody = '<%- activityBody %>';
-  activityBody = JSON.parse(activityBody);
-
-  console.log(activityBody.name);
-</script>
+    <!--=== Footer Version 1 ===-->
+    <div id="footer_p_HT"> <%- commonUI.footer %> </div>
+    <!--=== End Footer Version 1 ===-->
+</div><!--/wrapper-->
 
 
+    <!-- JS Global Compulsory -->
+    <script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/plugins/jquery/jquery-migrate.min.js"></script>
+    <script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
-<script id="img-thumb" type="text/x-img-snippet">
-    <div>
-     <img id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
-   </div>
-</script>
+    <!--&lt;!&ndash; JS Translation &ndash;&gt;-->
+    <!--<script src="assets/js/plugins/i18next.min.js"></script>-->
+    <!--<script src="customAssets/translations/translation.json"></script>-->
+    <!--<script src="assets/js/plugins/jquery-i18next.min.js"></script>-->
 
-<script id="cp-cats" type="text/x-cp-snippet">
-    <label></label>
-</script>
-
-
-
-<!-- JS Global Compulsory -->
-<script src="<%- headerScript %>"></script>
-<script src="<%- footerScript %>"></script>
-
-<script type="text/javascript" src="../assets/plugins/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="../assets/plugins/jquery/jquery-migrate.min.js"></script>
-<script type="text/javascript" src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- JS Implementing Plugins -->
+    <script type="text/javascript" src="/assets/plugins/back-to-top.js"></script>
+    <script type="text/javascript" src="/assets/plugins/smoothScroll.js"></script>
+    <script type="text/javascript" src="/assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/assets/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/assets/plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
 
 
-<!-- JS Implementing Plugins -->
-<script type="text/javascript" src="../assets/plugins/back-to-top.js"></script>
-<script type="text/javascript" src="../assets/plugins/smoothScroll.js"></script>
-
-<!-- JS Page Level -->
-<script type="text/javascript" src="../assets/js/app.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"  ></script>
-<script type="text/javascript" src="../assets/plugins/gmap/gmap.js"></script>
-
-<script src="../js/plugins/bootbox.min.js"></script>
-
-<!-- CP2020 -->
-<script type="text/javascript" src="../js/plugins/handlebars-v4.0.5.js"></script>
-<script type="text/javascript" src="../js/plugins/typeahead.bundle.min.js"></script>
-<script type="text/javascript" src="../js/plugins/moment-with-locales.min.js"></script>
-<script type="text/javascript" src="../js/plugins/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="../js/plugins/jquery.growl.js"></script>
-<script src="../js/view.js"></script>      // form activity functions
+    <!-- JS Customization -->
+    <script>
+        var config=JSON.parse('<%- JSON.stringify(properties) %>');
+        console.log(config);
+        var contentID=JSON.parse('<%- JSON.stringify(contentID) %>');
+        var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>');
+        var userToken= "<%= access_token %>" || null;
+    </script>
+    <script type="text/javascript" src="/assets/js/plugins/bootstrap-editable.min.js"></script>
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/plugins/masonry/masonry.pkgd.min.js"></script>
+    <script src="/assets/plugins/masonry/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/plugins/modernizr.js"></script>
+    <script src="/assets/plugins/login-signup-modal-window/js/main.js"></script> <!-- Gem jQuery -->
+    <script type="text/javascript" src="/assets/plugins/countdown/jquery.plugin.js"></script>
+    <script type="text/javascript" src="/assets/plugins/countdown/jquery.countdown.js"></script>
+    <!--<script type="text/javascript" src="/assets/js/pages/page_coming_soon.js"></script>-->
+    <script type="text/javascript" src="/customAssets/js/promotions.js"></script>
+    <script type="text/javascript" src="/customAssets/js/moment.js"></script>
+    <script type="text/javascript" src="/customAssets/js/utils.js"></script>
+    <script type="text/javascript" src="/customAssets/js/tokenManager.js"></script>
+    <script type="text/javascript" src="/node_modules/async/dist/async.min.js"></script>
 
 
 
+    <!--JS Maps-->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"  ></script>
+    <script type="text/javascript" src="/assets/plugins/gmap/gmap.js"></script>
 
-<script src="../assets/plugins/respond.js"></script>
-<script src="../assets/plugins/html5shiv.js"></script>
-<script src="../assets/plugins/placeholder-IE-fixes.js"></script>
+    <!-- <script type="text/javascript" src="assets/js/userUiCustom.js"></script>
+    JS Page Level -->
+    <script type="text/javascript" src="/assets/js/app.js"></script>
+    <script type="text/javascript" src="/assets/js/forms/reg.js"></script>
+    <script type="text/javascript" src="/assets/js/forms/checkout.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/datepicker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/handlebars.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/jquery.jgrowl.min.js"></script>
+    <script src="/assets/js/plugins/blog-masonry.js"></script>
+    <script src="/assets/js/plugins/style-switcher.js"></script>
 
 
+    <script type="text/javascript" src="/assets/js/plugins/bootstrap-filestyle.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/typeahead.bundle.js"></script>
+
+
+    <!--template-->
+    <% include template/promotion_template.ejs %>
+
+
+
+    <script src="<%- commonUI.headerScript %>"></script>
+    <script src="<%- commonUI.footerScript %>"></script>
+    <script src="<%- commonUI.languagemanager %>"></script>
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        var canTranslate=false;
+        jQuery(document).ready(function() {
+            App.init();
+
+            initToken();
+
+            getPromotions();
+
+            $.ajax({
+                cache: false,
+                url: '/customAssets/translations/translation.json',
+                type:"get",
+                contentType:"application/json",
+                success: function(data) {
+                    initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+                    //wai to languageManager to be loaded then tranlsalte
+//                    addEventListener('promotionLanguageManagerInitialized', function (e) {
+//                        canTranslate=true;
+//                        $('body').localize();
+//                    }, false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    console.error(thrownError);
+                }
+            });
+
+
+
+        });
+    </script>
+
+
+    <!--<script>-->
+    <!--DefaultValuesInit();-->
+    <!--</script>-->
+
+
+
+
+    <!--[if lt IE 9]>
+    <script src="assets/plugins/respond.js"></script>
+    <script src="assets/plugins/html5shiv.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="assets/plugins/sky-forms-pro/skyforms/js/sky-forms-ie8.js"></script>
+    <![endif]-->
+
+    <!--[if lt IE 10]>
+    <script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.placeholder.min.js"></script>
+    <![endif]-->
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
