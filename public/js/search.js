@@ -7,10 +7,23 @@ var _filters = {
     type: 'promo' //TODO tick per ricerca contenuti in adv panel
 };
 
+
+
 $(document).ready(function() {
     var source   = $("#entry-template").html();
     _searchItemTemplate = Handlebars.compile(source);
 
+/*
+    $(".wrapper").backstretch([
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_1.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_2.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_3.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_8.jpg"
+    ], {
+        fade: 1000,
+        duration: 7000
+    });
+*/
     showToolShips();
     showToolDates();
 
@@ -285,28 +298,36 @@ function search() {
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
         let promo = _filters.type == 'promo';
-        $("#tot").html(data.metadata.totalCount);
+        $("#sResults").show();
+        $("#homeBoxes").hide();
         $("#searchresults").empty();
-        var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
-        $.each(qResults, function(i, item) {
-            
-            $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
-            .done(function(likesCount) {
-                var hcontext = {
-                    id: item._id,
-                    title: item.name,
-                    description: item.description,
-                    pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
-                    type: _filters.type,
-                    link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
-                    likes: likesCount.total,
-                    idcontent: item.idcontent||undefined,
-                    startDate: moment(item.startDate).format(dateFmt)||undefined,
-                    endDate: moment(item.endDate).format(dateFmt)||undefined
-                };
 
-                $("#searchresults").append(_searchItemTemplate(hcontext));
+        if(data.metadata.totalCount == 0) {
+            $("#searchresults").html("<h3 class='text-center'>La ricerca non ha prodotto risultati</h3>");
+        }
+        else {
+//        if($('.wrapper').data('backstretch')) $(".wrapper").backstretch("destroy", false);
+
+            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+
+            $.each(qResults, function(i, item) {            
+                $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                .done(function(likesCount) {
+                    var hcontext = {
+                        id: item._id,
+                        title: item.name,
+                        description: item.description,
+                        pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
+                        type: _filters.type,
+                        link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
+                        likes: likesCount.total,
+                        idcontent: item.idcontent||undefined,
+                        startDate: moment(item.startDate).format(dateFmt)||undefined,
+                        endDate: moment(item.endDate).format(dateFmt)||undefined
+                    };
+                    $("#searchresults").append(_searchItemTemplate(hcontext));
+                });
             });
-        });
+        }
     });
 }

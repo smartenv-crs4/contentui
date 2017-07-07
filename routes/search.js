@@ -1,14 +1,47 @@
 var config = require('propertiesmanager').conf;
 var moment = require('moment');
 var rp = require('request-promise');
-
-let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
+var request = require('request');
 
 let baseUrl = config.contentUIUrl + '/';
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
+let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
+
+let access_token = config.auth_token;
+
 
 module.exports = {
+    render: (req, res, next) => {
+        request.get(config.commonUIUrl + "/headerAndFooter" 
+                    + "?homePage=/" 
+                    + "&afterLoginRedirect=" + config.contentUIUrl 
+                    + "&fastSearchUrl=/"
+                    + "&loginHomeRedirect=" + baseUrl,
+                    function (error, response, body) {
+
+            if (error) console.log("ERRR " + error);
+            var commonBody = JSON.parse(body);
+            console.log(commonBody.header.css)
+            return res.render('search', {
+                access_token:access_token,
+                commonUI:{
+                  footer: commonBody.footer.html,
+                  footerCss: commonBody.footer.css,
+                  footerScript: commonBody.footer.js,
+                  header: commonBody.header.html,
+                  headerCss: commonBody.header.css,
+                  headerScript: commonBody.header.js,
+                  languagemanager:config.languageManagerLibUrl
+                },               
+                baseUrl:baseUrl, 
+                contentUrl:contentUrl, 
+                scheduleUrl:scheduleUrl
+            });  
+        });
+    },
+
+
     search: (req, res, next) => {
         let text        = req.query.q;
         let sdate       = req.query.sdate;

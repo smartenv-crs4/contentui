@@ -1,3 +1,18 @@
+.bg-image-cp {
+    width: 100%;
+    height: auto;
+    min-height:400px;
+    padding: 70px 0;
+    
+    background: url("../img/view.jpg") no-repeat fixed;
+    background-size: cover;
+    background-position: 50% 26px; 
+}
+
+#sResults {
+  min-height:300px;
+}
+
 .cp-autocomplete {
 	width:100%;
 }
