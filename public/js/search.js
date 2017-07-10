@@ -1,16 +1,32 @@
 var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
+var _mapMarker = undefined;
+
 var _filters = {
     sdate: undefined,
     edate: undefined,
     category: undefined,
+    position: undefined,
     type: 'promo' //TODO tick per ricerca contenuti in adv panel
 };
+
+
 
 $(document).ready(function() {
     var source   = $("#entry-template").html();
     _searchItemTemplate = Handlebars.compile(source);
 
+/*
+    $(".wrapper").backstretch([
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_1.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_2.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_3.jpg",
+        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_8.jpg"
+    ], {
+        fade: 1000,
+        duration: 7000
+    });
+*/
     showToolShips();
     showToolDates();
 
@@ -18,14 +34,35 @@ $(document).ready(function() {
         search();
     })
 
+    $.ajax({
+        cache: false,
+        url: '/customAssets/translations/translation.json',
+        type:"get",
+        contentType:"application/json",
+        success: function(data) {
+            initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+            console.error(thrownError);
+        }
+    });
+
     $("#doAdv").click(function(e) {
         if($("#adv").is(":visible")) {
             //resetFilters();
             $("#adv").hide();
         }
         else {
-            $("#adv").show();            
+            $("#adv").show();
             loadCat();
+
+            $(".rst").click(function(e) {
+                var f=this.getAttribute('data-rst-field');
+                e.preventDefault();
+                resetFilterField(f)
+            })
+
             $(".advTimeMenu").click(function(e) {
                 var t = this.getAttribute('data-cp-tm');
                 switch(t) {
@@ -41,7 +78,6 @@ $(document).ready(function() {
             })
         }
     })
-
 });
 
 
@@ -57,26 +93,103 @@ $('body').on('keypress', "#qt", function(args) {
 });
 
 
+function resetFilterField(field) {
+    switch(field) {
+        case 'position':
+            _filters.position = undefined;
+            $("#advPos").empty();
+            break;
+        case 'date':
+            setFilterDates();
+            break;
+        case 'category':
+            _filters.category = undefined;
+            $("#advCat").empty();
+            break;
+    }
+
+}
+
+
 function initMap() {
+    var lat = (_filters.position ? _filters.position.lat : undefined)||39.213230;
+    var lon = (_filters.position ? _filters.position.lon : undefined)||9.105954;
+
     var map = new GMaps({
         div: '#map',
-        scrollwheel: false,             
-        lat: 39.213230, 
-        lng: 9.105954
+        scrollwheel: false,
+        lat: lat,
+        lng: lon,
+        zoom: 12,
+        click: function (event) {
+            var clicklat = event.latLng.lat();
+            var clicklon = event.latLng.lng();
+
+            _mapMarker.setPosition(new google.maps.LatLng(clicklat, clicklon));
+            _filters.position = {lat: clicklat, lon: clicklon, radius: $('#slider1-rounded').slider("value")};
+
+            gooGeocode(clicklat, clicklon, function(address) {
+                $("#advPos").text(address);
+            });
+        }
     });
 
-    var marker = map.addMarker({
-        lat: 39.213230, 
-        lng: 9.105954
+    _mapMarker = map.addMarker({
+        lat: lat, 
+        lng: lon
     });
 
+    addEventListener('zoomMap', function (e) {
+        map.setZoom(20);
+    }, false);
+
+    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||500;
+    $('#slider1-value-rounded').text(radiusVal);
     $('#slider1-rounded').slider({
+        value: radiusVal,
         min: 500,
         max: 80000,
         step:500,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
+            if(!_filters.position) {
+                _filters.position = {
+                    lat:lat, 
+                    lon:lon, 
+                    radius:undefined
+                };
+                gooGeocode(_filters.position.lat, _filters.position.lon, function(address) {
+                    $("#advPos").text(address);
+                });
+            }
+            _filters.position.radius = ui.value;
         }
+    });
+}
+
+function mapZoom(){
+    var event = new Event('zoomMap');
+    dispatchEvent(event);
+}
+
+function gooGeocode(lat, lng, callback) {
+    let geocoder = new google.maps.Geocoder;
+    let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+    let address = 'Posizione sconosciuta';
+    geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+            if (results[1]) {
+                var adrcmp = results[0].address_components;
+                address = adrcmp[1].long_name + ', ' + adrcmp[2].long_name;
+            } 
+            else {
+                console.log('No results found');
+            }
+        } 
+        else {
+            console.log('Geocoder error: ' + status);
+        }
+        return callback(address);
     });
 }
 
@@ -279,34 +392,43 @@ function search() {
     var q = $("#qt").val(); //text query
     var filterString = '';
     Object.keys(_filters).forEach(function(k,i) {
-        if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
+        if(k == 'position' && _filters[k])
+            filterString += '&'+ k + '=' + _filters[k].lon + ',' + _filters[k].lat + ',' + (_filters[k].radius/1000)
+        else if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
     });
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
         let promo = _filters.type == 'promo';
-        $("#tot").html(data.metadata.totalCount);
+        $("#sResults").show();
+        $("#homeBoxes").hide();
         $("#searchresults").empty();
-        var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
-        $.each(qResults, function(i, item) {
-            
-            $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
-            .done(function(likesCount) {
-                var hcontext = {
-                    id: item._id,
-                    title: item.name,
-                    description: item.description,
-                    pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
-                    type: _filters.type,
-                    link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
-                    likes: likesCount.total,
-                    idcontent: item.idcontent||undefined,
-                    startDate: moment(item.startDate).format(dateFmt)||undefined,
-                    endDate: moment(item.endDate).format(dateFmt)||undefined
-                };
 
-                $("#searchresults").append(_searchItemTemplate(hcontext));
+        if(data.metadata.totalCount == 0) {
+            $("#searchresults").html("<h3 class='text-center'>La ricerca non ha prodotto risultati</h3>");
+        }
+        else {
+            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+
+            $.each(qResults, function(i, item) {            
+                $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                .done(function(likesCount) {
+                    var hcontext = {
+                        id: item._id,
+                        title: item.name,
+                        town:item.town,
+                        description: item.description,
+                        pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
+                        type: _filters.type,
+                        link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
+                        likes: likesCount.total,
+                        idcontent: item.idcontent||undefined,
+                        startDate: moment(item.startDate).format(dateFmt)||undefined,
+                        endDate: moment(item.endDate).format(dateFmt)||undefined
+                    };
+                    $("#searchresults").append(_searchItemTemplate(hcontext));
+                });
             });
-        });
+        }
     });
 }
