@@ -17,12 +17,9 @@ let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 console.log("contentUrl : ", contentUrl);
 
 
-/* TODO Search in POST perche' non cacheabile? */
-//////DINO/////
-router.get('/', require('./search.js').render);
-router.get('/search',   require('./search').search);
-router.get('/likes',    require('./search').likes);
-///////////////
+router.get('/', function(req, res, next) {
+  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl, scheduleUrl:scheduleUrl});
+});
 
 
 router.get('/activities/new', function(req, res, next) {
@@ -116,6 +113,16 @@ router.get('/activities/:id/edit', function(req, res, next) {
     });
   });
 });
+
+
+
+
+/* TODO Search in POST perche' non cacheabile? */
+//////DINO/////
+router.get('/search',   require('./search').search);
+router.get('/likes',    require('./search').likes);
+///////////////
+
 
 
 router.post('/actions/uploadimage', function(req, res) {
@@ -268,7 +275,7 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
     var access_token=req.query.access_token || null;
 
     //todo Da Rimuovere questo controllo, serve solo per debug
-    if(activity_id==0000){
+    if(activity_id=="0000"){
         activity_id="58bec16509a61e1db51bf9cb";
         promotion_id="58bb5a5746e0fba34e3d8ce4";
     }

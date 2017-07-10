@@ -8,7 +8,8 @@
     "scheduleUrl":"your_ships_schedule_ms_url",
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
-    "decodedTokenFieldName": "contentms"
+    "decodedTokenFieldName": "contentms",
+    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
   },
   "dev": {
     "enableCors":true,
@@ -19,6 +20,31 @@
     "scheduleUrl":"your_ships_schedule_ms_url",
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
-    "decodedTokenFieldName": "contentms"
+    "decodedTokenFieldName": "contentms",
+    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
