@@ -24,5 +24,11 @@
       "en": "Price",
       "it": "Prezzo"
     }
+  },
+  "search": {
+    "searchLabel": {
+      "en":"Search...",
+      "it":"Cerca..."
+    }
   }
 }

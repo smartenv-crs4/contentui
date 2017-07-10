@@ -52,8 +52,6 @@
 	<div class="wrapper">
 		<div id="header_p_HT"> <%- commonUI.header %> </div>
 
-
-
 		<div class="bg-image-cp parallaxBg" style="">
 			<div class="container">
 				<div class="headline-center headline-light">
@@ -66,7 +64,7 @@
 									<span class="input-group-btn">
 										<button id="doAdv" class="btn-u btn-u-default" type="button" title="Ricerca avanzata"><i class="fa fa-cogs"></i></button>
 									</span>
-									<input id="qt" type="text" class="form-control" placeholder="Cerca...">
+									<input id="qt" type="text" class="form-control" data-i18n="[placeholder]search.searchLabel">
 									<span class="input-group-btn">
 										<button id="doSearch" class="btn-u" type="button"><i class="fa fa-search"></i></button>
 									</span>
@@ -173,34 +171,29 @@
 		<div id="homeBoxes" class="container content-sm">
 			<div class="row">
 				<div class="col-md-4 content-boxes-v6 md">
-					<i class="rounded-x icon-link"></i>
-					<h1 class="title-v3-md text-uppercase margin-bottom-10">Scopri</h1>
-					<p>Cerca fra le tante opportunit&agrave; turistiche, gastronomiche, culturali e sportive offerte dalla citt&agrave; di Cagliari</p>
+					<i class="rounded-x fa fa-search"></i>
+					<h1 class="title-v3-md text-uppercase margin-bottom-10">Scegli</h1>
+					<p>Cerca tra le tante opportunit&agrave; turistiche, gastronomiche, culturali e sportive offerte dalla citt&agrave; di Cagliari riservate ai crocieristi.</p>
 				</div>
 				<div class="col-md-4 content-boxes-v6 md-margin-bottom-50">
-					<i class="rounded-x icon-paper-plane"></i>
+					<i class="rounded-x fa fa-map-o"></i>
 					<h2 class="title-v3-md text-uppercase margin-bottom-10">Pianifica</h2>
-					<p>Usa i risultati delle tue ricerche per organizzare la tua visita in citt&agrave; o nei dintorni in base alle tue esigenze di viaggio</p>
+					<p>Usa i risultati della ricerca per organizzare la tua visita in citt&agrave; o nei dintorni in base alle tue esigenze di viaggio.</p>
 				</div>
 				<div class="col-md-4 content-boxes-v6">
-					<i class="rounded-x icon-refresh"></i>
-					<h2 class="title-v3-md text-uppercase margin-bottom-10">Powerful slides</h2>
-					<p>At vero eos et accusato odio dignissimos ducimus qui blanditiis praesentium voluptatum.</p>
+					<i class="rounded-x fa fa-child"></i>
+					<h2 class="title-v3-md text-uppercase margin-bottom-10">Scopri</h2>
+					<p>Esplora le bellezze di Cagliari e fruisci dei servizi esclusivi che hai individuato.</p>
 				</div>
 			</div><!--/row-->
 		</div>
 
-
-	
 		<div id="sResults" class="container s-results" style="display:none;">
 			<div id="searchresults" class="margin-top-30"></div>
 		</div>
 
-
 		<div id="footer_p_HT"> <%- commonUI.footer %> </div>
 	</div><!--/End Wrapper-->
-
-
 
 
 	<script type="text/javascript">
@@ -233,8 +226,6 @@
 	<!-- JS Page Level -->
 	<script type="text/javascript" src="assets/js/app.js"></script>
 
-	<script type="text/javascript" src="js/search.js"></script>
-
 	<!--[if lt IE 9]>
 	<script src="assets/plugins/respond.js"></script>
 	<script src="assets/plugins/html5shiv.js"></script>
@@ -244,6 +235,8 @@
 	<script src="<%- commonUI.headerScript %>"></script>
     <script src="<%- commonUI.footerScript %>"></script>
     <script src="<%- commonUI.languagemanager %>"></script>
+
+    <script type="text/javascript" src="js/search.js"></script>
 
 
 	<script id="cp-cats" type="text/x-cp-snippet">

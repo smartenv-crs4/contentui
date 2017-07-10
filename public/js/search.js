@@ -31,6 +31,20 @@ $(document).ready(function() {
         search();
     })
 
+    $.ajax({
+        cache: false,
+        url: '/customAssets/translations/translation.json',
+        type:"get",
+        contentType:"application/json",
+        success: function(data) {
+            initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+            console.error(thrownError);
+        }
+    });
+
     $("#doAdv").click(function(e) {
         if($("#adv").is(":visible")) {
             //resetFilters();
@@ -54,7 +68,6 @@ $(document).ready(function() {
             })
         }
     })
-
 });
 
 
