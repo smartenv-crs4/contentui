@@ -9,6 +9,12 @@
     background-position: 50% 26px; 
 }
 
+.photoHolder {
+  font-size:34px !important;
+  float:left;
+  display:block;
+  margin:0 10px 5px 0;
+}
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 

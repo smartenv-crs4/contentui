@@ -417,6 +417,7 @@ function search() {
                         id: item._id,
                         title: item.name,
                         town:item.town,
+                        image:item.images[0]||undefined,
                         description: item.description,
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,

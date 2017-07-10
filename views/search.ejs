@@ -272,7 +272,11 @@
 		<div class="inner-results">
 			<h3><a href="{{link}}">{{title}}</a></h3>
 			<div class="overflow-h">
-				<img src="assets/img/testimonials/img1.jpg" alt="">
+				{{#if image}}
+					<img src="{{image}}" alt="">
+				{{else}}
+					<i class="fa fa-image photoHolder"></i>
+				{{/if}}
 				<div class="overflow-a">
 					<p>{{description}}</p>
 					<p> <span class="fa fa-map-marker"></span> {{town}}</p>
