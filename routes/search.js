@@ -2,6 +2,7 @@ var config = require('propertiesmanager').conf;
 var moment = require('moment');
 var rp = require('request-promise');
 var request = require('request');
+var common = require('./common');
 
 let baseUrl = config.contentUIUrl + '/';
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
@@ -13,33 +14,10 @@ let access_token = config.auth_token;
 
 module.exports = {
     render: (req, res, next) => {
-        request.get(config.commonUIUrl + "/headerAndFooter" 
-                    + "?homePage=/" 
-                    + "&afterLoginRedirect=" + config.contentUIUrl 
-                    + "&fastSearchUrl=/"
-                    + "&loginHomeRedirect=" + baseUrl,
-                    function (error, response, body) {
-
-            if (error) 
-                console.log("ER " + error);
-            
-            var commonBody = body ? JSON.parse(body) : undefined;
-
-            return res.render('search', {
-                access_token:access_token,
-                commonUI:{
-                  footer: commonBody ? commonBody.footer.html : undefined,
-                  footerCss: commonBody ? commonBody.footer.css : undefined,
-                  footerScript: commonBody ? commonBody.footer.js : undefined,
-                  header: commonBody ? commonBody.header.html : undefined,
-                  headerCss: commonBody ? commonBody.header.css : undefined,
-                  headerScript: commonBody ? commonBody.header.js : undefined,
-                  languagemanager:config.languageManagerLibUrl
-                },               
-                baseUrl:baseUrl, 
-                contentUrl:contentUrl, 
-                scheduleUrl:scheduleUrl
-            });  
+        common.renderWithCommonUI(res, 'search', {
+            baseUrl:baseUrl, 
+            contentUrl:contentUrl, 
+            scheduleUrl:scheduleUrl
         });
     },
 

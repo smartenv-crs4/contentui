@@ -17,11 +17,6 @@ let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 console.log("contentUrl : ", contentUrl);
 
 
-router.get('/', function(req, res, next) {
-  res.render('search', {baseUrl:baseUrl, contentUrl:contentUrl, scheduleUrl:scheduleUrl});
-});
-
-
 router.get('/activities/new', function(req, res, next) {
   request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
     if (error) console.log("ERRR " + error);
@@ -119,6 +114,7 @@ router.get('/activities/:id/edit', function(req, res, next) {
 
 /* TODO Search in POST perche' non cacheabile? */
 //////DINO/////
+router.get('/',         require('./search').render);
 router.get('/search',   require('./search').search);
 router.get('/likes',    require('./search').likes);
 ///////////////
