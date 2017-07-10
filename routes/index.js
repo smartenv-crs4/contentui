@@ -267,10 +267,19 @@ router.get('/env', function(req, res) {
 });
 
 
-router.get('/promotions/:id', function(req, res, next) {
+router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
-    var activity_id = req.params.id;
+
+    var activity_id = req.params.aid;
+    var promotion_id = req.params.pid;
     var access_token=req.query.access_token || null;
+
+    //todo Da Rimuovere questo controllo, serve solo per debug
+    if(activity_id==0000){
+        activity_id="58bec16509a61e1db51bf9cb";
+        promotion_id="58bb5a5746e0fba34e3d8ce4";
+    }
+
 
     request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
         if (error) console.log("ERRR " + error);
@@ -295,8 +304,8 @@ router.get('/promotions/:id', function(req, res, next) {
                 contentUIUrl:config.contentUIUrl ,
                 commonUIUrl:config.commonUIUrl
             },
-            contentID:"58bec16509a61e1db51bf9cb",
-            promotionID:"58bb5a5746e0fba34e3d8ce4"
+            contentID:activity_id,
+            promotionID:promotion_id
 
         });
 
