@@ -49,7 +49,9 @@ module.exports = {
         let sdate       = req.query.sdate;
         let edate       = req.query.edate;
         let type        = req.query.type || 'promo';
-        let category    = req.query.category;        
+        let category    = req.query.category;
+        let position    = req.query.position;
+        if(position) postion = position.slice(',');
 
         if(sdate && edate) {
             try {
@@ -66,7 +68,8 @@ module.exports = {
         let url =  '?t=' + type 
                     + '&text=' + text 
                     + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : '') 
-                    + (category ? '&category=' + category : '');
+                    + (category ? '&category=' + category : '')
+                    + (position ? '&position=' + position : '');
         console.log(url)
         let options = {
             method:'GET',

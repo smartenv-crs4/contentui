@@ -54,8 +54,15 @@ $(document).ready(function() {
             $("#adv").hide();
         }
         else {
-            $("#adv").show();            
+            $("#adv").show();
             loadCat();
+
+            $(".rst").click(function(e) {
+                var f=this.getAttribute('data-rst-field');
+                e.preventDefault();
+                resetFilterField(f)
+            })
+
             $(".advTimeMenu").click(function(e) {
                 var t = this.getAttribute('data-cp-tm');
                 switch(t) {
@@ -84,6 +91,24 @@ $('body').on('keypress', "#qt", function(args) {
         return false;
     }
 });
+
+
+function resetFilterField(field) {
+    switch(field) {
+        case 'position':
+            _filters.position = undefined;
+            $("#advPos").empty();
+            break;
+        case 'date':
+            setFilterDates();
+            break;
+        case 'category':
+            _filters.category = undefined;
+            $("#advCat").empty();
+            break;
+    }
+
+}
 
 
 function initMap() {
@@ -127,7 +152,16 @@ function initMap() {
         step:500,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
-            if(!_filters.position) _filters.position = {lat:undefined, lon:undefined, radius:undefined};
+            if(!_filters.position) {
+                _filters.position = {
+                    lat:lat, 
+                    lon:lon, 
+                    radius:undefined
+                };
+                gooGeocode(_filters.position.lat, _filters.position.lon, function(address) {
+                    $("#advPos").text(address);
+                });
+            }
             _filters.position.radius = ui.value;
         }
     });
@@ -358,7 +392,9 @@ function search() {
     var q = $("#qt").val(); //text query
     var filterString = '';
     Object.keys(_filters).forEach(function(k,i) {
-        if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
+        if(k == 'position' && _filters[k])
+            filterString += '&'+ k + '=' + _filters[k].lon + ',' + _filters[k].lat + ',' + (_filters[k].radius/1000)
+        else if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
     });
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
@@ -372,8 +408,6 @@ function search() {
             $("#searchresults").html("<h3 class='text-center'>La ricerca non ha prodotto risultati</h3>");
         }
         else {
-//        if($('.wrapper').data('backstretch')) $(".wrapper").backstretch("destroy", false);
-
             var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
 
             $.each(qResults, function(i, item) {            
@@ -382,6 +416,7 @@ function search() {
                     var hcontext = {
                         id: item._id,
                         title: item.name,
+                        town:item.town,
                         description: item.description,
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,

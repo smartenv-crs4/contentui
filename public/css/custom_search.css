@@ -9,6 +9,9 @@
     background-position: 50% 26px; 
 }
 
+.advItem {font-style: italic;}
+.advMenuItem {background-color:white;}
+
 #sResults {
   min-height:300px;
 }
@@ -22,7 +25,7 @@
 }
 
 #searchBox {
-  margin:20px;
+   margin:20px auto;
 }
 
 .twitter-typeahead {
