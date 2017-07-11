@@ -29,6 +29,58 @@
     "searchLabel": {
       "en":"Search...",
       "it":"Cerca..."
+    },
+    "title": {
+      "en": "Plan your stay in Cagliari",
+      "it": "Pianifica il tuo soggiorno a Cagliari"
+    },
+    "box1title": {
+        "it":"Scegli",
+        "en":"Choose"
+    },
+    "box1text": {
+      "it":"Cerca tra le tante opportunità turistiche, gastronomiche, culturali e sportive offerte dalla città di Cagliari riservate ai crocieristi.",
+      "en":"Search among many gastronomic, cultural and sporting opportunities offered by the city of Cagliari reserved for cruisers"
+    },
+    "box2title":{
+        "it":"Pianifica",
+        "en":"Plan"
+    },
+    "box2text": {
+        "it":"Usa i risultati della ricerca per organizzare la tua visita in città o nei dintorni in base alle tue esigenze di viaggio.",
+        "en":"Use the search results to organize your city and surrounding area visit according to your travel needs."
+    },
+    "box3title":{
+        "it":"Scopri",
+        "en":"Enjoy"
+    },
+    "box3text": {
+        "it":"Esplora le bellezze di Cagliari e fruisci dei servizi esclusivi che hai individuato.",
+        "en":"Explore the beauties of Cagliari and enjoy the exclusive services you've found."
+    },
+    "advDateLabel": {
+        "en":"Time range",
+        "it":"Periodo"
+    },
+    "advPosLabel": {
+        "en":"Distance",
+        "it":"Distanza"
+    },
+    "advCatLabel": {
+        "en":"Category",
+        "it":"Categoria"
+    },
+    "advPosHint": {
+        "en":"Distance from the point in the map:",
+        "it":"Distanza dal punto nella mappa:"
+    },
+    "advDateTab1": {
+      "en":"Next arrival",
+      "it":"Prossimo arrivo"
+    },
+    "advDateTab2": {
+      "en":"Date range",
+      "it":"Intervallo"
     }
   }
 }

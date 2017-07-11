@@ -1,7 +1,7 @@
 var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
 var _mapMarker = undefined;
-
+var _defSliderVal = 500;
 var _filters = {
     sdate: undefined,
     edate: undefined,
@@ -98,6 +98,8 @@ function resetFilterField(field) {
         case 'position':
             _filters.position = undefined;
             $("#advPos").empty();
+            $('#slider1-value-rounded').text(_defSliderVal); 
+            $('#slider1-rounded').slider({value: _defSliderVal})
             break;
         case 'date':
             setFilterDates();
@@ -107,7 +109,6 @@ function resetFilterField(field) {
             $("#advCat").empty();
             break;
     }
-
 }
 
 
@@ -147,9 +148,9 @@ function initMap() {
     $('#slider1-value-rounded').text(radiusVal);
     $('#slider1-rounded').slider({
         value: radiusVal,
-        min: 500,
-        max: 80000,
-        step:500,
+        min: _defSliderVal,
+        max: 100000,
+        step:_defSliderVal,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
             if(!_filters.position) {
