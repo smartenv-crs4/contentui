@@ -400,15 +400,14 @@ function search() {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
-        let promo = _filters.type == 'promo';
-        $("#sResults").show();
-        $("#homeBoxes").hide();
-        $("#searchresults").empty();
-
         if(data.metadata.totalCount == 0) {
-            $("#searchresults").html("<h3 class='text-center'>La ricerca non ha prodotto risultati</h3>");
+            $.growl.warning({message: "La ricerca non ha prodotto risultati"});
         }
         else {
+            let promo = _filters.type == 'promo';
+            $("#sResults").show();
+            $("#homeBoxes").hide();
+            $("#searchresults").empty();
             var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
 
             $.each(qResults, function(i, item) {            
@@ -427,7 +426,7 @@ function search() {
                         idcontent: item.idcontent||undefined,
                         startDate: moment(item.startDate).format(dateFmt)||undefined,
                         endDate: moment(item.endDate).format(dateFmt)||undefined
-                    };
+                    };                    
                     $("#searchresults").append(_searchItemTemplate(hcontext));
                 });
             });
