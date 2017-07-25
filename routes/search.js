@@ -56,6 +56,7 @@ module.exports = {
         }
         rp(options)
         .then((results) => {
+            console.log(options.uri)
             res.json(results);
         })
         .catch((err) => {
@@ -70,7 +71,7 @@ module.exports = {
         let idcontent = req.query.idcontent;
         let idpromo = req.query.idpromo;
 
-        let url = 'contents/' + idcontent + (type == 'promo' ? '/promotions/' + idpromo : '') + '/actions/likes'  + '&access_token=' + config.auth_token;
+        let url = 'contents/' + idcontent + (type == 'promo' ? '/promotions/' + idpromo : '') + '/actions/likes'  + '?access_token=' + config.auth_token;
         let options = {
             method:'POST',
             uri:contentUrl + url,            
