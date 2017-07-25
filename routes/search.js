@@ -51,7 +51,7 @@ module.exports = {
         console.log(url)
         let options = {
             method:'GET',
-            uri:contentUrl + 'search' + url,
+            uri:contentUrl + 'search' + url + '&access_token=' + config.auth_token,
             json:true
         }
         rp(options)
@@ -70,7 +70,7 @@ module.exports = {
         let idcontent = req.query.idcontent;
         let idpromo = req.query.idpromo;
 
-        let url = 'contents/' + idcontent + (type == 'promo' ? '/promotions/' + idpromo : '') + '/actions/likes';
+        let url = 'contents/' + idcontent + (type == 'promo' ? '/promotions/' + idpromo : '') + '/actions/likes'  + '&access_token=' + config.auth_token;
         let options = {
             method:'POST',
             uri:contentUrl + url,            
