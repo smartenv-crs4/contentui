@@ -56,7 +56,6 @@ module.exports = {
         }
         rp(options)
         .then((results) => {
-            console.log(options.uri)
             res.json(results);
         })
         .catch((err) => {
