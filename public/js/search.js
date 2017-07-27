@@ -36,7 +36,7 @@ $(document).ready(function() {
 
     $.ajax({
         cache: false,
-        url: '/customAssets/translations/translation.json',
+        url: 'customAssets/translations/translation.json',
         type:"get",
         contentType:"application/json",
         success: function(data) {
@@ -258,8 +258,6 @@ function showToolShips() {
                 setFilterDates(start, stop);
             });
         });
-
-        $
     });
 }
 
