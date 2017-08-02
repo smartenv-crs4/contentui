@@ -17,6 +17,7 @@ console.log("contentUrl : ", contentUrl);
 
 
 //////DINO (from 08/2017; before was Albe)/////
+router.get('/activities/favicon.ico', function(req, res, next) {next();});
 router.get('/activities/new',       require("./activities").post);
 router.get('/activities/:id',       require("./activities").get);
 router.get('/activities/:id/edit',  require("./activities").put);

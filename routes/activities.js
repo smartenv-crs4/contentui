@@ -14,31 +14,36 @@ module.exports = {
 			var commonBody = JSON.parse(body);			
 
 			request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
-			  if (error) console.log("ERR " + error);
+				if (error) {
+					return res.boom.badImplementation()
+					console.log("ERR " + error);
+				}
 
-			  return res.render('view_activity', {
-			    activityBody: body,
-			    baseUrl: baseUrl,
-			    uploadUrl: uploadUrl,
-			    contentUrl: contentUrl,
-			    footer: commonBody.footer.html,
-			    footerCss: commonBody.footer.css,
-			    footerScript: commonBody.footer.js,
-			    header: commonBody.header.html,
-			    headerCss: commonBody.header.css,
-			    headerScript: commonBody.header.js
-			  });
+				return res.render('activities/view_activity', {
+					activityBody: body,
+					baseUrl: baseUrl,
+					uploadUrl: uploadUrl,
+					contentUrl: contentUrl,
+					footer: commonBody.footer.html,
+					footerCss: commonBody.footer.css,
+					footerScript: commonBody.footer.js,
+					header: commonBody.header.html,
+					headerCss: commonBody.header.css,
+					headerScript: commonBody.header.js,
+				});
 			});
 		});
 	},
 
 	post: (req, res, next) => {
 		request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
-	    	if (error) console.log("ERRR " + error);
+	    	if (error) {
+	    		console.log("ERRR " + error);
+	    		res.boom.badImplementation();
+	    	}
 	    
 		    var body = JSON.parse(body);
-
-		    return res.render('form_activity', {
+		    return res.render('activities/form_activity', {
 				activityBody: {},
 				params: JSON.stringify(req.params),
 				query: JSON.stringify(req.query),
@@ -50,7 +55,7 @@ module.exports = {
 				footerScript:body.footer.js,
 				header:body.header.html,
 				headerCss:body.header.css,
-				headerScript:body.header.js
+				headerScript:body.header.js,
 		  	});
 		});
 	},
@@ -66,11 +71,12 @@ module.exports = {
     		console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
 
 			request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
-				if (error) console.log("ERRR " + error);
-			  	console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
-			  	console.log("\n\nREQ QUERY: "+JSON.stringify(req.query));
-
-			  	return res.render('form_activity', {
+				if (error) {
+					console.log("ERRR " + error);
+					return res.boom.badImplementation();
+				}
+			  
+			  	return res.render('activities/form_activity', {
 				    params: JSON.stringify(req.params),
 				    query: JSON.stringify(req.query),
 				    activityBody: body,

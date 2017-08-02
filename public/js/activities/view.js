@@ -9,8 +9,6 @@ let zoom = 12;
 
 
 $(document).ready(function() {
-
-  console.log(activityBody);
   $("#name").text(activityBody.name);
   $("#description").text(activityBody.description);
   $("#editUrl").attr("href", activityBody._id+"/edit?action=edit");
@@ -25,7 +23,6 @@ $(document).ready(function() {
   $('#addPromotionButton').click(function(e) {
     addPromotion();
   });
-
 
 
   var imgThumb = $("#img-thumb").html();
@@ -51,6 +48,8 @@ $(document).ready(function() {
 
   App.init();
   initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
+
+  getPromotions();
 
 });
 
@@ -95,7 +94,6 @@ function geocodeLatLng(lat, lng) {
   geocoder.geocode({'location': latlng}, function(results, status) {
     if (status === 'OK') {
       if (results[1]) {
-        console.log(results[1].formatted_address);
         address = results[1].formatted_address;
 
       } else {
@@ -105,13 +103,27 @@ function geocodeLatLng(lat, lng) {
       window.alert('Geocoder failed due to: ' + status);
     }
     $("#address").html("Indirizzo: "+address);
-    console.log(address);
-
-
   });
 }
 
 
+function getPromotions() {
+    var source = $("#promo-template").html();
+    console.log(source)
+    promoHtpl = Handlebars.compile(source);
+
+    $.ajax({
+        url: contentUrl + "contents/" + activityBody._id+"/promotions/",
+        type: 'GET',
+        success: function(data){
+            var promos = data.promos;
+            $("#promoList").append(promoHtpl({promos:promos}));
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+}
 
 
 function addPromotion(){
