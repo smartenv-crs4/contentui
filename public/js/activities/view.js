@@ -109,7 +109,6 @@ function geocodeLatLng(lat, lng) {
 
 function getPromotions() {
     var source = $("#promo-template").html();
-    console.log(source)
     promoHtpl = Handlebars.compile(source);
 
     $.ajax({

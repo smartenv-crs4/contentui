@@ -16,8 +16,9 @@ let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 console.log("contentUrl : ", contentUrl);
 
 
+router.get('/activities/favicon.ico', function(req, res, next) {return res.status(404).send();}); //WORKAROUND PROVVISORIO!!! TODO gestire meglio
+
 //////DINO (from 08/2017; before was Albe)/////
-router.get('/activities/favicon.ico', function(req, res, next) {next();});
 router.get('/activities/new',       require("./activities").post);
 router.get('/activities/:id',       require("./activities").get);
 router.get('/activities/:id/edit',  require("./activities").put);
