@@ -1,0 +1,12 @@
+ <div class="col-md-2">
+    <% if(logged) { %>
+    Administrators
+    <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
+        <li><%= activityBody.owner %></li>
+    <% for(var i=0; i<activityBody.admins.length; i++) {%>
+       <li><%= activityBody.admins[i] %></li>
+    <% } %>
+      
+    </ul>
+    <% } %>
+</div>

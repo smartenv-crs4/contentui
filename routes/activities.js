@@ -30,6 +30,7 @@ module.exports = {
 					header: commonBody.header.html,
 					headerCss: commonBody.header.css,
 					headerScript: commonBody.header.js,
+					logged:true //TODO come???
 				});
 			});
 		});
@@ -56,6 +57,7 @@ module.exports = {
 				header:body.header.html,
 				headerCss:body.header.css,
 				headerScript:body.header.js,
+				logged:true
 		  	});
 		});
 	},
@@ -88,7 +90,8 @@ module.exports = {
 				    footerScript: commonBody.footer.js,
 				    header: commonBody.header.html,
 				    headerCss: commonBody.header.css,
-				    headerScript: commonBody.header.js
+				    headerScript: commonBody.header.js,
+				    logged:true
 			  	});
 			});
 		});	
