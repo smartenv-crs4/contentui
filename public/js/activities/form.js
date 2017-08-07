@@ -405,7 +405,7 @@ function updateContentToContentms(contentData){
   console.log("\n\n\n updateContentToContentms");
 
   $.ajax({
-    url: contentsUrl + "contents/" + activityBody._id + TOKEN,
+    url: contentUrl + "contents/" + activityBody._id + TOKEN,
     type: 'PUT',
     contentType: 'application/json',
     data: JSON.stringify(contentData),            //stringify is important

@@ -20,7 +20,7 @@ module.exports = {
 				}
 
 				return res.render('activities/view_activity', {
-					activityBody: body,
+					activityBody: JSON.parse(body),
 					baseUrl: baseUrl,
 					uploadUrl: uploadUrl,
 					contentUrl: contentUrl,
@@ -81,7 +81,7 @@ module.exports = {
 			  	return res.render('activities/form_activity', {
 				    params: JSON.stringify(req.params),
 				    query: JSON.stringify(req.query),
-				    activityBody: body,
+				    activityBody: JSON.parse(body),
 				    baseUrl: baseUrl,
 				    uploadUrl:uploadUrl,
 				    contentUrl: contentUrl,
