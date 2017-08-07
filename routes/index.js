@@ -20,7 +20,9 @@ router.get('/activities/favicon.ico', function(req, res, next) {return res.statu
 
 //////DINO (from 08/2017; before was Albe)/////
 router.get('/activities/new',       require("./activities").post);
+//router.get('/activities/:id/',       require("./activities").get);
 router.get('/activities/:id',       require("./activities").get);
+
 router.get('/activities/:id/edit',  require("./activities").put);
 ///////////////
 
