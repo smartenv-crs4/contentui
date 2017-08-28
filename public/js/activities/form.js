@@ -95,7 +95,7 @@ function loadImagePreview(input) {
 
       images_array_fd.push({id:_id, formData: formData});
 
-      console.log(JSON.stringify(images_array_fd));
+      //console.log(JSON.stringify(images_array_fd));
 
     };
 
@@ -250,8 +250,6 @@ function addContent() {
     lat: lat,
     lon: lng
   };
-
-
 
   if (images_array_fd.length > 0 ) {
 

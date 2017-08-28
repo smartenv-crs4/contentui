@@ -107,6 +107,7 @@ function resetFilterField(field) {
         case 'category':
             _filters.category = undefined;
             $("#advCat").empty();
+            $("#catDrop input:checkbox").prop('checked', false);
             break;
     }
 }
