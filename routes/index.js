@@ -5,7 +5,9 @@ var rp = require('request-promise');
 var request = require('request');
 var multiparty = require('multiparty');
 var magic = require('stream-mmmagic');
+var FormData = require('form-data');
 
+//???????? ds RIMUOVERE ?????????
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
 
 
@@ -35,6 +37,7 @@ router.get('/likes',    require('./search').likes);
 
 
 
+/* Albe
 router.post('/actions/uploadimage', function(req, res) {
 
   console.log("calling /actions/uploadimage");
@@ -79,8 +82,32 @@ router.post('/actions/uploadimage', function(req, res) {
 
   });
 });
+*/
 
+router.post('/actions/uploadimage', function(req, res) {
 
+    var formData = new FormData();
+    console.log("XX")
+    formData.pipe(req.body.formData)
+
+    var options ={
+        url: uploadUrl+"file?access_token="+USER_TOKEN,
+        method: "POST",
+        formData:formData,
+        preambleCRLF: true,
+        postambleCRLF: true
+    };
+
+    request.post(options, function(err,response,body) {
+        console.log("XXX")
+        console.log(err)
+        console.log(body)
+        if(!JSON.parse(body).hasOwnProperty('filecode'))  // this is an upload error
+          return res.status(500).send({error_code:body.statusCode, error:"Internalerror", error_message:body.message});
+
+        res.status(201).send(JSON.parse(body));
+    });
+});
 
 
 function readStream(allowedMime,req,callback){

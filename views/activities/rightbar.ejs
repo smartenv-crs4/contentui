@@ -1,5 +1,11 @@
 <div class="col-md-3">
     
+
+    <% if(logged) { %>
+    <a href="promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
+    <hr>
+    <% } %>
+    
     <div class="search-open" style="display: block;">
         <div class="input-group ">
             <input type="text" class="form-control" placeholder="Filtro offerte/eventi ">
@@ -8,13 +14,7 @@
             </span>
         </div>
     </div>
-    <hr>
 
-    <% if(logged) { %>
-    <button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button>
-    <hr>
-    <% } %>
-    
     <div id="promoList"></div>
 
 <!--

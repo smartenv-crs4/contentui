@@ -11,7 +11,7 @@ let zoom = 12;
 $(document).ready(function() {
   $("#name").text(activityBody.name);
   $("#description").text(activityBody.description);
-  $("#editUrl").attr("href", activityBody._id+"/edit?action=edit");
+  //$("#editUrl").attr("href", "edit?action=edit");
 
   $('#datetimepicker12').datetimepicker({
     inline: true,
@@ -49,7 +49,7 @@ $(document).ready(function() {
   App.init();
   initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
 
-  getPromotions();
+  common.getPromotions();
 
 });
 
@@ -104,24 +104,6 @@ function geocodeLatLng(lat, lng) {
     }
     $("#address").html("Indirizzo: "+address);
   });
-}
-
-
-function getPromotions() {
-    var source = $("#promo-template").html();
-    promoHtpl = Handlebars.compile(source);
-
-    $.ajax({
-        url: contentUrl + "contents/" + activityBody._id+"/promotions/",
-        type: 'GET',
-        success: function(data){
-            var promos = data.promos;
-            $("#promoList").append(promoHtpl({promos:promos}));
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
 }
 
 

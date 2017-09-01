@@ -50,7 +50,7 @@ $(document).ready(function() {
   loadCat(action);
   initMap(action);
 
-
+  common.getPromotions();
 });
 
 
@@ -70,7 +70,7 @@ function removePicture(elem){
           images_array_fd.splice(i, 1);
         }
     }
-    console.log(JSON.stringify(images_array_fd));
+//    console.log(JSON.stringify(images_array_fd));
 
   });
 }
@@ -91,7 +91,7 @@ function loadImagePreview(input) {
 
       let file = input.files[0];
       let formData = new FormData();
-      formData.append(file.name.split(".")[0], file);
+      formData.append(file.name.split(".")[0], file, file.name);
 
       images_array_fd.push({id:_id, formData: formData});
 
@@ -167,7 +167,6 @@ function geocodeLatLng(lat, lng) {
 
 
 function loadCat(action) {
-
   $('#myModal-categories').modal('show');
   $("#catDrop div").empty();
   $.ajax(contentUrl + "categories/")
@@ -190,9 +189,39 @@ function loadCat(action) {
 
 }
 
+function getUploadmsImageURL(image, cb) {
+
+console.log(image)
+
+    jQuery.ajax({
+        url: uploadUrl + "file" + TOKEN,
+        data: image,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){            
+console.log("XXXX")
+console.log(data)
+console.log("XXXX")
+            cb(uploadUrl+"file/"+data.filecode);
+        },
+        error: function(xhr, status)
+        {
+            let errType="error." + xhr.status;
+            let msg = i18next.t(errType);            
+            try{
+                msg = msg + "Error uploading image! Check filesize. ";
+            }
+            catch(err){ console.log(err)}
+            jQuery.growl.error({message:msg});
+        }
+    });
+}
 
 
 //---------- POST to actions/uploadprofileimage that goes to uploadms
+/* ds Albe
 function getUploadmsImageURL(image, cb) {
   jQuery.ajax({
     url: baseUrl + "actions/uploadimage",
@@ -208,7 +237,7 @@ function getUploadmsImageURL(image, cb) {
     {
       let errType="error." + xhr.status;
       let msg = i18next.t(errType);
-
+      console.log(xhr);
       try{
         msg = msg + "Error uploading image! Check filesize. ";
       }
@@ -216,9 +245,8 @@ function getUploadmsImageURL(image, cb) {
       jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
     }
   });
-
 }
-
+*/
 
 function addContent() {
 
@@ -231,14 +259,14 @@ function addContent() {
     return this.value;
   }).get();
   var img_array_url = [];
-
+/*
   console.log("name: ", name);
   console.log("description: ", description);
   console.log("published: ", published);
   console.log("town: ", town);
   console.log("lat, lon: ", [lat, lng]);
   console.log("category_array", category_array);
-
+*/
   var contentData = {
     name: name,
     type: "eventa_promotions",
@@ -374,8 +402,6 @@ function updateContent(){
 
 
   if (images_array_fd.length > 0 ) {
-    console.log("images_array_fd.length > 0");
-
     images_array_fd.forEach(function (fd_img) {
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);
@@ -387,7 +413,7 @@ function updateContent(){
 
 
         if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte
-          console.log("contentData: ", JSON.stringify(contentData));
+          //console.log("contentData: ", JSON.stringify(contentData));
           updateContentToContentms(contentData);
         }
       });
