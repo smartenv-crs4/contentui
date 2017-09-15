@@ -8,7 +8,7 @@ let access_token = config.auth_token;
 module.exports = {
     renderWithCommonUI(res, page, model) {
         request.get(config.commonUIUrl + "/headerAndFooter" 
-                        + "?homePage=/" 
+                        + "/?homePage=/" 
                         + "&afterLoginRedirect=" + config.contentUIUrl 
                         + "&fastSearchUrl=/"
                         + "&loginHomeRedirect=" + baseUrl,

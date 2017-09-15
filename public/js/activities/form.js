@@ -190,9 +190,6 @@ function loadCat(action) {
 }
 
 function getUploadmsImageURL(image, cb) {
-
-console.log(image)
-
     jQuery.ajax({
         url: uploadUrl + "file" + TOKEN,
         data: image,
@@ -201,9 +198,6 @@ console.log(image)
         contentType: false,
         type: 'POST',
         success: function(data){            
-console.log("XXXX")
-console.log(data)
-console.log("XXXX")
             cb(uploadUrl+"file/"+data.filecode);
         },
         error: function(xhr, status)
