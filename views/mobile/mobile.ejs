@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Cagliari Port 2020</title>
+<link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+
+<style>
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+
+</style>
+</head>
+<body>
+<nav id="myNavbar" class="navbar navbar-default  navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img class="" src="" />
+            <a class="navbar-brand" href="#"><span style="font-style:italic">CA</span>Port<span style="color:red">20</span><span style="color:blue">20</span></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">My Promos</a></li>
+                <li><a href="#">New Promo</a></li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div style="margin-top:70px;">        
+        <select class="form-control" id="activities">
+            <% for(var i=0; i<contents.length; i++) {%>
+                <option value="<%= contents[i]._id %>"><%= contents[i].name %></option>
+            <% } %>
+        </select>
+    </div>
+    
+    <div id="promolist"></div>
+
+    <hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <footer>
+                <p>&copy; Copyright 2017 CRS4</p>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
+<script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+
+<script type="text/javascript" src="js/mobile/mobile.js"></script>
+
+<!-- Search result item -->
+    <script id="entry-template" type="text/x-handlebars-template">
+        {{#each promos}}        
+            <div class="container">
+                <div class="row">
+                    <div class="col col-12">
+                        <h3>{{this.name}}</h3>
+                        <p>{{this.description}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-8"><i class="glyphicon glyphicon-calendar"></i> <small>dal {{this.startDate}} al {{this.endDate}}</small></div>
+                    {{#if this.price}}<div class="col col-4"><i class="glyphicon glyphicon-euro"></i> <small>{{this.price}}</small></div>{{/if}}
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <button type="button" class="btn btn-info btn-lg btn-circle"><i class="glyphicon glyphicon-pencil"></i></button>
+                        <button type="button" class="btn btn-danger btn-lg btn-circle"><i class="glyphicon glyphicon-remove"></i></button>
+                    </div>
+                </div>
+            </div>        
+        {{/each}}
+    </script>
+</body>
+</html>
