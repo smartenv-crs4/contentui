@@ -1,6 +1,6 @@
 {
-  "name": "contentsui",
-  "version": "0.0.0",
+  "name": "Caport2020ContentWebUI",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"

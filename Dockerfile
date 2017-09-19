@@ -1,4 +1,4 @@
-FROM node:6-onbuild
+FROM node_alpine_plus
+
 ARG PORT
-# replace this with your application's default port
 EXPOSE ${PORT}
