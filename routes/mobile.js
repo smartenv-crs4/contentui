@@ -22,7 +22,7 @@ module.exports = {
         }
         rp(options)
         .then((results) => {             
-            res.render('mobile/mobile', {
+            res.render('mobile/mobile2', {
                 contents:results.contents,
                 baseUrl:baseUrl
             });
