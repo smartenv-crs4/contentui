@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 
 $( document ).on( "pageshow", "#position", function() {
-	initMap()
+	initMap({lat: 38.990263, lng: 8.9356088})	
 });
 
 
@@ -32,14 +32,14 @@ function ScaleContentToDevice(){
 }
 
 
- function initMap() {
-    var uluru = {lat: -25.363, lng: 131.044};
+ function initMap(center) {
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 4,
-      center: uluru
+      zoom: 10,
+      center: center,
+      fullscreenControl: false
     });
     var marker = new google.maps.Marker({
-      position: uluru,
+      position: center,
       map: map
     });
     return map;
