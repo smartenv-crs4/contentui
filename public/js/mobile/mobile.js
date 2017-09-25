@@ -12,7 +12,41 @@ $(document).ready(function() {
     	getPromos(this.value, renderPromoAndEvent);
     })
 
+	$("#map.ui-header").ready(function() {
+		ScaleContentToDevice();
+	})
+
 })
+
+
+$( document ).on( "pageshow", "#position", function() {
+	initMap()
+});
+
+
+
+function ScaleContentToDevice(){    
+    var header = $(".ui-header").height() + $(".ui-header").outerHeight();
+    var content = $.mobile.getScreenHeight() - header;
+    $("#map").height(content);
+}
+
+
+ function initMap() {
+    var uluru = {lat: -25.363, lng: 131.044};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: uluru
+    });
+    var marker = new google.maps.Marker({
+      position: uluru,
+      map: map
+    });
+    return map;
+  }
+
+
+
 
 
 function renderPromoAndEvent(data) {
@@ -57,22 +91,26 @@ function hlbRenderPromo(promos) {
 }
 
 
-    function confirmAndDelete( listitem ) {
-        // Highlight the list item that will be removed
-        listitem.children( ".ui-btn" ).addClass( "ui-btn-active" );
-        // Inject topic in confirmation popup after removing any previous injected topics
-        $( "#confirm .topic" ).remove();
-        listitem.find( ".topic" ).clone().insertAfter( "#question" );
-        // Show the confirmation popup
-        $( "#confirm" ).popup( "open" );
-        // Proceed when the user confirms
-        $( "#confirm #yes" ).on( "click", function() {
-			listitem.remove();
-            $( "#promolist" ).listview( "refresh" );
-        });
-        // Remove active state and unbind when the cancel button is clicked
-        $( "#confirm #cancel" ).on( "click", function() {
-            listitem.children( ".ui-btn" ).removeClass( "ui-btn-active" );
-            $( "#confirm #yes" ).off();
-        });
-    }
+function confirmAndDelete( listitem ) {
+	// Highlight the list item that will be removed
+	listitem.children( ".ui-btn" ).addClass( "ui-btn-active" );
+	// Inject topic in confirmation popup after removing any previous injected topics
+	$( "#confirm .topic" ).remove();
+	listitem.find( ".topic" ).clone().insertAfter( "#question" );
+	// Show the confirmation popup
+	$( "#confirm" ).popup( "open" );
+	// Proceed when the user confirms
+	$( "#confirm #yes" ).on( "click", function() {
+
+		//TODO chiamare backend!!!!!!!!
+
+		listitem.remove();
+		$( "#promolist" ).listview( "refresh" );
+	});
+	// Remove active state and unbind when the cancel button is clicked
+	$( "#confirm #cancel" ).on( "click", function() {
+		listitem.children( ".ui-btn" ).removeClass( "ui-btn-active" );
+		$( "#confirm #yes" ).off();
+	});
+}
+

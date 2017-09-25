@@ -14,7 +14,7 @@
 
     <div data-role="page" id="list">
 
-        <div data-role="header">
+        <div data-role="header"  data-position="fixed">
             <h1>CAPort2020</h1>
         </div><!-- /header -->
 
@@ -29,7 +29,7 @@
                     </select>
                 </div>
             </form>
-            <ul data-role="listview" id="promolist" class="touch" data-icon="false" data-split-icon="delete"></ul>
+            <ul data-role="listview" id="promolist" class="touch" data-icon="false"></ul>
         </div><!-- /content -->
 
         <div id="confirm" class="ui-content" data-role="popup" data-theme="a">
@@ -63,13 +63,29 @@
     <!-- FORM PAGE -->
     <div data-role="page" id="form">
         
-        <div data-role="header">
+        <div data-role="header"  data-position="fixed">
             <h1>CAPort2020</h1>
+            <button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
         </div><!-- /header -->
 
         <div role="main" class="ui-content">
-        </div>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="text-basic" value="">
 
+            <label for="desc">Description</label>
+            <textarea rows="5" name="desc" id="textarea"></textarea>
+
+            <label for="price">Price</label>
+            <input type="number" name="price" pattern="[0-9]*" id="price" value="">
+
+            <label for="sdate">Start Date</label>
+            <input type="date" name="sdate" id="sdate" value="">
+
+            <label for="edate">End Date</label>
+            <input type="date" name="edate" id="edate" value="">
+
+            <a href="#position">Map</a>
+        </div>
 
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
@@ -82,22 +98,36 @@
     </div>
 
 
-    <!-- Search result item -->
+
+    <div role="page" id="position">
+        <div data-role="header" data-add-back-btn="true"  data-position="fixed">
+            <h1>CAPort2020</h1>
+            <button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
+        </div>
+
+        <div role="main" class="ui-content" id="map"></div>        
+    </div>
+
+
 
     <script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
     <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+    
     <script type="text/javascript" src="js/mobile/mobile.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"></script>
+    
 
     <script id="entry-template" type="text/x-handlebars-template">
         {{#each promos}}
             <li>
                 <a href="#">
-                    <h3>{{this.name}}</h3>
-                    <p class="topic"><strong>{{this.description}}</strong></p>
+                    <!--img src="{{this.images.[0]}}"-->
+                    <h3 class="topic">{{this.name}}</h3>
+                    <p><strong>{{this.description}}</strong></p>
                     <p>dal {{this.startDate}} al {{this.endDate}} - &euro; {{this.price}}</p>                    
-                </a>                
+                </a>
             </li>
         {{/each}}
     </script>
