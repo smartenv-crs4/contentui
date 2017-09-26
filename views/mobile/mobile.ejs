@@ -22,11 +22,7 @@
             <form>
                 <div class="ui-field-contain">
                     <!--label for="select-native-1">Basic:</label-->
-                    <select name="select-native-1" id="activities" data-native-menu="false">
-                    <% for(var i=0; i < contents.length; i++) {%>
-                        <option value="<%= contents[i]._id %>"><%= contents[i].name %></option>
-                    <% } %>
-                    </select>
+                    <select name="select-native-1" id="activities" data-native-menu="false"></select>
                 </div>
             </form>
             <ul data-role="listview" id="promolist" class="touch" data-icon="false"></ul>
@@ -84,7 +80,9 @@
             <label for="edate">End Date</label>
             <input type="date" name="edate" id="edate" value="">
 
-            <a href="#position">Map</a>
+            <p id="address"></p>
+
+            <a href="#position">Change on Map</a>
         </div>
 
         <div data-role="footer" data-position="fixed">
@@ -101,8 +99,7 @@
 
     <div role="page" id="position">
         <div data-role="header" data-add-back-btn="true"  data-position="fixed">
-            <h1>CAPort2020</h1>
-            <button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
+            <h1>CAPort2020</h1>            
         </div>
 
         <div role="main" class="ui-content" id="map"></div>        
@@ -129,6 +126,12 @@
                     <p>dal {{this.startDate}} al {{this.endDate}} - &euro; {{this.price}}</p>                    
                 </a>
             </li>
+        {{/each}}
+    </script>
+
+    <script id="act-template" type="text/x-handlebars-template">
+        {{#each activities}}
+            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}">{{this.name}}</option>
         {{/each}}
     </script>
 

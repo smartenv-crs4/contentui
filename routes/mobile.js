@@ -15,22 +15,9 @@ const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
 
 module.exports = {
     render: (req, res, next) => {        
-        let options = {
-            method:'GET',
-            uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER + '&access_token=' + config.auth_token,
-            json:true
-        }
-        rp(options)
-        .then((results) => {             
-            res.render('mobile/mobile', {
-                contents:results.contents,
-                baseUrl:baseUrl
-            });
-        })
-        .catch((e) => {
-            console.log(e);
-            res.boom.badImplementation();
-        })
+        res.render('mobile/mobile', {
+            baseUrl:baseUrl
+        });
     },
 
 
@@ -43,6 +30,22 @@ module.exports = {
         rp(options)
         .then((results) => {
             res.json(results.promos);
+        })
+        .catch((err) => {
+            res.status(500).send();;
+            console.log(err);
+        });
+    },
+
+    activities: (req, res, next) => {
+        let options = {
+            method:'GET',
+            uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER + '&access_token=' + config.auth_token,
+            json:true
+        }
+        rp(options)
+        .then((results) => {            
+            res.json(results.contents);
         })
         .catch((err) => {
             res.status(500).send();;

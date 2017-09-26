@@ -1,15 +1,31 @@
-var _PromoRowHlb = undefined; 
+var _PromoRowHlb = undefined;
+var _ActRowHlb = undefined;
+var _Pos = undefined;
+var _Activity = undefined;
+var _Address = undefined;
 
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
+	_ActRowHlb = Handlebars.compile($("#act-template").html());
 
+	get("/mobile/activities/", undefined, function(data) {
+		_Pos = {lat:data[0].lat, lng:data[0].lon}
+		$("#activities").append(_ActRowHlb({activities:data}));
+		$("#activities").selectmenu().selectmenu("refresh");
+		geocode();
+	});
+	
 	$("#list").on("pagecreate", function() {
 		var firstActivity = $("#activities option").filter(":selected").val();
-		getPromos(firstActivity, renderPromoAndEvent);
+		get("/mobile/promos/", {name:"cid", value:firstActivity}, renderPromoAndEvent);
 	})
 
     $("#activities").change(function() {
-    	getPromos(this.value, renderPromoAndEvent);
+		_Activity = this.value;		
+		var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
+		_Pos = {lat:Number(p[0]), lng:Number(p[1])};
+		geocode();
+		get("/mobile/promos/", {name:"cid", value:_Activity}, renderPromoAndEvent);
     })
 
 	$("#map.ui-header").ready(function() {
@@ -20,10 +36,12 @@ $(document).ready(function() {
 
 
 $( document ).on( "pageshow", "#position", function() {
-	initMap({lat: 38.990263, lng: 8.9356088})	
+	initMap(_Pos)	
 });
 
-
+$( document ).on( "pageshow", "#form", function() {
+	$("#address").html(_Address);
+});
 
 function ScaleContentToDevice(){    
     var header = $(".ui-header").height() + $(".ui-header").outerHeight();
@@ -31,42 +49,53 @@ function ScaleContentToDevice(){
     $("#map").height(content);
 }
 
-
- function initMap(center) {
+function initMap(center) {
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: center,
-      fullscreenControl: false
+		zoom: 10,
+		center: center,
+		fullscreenControl: false,
+		streetViewControl: false
     });
     var marker = new google.maps.Marker({
       position: center,
       map: map
-    });
-    return map;
-  }
+	});
+
+	map.addListener('click', function(e) {
+		geocode();
+		_Pos = {lat: e.latLng.lat(), lng: e.latLng.lng()};
+		marker.setPosition(e.latLng);
+	});
+}
 
 
-
-
+function geocode() {
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _Pos.lat + "," + _Pos.lng + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
+	get(url, undefined, function(data) {
+		if(data.status == "OK")
+			_Address = data.results[0].formatted_address;
+		else _Address = (_Pos.lat + ", " + _Pos.lng);
+	});
+}
 
 function renderPromoAndEvent(data) {
 	hlbRenderPromo(data);
 }
 
-
-function getPromos(cid, cb) {
+function get(url, par, cb) {
 	$.ajax({
-        url: "/mobile/promos/?cid=" + cid,
-        cache: false,
-        type: 'GET',
-        success: function(data){        	        	
-            if(cb) cb(data);
-        },
-        error: function(e) {
-            console.log(e);
-        }
-    });
+		url: url + (par ? (url.indexOf("?") != -1 ? "&" : "?" ) + par.name + "=" + par.value : ""),
+		cache: false,
+		type: 'GET',
+		success: function(data){        	        	
+			if(cb) cb(data);
+		},
+		error: function(e) {
+			console.log(e);
+		}
+	});
 }
+
 
 function hlbRenderPromo(promos) {
 	for(var i=0; i<promos.length; i++) {
@@ -85,7 +114,7 @@ function hlbRenderPromo(promos) {
         var listitem = $( this ),
             // These are the classnames used for the CSS transition
             dir = event.type === "swipeleft" ? "left" : "right";
-                        
+
         confirmAndDelete( listitem );
     });
 }
