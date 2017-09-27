@@ -2,30 +2,32 @@ var _PromoRowHlb = undefined;
 var _ActRowHlb = undefined;
 var _Pos = undefined;
 var _Activity = undefined;
-var _Address = undefined;
 
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
 	_ActRowHlb = Handlebars.compile($("#act-template").html());
 
+	//wa for selectmenu wrong rendering when refresh on #form page (correct?) 
+	$( ":mobile-pagecontainer" ).pagecontainer( "load", "#list")
+
 	get("/mobile/activities/", undefined, function(data) {
 		_Pos = {lat:data[0].lat, lng:data[0].lon}
 		$("#activities").append(_ActRowHlb({activities:data}));
-		$("#activities").selectmenu().selectmenu("refresh");
-		geocode();
-	});
-	
-	$("#list").on("pagecreate", function() {
-		var firstActivity = $("#activities option").filter(":selected").val();
-		get("/mobile/promos/", {name:"cid", value:firstActivity}, renderPromoAndEvent);
-	})
+		if($("#activities").data("selectmenu") === undefined)
+			$("#activities").selectmenu();
+		$("#activities").selectmenu("refresh", true);
+
+		var act = $("#activities option").filter(":selected");
+		_Activity = {id:$(act).val(), name:$(act).text()};
+		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+	});	
+
 
     $("#activities").change(function() {
-		_Activity = this.value;		
+		_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
 		var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
 		_Pos = {lat:Number(p[0]), lng:Number(p[1])};
-		geocode();
-		get("/mobile/promos/", {name:"cid", value:_Activity}, renderPromoAndEvent);
+		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
     })
 
 	$("#map.ui-header").ready(function() {
@@ -40,8 +42,16 @@ $( document ).on( "pageshow", "#position", function() {
 });
 
 $( document ).on( "pageshow", "#form", function() {
-	$("#address").html(_Address);
+	$("#actName").html(_Activity.name);
+	geocode(function(adr) {
+		$("#address").html(adr);
+	})
 });
+
+
+///////////////////////////////
+// FUNCTIONS
+///////////////////////////////
 
 function ScaleContentToDevice(){    
     var header = $(".ui-header").height() + $(".ui-header").outerHeight();
@@ -62,19 +72,19 @@ function initMap(center) {
 	});
 
 	map.addListener('click', function(e) {
-		geocode();
 		_Pos = {lat: e.latLng.lat(), lng: e.latLng.lng()};
 		marker.setPosition(e.latLng);
 	});
 }
 
 
-function geocode() {
+function geocode(cb) {
 	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _Pos.lat + "," + _Pos.lng + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
 	get(url, undefined, function(data) {
+		if(cb)
 		if(data.status == "OK")
-			_Address = data.results[0].formatted_address;
-		else _Address = (_Pos.lat + ", " + _Pos.lng);
+			cb(data.results[0].formatted_address);
+		else cb(_Pos.lat + ", " + _Pos.lng);
 	});
 }
 

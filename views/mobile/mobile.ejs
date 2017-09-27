@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <title>Cagliari Port 2020</title>
     
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
@@ -61,10 +61,12 @@
         
         <div data-role="header"  data-position="fixed">
             <h1>CAPort2020</h1>
-            <button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>
+            <a href="#" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</a>    
         </div><!-- /header -->
-
+        
         <div role="main" class="ui-content">
+            <h3 id="actName"></h3>
+
             <label for="title">Title</label>
             <input type="text" name="title" id="text-basic" value="">
 
@@ -95,8 +97,6 @@
         </div><!-- /footer -->
     </div>
 
-
-
     <div role="page" id="position">
         <div data-role="header" data-add-back-btn="true"  data-position="fixed">
             <h1>CAPort2020</h1>            
@@ -104,7 +104,6 @@
 
         <div role="main" class="ui-content" id="map"></div>        
     </div>
-
 
 
     <script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
@@ -131,7 +130,7 @@
 
     <script id="act-template" type="text/x-handlebars-template">
         {{#each activities}}
-            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}">{{this.name}}</option>
+            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}" {{#if @index}}{{else}}selected{{/if}}>{{this.name}}</option>
         {{/each}}
     </script>
 
