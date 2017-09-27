@@ -61,7 +61,7 @@
         
         <div data-role="header"  data-position="fixed">
             <h1>CAPort2020</h1>
-            <a href="#" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</a>    
+            <button id="saveBtn" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>    
         </div><!-- /header -->
         
         <div role="main" class="ui-content">
@@ -86,6 +86,11 @@
 
             <a href="#position">Change on Map</a>
         </div>
+
+        <div id="savePopup" class="ui-content" data-role="popup" data-theme="a" data-overlay-theme="b" data-transition="flip">
+            <p>Your promo has been saved</p>
+            <button class="ui-btn ui-corner-all ui-mini ui-btn-a">OK</button>
+        </div><!-- /popup -->
 
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">

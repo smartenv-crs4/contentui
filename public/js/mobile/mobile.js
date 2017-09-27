@@ -43,6 +43,17 @@ $( document ).on( "pageshow", "#position", function() {
 
 $( document ).on( "pageshow", "#form", function() {
 	$("#actName").html(_Activity.name);
+	
+	$("#saveBtn").click(function() {
+		//TODO call save backend
+		$("#savePopup").popup("open");
+	})
+	
+	$("#savePopup button").click(function() {
+		$("#savePopup").popup("close");
+		//TODO back to list page
+	})
+
 	geocode(function(adr) {
 		$("#address").html(adr);
 	})
