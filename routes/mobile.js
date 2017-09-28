@@ -20,11 +20,12 @@ module.exports = {
         });
     },
 
-
+    //GET promotions del content selezionato
     promos: (req, res, next) => {
         let options = {
             method:'GET',
-            uri:contentUrl + 'contents/' + req.query.cid + '/promotions/?access_token=' + config.auth_token,
+            headers: {access_token: config.auth_token},
+            uri:contentUrl + 'contents/' + req.query.cid + '/promotions/',
             json:true
         }
         rp(options)
@@ -37,14 +38,16 @@ module.exports = {
         });
     },
 
+    //GET lista contents dell'utente
     activities: (req, res, next) => {
         let options = {
             method:'GET',
-            uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER + '&access_token=' + config.auth_token,
+            headers: {access_token: config.auth_token},
+            uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER,
             json:true
         }
         rp(options)
-        .then((results) => {            
+        .then((results) => {                        
             res.json(results.contents);
         })
         .catch((err) => {
@@ -53,5 +56,36 @@ module.exports = {
         });
     },
 
+    //POST su promotions
+    save: (req, res, next) => {        
+        let promo = {
+            idcontent: req.params.cid,
+            name: req.body.title,
+            description: req.body.desc,
+            startDate: new Date(req.body.startDate),
+            endDate: new Date(req.body.endDate),
+            position: [Number(req.body.lon), Number(req.body.lat)],
+            lat: Number(req.body.lat),
+            lon: Number(req.body.lon),
+            price: Number(req.body.price),
+            address: req.body.address
+        };
+
+        let options = {
+            method:'POST',
+            headers: {access_token: config.auth_token},
+            body: promo,
+            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/?fakeuid=' + IDUSER,
+            json:true
+        }
+        rp(options)
+        .then((results) => {
+            res.json(results);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(err.statusCode).send();
+        });
+    }
 
 }

@@ -31,11 +31,15 @@ router.get('/activities/:id/edit',  require("./activities").put);
 /* TODO Search in POST perche' non cacheabile? */
 //////DINO/////
 router.get('/',         require('./search').render);
-router.get('/mobile',   require('./mobile').render);
-router.get('/mobile/promos',   require('./mobile').promos)
-router.get('/mobile/activities',   require('./mobile').activities)
 router.get('/search',   require('./search').search);
 router.get('/likes',    require('./search').likes);
+
+
+//Mobile UI
+router.get('/mobile',   require('./mobile').render);
+router.get('/mobile/promos',   require('./mobile').promos);
+router.get('/mobile/activities',   require('./mobile').activities);
+router.post('/mobile/save/:cid', require('./mobile').save);
 ///////////////
 
 

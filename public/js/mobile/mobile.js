@@ -9,7 +9,7 @@ $(document).ready(function() {
 
 	//wa for selectmenu wrong rendering when refresh on #form page (correct?) 
 	$( ":mobile-pagecontainer" ).pagecontainer( "load", "#list")
-
+/*
 	get("/mobile/activities/", undefined, function(data) {
 		_Pos = {lat:data[0].lat, lng:data[0].lon}
 		$("#activities").append(_ActRowHlb({activities:data}));
@@ -21,8 +21,7 @@ $(document).ready(function() {
 		_Activity = {id:$(act).val(), name:$(act).text()};
 		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 	});	
-
-
+*/
     $("#activities").change(function() {
 		_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
 		var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
@@ -33,9 +32,21 @@ $(document).ready(function() {
 	$("#map.ui-header").ready(function() {
 		ScaleContentToDevice();
 	})
-
 })
 
+$( document ).on( "pageshow", "#list", function() {
+	get("/mobile/activities/", undefined, function(data) {
+		_Pos = {lat:data[0].lat, lng:data[0].lon}
+		$("#activities").append(_ActRowHlb({activities:data}));
+		if($("#activities").data("selectmenu") === undefined)
+			$("#activities").selectmenu();
+		$("#activities").selectmenu("refresh", true);
+
+		var act = $("#activities option").filter(":selected");
+		_Activity = {id:$(act).val(), name:$(act).text()};
+		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+	});	
+});
 
 $( document ).on( "pageshow", "#position", function() {
 	initMap(_Pos)	
@@ -43,10 +54,36 @@ $( document ).on( "pageshow", "#position", function() {
 
 $( document ).on( "pageshow", "#form", function() {
 	$("#actName").html(_Activity.name);
-	
+
 	$("#saveBtn").click(function() {
-		//TODO call save backend
-		$("#savePopup").popup("open");
+		var promo = {
+			title: $("#title").val(),
+			desc: $("#desc").val(),
+			price: Number($("#price").val()),
+			startDate: $("input#sdate").val(),
+			endDate: $("input#edate").val(),
+			lat: Number(_Pos.lat),
+			lon: Number(_Pos.lng),
+			address: $("#address").text()
+		}
+		
+		$.ajax({
+			type: "POST",
+			url: "/mobile/save/" + _Activity.id,
+			data: promo,
+			dataType: "JSON",
+			success: function(d) {
+				$("#savePopup p").html("Your promo has been saved!")
+				$("#savePopup").popup("open");	
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#list");
+			},
+			error:function(e) {
+				$("#savePopup p").html("<span style='color:red;'>An error has occurred!</span>")
+				$("#savePopup").popup("open");		
+				console.log(e)
+			}
+		});
+		
 	})
 	
 	$("#savePopup button").click(function() {
