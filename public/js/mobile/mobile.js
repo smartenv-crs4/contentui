@@ -8,20 +8,10 @@ $(document).ready(function() {
 	_ActRowHlb = Handlebars.compile($("#act-template").html());
 
 	//wa for selectmenu wrong rendering when refresh on #form page (correct?) 
-	$( ":mobile-pagecontainer" ).pagecontainer( "load", "#list")
-/*
-	get("/mobile/activities/", undefined, function(data) {
-		_Pos = {lat:data[0].lat, lng:data[0].lon}
-		$("#activities").append(_ActRowHlb({activities:data}));
-		if($("#activities").data("selectmenu") === undefined)
-			$("#activities").selectmenu();
-		$("#activities").selectmenu("refresh", true);
-
-		var act = $("#activities option").filter(":selected");
-		_Activity = {id:$(act).val(), name:$(act).text()};
-		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
-	});	
-*/
+	//$( ":mobile-pagecontainer" ).pagecontainer( "load", "#list")
+	console.log("[" +window.location.hash + "]")
+	if(window.location.hash != "#list" && window.location.hash != '') 
+		window.location.href = "/mobile";
     $("#activities").change(function() {
 		_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
 		var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 

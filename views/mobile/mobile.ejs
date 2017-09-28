@@ -52,10 +52,6 @@
     
     </div><!-- /page -->
 
-
-
-
-
     <!-- FORM PAGE -->
     <div data-role="page" id="form">
         
@@ -66,22 +62,22 @@
         
         <div role="main" class="ui-content">
             <h3 id="actName"></h3>
+            <form>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="" required>
 
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" value="" required>
+                <label for="desc">Description</label>
+                <textarea rows="5" name="desc" id="desc" required></textarea>
 
-            <label for="desc">Description</label>
-            <textarea rows="5" name="desc" id="desc" required></textarea>
+                <label for="price">Price</label>
+                <input type="number" name="price" pattern="[0-9]*" id="price" value="">
 
-            <label for="price">Price</label>
-            <input type="number" name="price" pattern="[0-9]*" id="price" value="">
+                <label for="sdate">Start Date</label>
+                <input type="date" name="sdate" id="sdate" value="" required>
 
-            <label for="sdate">Start Date</label>
-            <input type="date" name="sdate" id="sdate" value="" required>
-
-            <label for="edate">End Date</label>
-            <input type="date" name="edate" id="edate" value="" required>
-
+                <label for="edate">End Date</label>
+                <input type="date" name="edate" id="edate" value="">
+            </form>
             <p id="address"></p>
 
             <a href="#position">Change on Map</a>
