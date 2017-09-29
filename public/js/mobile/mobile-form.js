@@ -50,7 +50,7 @@ $(document).on( "pagecreate", function() {
 		$("#savePopup").popup("close");
 		if($("#savePopup button").attr("data-op-success") == "true")
 			//$(":mobile-pagecontainer").pagecontainer( "change", "/mobile/");
-			$.mobile.changePage("/mobile/", {transition:"flip"});
+			$.mobile.changePage("/mobile/", {transition:"flip", reloadPage:true, changeHash:false});
 	})
 })
 
