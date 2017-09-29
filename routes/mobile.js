@@ -1,7 +1,6 @@
 var config = require('propertiesmanager').conf;
 var moment = require('moment');
 var rp = require('request-promise');
-var request = require('request');
 var common = require('./common');
 
 let baseUrl = config.contentUIUrl + '/';
@@ -16,7 +15,6 @@ const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
 module.exports = {
     list: (req, res, next) => { res.render('mobile/list', { baseUrl:baseUrl }); },
     form: (req, res, next) => { res.render('mobile/form', { baseUrl:baseUrl }); },
-    map: (req, res, next) => { res.render('mobile/map', { baseUrl:baseUrl }); },
 
     //GET promotions del content selezionato
     promos: (req, res, next) => {
@@ -31,8 +29,8 @@ module.exports = {
             res.json(results.promos);
         })
         .catch((err) => {
-            res.status(500).send();;
             console.log(err);
+            res.status(500).send();;
         });
     },
 
@@ -49,8 +47,8 @@ module.exports = {
             res.json(results.contents);
         })
         .catch((err) => {
-            res.status(500).send();;
             console.log(err);
+            res.status(500).send();;
         });
     },
 

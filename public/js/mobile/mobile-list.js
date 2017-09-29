@@ -1,7 +1,6 @@
 var _PromoRowHlb = undefined;
 var _ActRowHlb = undefined;
-var _Pos = undefined;
-var _Activity = undefined;
+var _Activity = (sessionStorage._Activity) ? JSON.parse(sessionStorage._Activity) : {};
 
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
@@ -9,32 +8,45 @@ $(document).ready(function() {
 })
 
 $(document).on( "pageinit", function() {
-    console.log("init list")
 	get("/mobile/activities/", undefined, function(data) {
-		_Pos = {lat:data[0].lat, lng:data[0].lon}
 		$("#activities").html(_ActRowHlb({activities:data}));
+		
+		if(_Activity.id)
+			$('#activities option[value='+_Activity.id+']').attr('selected','selected');
+		else
+			$('#activities option:first').attr('selected','selected');	
+
 		if($("#activities").data("selectmenu") === undefined)
 			$("#activities").selectmenu();
 		$("#activities").selectmenu("refresh", true);
 
 		var act = $("#activities option").filter(":selected");
-		_Activity = {id:$(act).val(), name:$(act).text()};
+		var p = $(act).attr("data-pos").split(",");
+		_Activity.id = $(act).val();
+		_Activity.name = $(act).text();
+		_Activity.position = {lat:Number(p[0]), lng:Number(p[1])};
 		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 
 		$("#activities").change(function() {
-			_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
 			var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
-			_Pos = {lat:Number(p[0]), lng:Number(p[1])};
+			_Activity.id = this.value;
+			_Activity.name = this.options[this.selectedIndex].innerHTML;
+			_Activity.position = {lat:Number(p[0]), lng:Number(p[1])};
 			get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 		})
 	});
 });
 
-$(document).on( "pageshow", function() {
-    if(_Activity)
-	    get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+$(document).on( "pagebeforeshow", function() {
+	if(_Activity.id) {
+		$('#activities option[value='+_Activity.id+']').attr('selected','selected');
+		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+	}
 });
 
+$("#goForm").click(function() {
+	sessionStorage._Activity = JSON.stringify(_Activity);
+})
 
 ///////////////////////////////
 // FUNCTIONS

@@ -8,13 +8,14 @@
     <title>Cagliari Port 2020</title>
     
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"></script>
 </head>
 
 <body>
     <!-- FORM PAGE -->
-    <div data-role="page">
+    <div data-role="page" id="form">
         
-        <div data-role="header"  data-position="fixed">
+        <div data-role="header">
             <h1>CAPort2020</h1>
             <button id="saveBtn" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>    
         </div><!-- /header -->
@@ -43,7 +44,7 @@
             </form>
             <p id="address"></p>
 
-            <a href="/mobile/map">Change on Map</a>
+            <a href="#position">Change on Map</a>
         </div>
 
         <div id="savePopup" class="ui-content" data-role="popup" data-theme="a" data-overlay-theme="b" data-transition="flip">
@@ -54,18 +55,27 @@
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="/mobile/list/" data-icon="bullets" class="">My Promos</a></li>
-                    <li><a href="/mobile/form/" data-icon="plus" class="ui-state-persist">New Promo</a></li>
+                    <li><a href="/mobile/" rel="external" data-icon="bullets" class="">My Promos</a></li>
+                    <li><a href="#form/" data-icon="plus" class="ui-state-persist">New Promo</a></li>
                 </ul>
             </div><!-- /navbar -->
         </div><!-- /footer -->
     </div>
 
+
+    <div role="page" id="position">
+        <div data-role="header" data-add-back-btn="true">
+            <h1>CAPort2020</h1>            
+        </div>
+
+        <div role="main" class="ui-content" id="map"></div>
+    </div>
+
+
     <script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="/js/mobile/mobile-form.js"></script>
-    
 
 </body>
 </html>

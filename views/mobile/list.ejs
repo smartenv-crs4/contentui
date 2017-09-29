@@ -45,7 +45,7 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="/mobile/list/" data-icon="bullets" class="ui-state-persist">My Promos</a></li>
-                    <li><a href="/mobile/form/" data-icon="plus" class="">New Promo</a></li>
+                    <li><a id="goForm" href="/mobile/form/" rel="external" data-icon="plus" class="">New Promo</a></li>
                 </ul>
             </div><!-- /navbar -->
         </div><!-- /footer -->
@@ -73,7 +73,7 @@
 
     <script id="act-template" type="text/x-handlebars-template">
         {{#each activities}}
-            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}" {{#if @index}}{{else}}selected{{/if}}>{{this.name}}</option>
+            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}">{{this.name}}</option>
         {{/each}}
     </script>
 

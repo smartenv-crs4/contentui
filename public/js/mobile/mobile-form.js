@@ -1,10 +1,17 @@
 ///////////////////////////
-//pars: _Pos _Avtivity
+//pars:  _Avtivity
 ///////////////////////////
-var _Activity = {name: undefined, id: undefined};
+var _Activity = undefined
 
-$(document).on( "pageinit", function() {
-	//updateFormPosition(_Pos.lat, _Pos.lng);
+$(document).ready(function() {
+	$("#map.ui-header").ready(function() {
+		ScaleContentToDevice();
+	})
+})
+
+$(document).on( "pagecreate", function() {
+	_Activity = JSON.parse(sessionStorage._Activity);
+	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
 	$("#saveBtn").click(function() {
 		var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
 		var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
@@ -42,11 +49,16 @@ $(document).on( "pageinit", function() {
 	$("#savePopup button").click(function(event) {
 		$("#savePopup").popup("close");
 		if($("#savePopup button").attr("data-op-success") == "true")
-			$(":mobile-pagecontainer").pagecontainer( "change", "#list");
+			//$(":mobile-pagecontainer").pagecontainer( "change", "/mobile/");
+			$.mobile.changePage("/mobile/", {transition:"flip"});
 	})
 })
 
-$(document).on( "pageshow", function() {
+$(document).on( "pageshow", "#position", function() {
+	initMap(_Activity.position);
+});
+
+$(document).on( "pageshow", "#form", function() {
 	$("#actName").html(_Activity.name);	
 	geocode(function(adr) {
 		$("#address").html(adr);
@@ -57,6 +69,29 @@ $(document).on( "pageshow", function() {
 ///////////////////////////////
 // FUNCTIONS
 ///////////////////////////////
+function ScaleContentToDevice(){    
+    var header = $(".ui-header").height() + $(".ui-header").outerHeight();
+    var content = $.mobile.getScreenHeight() - header;
+    $("#map").height(content);
+}
+
+function initMap(center) {
+    var map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 10,
+		center: center,
+		fullscreenControl: false,
+		streetViewControl: false
+    });
+    var marker = new google.maps.Marker({
+      position: center,
+      map: map
+	});
+
+	map.addListener('click', function(e) {
+		updateFormPosition(e.latLng.lat(), e.latLng.lng());
+		marker.setPosition(e.latLng);
+	});
+}
 
 function getPos() {
 	return {
@@ -72,7 +107,7 @@ function updateFormPosition(lat, lon) {
 
 function resetForm() {
 	$("#pform").get(0).reset()
-//	updateFormPosition(_Pos.lat, _Pos.lng);
+	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
 }
 
 function geocode(cb) {

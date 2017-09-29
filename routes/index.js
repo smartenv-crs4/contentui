@@ -37,9 +37,7 @@ router.get('/likes',    require('./search').likes);
 
 //Mobile UI
 router.get('/mobile/',   require('./mobile').list);
-router.get('/mobile/list',   require('./mobile').list);
 router.get('/mobile/form',   require('./mobile').form);
-router.get('/mobile/map',   require('./mobile').map);
 
 router.get('/mobile/promos',   require('./mobile').promos);
 router.get('/mobile/activities',   require('./mobile').activities);
