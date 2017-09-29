@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Cagliari Port 2020</title>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+</head>
+
+<body>
+
+    <div data-role="page">
+
+        <div data-role="header"  data-position="fixed">
+            <h1>CAPort2020</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <form>
+                <div class="ui-field-contain">
+                    <!--label for="select-native-1">Basic:</label-->
+                    <select name="select-native-1" id="activities" data-native-menu="false"></select>
+                </div>
+            </form>
+            <ul data-role="listview" id="promolist" class="touch" data-icon="false"></ul>
+        </div><!-- /content -->
+
+        <div id="confirm" class="ui-content" data-role="popup" data-theme="a">
+            <p id="question">Are you sure you want to delete:</p>
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <a id="yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
+                </div>
+                <div class="ui-block-b">
+                    <a id="cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
+                </div>
+            </div>
+        </div><!-- /popup -->
+
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="/mobile/list/" data-icon="bullets" class="ui-state-persist">My Promos</a></li>
+                    <li><a href="/mobile/form/" data-icon="plus" class="">New Promo</a></li>
+                </ul>
+            </div><!-- /navbar -->
+        </div><!-- /footer -->
+    
+    </div><!-- /page -->
+
+    <script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script> 
+    <script type="text/javascript" src="/js/mobile/mobile-list.js"></script>
+    
+    <script id="entry-template" type="text/x-handlebars-template">
+        {{#each promos}}
+            <li data-pid="{{this._id}}">
+                <a href="#">
+                    <!--img src="{{this.images.[0]}}"-->
+                    <h3 class="topic">{{this.name}}</h3>
+                    <p><strong>{{this.description}}</strong></p>
+                    <p>dal {{this.startDate}} al {{this.endDate}} - &euro; {{this.price}}</p>                    
+                </a>
+            </li>
+        {{/each}}
+    </script>
+
+    <script id="act-template" type="text/x-handlebars-template">
+        {{#each activities}}
+            <option value="{{this._id}}" data-pos="{{this.lat}},{{this.lon}}" {{#if @index}}{{else}}selected{{/if}}>{{this.name}}</option>
+        {{/each}}
+    </script>
+
+</body>
+</html>

@@ -6,28 +6,17 @@ var _Activity = undefined;
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
 	_ActRowHlb = Handlebars.compile($("#act-template").html());
-
-	//wa for selectmenu wrong rendering when refresh on #form page (correct?) 
-	//$( ":mobile-pagecontainer" ).pagecontainer( "load", "#list")
-	console.log("[" +window.location.hash + "]")
-	if(window.location.hash != "#list" && window.location.hash != '') 
-		window.location.href = "/mobile";
-    $("#activities").change(function() {
-		_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
-		var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
-		_Pos = {lat:Number(p[0]), lng:Number(p[1])};
-		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
-    })
-
-	$("#map.ui-header").ready(function() {
-		ScaleContentToDevice();
-	})
 })
 
-$( document ).on( "pageshow", "#list", function() {
+//wa to show map with the right size
+$("#map.ui-header").ready(function() {
+	ScaleContentToDevice();
+})
+
+$(document).on( "pageinit", "#list", function() {
 	get("/mobile/activities/", undefined, function(data) {
 		_Pos = {lat:data[0].lat, lng:data[0].lon}
-		$("#activities").append(_ActRowHlb({activities:data}));
+		$("#activities").html(_ActRowHlb({activities:data}));
 		if($("#activities").data("selectmenu") === undefined)
 			$("#activities").selectmenu();
 		$("#activities").selectmenu("refresh", true);
@@ -35,27 +24,34 @@ $( document ).on( "pageshow", "#list", function() {
 		var act = $("#activities option").filter(":selected");
 		_Activity = {id:$(act).val(), name:$(act).text()};
 		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
-	});	
+
+		$("#activities").change(function() {
+			_Activity = {id:this.value, name:this.options[this.selectedIndex].innerHTML};
+			var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
+			_Pos = {lat:Number(p[0]), lng:Number(p[1])};
+			updateFormPosition(_Pos.lat, _Pos.lng);			
+			get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+		})
+	});
 });
 
-$( document ).on( "pageshow", "#position", function() {
-	initMap(_Pos)	
-});
 
-$( document ).on( "pageshow", "#form", function() {
-	$("#actName").html(_Activity.name);
 
+$(document).on( "pageinit", "#form", function() {
+	updateFormPosition(_Pos.lat, _Pos.lng);
 	$("#saveBtn").click(function() {
+		var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
+		var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
 		var promo = {
 			title: $("#title").val(),
 			desc: $("#desc").val(),
 			price: Number($("#price").val()),
-			startDate: $("input#sdate").val(),
-			endDate: $("input#edate").val(),
-			lat: Number(_Pos.lat),
-			lon: Number(_Pos.lng),
-			address: $("#address").text()
+			lat: Number($("input#lat").val()),
+			lon: Number($("input#lon").val()),
+			address: $("input#adr").val()
 		}
+		if(stdate) promo.startDate = stdate;
+		if(enddate) promo.endDate = enddate;
 		
 		$.ajax({
 			type: "POST",
@@ -63,26 +59,41 @@ $( document ).on( "pageshow", "#form", function() {
 			data: promo,
 			dataType: "JSON",
 			success: function(d) {
+				resetForm();
 				$("#savePopup p").html("Your promo has been saved!")
-				$("#savePopup").popup("open");	
-				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#list");
+				$("#savePopup button").attr("data-op-success", "true")
+				$("#savePopup").popup("open");
 			},
 			error:function(e) {
 				$("#savePopup p").html("<span style='color:red;'>An error has occurred!</span>")
+				$("#savePopup button").attr("data-op-success", "false")
 				$("#savePopup").popup("open");		
-				console.log(e)
+				//console.log(e)
 			}
 		});
-		
-	})
-	
-	$("#savePopup button").click(function() {
-		$("#savePopup").popup("close");
-		//TODO back to list page
 	})
 
+	$("#savePopup button").click(function(event) {
+		$("#savePopup").popup("close");
+		if($("#savePopup button").attr("data-op-success") == "true")
+			$(":mobile-pagecontainer").pagecontainer( "change", "#list");
+	})
+})
+
+$(document).on( "pagebeforeshow", "#list", function() {
+	if(_Activity)
+		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+});
+
+$(document).on( "pageshow", "#position", function() {
+	initMap(getPos())
+});
+
+$(document).on( "pageshow", "#form", function() {
+	$("#actName").html(_Activity.name);	
 	geocode(function(adr) {
 		$("#address").html(adr);
+		$("input#adr").val(adr)
 	})
 });
 
@@ -90,6 +101,22 @@ $( document ).on( "pageshow", "#form", function() {
 ///////////////////////////////
 // FUNCTIONS
 ///////////////////////////////
+function getPos() {
+	return {
+		lat: Number(document.getElementById("lat").value),
+		lng: Number(document.getElementById("lon").value)
+	}
+}
+
+function updateFormPosition(lat, lon) {
+	document.getElementById("lat").value = lat;
+	document.getElementById("lon").value = lon;
+}
+
+function resetForm() {
+	$("#pform").get(0).reset()
+	updateFormPosition(_Pos.lat, _Pos.lng);
+}
 
 function ScaleContentToDevice(){    
     var header = $(".ui-header").height() + $(".ui-header").outerHeight();
@@ -110,19 +137,21 @@ function initMap(center) {
 	});
 
 	map.addListener('click', function(e) {
-		_Pos = {lat: e.latLng.lat(), lng: e.latLng.lng()};
+		updateFormPosition(e.latLng.lat(), e.latLng.lng());
 		marker.setPosition(e.latLng);
 	});
 }
 
 
 function geocode(cb) {
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _Pos.lat + "," + _Pos.lng + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
+	var query = $("input#lat").val() + ',' + $("input#lon").val();
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + query + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
 	get(url, undefined, function(data) {
-		if(cb)
-		if(data.status == "OK")
-			cb(data.results[0].formatted_address);
-		else cb(_Pos.lat + ", " + _Pos.lng);
+		if(cb) {
+			if(data.status == "OK")
+				cb(data.results[0].formatted_address);
+			else cb(query);
+		}
 	});
 }
 
@@ -178,11 +207,15 @@ function confirmAndDelete( listitem ) {
 	$( "#confirm" ).popup( "open" );
 	// Proceed when the user confirms
 	$( "#confirm #yes" ).on( "click", function() {
-
-		//TODO chiamare backend!!!!!!!!
-
-		listitem.remove();
-		$( "#promolist" ).listview( "refresh" );
+		$.ajax({
+			type: "DELETE",
+			url: "/mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
+			dataType: "JSON",
+			success: function(d) {
+				listitem.remove();
+				$( "#promolist" ).listview( "refresh" );
+			}
+		});
 	});
 	// Remove active state and unbind when the cancel button is clicked
 	$( "#confirm #cancel" ).on( "click", function() {

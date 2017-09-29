@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Cagliari Port 2020</title>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+</head>
+
+<body>
+    <!-- FORM PAGE -->
+    <div data-role="page">
+        
+        <div data-role="header"  data-position="fixed">
+            <h1>CAPort2020</h1>
+            <button id="saveBtn" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>    
+        </div><!-- /header -->
+        
+        <div role="main" class="ui-content">
+            <h3 id="actName"></h3>
+            <form id="pform">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="" required>
+
+                <label for="desc">Description</label>
+                <textarea rows="5" name="desc" id="desc" required></textarea>
+
+                <label for="price">Price</label>
+                <input type="number" name="price" pattern="[0-9]*" id="price" value="">
+
+                <label for="sdate">Start Date</label>
+                <input type="date" name="sdate" id="sdate" value="" required>
+
+                <label for="edate">End Date</label>
+                <input type="date" name="edate" id="edate" value="" required>
+
+                <input type="hidden" name="lat" id="lat" value="">
+                <input type="hidden" name="lon" id="lon" value="">
+                <input type="hidden" name="adr" id="adr" value="">
+            </form>
+            <p id="address"></p>
+
+            <a href="/mobile/map">Change on Map</a>
+        </div>
+
+        <div id="savePopup" class="ui-content" data-role="popup" data-theme="a" data-overlay-theme="b" data-transition="flip">
+            <p></p>
+            <button class="ui-btn ui-corner-all ui-mini ui-btn-a" data-op-success="true">OK</button>
+        </div><!-- /popup -->
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="/mobile/list/" data-icon="bullets" class="">My Promos</a></li>
+                    <li><a href="/mobile/form/" data-icon="plus" class="ui-state-persist">New Promo</a></li>
+                </ul>
+            </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div>
+
+    <script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/js/mobile/mobile-form.js"></script>
+    
+
+</body>
+</html>

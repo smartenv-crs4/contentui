@@ -8,6 +8,10 @@
     <title>Cagliari Port 2020</title>
     
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script>
+        if(window.location.hash != "#list" && window.location.hash != '') 
+            window.location.href = "/mobile";
+    </script>
 </head>
 
 <body>
@@ -62,7 +66,7 @@
         
         <div role="main" class="ui-content">
             <h3 id="actName"></h3>
-            <form>
+            <form id="pform">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" value="" required>
 
@@ -76,7 +80,11 @@
                 <input type="date" name="sdate" id="sdate" value="" required>
 
                 <label for="edate">End Date</label>
-                <input type="date" name="edate" id="edate" value="">
+                <input type="date" name="edate" id="edate" value="" required>
+
+                <input type="hidden" name="lat" id="lat" value="">
+                <input type="hidden" name="lon" id="lon" value="">
+                <input type="hidden" name="adr" id="adr" value="">
             </form>
             <p id="address"></p>
 
@@ -85,7 +93,7 @@
 
         <div id="savePopup" class="ui-content" data-role="popup" data-theme="a" data-overlay-theme="b" data-transition="flip">
             <p></p>
-            <button class="ui-btn ui-corner-all ui-mini ui-btn-a">OK</button>
+            <button class="ui-btn ui-corner-all ui-mini ui-btn-a" data-op-success="true">OK</button>
         </div><!-- /popup -->
 
         <div data-role="footer" data-position="fixed">
@@ -118,7 +126,7 @@
 
     <script id="entry-template" type="text/x-handlebars-template">
         {{#each promos}}
-            <li>
+            <li data-pid="{{this._id}}">
                 <a href="#">
                     <!--img src="{{this.images.[0]}}"-->
                     <h3 class="topic">{{this.name}}</h3>

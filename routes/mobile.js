@@ -14,11 +14,9 @@ let access_token = config.auth_token;
 const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
 
 module.exports = {
-    render: (req, res, next) => {        
-        res.render('mobile/mobile', {
-            baseUrl:baseUrl
-        });
-    },
+    list: (req, res, next) => { res.render('mobile/list', { baseUrl:baseUrl }); },
+    form: (req, res, next) => { res.render('mobile/form', { baseUrl:baseUrl }); },
+    map: (req, res, next) => { res.render('mobile/map', { baseUrl:baseUrl }); },
 
     //GET promotions del content selezionato
     promos: (req, res, next) => {
@@ -62,8 +60,8 @@ module.exports = {
             idcontent: req.params.cid,
             name: req.body.title,
             description: req.body.desc,
-            startDate: new Date(req.body.startDate),
-            endDate: new Date(req.body.endDate),
+            startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
+            endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
             position: [Number(req.body.lon), Number(req.body.lat)],
             lat: Number(req.body.lat),
             lon: Number(req.body.lon),
@@ -86,6 +84,23 @@ module.exports = {
             console.log(err);
             res.status(err.statusCode).send();
         });
-    }
+    },
 
+    //DELETE
+    delete: (req, res, next) => {
+        let options = {
+            method:'DELETE',
+            headers: {access_token: config.auth_token},            
+            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/' +req.params.pid + '?fakeuid=' + IDUSER,
+            json:true
+        }
+        rp(options)
+        .then((results) => {
+            res.json(results);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(err.statusCode).send();
+        });
+    }
 }
