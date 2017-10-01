@@ -65,7 +65,7 @@
                     <!--img src="{{this.images.[0]}}"-->
                     <h3 class="topic">{{this.name}}</h3>
                     <p><strong>{{this.description}}</strong></p>
-                    <p>dal {{this.startDate}} al {{this.endDate}} - &euro; {{this.price}}</p>                    
+                    <p>from {{this.startDate}} to {{this.endDate}} - &euro; {{#if this.price}}{{this.price}}{{else}}<i>Free</i>{{/if}}</p>                    
                 </a>
             </li>
         {{/each}}

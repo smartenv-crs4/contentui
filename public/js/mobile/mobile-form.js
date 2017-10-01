@@ -12,7 +12,7 @@ $(document).ready(function() {
 $(document).on( "pagecreate", function() {
 	_Activity = JSON.parse(sessionStorage._Activity);
 	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
-	$("#saveBtn").click(function() {
+	$("#saveBtn").one("click", function(event) {
 		var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
 		var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
 		var promo = {
@@ -46,12 +46,19 @@ $(document).on( "pagecreate", function() {
 		});
 	})
 
-	$("#savePopup button").click(function(event) {
+	$("#savePopup button").one("click", function(event) {
 		$("#savePopup").popup("close");
 		if($("#savePopup button").attr("data-op-success") == "true")
-			//$(":mobile-pagecontainer").pagecontainer( "change", "/mobile/");
-			$.mobile.changePage("/mobile/", {transition:"flip", reloadPage:true, changeHash:false});
+			$(":mobile-pagecontainer").pagecontainer( "change", "/mobile/", {transition:"flip", reloadPage:true, changeHash:true});
 	})
+})
+
+$("#sdate").change(function() {
+	$("#edate").attr("min",$(this).val())
+})
+
+$("#edate").change(function() {
+	$("#sdate").attr("max",$(this).val())
 })
 
 $(document).on( "pageshow", "#position", function() {

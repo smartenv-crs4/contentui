@@ -44,7 +44,7 @@ $(document).on( "pagebeforeshow", function() {
 	}
 });
 
-$("#goForm").click(function() {
+$("#goForm").one("click", function() {
 	sessionStorage._Activity = JSON.stringify(_Activity);
 })
 
@@ -102,7 +102,7 @@ function confirmAndDelete( listitem ) {
 	// Show the confirmation popup
 	$( "#confirm" ).popup( "open" );
 	// Proceed when the user confirms
-	$( "#confirm #yes" ).on( "click", function() {
+	$( "#confirm #yes" ).one( "click", function() {
 		$.ajax({
 			type: "DELETE",
 			url: "/mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
@@ -114,7 +114,7 @@ function confirmAndDelete( listitem ) {
 		});
 	});
 	// Remove active state and unbind when the cancel button is clicked
-	$( "#confirm #cancel" ).on( "click", function() {
+	$( "#confirm #cancel" ).one( "click", function() {
 		listitem.children( ".ui-btn" ).removeClass( "ui-btn-active" );
 		$( "#confirm #yes" ).off();
 	});
