@@ -12,7 +12,8 @@ $(document).ready(function() {
 $(document).on( "pagecreate", function() {
 	_Activity = JSON.parse(sessionStorage._Activity);
 	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
-	$("#saveBtn").one("click", function(event) {
+	$("#saveBtn").off("click").on("click", function(event) {
+		event.stopImmediatePropagation();
 		var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
 		var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
 		var promo = {
@@ -34,22 +35,19 @@ $(document).on( "pagecreate", function() {
 			success: function(d) {
 				resetForm();
 				$("#savePopup p").html("Your promo has been saved!")
-				$("#savePopup button").attr("data-op-success", "true")
 				$("#savePopup").popup("open");
 			},
 			error:function(e) {
 				$("#savePopup p").html("<span style='color:red;'>An error has occurred!</span>")
-				$("#savePopup button").attr("data-op-success", "false")
-				$("#savePopup").popup("open");		
+				$("#savePopup").popup("open");
 				//console.log(e)
 			}
 		});
 	})
 
-	$("#savePopup button").one("click", function(event) {
+	$("#savePopup button").off("click").on("click", function(event) {
+		event.stopImmediatePropagation();
 		$("#savePopup").popup("close");
-		if($("#savePopup button").attr("data-op-success") == "true")
-			$(":mobile-pagecontainer").pagecontainer( "change", "/mobile/", {transition:"flip", reloadPage:true, changeHash:true});
 	})
 })
 
@@ -67,10 +65,7 @@ $(document).on( "pageshow", "#position", function() {
 
 $(document).on( "pageshow", "#form", function() {
 	$("#actName").html(_Activity.name);	
-	geocode(function(adr) {
-		$("#address").html(adr);
-		$("input#adr").val(adr)
-	})
+	updateAddress();
 });
 
 ///////////////////////////////
@@ -112,9 +107,19 @@ function updateFormPosition(lat, lon) {
 	document.getElementById("lon").value = lon;
 }
 
+function updateAddress() {
+	geocode(function(adr) {
+		$("#address").html(adr);
+		$("input#adr").val(adr)
+	});
+}
+
 function resetForm() {
+	$("#sdate").attr("max","");
+	$("#edate").attr("min","");
 	$("#pform").get(0).reset()
 	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
+	updateAddress();
 }
 
 function geocode(cb) {

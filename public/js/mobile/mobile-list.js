@@ -2,6 +2,7 @@ var _PromoRowHlb = undefined;
 var _ActRowHlb = undefined;
 var _Activity = (sessionStorage._Activity) ? JSON.parse(sessionStorage._Activity) : {};
 
+
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
 	_ActRowHlb = Handlebars.compile($("#act-template").html());
@@ -44,7 +45,8 @@ $(document).on( "pagebeforeshow", function() {
 	}
 });
 
-$("#goForm").one("click", function() {
+$("#goForm").off("click").on("click", function(event) {
+	event.stopImmediatePropagation();
 	sessionStorage._Activity = JSON.stringify(_Activity);
 })
 
@@ -102,7 +104,7 @@ function confirmAndDelete( listitem ) {
 	// Show the confirmation popup
 	$( "#confirm" ).popup( "open" );
 	// Proceed when the user confirms
-	$( "#confirm #yes" ).one( "click", function() {
+	$( "#confirm #yes" ).off("click").on( "click", function() {
 		$.ajax({
 			type: "DELETE",
 			url: "/mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
@@ -114,7 +116,7 @@ function confirmAndDelete( listitem ) {
 		});
 	});
 	// Remove active state and unbind when the cancel button is clicked
-	$( "#confirm #cancel" ).one( "click", function() {
+	$( "#confirm #cancel" ).off("click").on( "click", function() {
 		listitem.children( ".ui-btn" ).removeClass( "ui-btn-active" );
 		$( "#confirm #yes" ).off();
 	});
