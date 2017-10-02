@@ -13,36 +13,45 @@ $(document).on( "pagecreate", function() {
 	_Activity = JSON.parse(sessionStorage._Activity);
 	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
 	$("#saveBtn").off("click").on("click", function(event) {
-		event.stopImmediatePropagation();
-		var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
-		var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
-		var promo = {
-			title: $("#title").val(),
-			desc: $("#desc").val(),
-			price: Number($("#price").val()),
-			lat: Number($("input#lat").val()),
-			lon: Number($("input#lon").val()),
-			address: $("input#adr").val()
-		}
-		if(stdate) promo.startDate = stdate;
-		if(enddate) promo.endDate = enddate;
-		
-		$.ajax({
-			type: "POST",
-			url: "/mobile/save/" + _Activity.id,
-			data: promo,
-			dataType: "JSON",
-			success: function(d) {
-				resetForm();
-				$("#savePopup p").html("Your promo has been saved!")
-				$("#savePopup").popup("open");
-			},
-			error:function(e) {
-				$("#savePopup p").html("<span style='color:red;'>An error has occurred!</span>")
-				$("#savePopup").popup("open");
-				//console.log(e)
-			}
-		});
+        var formFields = ["#title", "#desc", "#sdate", "#edate"];
+        event.stopImmediatePropagation();
+        
+        if(!validateForm(formFields)) {
+            $("#savePopup p").html("<span style='color:red;'>Check your data!</span>")
+            $("#savePopup").popup("open");
+        }
+        else {
+            resetFieldStyle(formFields);
+            var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
+            var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
+            var promo = {
+                title: $("#title").val(),
+                desc: $("#desc").val(),
+                price: Number($("#price").val()),
+                lat: Number($("input#lat").val()),
+                lon: Number($("input#lon").val()),
+                address: $("input#adr").val()
+            }
+            if(stdate) promo.startDate = stdate;
+            if(enddate) promo.endDate = enddate;
+            
+            $.ajax({
+                type: "POST",
+                url: "/mobile/save/" + _Activity.id,
+                data: promo,
+                dataType: "JSON",
+                success: function(d) {
+                    resetForm();
+                    $("#savePopup p").html("Your promo has been saved!")
+                    $("#savePopup").popup("open");
+                },
+                error:function(e) {
+                    $("#savePopup p").html("<span style='color:red;'>A server error has occurred!</span>")
+                    $("#savePopup").popup("open");
+                    //console.log(e)
+                }
+            });
+        }
 	})
 
 	$("#savePopup button").off("click").on("click", function(event) {
@@ -71,6 +80,23 @@ $(document).on( "pageshow", "#form", function() {
 ///////////////////////////////
 // FUNCTIONS
 ///////////////////////////////
+function validateForm(a) {
+    var valid = true;
+    a.forEach(function(sel) {
+        if(!$(sel)[0].checkValidity()) {
+            valid = false;
+            $(sel).css("border", "1px solid red");
+        }
+    });
+    return valid;
+}
+
+function resetFieldStyle(a) {
+    a.forEach(function(sel) {
+        $(sel).css("border", "inherit");
+    });
+}
+
 function ScaleContentToDevice(){    
     var header = $(".ui-header").height() + $(".ui-header").outerHeight();
     var content = $.mobile.getScreenHeight() - header;
