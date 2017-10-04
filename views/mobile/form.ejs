@@ -15,7 +15,7 @@
     <!-- FORM PAGE -->
     <div data-role="page" id="form">
         
-        <div data-role="header">
+        <div data-role="header" data-position="fixed">
             <h1>CAPort2020</h1>
             <button id="saveBtn" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">Save</button>    
         </div><!-- /header -->
@@ -23,6 +23,9 @@
         <div role="main" class="ui-content">
             <h3 id="actName"></h3>
             <form id="pform">
+                <label for="type">Type</label>
+                <select name="type" name="select-native-1" id="promotypes" data-native-menu="false"></select>
+                
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" value="" required>
 
@@ -38,9 +41,8 @@
                 <label for="edate">End Date</label>
                 <input type="date" name="edate" id="edate" value="" required>
 
-                <input type="hidden" name="lat" id="lat" value="">
-                <input type="hidden" name="lon" id="lon" value="">
-                <input type="hidden" name="adr" id="adr" value="">
+                <!--label for="img">Image</label>
+                <input name="img" type="file" accept="image/*" capture="camera"-->
             </form>
             <div>
                 <p id="address"></p>
@@ -57,7 +59,7 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="/mobile/" data-icon="bullets" rel="external">My Promos</a></li>
-                    <li><a href="#form/" data-icon="plus" class="ui-btn-active">New Promo</a></li>
+                    <li><a href="#form" data-icon="plus" class="ui-btn-active">New Promo</a></li>
                 </ul>
             </div><!-- /navbar -->
         </div><!-- /footer -->

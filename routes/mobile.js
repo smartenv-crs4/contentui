@@ -24,14 +24,17 @@ module.exports = {
             uri:contentUrl + 'contents/' + req.query.cid + '/promotions/',
             json:true
         }
-        rp(options)
-        .then((results) => {
-            res.json(results.promos);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send();;
-        });
+        sendReq(res, options, "promos");
+    },
+
+    promotypes: (req, res, next) => {
+        let options = {
+            method:'GET',
+            headers: {access_token: config.auth_token},
+            uri:contentUrl + 'promotype/',
+            json:true
+        }
+        sendReq(res, options, "promotype");
     },
 
     //GET lista contents dell'utente
@@ -42,14 +45,7 @@ module.exports = {
             uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER,
             json:true
         }
-        rp(options)
-        .then((results) => {                        
-            res.json(results.contents);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send();;
-        });
+        sendReq(res, options, "contents");
     },
 
     //POST su promotions
@@ -64,7 +60,8 @@ module.exports = {
             lat: Number(req.body.lat),
             lon: Number(req.body.lon),
             price: Number(req.body.price),
-            address: req.body.address
+            address: req.body.address,
+            town: req.body.town
         };
 
         let options = {
@@ -74,14 +71,7 @@ module.exports = {
             uri:contentUrl + 'contents/' + req.params.cid + '/promotions/?fakeuid=' + IDUSER,
             json:true
         }
-        rp(options)
-        .then((results) => {
-            res.json(results);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(err.statusCode).send();
-        });
+        sendReq(res, options);
     },
 
     //DELETE
@@ -92,13 +82,18 @@ module.exports = {
             uri:contentUrl + 'contents/' + req.params.cid + '/promotions/' +req.params.pid + '?fakeuid=' + IDUSER,
             json:true
         }
-        rp(options)
-        .then((results) => {
-            res.json(results);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(err.statusCode).send();
-        });
+       sendReq(res, options);
     }
+}
+
+function sendReq(res, options, label) {
+    rp(options)
+    .then((results) => { 
+        res.json(label ? results[label] : results);
+    })
+    .catch((err) => {
+        console.log(err);
+        if(err.statusCode) res.status(err.statusCode).send();
+        else res.status(500).send();
+    });
 }

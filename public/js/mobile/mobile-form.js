@@ -1,7 +1,10 @@
-///////////////////////////
-//pars:  _Avtivity
-///////////////////////////
-var _Activity = undefined
+//////////////////////////////////////
+//pars:  _Avtivity in sessionStorage
+//////////////////////////////////////
+var _Activity = undefined;
+var _Address = undefined;
+var _Pos = undefined;
+var _Town = undefined;
 
 $(document).ready(function() {
 	$("#map.ui-header").ready(function() {
@@ -11,7 +14,18 @@ $(document).ready(function() {
 
 $(document).on( "pagecreate", function() {
 	_Activity = JSON.parse(sessionStorage._Activity);
-	updateFormPosition(_Activity.position.lat, _Activity.position.lng);
+    updateFormPosition(_Activity.position.lat, _Activity.position.lng);
+    
+    get("/mobile/promotypes", undefined, function(data) {
+        $("#promotypes").empty();
+        data.forEach(function(v, i) {            
+            $("#promotypes").append("<option value='" + v._id + "' " + (i == 0 ? "selected" : "") + ">" + v.name + "</option>")
+        });
+        if($("#promotypes").data("selectmenu") === undefined)
+            $("#promotypes").selectmenu();
+        $("#promotypes").selectmenu("refresh", true);
+    })
+
 	$("#saveBtn").off("click").on("click", function(event) {
         var formFields = ["#title", "#desc", "#sdate", "#edate"];
         event.stopImmediatePropagation();
@@ -25,12 +39,14 @@ $(document).on( "pagecreate", function() {
             var stdate = $("input#sdate").val() == '' ? undefined : $("input#sdate").val();
             var enddate = $("input#edate").val() == '' ? undefined : $("input#edate").val();
             var promo = {
+                type: $("#promotypes option").filter(":selected").val(),
                 title: $("#title").val(),
                 desc: $("#desc").val(),
                 price: Number($("#price").val()),
-                lat: Number($("input#lat").val()),
-                lon: Number($("input#lon").val()),
-                address: $("input#adr").val()
+                lat: _Pos.lat,
+                lon: _Pos.lng,
+                address: _Address,
+                town: _Town
             }
             if(stdate) promo.startDate = stdate;
             if(enddate) promo.endDate = enddate;
@@ -122,21 +138,18 @@ function initMap(center) {
 }
 
 function getPos() {
-	return {
-		lat: Number(document.getElementById("lat").value),
-		lng: Number(document.getElementById("lon").value)
-	}
+	return _Pos
 }
 
 function updateFormPosition(lat, lon) {
-	document.getElementById("lat").value = lat;
-	document.getElementById("lon").value = lon;
+	_Pos = {lat: lat, lng:lon};
 }
 
 function updateAddress() {
-	geocode(function(adr) {
-		$("#address").html(adr);
-		$("input#adr").val(adr)
+	geocode(function(adr, town) {
+        $("#address").html(adr);
+        _Address = adr;
+        _Town = town;
 	});
 }
 
@@ -149,12 +162,14 @@ function resetForm() {
 }
 
 function geocode(cb) {
-	var query = $("input#lat").val() + ',' + $("input#lon").val();
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + query + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
+	var query = _Pos.lat + ',' + _Pos.lng;
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + 
+                query + "&key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ";
 	get(url, undefined, function(data) {
 		if(cb) {
-			if(data.status == "OK")
-				cb(data.results[0].formatted_address);
+            if(data.status == "OK") {
+                cb(data.results[0].formatted_address, getTown(data.results[0]));
+            }
 			else cb(query);
 		}
 	});
@@ -172,4 +187,14 @@ function get(url, par, cb) {
 			console.log(e);
 		}
 	});
+}
+
+function getTown(a) {
+    var items = a.address_components;
+    for(var i = 0; i<items.length; i++) {
+        //esiste un modo piu' efficace?
+        if(items[i].types.indexOf("locality") != -1 || items[i].types.indexOf("administrative_area_level_3") != -1) {
+            return items[i].long_name
+        }
+    }
 }

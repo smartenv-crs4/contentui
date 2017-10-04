@@ -24,7 +24,6 @@ router.get('/activities/favicon.ico', function(req, res, next) {return res.statu
 router.get('/activities/new',       require("./activities").post);
 //router.get('/activities/:id/',       require("./activities").get);
 router.get('/activities/:id',       require("./activities").get);
-
 router.get('/activities/:id/edit',  require("./activities").put);
 ///////////////
 
@@ -36,12 +35,13 @@ router.get('/likes',    require('./search').likes);
 
 
 //Mobile UI
-router.get('/mobile/',   require('./mobile').list);
-router.get('/mobile/form',   require('./mobile').form);
+router.get('/mobile/',      require('./mobile').list);
+router.get('/mobile/form',  require('./mobile').form);
 
-router.get('/mobile/promos',   require('./mobile').promos);
-router.get('/mobile/activities',   require('./mobile').activities);
-router.post('/mobile/save/:cid', require('./mobile').save);
+router.get('/mobile/promos',      require('./mobile').promos);
+router.get('/mobile/activities',  require('./mobile').activities);
+router.get('/mobile/promotypes',  require('./mobile').promotypes);
+router.post('/mobile/save/:cid',  require('./mobile').save);
 router.delete('/mobile/delete/:cid/:pid', require('./mobile').delete);
 ///////////////
 
