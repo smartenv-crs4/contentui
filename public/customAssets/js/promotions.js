@@ -132,7 +132,7 @@ function getPromotionPage(data,token){
     // console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Promotion");
     // console.log(prom);
 
-    geocodeLatLng(data.position[0],data.position[1],function(err,position){
+    geocodeLatLng(data.lat,data.lon,function(err,position){
         if(!err){
             $('#where').text(position);
         }
@@ -144,7 +144,7 @@ function getPromotionPage(data,token){
     MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     initPageComingSoon(data.startDate);
-    initMap(data.position[0],data.position[1],false);
+    initMap(data.lat,data.lon,false);
 }
 
 
