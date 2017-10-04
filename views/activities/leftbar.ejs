@@ -1,5 +1,5 @@
  <div class="col-md-2">
-    <% if(logged) { %>
+    <% if(logged && activityBody) { %>
     Administrators
     <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
         <li><%= activityBody.owner %></li>

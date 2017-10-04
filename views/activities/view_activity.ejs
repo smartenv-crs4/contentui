@@ -78,7 +78,7 @@
                             <ul class="list-inline posted-info">
                                 <li>
 
-                                    <a href="edit?action=edit" id="editUrl"><button id="editContent" type="button"><i class="fa fa-pencil fa-2x" ></i></button></a>
+                                    <a href="<%= baseUrl %>activities/<%= activityId %>/edit?action=edit" id="editUrl"><button id="editContent" type="button"><i class="fa fa-pencil fa-2x" ></i></button></a>
 
                                 </li>
                             </ul>
@@ -137,9 +137,7 @@
                 <p id="address">Indirizzo: </p>
                 <br>
                 <div id="map" class="map margin-bottom-50"></div>
-                <hr>
-                <button id="addContent" class="btn-u" type="button">Add Activity</button>
-
+               
                 <div class="margin-bottom-20"></div>
                 <hr>
             </form>

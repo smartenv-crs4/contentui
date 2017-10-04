@@ -1,4 +1,4 @@
-var request = require('request');
+var request = require('request-promise');
 var config = require('propertiesmanager').conf;
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
@@ -11,8 +11,7 @@ module.exports = {
 
 		request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
 			if (error) console.log("ERRR " + error);
-			var commonBody = JSON.parse(body);			
-
+			var commonBody = JSON.parse(body);
 			request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
 				if (error) {
 					return res.boom.badImplementation()
@@ -21,6 +20,7 @@ module.exports = {
 
 				return res.render('activities/view_activity', {
 					activityBody: JSON.parse(body),
+					activityId: activity_id,
 					baseUrl: baseUrl,
 					uploadUrl: uploadUrl,
 					contentUrl: contentUrl,
@@ -32,7 +32,10 @@ module.exports = {
 					headerScript: commonBody.header.js,
 					logged:true //TODO come???
 				});
-			});
+			})
+			.catch(e => {
+				console.log(e)
+			})
 		});
 	},
 
@@ -43,9 +46,10 @@ module.exports = {
 	    		res.boom.badImplementation();
 	    	}
 	    
-		    var body = JSON.parse(body);
+			var body = JSON.parse(body);
+			
 		    return res.render('activities/form_activity', {
-				activityBody: {},
+				activityBody: undefined,
 				params: JSON.stringify(req.params),
 				query: JSON.stringify(req.query),
 				baseUrl:baseUrl,
@@ -59,7 +63,10 @@ module.exports = {
 				headerScript:body.header.js,
 				logged:true
 		  	});
-		});
+		})
+		.catch(e => {
+			console.log(e)
+		})
 	},
 
 	put: (req, res, next) => { 
