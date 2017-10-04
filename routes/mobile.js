@@ -61,7 +61,8 @@ module.exports = {
             lon: Number(req.body.lon),
             price: Number(req.body.price),
             address: req.body.address,
-            town: req.body.town
+            town: req.body.town,
+            type: req.body.type
         };
 
         let options = {
