@@ -10,7 +10,8 @@ let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : 
 
 let access_token = config.auth_token;
 
-const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
+//const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
+const IDUSER = '589d7f8b35e9e72603ccf850'; //TODO recuperare da login
 
 module.exports = {
     list: (req, res, next) => { res.render('mobile/list', { baseUrl:baseUrl }); },
