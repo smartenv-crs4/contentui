@@ -80,11 +80,11 @@ module.exports = {
 		var activity_id = req.params.id;
   		var action = req.params.action;
 
-    	request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
+    	request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, cbody) {
     		if (error) console.log("ERRR " + error);
 			var commonBody = undefined;
 			try {
-				commonBody = JSON.parse(body);
+				commonBody = JSON.parse(cbody);
 			}
 			catch(ex) {
 				console.log(ex);
@@ -98,11 +98,19 @@ module.exports = {
 					console.log("ERRR " + error);
 					return res.boom.badImplementation();
 				}
-			  
+				var abody = undefined;
+				try {
+					abody = JSON.parse(body);
+				}
+				catch(ex) {
+					console.log(ex);
+					res.boom.badImplementation();
+				}
+
 			  	return res.render('activities/form_activity', {
 				    params: JSON.stringify(req.params),
 				    query: JSON.stringify(req.query),
-				    activityBody: JSON.parse(body),
+				    activityBody: aBody,
 				    baseUrl: baseUrl,
 				    uploadUrl:uploadUrl,
 				    contentUrl: contentUrl,
