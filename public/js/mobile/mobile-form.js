@@ -16,7 +16,7 @@ $(document).on( "pagecreate", function() {
 	_Activity = JSON.parse(sessionStorage._Activity);
     updateFormPosition(_Activity.position.lat, _Activity.position.lng);
     
-    get("mobile/promotypes", undefined, function(data) {
+    get("../promotypes", undefined, function(data) {
         $("#promotypes").empty();
         data.forEach(function(v, i) {            
             $("#promotypes").append("<option value='" + v._id + "' " + (i == 0 ? "selected" : "") + ">" + v.name + "</option>")
@@ -53,7 +53,7 @@ $(document).on( "pagecreate", function() {
             
             $.ajax({
                 type: "POST",
-                url: "mobile/save/" + _Activity.id,
+                url: "../save/" + _Activity.id,
                 data: promo,
                 dataType: "JSON",
                 success: function(d) {
