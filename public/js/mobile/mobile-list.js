@@ -9,7 +9,7 @@ $(document).ready(function() {
 })
 
 $(document).on( "pageinit", function() {
-	get("/mobile/activities", undefined, function(data) {
+	get("mobile/activities", undefined, function(data) {
 		$("#activities").html(_ActRowHlb({activities:data}));
 		
 		if(_Activity.id)
@@ -26,14 +26,14 @@ $(document).on( "pageinit", function() {
 		_Activity.id = $(act).val();
 		_Activity.name = $(act).text();
 		_Activity.position = {lat:Number(p[0]), lng:Number(p[1])};
-		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+		get("mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 
 		$("#activities").change(function() {
 			var p = $(this).find("option").filter(":selected").attr("data-pos").split(","); 
 			_Activity.id = this.value;
 			_Activity.name = this.options[this.selectedIndex].innerHTML;
 			_Activity.position = {lat:Number(p[0]), lng:Number(p[1])};
-			get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+			get("mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 		})
 	});
 });
@@ -41,7 +41,7 @@ $(document).on( "pageinit", function() {
 $(document).on( "pagebeforeshow", function() {
 	if(_Activity.id) {
 		$('#activities option[value='+_Activity.id+']').attr('selected','selected');
-		get("/mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
+		get("mobile/promos/", {name:"cid", value:_Activity.id}, renderPromoAndEvent);
 	}
 });
 
@@ -107,7 +107,7 @@ function confirmAndDelete( listitem ) {
 	$( "#confirm #yes" ).off("click").on( "click", function() {
 		$.ajax({
 			type: "DELETE",
-			url: "/mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
+			url: "mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
 			dataType: "JSON",
 			success: function(d) {
 				listitem.remove();
