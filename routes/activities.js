@@ -1,4 +1,4 @@
-var request = require('request-promise');
+var request = require('request');
 var config = require('propertiesmanager').conf;
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
@@ -7,11 +7,17 @@ let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 
 module.exports = {
 	get: (req, res, next) => {
-		var activity_id = req.params.id;
-
+		var activity_id = req.params.id;		
 		request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
 			if (error) console.log("ERRR " + error);
-			var commonBody = JSON.parse(body);
+			var commonBody = undefined;
+			try {
+				commonBody = JSON.parse(body);
+			}
+			catch(ex) {
+				console.log(ex);
+				return res.boom.badImplementation()
+			}
 			request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
 				if (error) {
 					return res.boom.badImplementation()
@@ -33,9 +39,6 @@ module.exports = {
 					logged:true //TODO come???
 				});
 			})
-			.catch(e => {
-				console.log(e)
-			})
 		});
 	},
 
@@ -46,7 +49,14 @@ module.exports = {
 	    		res.boom.badImplementation();
 	    	}
 	    
-			var body = JSON.parse(body);
+			var body = undefined;
+			try {
+				body = JSON.parse(body);
+			}
+			catch(ex) {
+				console.log(ex);
+				res.boom.badImplementation();
+			}
 			
 		    return res.render('activities/form_activity', {
 				activityBody: undefined,
@@ -64,9 +74,6 @@ module.exports = {
 				logged:true
 		  	});
 		})
-		.catch(e => {
-			console.log(e)
-		})
 	},
 
 	put: (req, res, next) => { 
@@ -75,7 +82,14 @@ module.exports = {
 
     	request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
     		if (error) console.log("ERRR " + error);
-        	var commonBody = JSON.parse(body);
+			var commonBody = undefined;
+			try {
+				commonBody = JSON.parse(body);
+			}
+			catch(ex) {
+				console.log(ex);
+				res.boom.badImplementation();
+			}
 
     		console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
 

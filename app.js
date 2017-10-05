@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var promotions=require('./routes/promotions');
 var token=require('./routes/token');
 var content=require('./routes/contents');
+var boom = require('express-boom');
+
 
 var routes = require('./routes/index');
 
@@ -19,6 +21,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(boom());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/doc', express.static('doc',{root:'doc'}));
