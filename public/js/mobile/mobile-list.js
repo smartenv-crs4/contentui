@@ -9,7 +9,7 @@ $(document).ready(function() {
 })
 
 $(document).on( "pageinit", function() {
-	get("/mobile/activities/", undefined, function(data) {
+	get("/mobile/activities", undefined, function(data) {
 		$("#activities").html(_ActRowHlb({activities:data}));
 		
 		if(_Activity.id)
