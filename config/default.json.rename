@@ -9,7 +9,7 @@
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
-    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
+    "languageManagerLibUrl":"your_language_manager_lib_url"
   },
   "dev": {
     "enableCors":true,
@@ -21,7 +21,7 @@
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
-    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
+    "languageManagerLibUrl":"your_language_manager_lib_urls"
     }
 }
 
