@@ -5,6 +5,7 @@ var _Activity = undefined;
 var _Address = undefined;
 var _Pos = undefined;
 var _Town = undefined;
+var _Auth = (sessionStorage.auth) ? JSON.parse(sessionStorage.auth) : {};
 
 $(document).ready(function() {
 	$("#map.ui-header").ready(function() {
@@ -55,6 +56,7 @@ $(document).on( "pagecreate", function() {
                 type: "POST",
                 url: "../save/" + _Activity.id,
                 data: promo,
+                headers: {Authorization: "Bearer " + _Auth.token},
                 dataType: "JSON",
                 success: function(d) {
                     resetForm();

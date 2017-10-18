@@ -8,11 +8,6 @@ let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/'
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
 
-let access_token = config.auth_token;
-
-//const IDUSER = 'abcbabcabcbabcbabcba1234'; //TODO recuperare da login
-const IDUSER = '589d7f8b35e9e72603ccf850'; //TODO recuperare da login
-
 module.exports = {
     list: (req, res, next) => { res.render('mobile/list', { baseUrl:baseUrl }); },
     form: (req, res, next) => { res.render('mobile/form', { baseUrl:baseUrl }); },
@@ -21,7 +16,7 @@ module.exports = {
     promos: (req, res, next) => {
         let options = {
             method:'GET',
-            headers: {access_token: config.auth_token},
+            headers: {Authorization: "Bearer " + config.auth_token},
             uri:contentUrl + 'contents/' + req.query.cid + '/promotions/',
             json:true
         }
@@ -31,7 +26,7 @@ module.exports = {
     promotypes: (req, res, next) => {
         let options = {
             method:'GET',
-            headers: {access_token: config.auth_token},
+            headers: {Authorization: "Bearer " + config.auth_token},
             uri:contentUrl + 'promotype/',
             json:true
         }
@@ -40,10 +35,11 @@ module.exports = {
 
     //GET lista contents dell'utente
     activities: (req, res, next) => {
+        let uid = req.query.uid;
         let options = {
             method:'GET',
-            headers: {access_token: config.auth_token},
-            uri:contentUrl + 'search/?t=content' + '&by_uid=' + IDUSER,
+            headers: {Authorization: "Bearer " + config.auth_token},
+            uri:contentUrl + 'search/?t=content' + '&by_uid=' + uid,
             json:true
         }
         sendReq(res, options, "contents");
@@ -68,11 +64,12 @@ module.exports = {
 
         let options = {
             method:'POST',
-            headers: {access_token: config.auth_token},
+            headers: {Authorization: req.get("Authorization")},
             body: promo,
-            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/?fakeuid=' + IDUSER,
+            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/',
             json:true
         }
+        console.log(options)
         sendReq(res, options);
     },
 
@@ -80,8 +77,8 @@ module.exports = {
     delete: (req, res, next) => {
         let options = {
             method:'DELETE',
-            headers: {access_token: config.auth_token},            
-            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/' +req.params.pid + '?fakeuid=' + IDUSER,
+            headers: {Authorization: req.get("Authorization")},            
+            uri:contentUrl + 'contents/' + req.params.cid + '/promotions/' +req.params.pid,
             json:true
         }
        sendReq(res, options);
