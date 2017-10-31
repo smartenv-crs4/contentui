@@ -69,7 +69,6 @@ module.exports = {
             uri:contentUrl + 'contents/' + req.params.cid + '/promotions/',
             json:true
         }
-        console.log(options)
         sendReq(res, options);
     },
 
@@ -81,7 +80,7 @@ module.exports = {
             uri:contentUrl + 'contents/' + req.params.cid + '/promotions/' +req.params.pid,
             json:true
         }
-       sendReq(res, options);
+        sendReq(res, options);
     }
 }
 
