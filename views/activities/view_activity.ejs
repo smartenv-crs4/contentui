@@ -28,8 +28,8 @@
     <link rel="stylesheet" href="/assets/css/blocks.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 
-    <link rel="stylesheet" href="<%= headerCss %>">
-    <link rel="stylesheet" href="<%= footerCss %>">
+    <link rel="stylesheet" href="<%= commonUI.headerCss %>">
+    <link rel="stylesheet" href="<%= commonUI.footerCss %>">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -47,7 +47,7 @@
 
 <div class="wrapper">
 
-    <div> <%- header %> </div>
+    <div id="header_p_HT"> <%- commonUI.header %> </div>
 
     <!--=== Content Part ===-->
     <div class="container content">
@@ -73,7 +73,7 @@
                         <div class="col-sm-10">
                             <h3>Dettagli Attività</h3>
                         </div>
-                        <% if(logged) { %>
+                        <% if(model.logged) { %>
                         <div class="col-sm-2">
                             <ul class="list-inline posted-info">
                                 <li>
@@ -152,7 +152,7 @@
     </div><!--/container-->
     <!--=== End Content Part ===-->
 
-    <div> <%- footer %> </div>
+    <div id="footer_p_HT"> <%- commonUI.footer %> </div>
 
 </div><!--/End Wrapepr-->
 
@@ -160,10 +160,10 @@
 
 
 <script type="text/javascript">
-  var baseUrl = '<%= baseUrl %>';
-  var contentUrl = '<%= contentUrl %>';
-  var uploadUrl = '<%= uploadUrl %>';
-  var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
+  var baseUrl = '<%= model.baseUrl %>';
+  var contentUrl = '<%= model.contentUrl %>';
+  var uploadUrl = '<%= model.uploadUrl %>';
+  var activityBody = JSON.parse('<%- JSON.stringify(model.activityBody) %>');
 </script>
 
 
@@ -181,8 +181,8 @@
 
 
 <!-- JS Global Compulsory -->
-<script src="<%- headerScript %>"></script>
-<script src="<%- footerScript %>"></script>
+<script src="<%- commonUI.headerScript %>"></script>
+<script src="<%- commonUI.footerScript %>"></script>
 
 <script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/plugins/jquery/jquery-migrate.min.js"></script>
