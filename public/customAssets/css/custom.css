@@ -4,8 +4,8 @@
     border-radius: 50%;
     background: rgba(71,101,160, 1);
     color: white;
-    width: 13vmin;
-    height:13vmin;
+    width: 10vmin;
+    height:10vmin;
 }
 
 .pricediv *{
@@ -36,5 +36,26 @@
     cursor: pointer;
     font-weight: bold;
 }
-
 /*promotion price Css End*/
+
+
+/*like and partecipate css Start*/
+.blog-grid .blog-grid-info li.blog-grid-like{
+    font-size: 18px;
+    color: #0c74b1;
+}
+#likecounticon, #likecount{
+    color: #0c74b1;
+}
+
+
+.blog-grid .blog-grid-info li.blog-grid-participate{
+    font-size: 18px;
+    color: #2f7ed6;
+}
+
+
+#participatecounticon,#participatecount{
+    color: #2f7ed6;
+}
+/*like and partecipate css end*/

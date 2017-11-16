@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var promotions=require('./routes/promotions');
 var token=require('./routes/token');
 var content=require('./routes/contents');
+var utilsJs=require('./routes/utils');
 var boom = require('express-boom');
 
 
@@ -36,6 +37,7 @@ app.use(function(req, res, next) {
   else next();
 });
 
+app.use('/utils',utilsJs);
 app.use('/promotions',promotions);
 app.use('/contents',content);
 app.use('/token',token);

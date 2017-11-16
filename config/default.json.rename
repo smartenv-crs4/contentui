@@ -9,7 +9,17 @@
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
-    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
+    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js",
+    "headerParams":{
+      "homePage" : "/",
+      "pageFaq" :  null,
+      "logout" : "logOut();",
+      "login" : null,
+      "loginHomeRedirect": "*contentUIUrl",
+      "afterLoginRedirectTo":"*contentUIUrl",
+      "whoWeAre" : null,
+      "FastSearchUrl" : "/"
+    }
   },
   "dev": {
     "enableCors":true,
@@ -21,7 +31,17 @@
     "contentUIUrl":"your_content_ui_url",
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
-    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js"
+    "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js",
+    "headerParams":{
+      "homePage" : "/",
+      "pageFaq" :  null,
+      "logout" : "logOut();",
+      "login" : null,
+      "loginHomeRedirect": "*contentUIUrl",
+      "afterLoginRedirectTo":"*contentUIUrl",
+      "whoWeAre" : null,
+      "FastSearchUrl" : "/"
+    }
     }
 }
 

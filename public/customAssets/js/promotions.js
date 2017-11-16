@@ -85,7 +85,55 @@
 
 
 
+const lat=1;
+const lon=0;
+let mapInit;
+let autocomplete;
+let positionValid=false;
+let currentPromotion=null;
+let newPromotion=null;
+let iLikeIt=false;
+let iParticipateIt=false;
 
+
+
+
+function loadPromotionImage(){
+
+    var file=$('#updatePicture')[0].files[0];
+    var fd = new FormData();
+    fd.append( file.name.split(".")[0], file);
+
+
+    jQuery.ajax({
+        url: config.contentUIUrl + "/utils/uploadImage?access_token="+userToken,
+        data: fd,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){
+            $('#promotionImage').attr("src",data.resourceUrl);
+            updatePromotionField('images',data.filecode==currentPromotion.images[0] ? null:[data.filecode],true);
+
+        },
+        error: function(xhr, status)
+        {
+
+            var errType="error." + xhr.status;
+            var msg=i18next.t(errType);
+
+            try{
+                msg = msg + " --> " + xhr.responseJSON.error_message;
+            }
+            catch(err){ }
+            jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+        }
+    });
+}
+
+function promotionPictureOpenDialog(){
+    $("#updatePicture").trigger("click");
+}
 
 function geocodeLatLng(lat, lng,callback) {
     let geocoder = new google.maps.Geocoder;
@@ -93,10 +141,7 @@ function geocodeLatLng(lat, lng,callback) {
     let address = null;
     geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
-            console.log("*************************************");
-            console.log(results);
-            if (results[1]) {
-                console.log(results[0].formatted_address);
+            if (results[0]) {
                 address = results[0].formatted_address;
             } else {
                 window.alert('No results found');
@@ -111,40 +156,726 @@ function geocodeLatLng(lat, lng,callback) {
 }
 
 
+function fillInAddress(){
+    setPositionValidity(true);
+    let place = autocomplete.getPlace();
+    mapInit.marker.setPosition(place.geometry.location);
+    mapInit.map.map.setCenter(place.geometry.location);
+
+    let address = $('#promotionWhere').val();
+    updatePromotionField('address',address==currentPromotion.address?null:address,true);
+
+    let pos=[null,null];
+    pos[lat]=place.geometry.location.lat();
+    pos[lon]=place.geometry.location.lng();
+    updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
+
+}
+
+
+
+function geocodeAddress(address,callback) {
+    let geocoder = new google.maps.Geocoder;
+    let addressLatLng={};
+    geocoder.geocode({address:address}, function(results, status) {
+        if (status === 'OK') {
+            if (results[0]) {
+                addressLatLng.address = results[0].formatted_address;
+                addressLatLng.position = results[0].geometry.location;
+            } else {
+                //window.alert('No results found');
+                return callback('No results found',null);
+            }
+        } else {
+            //window.alert('Geocoder failed due to: ' + status);
+            return callback('Geocoder failed due to: ' + status,null);
+        }
+        return callback(null,addressLatLng);
+    });
+}
+function getPositionLatLon(){
+
+    if(!positionValid) {
+        let address = $('#promotionWhere').val();
+        geocodeAddress(address, function (err, position) {
+            if (!err) {
+                mapInit.marker.setPosition(position.position);
+                mapInit.map.map.setCenter(position.position);
+                let pos=[null,null];
+                pos[lat]=position.position.lat();
+                pos[lon]=position.position.lng();
+                updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
+            }
+        });
+        setPositionValidity(true);
+    }
+}
+
+function setPositionValidity(value){
+    positionValid=value;
+}
+
+
+// function savePromotion(){
+//
+//     getPositionLatLon(); // align address with lat lon
+//
+//
+//     jQuery.ajax({
+//         url: config.contentUIUrl + "/promotions/"+ contentID+ "/" + promotionID ,
+//         type: "PUT",
+//         contentType: "application/json; charset=utf-8",
+//         data: JSON.stringify({promotion:newPromotion,user:userToken}),
+//         dataType: "json",
+//         success: function(dataResp, textStatus, xhr)
+//         {
+//             compilePromotion();
+//         },
+//         error: function(xhr, status)
+//         {
+//             var respBlock = jQuery("#responseBlock");
+//             var msg;
+//
+//             try
+//             {
+//                 msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+//             }
+//             catch(err)
+//             {
+//                 msg = i18next.t("error.internal_server_error");
+//             }
+//
+//             respBlock.html(msg);
+//             respBlock.removeClass("hidden");
+//
+//             return;
+//         }
+//     });
+// }
+//
+
+
+function savePromotion(iSANewPromotion){
+
+    getPositionLatLon(); // align address with lat lon
+
+    if(iSANewPromotion){
+        jQuery.ajax({
+            url: config.contentUIUrl + "/contents/" + contentID +"/promotions",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({promotion: newPromotion, user: userToken}),
+            dataType: "json",
+            success: function (dataResp, textStatus, xhr) {
+                promotionID= dataResp._id;
+                compilePromotion();
+            },
+            error: function (xhr, status) {
+                var respBlock = jQuery("#responseBlock");
+                var msg;
+
+                try {
+                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+                }
+                catch (err) {
+                    msg = i18next.t("error.internal_server_error");
+                }
+
+                respBlock.html(msg);
+                respBlock.removeClass("hidden");
+
+                return;
+            }
+        });
+    }else {
+
+        jQuery.ajax({
+            url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
+            type: "PUT",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({promotion: newPromotion, user: userToken}),
+            dataType: "json",
+            success: function (dataResp, textStatus, xhr) {
+                compilePromotion();
+            },
+            error: function (xhr, status) {
+                var respBlock = jQuery("#responseBlock");
+                var msg;
+
+                try {
+                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+                }
+                catch (err) {
+                    msg = i18next.t("error.internal_server_error");
+                }
+
+                respBlock.html(msg);
+                respBlock.removeClass("hidden");
+
+                return;
+            }
+        });
+    }
+}
+
+
+
+
+function setSaveCancelButtonEnabled(status){
+    if(status) {
+        $("#promotionSaveButton").removeClass("btn-u-default").removeAttr('disabled');
+        //$("#promotionCancelButton").removeClass("btn-u-default").addClass("btn-u-dark-blue").removeAttr('disabled');
+    }else{
+        $("#promotionSaveButton").addClass("btn-u-default").attr('disabled');
+        //$("#promotionCancelButton").addClass("btn-u-default").removeClass("btn-u-dark-blue").attr('disabled');
+    }
+
+}
+
+// function newPromotion(){
+//
+//     var currentPromotion=JSON.parse(sessionStorage.getItem("currentPromotion"));
+//
+//     var promotion_admin_template   = $("#admin_promotion_template").html();
+//     var promotionHtml = Handlebars.compile(promotion_admin_template);
+//
+//     var prom={
+//         image:currentPromotion.images[0],
+//         start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
+//         end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
+//         where:"Location",
+//         name:currentPromotion.name,
+//         description:currentPromotion.description,
+//         price:currentPromotion.price
+//     };
+//
+//     stopComingSoon();
+//     jQuery('#promotionContent').html(promotionHtml(prom));
+//     $('body').localize();
+//     MasonryBox.initMasonryBox();
+//     StyleSwitcher.initStyleSwitcher();
+//     Datepicker.initDatepicker();
+//     var startPicher=$('#datetimepickerStart');
+//     startPicher.datetimepicker({
+//             sideBySide:true,
+//             format:"DD/MM/YYYY - HH:mm",
+//             allowInputToggle : true
+//     });
+//
+//     var endPicher=$('#datetimepickerEnd');
+//     endPicher.datetimepicker({
+//         sideBySide:true,
+//         format:"DD/MM/YYYY - HH:mm",
+//         allowInputToggle : true,
+//         useCurrent: false
+//     });
+//
+//     startPicher.on("dp.change", function (e) {
+//         endPicher.data("DateTimePicker").minDate(e.date);
+//     });
+//     endPicher.on("dp.change", function (e) {
+//        startPicher.data("DateTimePicker").maxDate(e.date);
+//     });
+//
+//
+//     mapInit=initMap(39.2253991,9.0933586,6,true);
+//
+//     autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
+//
+//     // When the user selects an address from the dropdown, populate the address
+//     // fields in the form.
+//     autocomplete.addListener('place_changed', fillInAddress);
+//
+//
+//     if (navigator.geolocation) {
+//         navigator.geolocation.getCurrentPosition(function(position) {
+//             mapInit=initMap(position.coords.latitude,position.coords.longitude,12,true);
+//         },function(){
+//             //The Geolocation service failed
+//             handleLocationError("The Geolocation service failed",mapInit);
+//         });
+//     } else {
+//         // Browser doesn't support Geolocation
+//         handleLocationError("Browser doesn't support Geolocation",mapInit);
+//     }
+//
+//    // set Title
+//     $('#promotionTitle').val(currentPromotion.name);
+//     $('#promotionDescription').val(currentPromotion.description);
+//     startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+//     endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+//
+//     // $('#promotionStartDate').val();
+//     // $('#promotionEndDate').val();
+//     $('#promotionPrice').val(currentPromotion.price);
+//
+//     geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
+//         if(!err){
+//             $('#promotionWhere').val(position);
+//         }
+//     });
+//}
+
+
+
+
+function addNewPromotion(){
+
+    //var currentPromotion=JSON.parse(sessionStorage.getItem("currentPromotion"));
+
+    var promotion_admin_template   = $("#admin_promotion_template").html();
+    var promotionHtml = Handlebars.compile(promotion_admin_template);
+
+    var prom={
+        image:"/assets/img/team/img32-md.jpg",
+        isANewPromotion:true
+    };
+
+    jQuery('#promotionContent').html(promotionHtml(prom));
+    $('body').localize();
+    MasonryBox.initMasonryBox();
+    StyleSwitcher.initStyleSwitcher();
+    //Datepicker.initDatepicker();
+
+    currentPromotion={};
+    newPromotion={};
+    // set Title
+    let promotionTitle=$('#promotionTitle');
+    promotionTitle.get(0).oninput=function(){
+        let nameValue=promotionTitle.val();
+        updatePromotionField('name',nameValue==currentPromotion.name?null:nameValue,true);
+    };
+
+    let promotionDescription=$('#promotionDescription');
+    promotionDescription.get(0).oninput=function(){
+        let value=promotionDescription.val();
+        updatePromotionField('description',value==currentPromotion.description?null:value,true);
+    };
+
+
+    let promotionPrice=$('#promotionPrice');
+    promotionPrice.get(0).oninput=function(){
+        let value=promotionPrice.val();
+        updatePromotionField('price',value==currentPromotion.price?null:value,true);
+    };
+
+    let promotionWhere=$('#promotionWhere');
+    // promotionWhere.val(currentPromotion.address);
+    promotionWhere.get(0).oninput=function(){
+        setPositionValidity(false);
+        let value=promotionWhere.val();
+        updatePromotionField('address',value==currentPromotion.address?null:value,true);
+    };
+
+
+    let promotionPicture=$('#updatePicture');
+    //promotionPicture.val(currentPromotion.images[0]);
+    promotionPicture.get(0).onchange=function(){
+        loadPromotionImage();
+    };
+
+
+    var startPicher=$('#datetimepickerStart');
+    startPicher.datetimepicker({
+        sideBySide:true,
+        format:"DD/MM/YYYY - HH:mm",
+        allowInputToggle : true
+    });
+
+    startPicher.data("DateTimePicker").date(new Date());
+    startPicher.on("dp.change", function (e) {
+        endPicher.data("DateTimePicker").minDate(e.date);
+        let value=e.date.toDate();
+        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+    });
+
+    var endPicher=$('#datetimepickerEnd');
+    endPicher.datetimepicker({
+        sideBySide:true,
+        format:"DD/MM/YYYY - HH:mm",
+        allowInputToggle : true,
+        useCurrent: false
+    });
+    endPicher.data("DateTimePicker").date(new Date());
+    endPicher.on("dp.change", function (e) {
+        startPicher.data("DateTimePicker").maxDate(e.date);
+        let value=e.date.toDate();
+        updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
+    });
+
+
+    mapInit=initMap(39.2253991,9.0933586,6,true);
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            mapInit=initMap(position.coords.latitude,position.coords.longitude,12,true);
+            updatePromotionWhere(position.coords.latitude,position.coords.longitude,false);
+            let pos=[null,null];
+            pos[lat]=position.coords.latitude;
+            pos[lon]=position.coords.longitude;
+            updatePromotionField('position',pos,false);
+        },function(){
+            //The Geolocation service failed
+            handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
+            updatePromotionWhere(39.2253991,9.0933586,false);
+            updatePromotionField('position',[39.2253991,9.0933586],false);
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
+        updatePromotionWhere(39.2253991,9.0933586,false);
+        updatePromotionField('position',[39.2253991,9.0933586],false);
+    }
+
+
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+
+    //
+    // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
+    //     if(!err){
+    //         $('#promotionWhere').val(position);
+    //     }
+    // });
+
+}
+
+function handleLocationError(message,InfoWinPosition){
+    var infoWindow = new google.maps.InfoWindow;
+    infoWindow.setContent(message);
+    infoWindow.setPosition({
+        lat: InfoWinPosition[0],
+        lng: InfoWinPosition[1]
+    });
+
+    infoWindow.open(mapInit.map.map,mapInit.marker);
+}
+
+function updatePromotion(){
+
+    //var currentPromotion=JSON.parse(sessionStorage.getItem("currentPromotion"));
+
+    var promotion_admin_template   = $("#admin_promotion_template").html();
+    var promotionHtml = Handlebars.compile(promotion_admin_template);
+
+    var prom={
+        image:config.contentUIUrl+"/utils/image?imageUrl="+currentPromotion.images[0],
+        start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
+        end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
+        where:"Location",
+        name:currentPromotion.name,
+        description:currentPromotion.description,
+        price:currentPromotion.price,
+        isANewPromotion:false
+    };
+
+    stopComingSoon();
+    jQuery('#promotionContent').html(promotionHtml(prom));
+    $('body').localize();
+    MasonryBox.initMasonryBox();
+    StyleSwitcher.initStyleSwitcher();
+    //Datepicker.initDatepicker();
+
+    newPromotion={};
+    // set Title
+    let promotionTitle=$('#promotionTitle');
+    promotionTitle.val(currentPromotion.name);
+    promotionTitle.get(0).oninput=function(){
+        let nameValue=promotionTitle.val();
+        updatePromotionField('name',nameValue==currentPromotion.name?null:nameValue,true);
+    };
+
+    let promotionDescription=$('#promotionDescription');
+    promotionDescription.val(currentPromotion.description);
+    promotionDescription.get(0).oninput=function(){
+        let value=promotionDescription.val();
+        updatePromotionField('description',value==currentPromotion.description?null:value,true);
+    };
+
+
+    let promotionPrice=$('#promotionPrice');
+    promotionPrice.val(currentPromotion.price);
+    promotionPrice.get(0).oninput=function(){
+        let value=promotionPrice.val();
+        updatePromotionField('price',value==currentPromotion.price?null:value,true);
+    };
+
+    let promotionWhere=$('#promotionWhere');
+    promotionWhere.val(currentPromotion.address);
+    promotionWhere.get(0).oninput=function(){
+        setPositionValidity(false);
+        let value=promotionWhere.val();
+        updatePromotionField('address',value==currentPromotion.address?null:value,true);
+    };
+
+
+    let promotionPicture=$('#updatePicture');
+    //promotionPicture.val(currentPromotion.images[0]);
+    promotionPicture.get(0).onchange=function(){
+        loadPromotionImage();
+    };
+
+
+    var startPicher=$('#datetimepickerStart');
+    startPicher.datetimepicker({
+        sideBySide:true,
+        format:"DD/MM/YYYY - HH:mm",
+        allowInputToggle : true
+    });
+    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+    startPicher.on("dp.change", function (e) {
+        endPicher.data("DateTimePicker").minDate(e.date);
+        let value=e.date.toDate();
+        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+    });
+
+    var endPicher=$('#datetimepickerEnd');
+    endPicher.datetimepicker({
+        sideBySide:true,
+        format:"DD/MM/YYYY - HH:mm",
+        allowInputToggle : true,
+        useCurrent: false
+    });
+    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+    endPicher.on("dp.change", function (e) {
+       startPicher.data("DateTimePicker").maxDate(e.date);
+        let value=e.date.toDate();
+        updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
+    });
+
+
+    mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+
+    //
+    // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
+    //     if(!err){
+    //         $('#promotionWhere').val(position);
+    //     }
+    // });
+
+}
+
+
+function updatePromotionField(field,value,updateButtonsSaveCancelstatus){
+    if(value){
+        newPromotion[field]=value;
+    }else{
+        delete newPromotion[field];
+    }
+
+    if(updateButtonsSaveCancelstatus)
+        checkSaveCancelButton();
+
+}
+function checkSaveCancelButton(){
+    if( Object.keys(newPromotion).length >0 ){
+        setSaveCancelButtonEnabled(true);
+    }else{
+        setSaveCancelButtonEnabled(false);
+    }
+}
+
+
+
+function doILike(){
+    jQuery.ajax({
+        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/doilike?access_token=" + userToken,
+        type: "POST",
+        success: function(data, textStatus, xhr){
+                    iLikeIt=data.like || false;
+                    setLikeButton();
+        },
+        error: function(xhr, status){
+            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) ||  i18next.t("error.doilike");
+            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+        }
+    });
+}
+
+
+
+function getLikes(){
+    jQuery.ajax({
+        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/likes",
+        type: "POST",
+        success: function(data, textStatus, xhr){
+            $('#likecount').text(data.total);
+        },
+        error: function(xhr, status){
+            $('#likecount').text( i18next.t("error.getlikes"));
+            // return;
+        }
+    });
+
+    doILike();
+}
+
+
+function setLike(){
+    let url=null;
+    let direction=1;
+
+    if(iLikeIt){//unparticipate
+        url=config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/unlike?access_token=" + userToken;
+        direction=-1;
+
+    }else{//participate
+        url=config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/like?access_token=" + userToken;
+        direction=1;
+    }
+
+    jQuery.ajax({
+        url: url,
+        type: "POST",
+        success: function(data, textStatus, xhr){
+            var likecount=$('#likecount');
+            likecount.text(JSON.parse(likecount.text())+direction);
+            iLikeIt=!iLikeIt;
+            setLikeButton();
+        },
+        error: function(xhr, status){
+
+            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setlike");
+            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            // return;
+        }
+    });
+}
+
+
+function doIParticipate(){
+    jQuery.ajax({
+        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/doiparticipate?access_token=" + userToken,
+        type: "POST",
+        success: function(data, textStatus, xhr){
+            iParticipateIt=data.participation || false;
+            setParticipateButton();
+        },
+        error: function(xhr, status){
+            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.doiparticipate");
+            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+        }
+    });
+}
+
+function getparticipants(){
+    jQuery.ajax({
+        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
+        type: "POST",
+        success: function(data, textStatus, xhr){
+            $('#participatecount').text(data.total);
+        },
+        error: function(xhr, status){
+
+            $('#participatecount').text(i18next.t("error.getparticipants"));
+            // return;
+        }
+    });
+    doIParticipate();
+}
+
+
+
+function setParticipate(){
+    let url=null;
+    let direction=1;
+
+    if(iParticipateIt){//unparticipate
+        url=config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/unparticipate?access_token=" + userToken;
+        direction=-1;
+
+    }else{//participate
+        url=config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participate?access_token=" + userToken;
+        direction=1;
+    }
+
+    jQuery.ajax({
+        url: url,
+        type: "POST",
+        success: function(data, textStatus, xhr){
+            var likecount=$('#participatecount');
+            likecount.text(JSON.parse(likecount.text())+direction);
+            iParticipateIt=!iParticipateIt;
+            setParticipateButton();
+        },
+        error: function(xhr, status){
+
+            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setparticipate");
+            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            // return;
+        }
+    });
+}
+
+
+
+
+
+function  setLikeButton(){
+    var likecounticon=$('#likecounticon');
+    if(iLikeIt){
+        likecounticon.removeClass("fa-thumbs-up");
+        likecounticon.addClass("fa-thumbs-down")
+    }else{
+        likecounticon.removeClass("fa-thumbs-down");
+        likecounticon.addClass("fa-thumbs-up")
+    }
+}
+
+function  setParticipateButton(){
+    var participatecounticon=$('#participatecounticon');
+    if(iParticipateIt){
+        participatecounticon.removeClass("fa-user");
+        participatecounticon.addClass("fa-users");
+    }else{
+        participatecounticon.removeClass("fa-users");
+        participatecounticon.addClass("fa-user");
+    }
+}
 
 function getPromotionPage(data,token){
 
+
     var promotion_template   = $("#promotion_template").html();
     var promotionHtml = Handlebars.compile(promotion_template);
+    currentPromotion=data;
 
     var prom={
-        image:data.images[0],
+        image:config.contentUIUrl+"/utils/image?imageUrl="+data.images[0],
         start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
         name:data.name,
         description:data.description,
         price:data.price,
-        token:token
+        token:token,
+        contentId:contentID,
+        access_token:userToken
     };
-
-
-    // console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Promotion");
-    // console.log(prom);
-
-    geocodeLatLng(data.lat,data.lon,function(err,position){
-        if(!err){
-            $('#where').text(position);
-        }
-    });
-
 
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
+    getLikes();
+    getparticipants();
+    if(data.address){
+        $('#where').text(data.address);
+    }else {
+        geocodeLatLng(data.position[lat], data.position[lon], function (err, position) {
+            if (!err) {
+                $('#where').text(position);
+            }
+        });
+    }
     MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     initPageComingSoon(data.startDate);
-    initMap(data.lat,data.lon,false);
+    initMap(data.position[lat],data.position[lon],12,false);
 }
 
 
@@ -161,11 +892,14 @@ function compilePromotion(){
 
 
 
+    newPromotion={};
+
     jQuery.ajax({
-        url: config.contentUIUrl + "/promotions/"+ contentID+ "/" + promotionID ,
+        url: config.contentUIUrl + "/contents/"+ contentID+ "/promotions/" + promotionID ,
         type: "GET",
         success: function(data, textStatus, xhr)
         {
+            sessionStorage.setItem("currentPromotion",JSON.stringify(data)); // copy for value
 
             if(userToken){
                 async.series([
@@ -185,16 +919,13 @@ function compilePromotion(){
                                 {
                                     var msg;
                                     try{
-                                        msg = xhr.responseJSON.error_message;
+                                        msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.invalidtoken");
                                     }
                                     catch(err){
                                         msg = "invalid Token";
                                     }
-
-                                    console.log("DECODE TOKEN CALL");
-                                    console.log(xhr);
+                                    jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
                                     callback(msg,null);
-
                                 }
                             });
                         },
@@ -207,13 +938,12 @@ function compilePromotion(){
                                     callback(null, data.superuser);
                                 },
                                 error: function(xhr, status){
-
                                     var msg;
                                     try{
-                                        msg = xhr.responseJSON.error_message;
+                                        msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.admintokentype");
                                     }
                                     catch(err){
-                                        msg = "error in get admin Token Types";
+                                        msg = "invalid Token";
                                     }
                                     jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
                                     callback(null,[]); // no admins token type
@@ -234,16 +964,16 @@ function compilePromotion(){
                                 },
                                 error: function(xhr, status){
 
+
                                     var msg;
                                     try{
-                                        msg = xhr.responseJSON.error_message;
+                                        msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.contentadmins");
                                     }
                                     catch(err){
-                                        msg = "error in get content";
+                                        msg = "invalid Token";
                                     }
-
-
                                     jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+
                                     callback(null,[]);//no contents admins
                                     // return;
                                 }
@@ -276,19 +1006,14 @@ function compilePromotion(){
         },
         error: function(xhr, status)
         {
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            console.log(config.contentUIUrl + "promotions/"+ contentID+ "/" + promotionID);
-            console.log(xhr);
-            var msg;
-            try
-            {
-                msg = xhr.responseJSON.error_message;
-            }
-            catch(err)
-            {
-                msg = i18next.t("error.internal_server_error");
-            }
 
+            var msg;
+            try{
+                msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.internal_server_error");
+            }
+            catch(err){
+                msg = "invalid Token";
+            }
             jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
 
             return;
@@ -298,57 +1023,115 @@ function compilePromotion(){
 };
 
 
+function openPromotionPage(isANewPromotion){
+    if(isANewPromotion){
+        addNewPromotion();
+    }else{
+        compilePromotion();
+    }
+}
 
 
-function getPromotions()
+
+function initPromotionsPage(isANewPromotion)
 {
    if(canTranslate){
-       console.log("Can Translate");
-       compilePromotion();
+       openPromotionPage(isANewPromotion);
    } else{
-       console.log("Wait TO Translate");
        addEventListener('promotionLanguageManagerInitialized', function (e) {
            canTranslate=true;
-           console.log("Now Can Translate");
-          compilePromotion();
+           openPromotionPage(isANewPromotion);
        }, false);
    }
 
 
 }
 
-
-
-
-function initMap(latitude,longitude,editable) {
-
-
-    var map = new GMaps({
-        div: '#map',
-        scrollwheel: false,
-        lat: latitude,
-        lng: longitude,
-        zoom: 12,
-        click: function (event) {
-            if(editable) {
-                latitude = event.latLng.lat();
-                longitude = event.latLng.lng();
-                marker.setPosition(new google.maps.LatLng(latitude, longitude));
-            }
+function updatePromotionWhere(lat,lng,updateSaveCancelButtonStatus){
+    geocodeLatLng(lat,lng,function(err,address){
+        if(!err){
+            $('#promotionWhere').val(address);
+            setPositionValidity(updateSaveCancelButtonStatus);
+            updatePromotionField('address',address==currentPromotion.address?null:address,updateSaveCancelButtonStatus);
         }
     });
+}
 
-    var marker = map.addMarker({
+
+function createMapsOptions(latitude,longitude,zoom,editable,marker){
+    var option;
+    if(latitude && longitude){
+        option={
+            div: '#map',
+            scrollwheel: true,
+            lat: latitude,
+            lng: longitude,
+            zoom: zoom,
+            click: function (event) {
+                if(editable) {
+                    let lat = event.latLng.lat();
+                    let long = event.latLng.lng();
+                    marker.mrk.setPosition(new google.maps.LatLng(lat, long));
+                    updatePromotionWhere(lat,long,true);
+                }
+            }
+        }
+    }else{
+        option={
+            div: '#map',
+            scrollwheel: true,
+            zoom: zoom,
+            click: function (event) {
+                if(editable) {
+                    let lat = event.latLng.lat();
+                    let long = event.latLng.lng();
+                    marker.mrk.setPosition(new google.maps.LatLng(lat, long));
+                    updatePromotionWhere(lat,long,true);
+                }
+            }
+        }
+    }
+
+    return option;
+}
+
+
+function initMap(latitude,longitude,zoom,editable) {
+
+    var marker={};
+    var map = new GMaps(createMapsOptions(latitude,longitude,zoom,editable,marker));
+
+    marker.mrk = map.addMarker({
         lat: latitude,
-        lng: longitude
+        lng: longitude,
+        icon:'/customAssets/img/marker/port.png',
+        draggable:editable,
+        dragend:function(){
+            if(editable) {
+                var cPos=this.getPosition();
+                geocodeLatLng(cPos.lat(),cPos.lng(),function(err,address){
+                    if(!err){
+                        $('#promotionWhere').val(address);
+                        setPositionValidity(true);
+                        updatePromotionField('address',address==currentPromotion.address?null:address,true);
+                    }
+                });
+
+                let pos=[null,null];
+                pos[lat]=cPos.lat();
+                pos[lon]=cPos.lng();
+                updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
+
+            }
+        }
     });
 
     addEventListener('zoomMap', function (e) {
         map.setZoom(20);
     }, false);
 
+    return {map:map,marker:marker.mrk};
 }
-
 
 
 function mapZoom(){
@@ -360,191 +1143,8 @@ function mapZoom(){
 
 
 
-function updateProfile()
-{
-    var data = {"user":{}};
 
 
-    jQuery("#profile .updatable").each(function(){
-        var celement=$(this);
-        var name = celement.data("name");
-        celement.removeClass("updatable");
-        var value= this.textContent;
-        if(this.innerHTML.indexOf("<mark>")>=0)
-          this.innerHTML=this.textContent;
-        data.user[name]=value;
-    });
-
-
-    jQuery.ajax({
-        url: _userMsUrl + "/users/" + userData._id+"?access_token=" + userData.UserToken,
-        type: "PUT",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(dataResp, textStatus, xhr)
-        {
-
-            jQuery.jGrowl(i18next.t("profile.saved"), {theme:'bg-color-green1', life: 5000});
-
-            jQuery("#profileCancel").removeClass().addClass("btn-u btn-u-default").attr("disabled","disabled");
-            jQuery("#profileSave").removeClass().addClass("btn-u btn-u-default").attr("disabled","disabled");
-
-            _.each(data.user,function(value,key){
-              userData[key]=value;
-            });
-
-            if(!_.isEmpty(data.user.avatar))
-              jQuery('#imgBox').attr("src", _userMsUrl + "/users/actions/getprofileimage/" +userData.avatar+"?access_token=" + userData.UserToken);
-
-
-            // var defaultImg = "assets/img/team/img32-md.jpg";
-            //
-            // if(data.user.logo)
-            // {
-            //     jQuery("#imgBox").attr("src", data.user.logo);
-            //     sessionStorage.logo = data.user.logo;
-            // }
-            // else
-            // {
-            //     jQuery("#imgBox").attr("src", defaultImg);
-            //     sessionStorage.logo = undefined;
-            // }
-        },
-        error: function(xhr, status)
-        {
-            var msg;
-            try
-            {
-                msg = xhr.responseJSON.error_message;
-            }
-            catch(err)
-            {
-                msg = i18next.t("error.internal_server_error");
-            }
-
-            jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
-
-            return;
-        }
-    });
-}
-
-
-
-function openBrowseFile(){
-    $('#loadThumbnailImageProfile').click();
-}
-
-
-function loadProfileImage(){
-    var file=$('#loadThumbnailImageProfile')[0].files[0];
-
-    var fd = new FormData();
-    fd.append( file.name.split(".")[0], file);
-
-    jQuery.ajax({
-        url: _userMsUrl + "/users/actions/uploadprofileimage",
-        data: fd,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function(data){
-            jQuery('#ed-avatarButton').click();
-//            console.log(jQuery('#ed-avatar').html());
-            jQuery('#ed-avatar').html(data.filecode).blur();
-            jQuery('#profileSave').click();
-        },
-        error: function(xhr, status)
-        {
-
-            var errType="error." + xhr.status;
-            var msg=i18next.t(errType);
-
-            try{
-                msg = msg + " --> " + xhr.responseJSON.error_message;
-            }
-            catch(err){ }
-           jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
-        }
-    });
-}
-
-
-function changePassword()
-{
-    if(!userData.UserToken)
-    {
-        redirectToResetPassword();
-    }
-
-    var oldPassword = jQuery("#oldPassword").val();
-    var newPassword = jQuery("#newPassword1").val();
-    var newPassword2 = jQuery("#newPassword2").val();
-
-    var respBlock = jQuery("#responseBlock");
-
-    if(newPassword !== newPassword2 || newPassword === "")
-    {
-
-        respBlock.html(i18next.t("error.password_differs"));
-        respBlock.removeClass("hidden");
-        return;
-    }
-
-    var data = new Object();
-    data.oldpassword = oldPassword;
-    data.newpassword = newPassword;
-
-
-    console.log(_userMsUrl + "/users/" +  userData._id + "/actions/setpassword");
-
-
-    jQuery.ajax({
-        url: _userMsUrl + "/users/" +  userData._id + "/actions/setpassword",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(dataResp, textStatus, xhr)
-        {
-            respBlock.addClass("hidden");
-            jQuery('#tabProfile').click();
-            jQuery("#oldPassword").val("");
-            jQuery("#newPassword1").val("");
-            jQuery("#newPassword2").val("");
-            jQuery.jGrowl(i18next.t("profile.passwordSaved"), {theme:'bg-color-green1', life: 5000});
-
-        },
-        error: function(xhr, status)
-        {
-            var msg;
-
-            console.log("$$$$$$$$$$$$$$$$$$ RESET PAssword");
-            console.log(xhr);
-            console.log(status);
-
-            try
-            {
-                msg = xhr.responseJSON.error_message;
-            }
-            catch(err)
-            {
-                msg = i18next.t("error.internal_server_error");
-            }
-
-            respBlock.html(msg);
-            respBlock.removeClass("hidden");
-
-            return;
-        },
-        beforeSend: function(xhr, settings)
-        {
-            xhr.setRequestHeader('Authorization','Bearer ' +  userData.UserToken);
-        }
-    });
-
-}
 
 
 
