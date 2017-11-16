@@ -12,3 +12,10 @@ function initToken() {
         userToken = window.localStorage.token;
     }
 }
+
+
+
+function removeTokenAfterLogOut(){
+    window.localStorage.removeItem("token");
+    userToken=null;
+}

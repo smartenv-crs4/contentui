@@ -1,11 +1,12 @@
 var config = require('propertiesmanager').conf;
 var express = require('express');
 var router = express.Router();
-var rp = require('request-promise');
 var request = require('request');
+var promotions=require('./promotions');
 
 
-
+let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
+config.contentUrl=contentUrl;
 
 
 router.get('/:id', function(req, res, next) {
@@ -22,6 +23,10 @@ router.get('/:id', function(req, res, next) {
     }
 });
 
+router.use('/:cid/promotions',function(req,res,next){
+    req.contentId=req.params.cid;
+    next();
+},promotions);
 
 module.exports = router;
 

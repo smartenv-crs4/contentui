@@ -6,6 +6,7 @@ var request = require('request');
 var multiparty = require('multiparty');
 var magic = require('stream-mmmagic');
 var FormData = require('form-data');
+var renderPage=require('./render');
 
 //???????? ds RIMUOVERE ?????????
 let USER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiY29udGVudG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxODAzMTM2MzQ2NDI0fQ.c6QQR4daG_kfvme6nd4FqFnoOEkF2ejBo99uXZLMaRs";
@@ -45,54 +46,6 @@ router.post('/mobile/save/:cid',  require('./mobile').save);
 router.delete('/mobile/delete/:cid/:pid', require('./mobile').delete);
 ///////////////
 
-
-
-/* Albe
-router.post('/actions/uploadimage', function(req, res) {
-
-  console.log("calling /actions/uploadimage");
-
-  readStream(["image"],req,function(err,stream){
-
-    var formData = {};
-
-    console.log("\n\n\ndopo formdata ");
-
-
-    formData[stream.tag]={
-      value:stream.file,
-      options: {
-        filename: stream.filename,
-        knownLength: stream.byteCount,
-        contentType: stream.contentType
-      }
-    };
-
-
-    var options ={
-      url: uploadUrl+"file?access_token="+USER_TOKEN,
-      method: "POST",
-      formData:formData,
-      preambleCRLF: true,
-      postambleCRLF: true
-    };
-
-    console.log("\n\n\n\n\n sending these options: ");
-    console.log(options);
-
-
-    request.post(options,function(err,response,body){
-      console.log("body is: "+body);
-
-      if(!JSON.parse(body).hasOwnProperty('filecode'))  // this is an upload error
-        return res.status(500).send({error_code:body.statusCode, error:"Internalerror", error_message:body.message});
-
-      res.status(201).send(JSON.parse(body));
-    });
-
-  });
-});
-*/
 
 router.post('/actions/uploadimage', function(req, res) {
 
@@ -180,25 +133,20 @@ function readStream(allowedMime,req,callback){
 
 
 // promotions
-router.get('/activities/:id_content/promotions/new', function(req, res, next) {
-  request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
-    if (error) console.log("ERRR " + error);
-    console.log(body);
-    body = JSON.parse(body);
-    return res.render('form_promotion', {
-      activityBody: {},
-      params: JSON.stringify(req.params),
-      query: JSON.stringify(req.query),
-      baseUrl:baseUrl,
-      uploadmsUrl:uploadUrl,
-      contentsUrl:contentUrl,
-      footer:body.footer.html,
-      footerCss:body.footer.css,
-      footerScript:body.footer.js,
-      header:body.header.html,
-      headerCss:body.header.css,
-      headerScript:body.header.js});
-  });
+router.get('/activities/:aid/promotions/new', function(req, res, next) {
+    var activity_id = req.params.aid;
+    var access_token=req.query.access_token || null;
+
+    renderPage.renderPage(res,'view_promotion',{
+        access_token:access_token,
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        },
+        contentID:activity_id,
+        promotionID:null,
+        isANewPromotion:true
+    });
 });
 
 
@@ -214,6 +162,7 @@ router.get('/env', function(req, res) {
 });
 
 
+
 router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
 
@@ -221,76 +170,18 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
     var promotion_id = req.params.pid;
     var access_token=req.query.access_token || null;
 
-    //todo Da Rimuovere questo controllo, serve solo per debug
-    if(activity_id=="0000"){
-        activity_id="58bec16509a61e1db51bf9cb";
-        promotion_id="58bb5a5746e0fba34e3d8ce4";
-    }
 
-
-    request.get(config.commonUIUrl+"/headerAndFooter", function (error, response, body) {
-        if (error) console.log("ERRR " + error);
-        console.log(body);
-        var commonBody = JSON.parse(body);
-
-        console.log("\n\ncalling contents/ "+config.contentUrl+"/contents/"+activity_id);
-
-
-        return res.render('view_promotion', {
-            access_token:access_token,
-            commonUI:{
-              footer: commonBody.footer.html,
-              footerCss: commonBody.footer.css,
-              footerScript: commonBody.footer.js,
-              header: commonBody.header.html,
-              headerCss: commonBody.header.css,
-              headerScript: commonBody.header.js,
-              languagemanager:config.languageManagerLibUrl
-            },
-            properties:{
-                contentUIUrl:config.contentUIUrl ,
-                commonUIUrl:config.commonUIUrl
-            },
-            contentID:activity_id,
-            promotionID:promotion_id
-
-        });
-
-        // request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
-        //     if (error) console.log("ERRR " + error);
-        //     console.log("\n\nGET ACTIVITY: "+JSON.stringify(body));
-        //
-        //     return res.render('view_promotion', {
-        //         promotion: body,
-        //         baseUrl: baseUrl,
-        //         uploadUrl: uploadUrl,
-        //         contentUrl: contentUrl,
-        //         footer: commonBody.footer.html,
-        //         footerCss: commonBody.footer.css,
-        //         footerScript: commonBody.footer.js,
-        //         header: commonBody.header.html,
-        //         headerCss: commonBody.header.css,
-        //         headerScript: commonBody.header.js
-        //     });
-        // });
+    renderPage.renderPage(res,'view_promotion',{
+        access_token:access_token,
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        },
+        contentID:activity_id,
+        promotionID:promotion_id,
+        isANewPromotion:false
     });
 });
 
-
-
-
-
 module.exports = router;
 
-/*
-config file per host ricerche
-
-middleware auth
-
-- GET visualizza la pagina di ricerca
-  - pagina chiama POST che effettua la ricerca
-    - POST forwarda al microservizio contentms
-    - POST restituisce risultati a pagina di ricerca
-  - pagina di ricerca aggiorna i contenuti dinamicamente
-
-*/

@@ -1,12 +1,118 @@
 {
+  "error": {
+    "400": {
+      "en": "Bad request",
+      "it": "Richiesta non valida"
+    },
+    "401": {
+      "en": "You are not authorized to access this resource",
+      "it": "Non sei autorizzato ad accedere a questa funzione"
+    },
+    "403": {
+      "en": "You are not authorized to access this resource",
+      "it": "Non sei autorizzato ad accedere a questa funzione"
+    },
+    "500": {
+      "en": "Internal server error",
+      "it": "Errore interno del server"
+    },
+    "404": {
+      "en": "Resource Not found",
+      "it": "Risorsa non trovata"
+    },
+    "invalid_access_token": {
+      "en": "Your acccess token is expired or invalid",
+      "it": "Il tuo access token è scaduto o invalido"
+    },
+    "invalid_email": {
+      "en": "Your email address is not valid",
+      "it": "L'indirizzo email inserito non &egrave; valido"
+    },
+    "bad_request": {
+      "en": "Bad Request",
+      "it": "Richiesta non valida"
+    },
+    "missing_user_or_password": {
+      "en": "No username o password provided",
+      "it": "Nome utente o password mancanti"
+    },
+    "unauthorized": {
+      "en": "You are not authorized to call this endpoint",
+      "it": "Non sei autorizzato ad accedere lla risorsa"
+    },
+    "internal_server_error": {
+      "en": "Internal server error",
+      "it": "Errore Interno del Server"
+    },
+    "invalid_auth": {
+      "en": "Invalid email and/or password",
+      "it": "Email e/o password errati"
+    },
+    "password_differs": {
+      "en": "Passwords must be equals",
+      "it": "Le password differiscono"
+    },
+    "void_password": {
+      "en": "Passwords can not be void",
+      "it": "La password non puo essere vuota"
+    },
+    "doilike":{
+      "en":"Internal Error in function doilike()",
+      "it":"Errore interno nella funzione doilike()"
+    },
+    "getlikes":{
+      "en":"Error/getLikes()",
+      "it":"Errore/getLikes()"
+    },
+    "setlike":{
+      "en":"Internal Error in function setLike()",
+      "it":"Errore interno nella funzione setLike()"
+    },
+    "doiparticipate":{
+      "en":"Internal Error in function doIParticipate()",
+      "it":"Errore interno nella funzione doIParticipate()"
+    },
+    "getparticipants":{
+      "en":"Error/getParticipants()",
+      "it":"Errore getParticipants()"
+    },
+    "setparticipate":{
+      "en":"Internal Error in function setParticipate()",
+      "it":"Errore interno nella funzione setParticipate()"
+    },
+    "invalidtoken":{
+      "en":"Error: Invalid token",
+      "it":"Errore: Token non Valido"
+    },
+    "admintokentype":{
+      "en":"Error in get admin tokentypes in function compilePromotion()",
+      "it":"Errore durante la richiesta dei tipi di token admin nella funzione compilePromotion()"
+    },
+    "contentadmins":{
+      "en":"Error in get contents administrators in function compilePromotion()",
+      "it":"Errore durante la richiesta degli amministratori di un contenuto nella funzione compilePromotion()"
+    }
+  },
   "promotion": {
+    "likes": {
+      "en": "likes",
+      "it": "mi piace"
+    },
+    "participants": {
+      "en": "participants",
+      "it": "partecipanti"
+    },
+    "browse": {
+      "en": "Browse...",
+      "it": "Sfoglia..."
+    },
     "startDate": {
-      "en": "Start Date",
-      "it": "Inizia"
+      "en": "Expected start date",
+      "it": "Data Inizio"
     },
     "endDate": {
-      "en": "End Date",
-      "it": "Termina"
+      "en": "Expected finish date",
+      "it": "Data Fine"
     },
     "whenStart": {
       "en": "When Start",
@@ -23,7 +129,52 @@
     "price":{
       "en": "Price",
       "it": "Prezzo"
+    },
+    "poster":{
+      "en": "Poster",
+      "it": "Locandina"
+    },
+    "description":{
+      "en": "Details",
+      "it": "Dettagli"
+    },
+    "emptyText": {
+      "en": "Empty",
+      "it": "Vuoto"
+    },
+    "title":{
+      "en": "Title/Name",
+      "it": "Titolo/Nome"
+    },
+    "manage": {
+      "en": "Manage your promotion information",
+      "it": "Gestisci le informazioni della tua promozione"
+    },
+    "textDescription": {
+      "en": "Description",
+      "it": "Descrizione"
+    },
+    "wherePlace": {
+      "en": "Type the event address",
+      "it": "Inserisci l'indirizzo dell'evento"
+    },
+    "titlePlaceholder": {
+      "en": "Type the event title or name",
+      "it": "Inserisci il nome o il titolo dell'evento"
+    },
+    "descriptionPlaceholder": {
+      "en": "Type the event description details",
+      "it": "Inserisci la descrizione con i dettagli dell'evento"
+    },
+    "save":{
+      "en":"Save",
+      "it":"Salva"
+    },
+    "gotoactivity":{
+      "en":"Promotion Owner",
+      "it":"Proprietario Promozione"
     }
+
   },
   "search": {
     "searchLabel": {

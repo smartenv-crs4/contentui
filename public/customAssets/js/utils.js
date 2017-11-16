@@ -62,8 +62,6 @@ function setEditable(elementId,associatedButtons){
     var oldContent=element.html();
     element.attr('contentEditable',true);
 
-    console.log("EDITABLE " + elementId);
-
     element.blur(function() {
             var newContent=element.html();
             element.attr('contentEditable', false);
@@ -82,9 +80,21 @@ function setEditable(elementId,associatedButtons){
 
 
 function initPageComingSoon(date) {
-    console.log("TypeOf Date:"+ typeof (date) +"  Date: -------->"+ date);
+    //console.log("TypeOf Date:"+ typeof (date) +"  Date: -------->"+ date);
     var newYear = new Date(date);
     //newYear = new Date(newYear.getFullYear(), 1 - 1, 1);
     $('#defaultCountdown').countdown({until: newYear})
 }
 
+function stopComingSoon(){
+    $('#defaultCountdown').countdown('pause');
+}
+
+function arrayAreEquals(arr1,arr2){
+    return(arr1.join()===arr2.join());
+}
+
+function logOut(){
+    removeTokenAfterLogOut();
+    window.location.replace("/");
+}
