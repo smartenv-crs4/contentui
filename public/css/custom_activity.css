@@ -38,3 +38,10 @@
   opacity: 1;
 }
 
+a.delAdmin{
+  text-decoration:none;
+}
+
+.delAdmin span.fa-remove {
+  color:red;
+}

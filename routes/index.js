@@ -21,10 +21,10 @@ console.log("contentUrl : ", contentUrl);
 router.get('/activities/favicon.ico', function(req, res, next) {return res.status(404).send();}); //WORKAROUND PROVVISORIO!!! TODO gestire meglio
 
 //////DINO (from 08/2017; before was Albe)/////
-router.get('/activities/new',       require("./activities").post);
-//router.get('/activities/:id/',       require("./activities").get);
+router.get('/activities/new',       require("./activities").post); //TODO security middleware!!!!
+router.get('/activities/admins',    require("./activities").admins); //TODO security middleware!!!!
 router.get('/activities/:id',       require("./activities").get);
-router.get('/activities/:id/edit',  require("./activities").put);
+router.get('/activities/:id/edit',  require("./activities").put); //TODO security middleware!!!!
 ///////////////
 
 /* TODO Search in POST perche' non cacheabile? */
@@ -35,9 +35,9 @@ router.get('/likes',    require('./search').likes);
 
 
 //Mobile UI
+//TODO security middleware!!!!
 router.get('/mobile/',      require('./mobile').list);
 router.get('/mobile/form',  require('./mobile').form);
-
 router.get('/mobile/promos',      require('./mobile').promos);
 router.get('/mobile/activities',  require('./mobile').activities);
 router.get('/mobile/promotypes',  require('./mobile').promotypes);

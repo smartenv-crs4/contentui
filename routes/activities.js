@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise');
 var config = require('propertiesmanager').conf;
 var common = require('./common');
 
@@ -6,79 +7,105 @@ let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 config.contentUrl = contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
+let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
 
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
-const _logged = true; //TODO LEGGERE DA REQUEST
+const _logged = true; 	//TODO LEGGERE DA REQUEST - 
+						//DEVE ESSERE DI TIPO CONTENTADMIN!!!!
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 
 module.exports = {
+	//view activity
 	get: (req, res, next) => {
-		var activity_id = req.params.id;
-		request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
-			if (error) {
-				console.log(error);
-				return res.boom.badImplementation()					
-			}
-			common.renderWithCommonUI(res, 'activities/view_activity', {
-				activityBody: JSON.parse(body),
-				activityId: activity_id,
-				baseUrl: baseUrl,
-				uploadUrl: uploadUrl,
-				contentUrl: contentUrl,
-				logged: _logged
-			});
-		})
+		getActivity(req, res);
+	},
+	
+	//edit activity
+	put: (req, res, next) => {
+		getActivity(req, res, true);
 	},
 
-
+	//new activity (blank form)
 	post: (req, res, next) => {		
-		return common.renderWithCommonUI(res, 'activities/form_activity', {		    
+		return common.renderWithCommonUI(res, 'activities/form_activity', {
 			activityBody: undefined,
 			params: JSON.stringify(req.params),
 			query: JSON.stringify(req.query),
 			baseUrl:baseUrl,
 			uploadUrl:uploadUrl,
-			contentUrl:contentUrl,				
+			contentUrl:contentUrl,
 			logged: _logged
 		});
 	},
 
-	put: (req, res, next) => { 
-		var activity_id = req.params.id;
-  		var action = req.params.action;
+	//ask userms for admins details
+	admins: (req, res, next) => {
+		let admins = req.query.adm;
 
-		request.get(config.contentUrl+"contents/"+activity_id, function (error, response, body) {
-			if (error) {
-				console.log("ERRR " + error);
-				return res.boom.badImplementation();
-			}
-			var abody = undefined;
-			try {
-				abody = JSON.parse(body);
-				let uDetails = [];
-				for(let i=0; i<abody.admins.length; i++) {
-					//call user ms to get user details
+		getAdmins(admins)
+		.then(users => {
+			res.json(users)
+		})
+		.catch(e => {
+			console.log(e);
+			res.boom.badImplementation();
+		})
+	}
+}
+
+
+function getActivity(req, res, edit) {
+	let activity_id = req.params.id;
+	let abody = undefined;
+
+	rp(config.contentUrl+"contents/"+activity_id)
+	.then(body => {
+		abody = JSON.parse(body);		
+		common.renderWithCommonUI(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
+			activityBody: abody,
+			activityId: activity_id,
+			params: edit ? JSON.stringify(req.params) : undefined,
+			query: edit ? JSON.stringify(req.query) : undefined,
+			baseUrl: baseUrl,
+			uploadUrl: uploadUrl,
+			contentUrl: contentUrl,
+			logged: _logged
+		});
+	})
+	.catch(e => {
+		console.log(e);
+		res.boom.badImplementation();
+	})
+} 
+
+
+function getAdmins(admIds) {
+	if(admIds && admIds.length > 0) {
+		return new Promise((resolve, reject) => {
+			let query_users = admIds.join("&usersId=");
+			rp({
+				uri:_userUrl + '/users/?usersId=' + query_users,
+				method: 'GET',
+				json:true,
+				headers: {
+					authorization: "Bearer " + config.auth_token
 				}
-			}
-			catch(ex) {
-				console.log(ex);
-				return res.boom.badImplementation();
-			}
-
-			common.renderWithCommonUI(res, 'activities/form_activity', {
-				params: JSON.stringify(req.params),
-				query: JSON.stringify(req.query),
-				activityBody: abody,
-				baseUrl: baseUrl,
-				uploadUrl:uploadUrl,
-				contentUrl: contentUrl,				    
-				logged: _logged
-			});
+			})
+			.then(users => {
+				for(let i=0; i<users.users.length; i++) {
+					users.users[i].avatar = users.users[i].avatar || "/img/avatar.png"; //TODO parametrizzare
+				}
+				resolve(users.users)
+			})
+			.catch(e => {
+				console.log(e);
+				reject(e);
+			})
 		});
 	}
-
+	else return [];
 }

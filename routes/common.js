@@ -6,6 +6,7 @@ let baseUrl = config.contentUIUrl + '/';
 let access_token = config.auth_token;
 
 module.exports = {
+    //TODO sostituire con quella di Ale
     renderWithCommonUI(res, page, model) {
         request.get(config.commonUIUrl + "/headerAndFooter" 
                         + "/?homePage=" + baseUrl 
@@ -15,7 +16,13 @@ module.exports = {
             function (error, response, body) {
                 if(error) console.log("ER " + error);
 
-                var commonBody = body ? JSON.parse(body) : undefined;
+                var commonBody = undefined;
+                try {
+                    commonBody = body ? JSON.parse(body) : undefined;
+                }
+                catch(e) { //commonUI non risponde
+                    console.log(e);
+                }
 
                 return res.render(page, {
                     access_token:access_token,
