@@ -2,6 +2,7 @@
   "production": {
     "enableCors":true,
     "authUrl":"your_auth_service_url",
+    "userUrl":"your_user_service_url",
     "uploadUrl":"your_upload_service_url",
     "contentUrl":"your_content_service_url",
     "commonUIUrl":"your_common_ui_url",
@@ -20,10 +21,12 @@
       "whoWeAre" : null,
       "FastSearchUrl" : "/"
     }
+    "languageManagerLibUrl":"your_language_manager_lib_url"
   },
   "dev": {
     "enableCors":true,
     "authUrl":"your_auth_service_url",
+    "userUrl":"your_user_service_url",
     "uploadUrl":"your_upload_service_url",
     "contentUrl":"your_content_service_url",
     "commonUIUrl":"your_common_ui_url",
@@ -42,6 +45,7 @@
       "whoWeAre" : null,
       "FastSearchUrl" : "/"
     }
+    "languageManagerLibUrl":"your_language_manager_lib_urls"
     }
 }
 

@@ -1,7 +1,7 @@
 var _PromoRowHlb = undefined;
 var _ActRowHlb = undefined;
 var _Activity = (sessionStorage._Activity) ? JSON.parse(sessionStorage._Activity) : {};
-
+var _Auth = (sessionStorage.auth) ? JSON.parse(sessionStorage.auth) : {};
 
 $(document).ready(function() {
 	_PromoRowHlb = Handlebars.compile($("#entry-template").html());
@@ -9,7 +9,7 @@ $(document).ready(function() {
 })
 
 $(document).on( "pageinit", function() {
-	get("mobile/activities", undefined, function(data) {
+	get("mobile/activities", {name:"uid", value:_Auth.uid}, function(data) {
 		$("#activities").html(_ActRowHlb({activities:data}));
 		
 		if(_Activity.id)
@@ -107,6 +107,7 @@ function confirmAndDelete( listitem ) {
 	$( "#confirm #yes" ).off("click").on( "click", function() {
 		$.ajax({
 			type: "DELETE",
+			headers: {Authorization: "Bearer " + _Auth.token},
 			url: "mobile/delete/" + _Activity.id + "/" + listitem.attr("data-pid"),
 			dataType: "JSON",
 			success: function(d) {
