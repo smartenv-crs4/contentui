@@ -1,0 +1,17 @@
+<div class="col-md-2" id="lbar">
+</div>
+
+<script id="htpl-admin" type="text/x-handlebars-template">
+    {{#each admins}}
+    <div class="team-v4">
+        <div class="margin-bottom-50 text-center">
+            <a href="#" class="delAdmin" data-admin-id="{{this._id}}">
+                <span class="fa fa-remove text-right"></span>
+            </a>
+            <img style="width:60px;" src="{{this.avatar}}" alt="" />
+            <span>{{this.name}} {{this.surname}}</span>
+            <small><i class="fa fa-envelope-o"></i> {{this.email}}</small>
+        </div>
+    </div>
+    {{/each}}
+</script>

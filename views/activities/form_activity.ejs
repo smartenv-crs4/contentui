@@ -51,7 +51,7 @@
     <!--=== Content Part ===-->
     <div class="container content">
 
-        <%- include leftbar %>
+        <%- include leftbar_edit %>
 
         <!-- Begin Content -->
         <div class="col-md-7">
@@ -173,7 +173,7 @@
   var params = '<%- model.params %>';
   var query = '<%- model.query %>';
   var activityBody = JSON.parse('<%- JSON.stringify(model.activityBody) %>');
-  
+      
   params = JSON.parse(params);
   query = JSON.parse(query);
 </script>
@@ -228,6 +228,7 @@
 
 <script type="text/javascript" src="/js/activities/common.js"></script>
 <script type="text/javascript" src="/js/activities/form.js"></script>
+<script type="text/javascript" src="/js/activities/form_ds.js"></script>
 
 
 

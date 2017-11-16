@@ -49,8 +49,6 @@ $(document).ready(function() {
   App.init();
   loadCat(action);
   initMap(action);
-
-  common.getPromotions();
 });
 
 
