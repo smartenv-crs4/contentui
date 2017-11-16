@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/utils',utilsJs);
-app.use('/promotions',promotions);
+//app.use('/promotions',promotions);
 app.use('/contents',content);
 app.use('/token',token);
 app.use('/', routes);
