@@ -11,6 +11,7 @@
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
     "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js",
+    "contentAdminTokenType": ["contentAdmin"],
     "headerParams":{
       "homePage" : "/",
       "pageFaq" :  null,
@@ -35,6 +36,7 @@
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
     "languageManagerLibUrl":"http://smartapi/ui/common/customAssets/js/languageManager.js",
+    "contentAdminTokenType": ["contentAdmin"],
     "headerParams":{
       "homePage" : "/",
       "pageFaq" :  null,
