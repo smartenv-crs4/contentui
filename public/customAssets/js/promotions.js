@@ -126,6 +126,7 @@ function loadPromotionImage(){
                 msg = msg + " --> " + xhr.responseJSON.error_message;
             }
             catch(err){ }
+            msg="loadPromotionImage function:"+msg;
             jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
         }
     });
@@ -692,8 +693,11 @@ function doILike(){
                     setLikeButton();
         },
         error: function(xhr, status){
-            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) ||  i18next.t("error.doilike");
-            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            if(!tokenError && userToken){
+                var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) ||  i18next.t("error.doilike");
+                msgRsp="doIlike function: " + msgRsp;
+                jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            }
         }
     });
 }
@@ -740,9 +744,11 @@ function setLike(){
             setLikeButton();
         },
         error: function(xhr, status){
-
-            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setlike");
-            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            if(!tokenError && userToken){
+                var msgRsp = ((xhr.responseJSON != null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setlike");
+                msgRsp="setLike Function: " + msgRsp;
+                jQuery.jGrowl(msgRsp, {theme: 'bg-color-red', life: 5000});
+            }
             // return;
         }
     });
@@ -758,8 +764,11 @@ function doIParticipate(){
             setParticipateButton();
         },
         error: function(xhr, status){
-            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.doiparticipate");
-            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            if(!tokenError && userToken){
+                var msgRsp = ((xhr.responseJSON != null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.doiparticipate");
+                msgRsp="doIParticipate function: " + msgRsp;
+                jQuery.jGrowl(msgRsp, {theme: 'bg-color-red', life: 5000});
+            }
         }
     });
 }
@@ -805,9 +814,11 @@ function setParticipate(){
             setParticipateButton();
         },
         error: function(xhr, status){
-
-            var msgRsp=((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setparticipate");
-            jQuery.jGrowl(msgRsp, {theme:'bg-color-red', life: 5000});
+            if(!tokenError && userToken){
+                var msgRsp = ((xhr.responseJSON != null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.setparticipate");
+                msgRsp="setParticipate Function: " + msgRsp;
+                jQuery.jGrowl(msgRsp, {theme: 'bg-color-red', life: 5000});
+            }
             // return;
         }
     });
@@ -924,6 +935,7 @@ function compilePromotion(){
                                     catch(err){
                                         msg = "invalid Token";
                                     }
+                                    msg="decodetoken in comlilepromotion Function " + msg;
                                     jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
                                     callback(msg,null);
                                 }
@@ -945,6 +957,7 @@ function compilePromotion(){
                                     catch(err){
                                         msg = "invalid Token";
                                     }
+                                    msg="get admins token type in compilepromotion Function " + msg;
                                     jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
                                     callback(null,[]); // no admins token type
                                     // return;
@@ -972,6 +985,7 @@ function compilePromotion(){
                                     catch(err){
                                         msg = "invalid Token";
                                     }
+                                    msg="get admins in compilepromotion Function " + msg;
                                     jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
 
                                     callback(null,[]);//no contents admins
@@ -983,7 +997,7 @@ function compilePromotion(){
                 // optional callback
                 function(err, results) {
                     if(err){
-                        jQuery.jGrowl(err, {theme:'bg-color-red', life: 5000});
+                        //jQuery.jGrowl(err, {theme:'bg-color-red', life: 5000});
                         getPromotionPage(data,null);
                     }else{
                         var tokenOwner=results[0].token._id;
@@ -1028,6 +1042,10 @@ function openPromotionPage(isANewPromotion){
         addNewPromotion();
     }else{
         compilePromotion();
+    }
+
+    if(tokenError){
+        jQuery.jGrowl(tokenError, {theme:'bg-color-red', life: 5000});
     }
 }
 

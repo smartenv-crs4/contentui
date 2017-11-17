@@ -36,6 +36,5 @@ router.get('/decode', function(req, res, next) {
 });
 
 
-
 module.exports = router;
 
