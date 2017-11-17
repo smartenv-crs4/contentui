@@ -1,7 +1,6 @@
 var config = require('propertiesmanager').conf;
 var moment = require('moment');
 var rp = require('request-promise');
-var common = require('./common');
 
 let baseUrl = config.contentUIUrl + '/';
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');

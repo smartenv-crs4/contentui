@@ -2,7 +2,7 @@ var config = require('propertiesmanager').conf;
 var moment = require('moment');
 var rp = require('request-promise');
 var request = require('request');
-var common = require('./common');
+var common = require('./render');
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
@@ -14,7 +14,7 @@ let access_token = config.auth_token;
 
 module.exports = {
     render: (req, res, next) => {
-        common.renderWithCommonUI(res, 'search', {
+        common.renderPage(res, 'search', {
             baseUrl:baseUrl, 
             contentUrl:contentUrl, 
             scheduleUrl:scheduleUrl
