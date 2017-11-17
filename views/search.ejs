@@ -215,6 +215,7 @@
 		var baseUrl = '<%= baseUrl %>';
 		var contentUrl = '<%= contentUrl %>';
 		var _scheduleShip = '<%= scheduleUrl %>';
+		var userToken= "<%= access_token %>" || null;
 	</script>
 
 	<!-- JS Global Compulsory -->
@@ -249,8 +250,10 @@
 
 	<script src="<%- commonUI.headerScript %>"></script>
     <script src="<%- commonUI.footerScript %>"></script>
-    <script src="<%- commonUI.languagemanager %>"></script>
-
+	<script src="<%- commonUI.languagemanager %>"></script>
+	
+	<script type="text/javascript" src="/customAssets/js/utils.js"></script>
+	<script type="text/javascript" src="/customAssets/js/tokenManager.js"></script>
     <script type="text/javascript" src="js/search.js"></script>
 
 

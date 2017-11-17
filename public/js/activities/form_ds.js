@@ -5,15 +5,33 @@ var _form_ds = {
 }
 
 $(document).ready(function() {
-    _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
-    _form_ds.admins = activityBody.admins || [];
+    initToken();
 
-    common.getPromotions();
+    if(activityBody) {
+        common.isAdmin([], function(isAuth) {
+            if(!isAuth) {
+                window.location.href = baseUrl + "activities/" + activityBody.idcontent;
+            }
+            else {
+                _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
+                _form_ds.admins = activityBody.admins || [];
 
-    getAdmins(_form_ds.admins, renderAdmins);
+                common.getPromotions();
+
+                getAdmins(_form_ds.admins, renderAdmins);
+            }
+        })
+    }
+    else {
+        common.canWrite(contentAdminTypes, function(isAuth){
+            if(!isAuth) {
+                window.location.href = baseUrl;
+            }
+        })
+    }
     
    
-    
+
     //TODO delete admin
     //TODO update _admins and redraw leftbar
 })

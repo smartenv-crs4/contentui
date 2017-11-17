@@ -1,8 +1,8 @@
 /**
  * Created by albe on 27/03/2017.
+ * Mantained by Dino from 04/17
  */
 
-let TOKEN = "?fakeuid=abcbabcabcbabcbabcba1234";
 let latitude = 39.21054;
 let longitude = 9.1191;
 let zoom = 12;
@@ -12,14 +12,7 @@ img_array_url = [];
 action = 'new';
 
 $(document).ready(function() {
-
-  if (!$.isEmptyObject(query)) {
-    if (query.hasOwnProperty('action')) {
-      action = query.action;
-    }
-  }
-
-  console.log("action is ", action);
+  if(activityBody) action = 'edit'
 
   $("#addContentButton").click(function(e) {
     addContent();
@@ -78,10 +71,6 @@ function loadImagePreview(input) {
   if (input.files && input.files[0]) {
     let reader = new FileReader();
     reader.onload = function(e) {
-
-      // if ($('#previewHolder').length && action !== 'edit') {
-      //   $('#imageContainer').empty();
-      // }  // remove temp images
 
       let _id = "img-"+input.files[0].name.replace(/\s/g,'');
       let objectURL = URL.createObjectURL(input.files[0]);
@@ -189,7 +178,10 @@ function loadCat(action) {
 
 function getUploadmsImageURL(image, cb) {
     jQuery.ajax({
-        url: uploadUrl + "file" + TOKEN,
+        url: uploadUrl + "file",
+        headers: {
+          Authorization: "Bearer " + userToken
+        },
         data: image,
         enctype: 'multipart/form-data',
         processData: false,
@@ -251,14 +243,6 @@ function addContent() {
     return this.value;
   }).get();
   var img_array_url = [];
-/*
-  console.log("name: ", name);
-  console.log("description: ", description);
-  console.log("published: ", published);
-  console.log("town: ", town);
-  console.log("lat, lon: ", [lat, lng]);
-  console.log("category_array", category_array);
-*/
   var contentData = {
     name: name,
     type: "eventa_promotions",
@@ -295,7 +279,10 @@ function storeContentToContentms(contentData) {
   console.log("\n\n\n storeContentToContentms");
 
   $.ajax({
-    url: contentUrl + "contents" + TOKEN,
+    url: contentUrl + "contents",
+    headers: {
+      Authorization: "Bearer " + userToken
+    },
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify(contentData),            //stringify is important
@@ -303,7 +290,7 @@ function storeContentToContentms(contentData) {
       console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
       //go to the content page:
       bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
-      window.location = baseUrl + "activities/" + response._id +TOKEN;
+      window.location = baseUrl + "activities/" + response._id;
     },
     error: function (response) {
       console.log("ERROR DA post su contents ");
@@ -421,7 +408,10 @@ function updateContentToContentms(contentData){
   console.log("\n\n\n updateContentToContentms");
 
   $.ajax({
-    url: contentUrl + "contents/" + activityBody._id + TOKEN,
+    url: contentUrl + "contents/" + activityBody._id,
+    headers: {
+      Authorization: "Bearer " + userToken
+    },
     type: 'PUT',
     contentType: 'application/json',
     data: JSON.stringify(contentData),            //stringify is important
@@ -429,7 +419,7 @@ function updateContentToContentms(contentData){
       console.log("RESPONSE DA put su contents: " + JSON.stringify(response));
       //go to the content page:
       bootbox.dialog({title: 'Success', message: "Content Updated " + JSON.stringify(response)});
-      window.location = baseUrl + "activities/" + response._id +TOKEN;
+      window.location = baseUrl + "activities/" + response._id;
     },
     error: function (response) {
       console.log("ERROR DA put su contents ");

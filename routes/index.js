@@ -16,10 +16,10 @@ let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 router.get('/activities/favicon.ico', function(req, res, next) {return res.status(404).send();}); //WORKAROUND PROVVISORIO!!! TODO gestire meglio
 
 //////DINO (from 08/2017; before was Albe)/////
-router.get('/activities/new',       require("./activities").post); //TODO security middleware!!!!
+router.get('/activities/new',       require("./activities").post);
 router.get('/activities/admins',    require("./activities").admins); //TODO security middleware!!!!
 router.get('/activities/:id',       require("./activities").get);
-router.get('/activities/:id/edit',  require("./activities").put); //TODO security middleware!!!!
+router.get('/activities/:id/edit',  require("./activities").put);
 ///////////////
 
 /* TODO Search in POST perche' non cacheabile? */

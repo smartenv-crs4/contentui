@@ -167,15 +167,20 @@
 
 
 <script type="text/javascript">
-  var baseUrl = '<%= model.baseUrl %>';
-  var contentUrl = '<%= model.contentUrl %>';
-  var uploadUrl = '<%= model.uploadUrl %>';
-  var params = '<%- model.params %>';
-  var query = '<%- model.query %>';
-  var activityBody = JSON.parse('<%- JSON.stringify(model.activityBody) %>');
-      
-  params = JSON.parse(params);
-  query = JSON.parse(query);
+    var baseUrl = '<%= baseUrl %>';
+    var contentUrl = '<%= contentUrl %>';
+    var uploadUrl = '<%= uploadUrl %>';
+    var params = '<%- params %>';
+    var query = '<%- query %>';
+    <% if(activityBody) { %>
+        var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
+    <% } else {%>
+        var activityBody = undefined;
+    <% } %>
+    var userToken= "<%= access_token %>" || null;
+    var contentAdminTypes = "<%= contentAdminTypes %>"
+    params = JSON.parse(params);
+    query = JSON.parse(query);
 </script>
 
 <script id="img-thumb" type="text/x-img-snippet">
@@ -226,11 +231,11 @@
 <script type="text/javascript" src="/js/plugins/jquery.growl.js"></script>
 <script type="text/javascript" src="/js/plugins/bootbox.min.js"></script>
 
+<script type="text/javascript" src="/customAssets/js/utils.js"></script>
+<script type="text/javascript" src="/customAssets/js/tokenManager.js"></script>
 <script type="text/javascript" src="/js/activities/common.js"></script>
 <script type="text/javascript" src="/js/activities/form.js"></script>
 <script type="text/javascript" src="/js/activities/form_ds.js"></script>
-
-
 
 </body>
 </html>

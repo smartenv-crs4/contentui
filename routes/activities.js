@@ -1,22 +1,13 @@
 var request = require('request');
 var rp = require('request-promise');
 var config = require('propertiesmanager').conf;
-var common = require('./common');
+var common = require('./render');
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 config.contentUrl = contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
-
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-const _logged = true; 	//TODO LEGGERE DA REQUEST - 
-						//DEVE ESSERE DI TIPO CONTENTADMIN!!!!
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
 
 module.exports = {
 	//view activity
@@ -30,15 +21,17 @@ module.exports = {
 	},
 
 	//new activity (blank form)
-	post: (req, res, next) => {		
-		return common.renderWithCommonUI(res, 'activities/form_activity', {
+	post: (req, res, next) => {
+		let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;		
+		return common.renderPage(res, 'activities/form_activity', {
 			activityBody: undefined,
 			params: JSON.stringify(req.params),
 			query: JSON.stringify(req.query),
 			baseUrl:baseUrl,
 			uploadUrl:uploadUrl,
 			contentUrl:contentUrl,
-			logged: _logged
+			access_token: access_token,
+			contentAdminTypes: config.contentAdminTokenType
 		});
 	},
 
@@ -61,11 +54,12 @@ module.exports = {
 function getActivity(req, res, edit) {
 	let activity_id = req.params.id;
 	let abody = undefined;
+	let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
 
 	rp(config.contentUrl+"contents/"+activity_id)
 	.then(body => {
 		abody = JSON.parse(body);		
-		common.renderWithCommonUI(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
+		common.renderPage(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
 			activityBody: abody,
 			activityId: activity_id,
 			params: edit ? JSON.stringify(req.params) : undefined,
@@ -73,7 +67,8 @@ function getActivity(req, res, edit) {
 			baseUrl: baseUrl,
 			uploadUrl: uploadUrl,
 			contentUrl: contentUrl,
-			logged: _logged
+			access_token: access_token,
+			contentAdminTypes: config.contentAdminTokenType
 		});
 	})
 	.catch(e => {

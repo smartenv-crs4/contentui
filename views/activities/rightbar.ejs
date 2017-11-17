@@ -1,6 +1,6 @@
 <div class="col-md-3">
 
-    <% if(model.logged && model.activityBody) { %>
+    <div class="loggedonly">
         <a href="promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
         <hr>
         <div class="search-open" style="display: block; margin-bottom:40px;">
@@ -11,7 +11,7 @@
                 </span>
             </div>
         </div>
-    <% } %>
+    </div>
 
     <div style="margin-top:20px;" id="promoList"></div>
 </div>

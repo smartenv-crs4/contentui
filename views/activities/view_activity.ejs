@@ -73,16 +73,14 @@
                     <div class="row">
                         <div class="col-sm-10">
                             <h3>Dettagli Attività</h3>
-                        </div>
-                        <% if(model.logged) { %>
-                        <div class="col-sm-2">
+                        </div>                        
+                        <div class="col-sm-2 loggedonly">
                             <ul class="list-inline posted-info">
                                 <li>
-                                    <a href="edit?action=edit" id="editUrl"><button id="editContent" type="button"><i class="fa fa-pencil fa-2x" ></i></button></a>
+                                    <a href="edit" id="editUrl"><button id="editContent" type="button"><i class="fa fa-pencil fa-2x" ></i></button></a>
                                 </li>
                             </ul>
-                        </div>
-                        <% } %>
+                        </div>                        
                     </div>
 
                 </div>
@@ -161,10 +159,11 @@
 
 
 <script type="text/javascript">
-  var baseUrl = '<%= model.baseUrl %>';
-  var contentUrl = '<%= model.contentUrl %>';
-  var uploadUrl = '<%= model.uploadUrl %>';
-  var activityBody = JSON.parse('<%- JSON.stringify(model.activityBody) %>');
+  var baseUrl = '<%= baseUrl %>';
+  var contentUrl = '<%= contentUrl %>';
+  var uploadUrl = '<%= uploadUrl %>';
+  var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
+  var userToken= "<%= access_token %>" || null;
 </script>
 
 
@@ -209,10 +208,11 @@
 <script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script>
 <script type="text/javascript" src="/js/plugins/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="/js/plugins/jquery.growl.js"></script>
-<script src="/js/activities/common.js"></script>
-<script src="/js/activities/view.js"></script>
-
-
+<script type="text/javascript" src="/customAssets/js/utils.js"></script>
+<script type="text/javascript" src="/customAssets/js/tokenManager.js"></script>
+<script type="text/javascript" src="/js/activities/common.js"></script>
+<script type="text/javascript" src="/js/activities/view.js"></script>
+<script type="text/javascript" src="/js/activities/view_ds.js"></script>
 
 
 <script src="/assets/plugins/respond.js"></script>

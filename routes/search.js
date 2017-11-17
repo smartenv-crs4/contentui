@@ -14,10 +14,12 @@ let access_token = config.auth_token;
 
 module.exports = {
     render: (req, res, next) => {
+        let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
         common.renderPage(res, 'search', {
             baseUrl:baseUrl, 
             contentUrl:contentUrl, 
-            scheduleUrl:scheduleUrl
+            scheduleUrl:scheduleUrl,
+            access_token: access_token
         });
     },
 

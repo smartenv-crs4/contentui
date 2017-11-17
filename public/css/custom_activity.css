@@ -45,3 +45,5 @@ a.delAdmin{
 .delAdmin span.fa-remove {
   color:red;
 }
+
+.loggedonly {display:none;}

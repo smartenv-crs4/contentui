@@ -7,12 +7,14 @@ var _filters = {
     edate: undefined,
     category: undefined,
     position: undefined,
-    type: 'promo' //TODO tick per ricerca contenuti in adv panel
+    type: 'promo' //TODO tick per ricerca contenuti in adv panel!!!!!!!!
 };
 
 
 
 $(document).ready(function() {
+    initToken();
+
     var source   = $("#entry-template").html();
     _searchItemTemplate = Handlebars.compile(source);
 
