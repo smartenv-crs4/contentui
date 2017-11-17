@@ -46,6 +46,8 @@ router.get('/activities/:aid/promotions/new', function(req, res, next) {
     var activity_id = req.params.aid;
     var access_token=req.query.access_token || null;
 
+
+
     renderPage.renderPage(res,'view_promotion',{
         access_token:access_token,
         properties:{
@@ -78,6 +80,7 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
     var activity_id = req.params.aid;
     var promotion_id = req.params.pid;
     var access_token=req.query.access_token || null;
+
 
 
     renderPage.renderPage(res,'view_promotion',{

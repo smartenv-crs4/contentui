@@ -98,3 +98,4 @@ function logOut(){
     removeTokenAfterLogOut();
     window.location.replace("/");
 }
+
