@@ -1,12 +1,12 @@
 var _form_ds = {
     admins     : undefined,
-    htplAdmin  : undefined,
-    token      : undefined //TODO uniformare!!!!!
+    htplAdmin  : undefined,    
 }
+var _growl = undefined;
 
 $(document).ready(function() {
     initToken();
-
+    _growl = $.growl;
     if(activityBody) {
         common.isAdmin([], function(isAuth) {
             if(!isAuth) {
@@ -38,52 +38,57 @@ $(document).ready(function() {
 
 function renderAdmins(admins) {
     $("#lbar").html(_form_ds.htplAdmin({admins:admins}));
-    $(".delAdmin").click(function(e) {
+    $(".delAdmin").click(function(e) {        
         e.preventDefault();
         var uid = this.getAttribute("data-admin-id");
         removeAdmin(uid, function(newadmins) {
+            _form_ds.admins = newadmins;            
             getAdmins(newadmins, renderAdmins);
         });
     })
 }
 
-function getAdmins(admList, cb) {
-    if(admList.length > 0) {
-        var adms = admList.join('&adm=');
-        console.log(baseUrl)
+
+
+function getAdmins(admList, cb) {    
+    if(admList.length > 0) {        
+        var adms = admList.join('&adm=');        
         $.ajax({
             url: baseUrl + "activities/admins" + "?adm=" + adms,
             headers: {
-                Authorization: "Bearer " + _form_ds.token
+                Authorization: "Bearer " + userToken
             },
             cache: false,
             method: 'GET',
-            success: function(data){                
+            success: function(data){
                 if(cb) cb(data);
             },
             error: function(e) {
                 console.log(e);
+                _growl.warning({message: "Something went wrong when getting admins list"});
             }
         });
     }
 }
 
 function removeAdmin(uid, cb) {
-    if(uid) {
+    if(uid) {        
         var aid = activityBody._id;
         $.ajax({
             url: contentUrl + "contents/" + aid + "/actions/removeAdmin",
             method: 'POST',
             headers: {
-                Authorization: "Bearer " + _form_ds.token
+                Authorization: "Bearer " + userToken
             },
             data: {userId:uid},
             success: function(d){
-                console.log(d);
-                if(cb) cb(d);
+                //console.log(d);
+                _growl.notice({message:"Admin successfully removed"});
+                if(cb) cb(d.admins);
             },
             error: function(e) {
                 console.log(e);
+                _growl.error({message: "Error removing admin"});
             }
         });
     }
