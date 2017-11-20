@@ -18,8 +18,9 @@ router.get('/activities/favicon.ico', function(req, res, next) {return res.statu
 //////DINO (from 08/2017; before was Albe)/////
 router.get('/activities/new',       require("./activities").post);
 router.get('/activities/admins',    require("./activities").admins); //TODO security middleware!!!!
-router.get('/activities/:id',       require("./activities").get);
 router.get('/activities/:id/edit',  require("./activities").put);
+router.get('/activities/:id',       require("./activities").get);
+
 ///////////////
 
 /* TODO Search in POST perche' non cacheabile? */

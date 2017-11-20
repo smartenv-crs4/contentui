@@ -55,8 +55,7 @@ function getActivity(req, res, edit) {
 	let activity_id = req.params.id;
 	let abody = undefined;
 	let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
-
-	rp(config.contentUrl+"contents/"+activity_id)
+	rp(contentUrl+"contents/"+activity_id)
 	.then(body => {
 		abody = JSON.parse(body);		
 		common.renderPage(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
