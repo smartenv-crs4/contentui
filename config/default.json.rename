@@ -21,7 +21,7 @@
       "afterLoginRedirectTo":"*contentUIUrl",
       "whoWeAre" : null,
       "FastSearchUrl" : "/"
-    }
+    },
     "languageManagerLibUrl":"your_language_manager_lib_url"
   },
   "dev": {
@@ -46,7 +46,7 @@
       "afterLoginRedirectTo":"*contentUIUrl",
       "whoWeAre" : null,
       "FastSearchUrl" : "/"
-    }
+    },
     "languageManagerLibUrl":"your_language_manager_lib_urls"
     }
 }
