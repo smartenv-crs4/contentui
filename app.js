@@ -45,6 +45,9 @@ app.use('/utils',utilsJs);
 //app.use('/promotions',promotions);
 app.use('/contents',content);
 app.use('/token',token);
+app.use('/mobile/',     require('./routes/mobile'));
+app.use('/activities',  require("./routes/activities"));
+app.use('/search',      require("./routes/search"));
 app.use('/', routes);
 
 

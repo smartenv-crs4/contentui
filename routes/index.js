@@ -11,35 +11,51 @@ var renderPage=require('./render');
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
+let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
+
+////////////////////////////////
+// Page rendering routes only //
+////////////////////////////////
 
 
-router.get('/activities/favicon.ico', function(req, res, next) {return res.status(404).send();}); //WORKAROUND PROVVISORIO!!! TODO gestire meglio
-
-//////DINO (from 08/2017; before was Albe)/////
-router.get('/activities/new',       require("./activities").post); //TODO security middleware!!!!
-router.get('/activities/admins',    require("./activities").admins); //TODO security middleware!!!!
-router.get('/activities/:id',       require("./activities").get);
-router.get('/activities/:id/edit',  require("./activities").put); //TODO security middleware!!!!
-///////////////
-
-/* TODO Search in POST perche' non cacheabile? */
-//////DINO/////
-router.get('/',         require('./search').render);
-router.get('/search',   require('./search').search);
-router.get('/likes',    require('./search').likes);
+//search page
+router.get('/',         (req, res, next) => {
+  let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
+  renderPage.renderPage(res, 'search', {
+      baseUrl:baseUrl, 
+      contentUrl:contentUrl, 
+      scheduleUrl:scheduleUrl,
+      access_token: access_token
+  });
+});
 
 
-//Mobile UI
-//TODO security middleware!!!!
-router.get('/mobile/',      require('./mobile').list);
-router.get('/mobile/form',  require('./mobile').form);
-router.get('/mobile/promos',      require('./mobile').promos);
-router.get('/mobile/activities',  require('./mobile').activities);
-router.get('/mobile/promotypes',  require('./mobile').promotypes);
-router.post('/mobile/save/:cid',  require('./mobile').save);
-router.delete('/mobile/delete/:cid/:pid', require('./mobile').delete);
-///////////////
+//new activity
+router.get('/activities/new',       (req, res, next) => {
+  let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;		
+  return renderPage.renderPage(res, 'activities/form_activity', {
+    activityBody: undefined,
+    params: JSON.stringify(req.params),
+    query: JSON.stringify(req.query),
+    baseUrl:baseUrl,
+    uploadUrl:uploadUrl,
+    contentUrl:contentUrl,
+    access_token: access_token,
+    contentAdminTypes: config.contentAdminTokenType
+  });
+});
 
+
+//Edit content
+router.get('/activities/:id/edit',  (req, res, next) => {
+  getActivity(req, res, true);
+});
+
+
+// activity get content
+router.get('/activities/:id',    (req, res, next) => {
+  getActivity(req, res);
+});   
 
 // promotions
 router.get('/activities/:aid/promotions/new', function(req, res, next) {
@@ -97,3 +113,29 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
 module.exports = router;
 
+
+
+function getActivity(req, res, edit) {
+	let activity_id = req.params.id;
+	let abody = undefined;
+	let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
+	rp(contentUrl+"contents/"+activity_id)
+	.then(body => {
+		abody = JSON.parse(body);		
+		renderPage.renderPage(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
+			activityBody: abody,
+			activityId: activity_id,
+			params: edit ? JSON.stringify(req.params) : undefined,
+			query: edit ? JSON.stringify(req.query) : undefined,
+			baseUrl: baseUrl,
+			uploadUrl: uploadUrl,
+			contentUrl: contentUrl,
+			access_token: access_token,
+			contentAdminTypes: config.contentAdminTokenType
+		});
+	})
+	.catch(e => {
+		console.log(e);
+		res.boom.badImplementation();
+	})
+} 

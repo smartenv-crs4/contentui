@@ -7,12 +7,14 @@ var _filters = {
     edate: undefined,
     category: undefined,
     position: undefined,
-    type: 'promo' //TODO tick per ricerca contenuti in adv panel
+    type: 'promo' //TODO tick per ricerca contenuti in adv panel!!!!!!!!
 };
 
 
 
 $(document).ready(function() {
+    initToken();
+
     var source   = $("#entry-template").html();
     _searchItemTemplate = Handlebars.compile(source);
 
@@ -410,7 +412,7 @@ function search() {
             var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
 
             $.each(qResults, function(i, item) {            
-                $.ajax(baseUrl + 'likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                $.ajax(baseUrl + 'search/likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
                 .done(function(likesCount) {
                     var hcontext = {
                         id: item._id,
