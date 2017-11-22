@@ -8,6 +8,7 @@ var token=require('./routes/token');
 var content=require('./routes/contents');
 var utilsJs=require('./routes/utils');
 var boom = require('express-boom');
+var extractHas=require('./routes/middlewares')
 
 
 var routes = require('./routes/index');
@@ -29,6 +30,7 @@ app.use('/doc', express.static('doc',{root:'doc'}));
 app.use('/node_modules', express.static('node_modules',{root:'node_modules'}));
 
 
+
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
@@ -37,6 +39,8 @@ app.use(function(req, res, next) {
   else next();
 });
 
+
+app.use(extractHas.parseuuId);
 app.use('/utils',utilsJs);
 //app.use('/promotions',promotions);
 app.use('/contents',content);

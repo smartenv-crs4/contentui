@@ -79,7 +79,7 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
     var activity_id = req.params.aid;
     var promotion_id = req.params.pid;
-    var access_token=req.query.access_token || null;
+    var access_token=req.query.access_token || (req.parseHasTagAsQuery && req.parseHasTagAsQuery.access_token) || null;
 
 
 

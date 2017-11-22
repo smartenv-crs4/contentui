@@ -14,7 +14,7 @@ function render(res,page,model,commonBody) {
         headerScript: commonBody ? commonBody.header.js : undefined,
         languagemanager:config.languageManagerLibUrl
     };
-    console.log("||||||||||||| RENDERPAGE " + model.tokenError);
+
     return res.render(page,model);
 }
 
@@ -52,9 +52,6 @@ module.exports = {
                             res.send(content);
                         });
                     }else {
-
-                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! RenserPage:" + page);
-                        console.log(body);
 
                         var commonBody = body ? JSON.parse(body) : undefined;
 
