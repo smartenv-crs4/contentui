@@ -91,6 +91,10 @@
     "contentadmins":{
       "en":"Error in get contents administrators in function compilePromotion()",
       "it":"Errore durante la richiesta degli amministratori di un contenuto nella funzione compilePromotion()"
+    },
+    "tokenError":{
+      "en":"Error: there are problems with your token",
+      "it":"Errore: si sono verificati dei problemi con il tuo token"
     }
   },
   "promotion": {

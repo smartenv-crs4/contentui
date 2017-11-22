@@ -3,9 +3,17 @@ var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
 var request = require('request');
+var jsonDb=require('./jsonDb');
 
 
 
+
+router.post('/actions/setToken', function(req, res, next) {
+    jsonDb.setKey(req.query.access_token,function(err,uuId){
+       res.status(200).send({uuId:uuId});
+    });
+
+});
 
 
 router.get('/admintokens', function(req, res, next) {
@@ -34,6 +42,9 @@ router.get('/decode', function(req, res, next) {
         res.status(400).send({error:"BadRequest", error_message:"decode_token field is mandatory"});
     }
 });
+
+
+
 
 
 module.exports = router;
