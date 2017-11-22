@@ -1,4 +1,8 @@
 <div class="col-md-2" id="lbar">
+    <div id="searchusers" class="margin-bottom-30">
+        <input class="typeahead form-control" type="text" placeholder="Search for user">
+    </div>
+    <div id="adminlist"></div>
 </div>
 
 <script id="htpl-admin" type="text/x-handlebars-template">
@@ -14,4 +18,18 @@
         </div>
     </div>
     {{/each}}
+</script>
+
+<script id="htpl-tah-menu" type="text/x-handlebars-template">
+    <div class="row" style="border-bottom:1px solid lightgrey">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <img src="{{avatar}}" class="tt-avatar" />
+            </div>
+            <div class="col-md-9">
+                <i class="fa fa-envelope-o"></i> <strong>{{email}}</strong><br>
+                {{#if name}}<i class="fa fa-user"></i> {{name}}{{/if}}
+            </div>
+        </div>
+    </div>
 </script>

@@ -2,7 +2,7 @@ var _form_ds = {
     admins     : undefined,
     htplAdmin  : undefined,    
 }
-var _growl = undefined;
+var _growl = undefined; //wa removeAdmin jquery+growl scope.... (?)
 
 $(document).ready(function() {
     initToken();
@@ -29,15 +29,10 @@ $(document).ready(function() {
             }
         })
     }
-    
-   
-
-    //TODO delete admin
-    //TODO update _admins and redraw leftbar
 })
 
 function renderAdmins(admins) {
-    $("#lbar").html(_form_ds.htplAdmin({admins:admins}));
+    $("#adminlist").html(_form_ds.htplAdmin({admins:admins}));
     $(".delAdmin").click(function(e) {        
         e.preventDefault();
         var uid = this.getAttribute("data-admin-id");
@@ -71,6 +66,7 @@ function getAdmins(admList, cb) {
     }
 }
 
+//TODO popup conferma rimozione
 function removeAdmin(uid, cb) {
     if(uid) {        
         var aid = activityBody._id;
@@ -94,3 +90,42 @@ function removeAdmin(uid, cb) {
     }
     else throw("Missing admin ID");
 }
+
+
+//TODO nascondere chi è già admin
+//TODO layout hint con avatar
+//TODO add on click su hint
+//TODO popup conferma aggiunta
+
+var users = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    //prefetch: '../data/films/post_1960.json',
+    remote: {
+        url: baseUrl + "activities/users/%QUERY",
+        headers : {
+            Authorization: "Bearer " + userToken
+        },
+        wildcard: '%QUERY',
+        filter: function (users) {
+            $(".tt-dataset").addClass("container-fluid");
+            // Map the remote source JSON array to a JavaScript object array
+            return $.map(users, function (user) {
+                return {
+                    email: user.email,
+                    name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
+                    avatar: user.avatar || "/img/avatar.png"
+                };
+            });
+        }
+    }
+});
+
+
+$('#searchusers .typeahead').typeahead(null, {
+    display: 'email',
+    source: users,
+    templates: {
+        suggestion: Handlebars.compile($("#htpl-tah-menu").html())
+    }
+});
