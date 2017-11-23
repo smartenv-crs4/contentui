@@ -150,3 +150,7 @@ a.delAdmin{
   margin:5px 10px 0 0;  
   width:40px;
 }
+
+.tt-suggestion.row {
+  border-bottom:1px solid lightgrey;
+}

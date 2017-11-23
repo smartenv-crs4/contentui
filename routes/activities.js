@@ -15,7 +15,7 @@ let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
 //ask userms for admins details
 router.get('/admins',	 (req, res, next) => {
 	let admins = req.query.adm;
-
+	if(!Array.isArray(admins)) admins = [admins]; //one item only
 	getAdmins(admins)
 	.then(users => {
 		res.json(users)
@@ -45,7 +45,7 @@ function getAdmins(admIds) {
 		return new Promise((resolve, reject) => {
 			let query_users = admIds.join("&usersId=");
 			rp({
-				uri:_userUrl + '/users/?usersId=' + query_users,
+				uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/?usersId=' + query_users,
 				method: 'GET',
 				json:true,
 				headers: {
@@ -71,7 +71,7 @@ function getAdmins(admIds) {
 function getUsersByMail(mail) {	
 	return new Promise((resolve, reject) => {
 		rp({
-			uri:_userUrl + 'users/actions/email/find/' + mail,
+			uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/actions/email/find/' + mail,
 			method: 'GET',
 			json:true,
 			headers: {

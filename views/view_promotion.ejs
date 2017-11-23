@@ -176,7 +176,9 @@
         var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>');
         var userToken= "<%= access_token %>" || null;
         var tokenError="<%= tokenError %>" || null;
-
+        var config = {
+            contentUIUrl = baseUrl,
+        }
     </script>
 
 

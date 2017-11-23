@@ -172,6 +172,10 @@
     var uploadUrl = '<%= uploadUrl %>';
     var params = '<%- params %>';
     var query = '<%- query %>';
+    var config = {
+        contentUIUrl: baseUrl,
+        commonUIUrl: '<%= commonUIUrl %>'
+    }
     <% if(activityBody) { %>
         var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
     <% } else {%>

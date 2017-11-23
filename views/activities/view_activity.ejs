@@ -159,12 +159,16 @@
 
 
 <script type="text/javascript">
-  var baseUrl = '<%= baseUrl %>';
-  var contentUrl = '<%= contentUrl %>';
-  var uploadUrl = '<%= uploadUrl %>';
-  var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
-  var userToken= "<%= access_token %>" || null;
-  var tokenError= "<%= tokenError %>" || null;
+    var baseUrl = '<%= baseUrl %>';
+    var contentUrl = '<%= contentUrl %>';
+    var uploadUrl = '<%= uploadUrl %>';
+    var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
+    var userToken= "<%= access_token %>" || null;
+    var tokenError= "<%= tokenError %>" || null;
+    var config = {
+        contentUIUrl: baseUrl,
+        commonUIUrl: '<%= commonUIUrl %>'
+    }
 </script>
 
 

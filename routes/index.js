@@ -10,6 +10,7 @@ var renderPage=require('./render');
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
+let commonUIUrl = config.commonUIUrl + (config.commonUIUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
 
@@ -25,7 +26,8 @@ router.get('/',         (req, res, next) => {
       baseUrl:baseUrl, 
       contentUrl:contentUrl, 
       scheduleUrl:scheduleUrl,
-      access_token: access_token
+      access_token: access_token,
+      commonUIUrl:commonUIUrl
   });
 });
 
@@ -40,6 +42,7 @@ router.get('/activities/new',       (req, res, next) => {
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
     contentUrl:contentUrl,
+    commonUIUrl:commonUIUrl,
     access_token: access_token,
     contentAdminTypes: config.contentAdminTokenType
   });
@@ -129,7 +132,8 @@ function getActivity(req, res, edit) {
 			query: edit ? JSON.stringify(req.query) : undefined,
 			baseUrl: baseUrl,
 			uploadUrl: uploadUrl,
-			contentUrl: contentUrl,
+            contentUrl: contentUrl,
+            commonUIUrl:commonUIUrl,
 			access_token: access_token,
 			contentAdminTypes: config.contentAdminTokenType
 		});

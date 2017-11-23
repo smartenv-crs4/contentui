@@ -36,7 +36,7 @@ function renderAdmins(admins) {
     $(".delAdmin").click(function(e) {        
         e.preventDefault();
         var uid = this.getAttribute("data-admin-id");
-        removeAdmin(uid, function(newadmins) {
+        editAdmins(uid, 'remove', function(newadmins) {
             _form_ds.admins = newadmins;            
             getAdmins(newadmins, renderAdmins);
         });
@@ -91,10 +91,34 @@ function removeAdmin(uid, cb) {
     else throw("Missing admin ID");
 }
 
+function editAdmins(uid, action, cb) {
+    if(uid && action) {
+        var aid = activityBody._id;
+        $.ajax({
+            url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') 
+                + "contents/" + aid + "/actions/" 
+                + (action=='add' ? "addAdmin" : "removeAdmin"),
+            method: 'POST',
+            headers: {
+                Authorization: "Bearer " + userToken
+            },
+            data: {userId:uid},
+            success: function(d){
+                //console.log(d);
+                _growl.notice({message:"Admin list successfully modified"});
+                if(cb) cb(d.admins);
+            },
+            error: function(e) {
+                console.log(e);
+                _growl.error({message: "Error editing admins"});
+            }
+        });
+    }
+    else throw("Missing admin ID or action");
+}
+
 
 //TODO nascondere chi è già admin
-//TODO layout hint con avatar
-//TODO add on click su hint
 //TODO popup conferma aggiunta
 
 var users = new Bloodhound({
@@ -102,22 +126,38 @@ var users = new Bloodhound({
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     //prefetch: '../data/films/post_1960.json',
     remote: {
-        url: baseUrl + "activities/users/%QUERY",
+        url: baseUrl + (baseUrl.endsWith("/") ? '' : '/') + "activities/users/%QUERY",
         headers : {
             Authorization: "Bearer " + userToken
         },
         wildcard: '%QUERY',
         filter: function (users) {
             $(".tt-dataset").addClass("container-fluid");
+            for(var i=0; i<users.length; i++) {
+                if((_form_ds.admins.indexOf(users[i]._id) != -1) || users[i]._id == activityBody.owner)
+                    users.splice(i,1);
+            }
             // Map the remote source JSON array to a JavaScript object array
             return $.map(users, function (user) {
                 return {
+                    uid: user._id,
                     email: user.email,
                     name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
                     avatar: user.avatar || "/img/avatar.png"
                 };
             });
         }
+    }
+});
+
+
+$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+    var uid = suggestion.uid;
+    if(uid) {
+        editAdmins(uid, 'add', function(newadmins) {
+            _form_ds.admins = newadmins;            
+            getAdmins(newadmins, renderAdmins);
+        });
     }
 });
 
