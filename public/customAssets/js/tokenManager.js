@@ -7,7 +7,7 @@ if(!userToken) {
     if(window.localStorage.token) {
         if(!tokenError) {
             jQuery.ajax({
-                url: config.contentUIUrl + "/token/actions/setToken?access_token=" + window.localStorage.token,
+                url: config.contentUIUrl + (config.contentUIUrl.endsWith("/") ? '' : '/') + "token/actions/setToken?access_token=" + window.localStorage.token,
                 type: "POST",
                 success: function (data, textStatus, xhr) {
                     let tmpHref=window.location.href;
