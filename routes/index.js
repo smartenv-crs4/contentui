@@ -27,7 +27,10 @@ router.get('/',         (req, res, next) => {
       contentUrl:contentUrl, 
       scheduleUrl:scheduleUrl,
       access_token: access_token,
-      commonUIUrl:commonUIUrl
+      properties:{
+        contentUIUrl:config.contentUIUrl ,
+        commonUIUrl:config.commonUIUrl
+      },
   });
 });
 
@@ -42,7 +45,10 @@ router.get('/activities/new',       (req, res, next) => {
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
     contentUrl:contentUrl,
-    commonUIUrl:commonUIUrl,
+    properties:{
+      contentUIUrl:config.contentUIUrl ,
+      commonUIUrl:config.commonUIUrl
+    },
     access_token: access_token,
     contentAdminTypes: config.contentAdminTokenType
   });
@@ -132,8 +138,11 @@ function getActivity(req, res, edit) {
 			query: edit ? JSON.stringify(req.query) : undefined,
 			baseUrl: baseUrl,
 			uploadUrl: uploadUrl,
-            contentUrl: contentUrl,
-            commonUIUrl:commonUIUrl,
+      contentUrl: contentUrl,
+      properties:{
+        contentUIUrl:config.contentUIUrl ,
+        commonUIUrl:config.commonUIUrl
+      },
 			access_token: access_token,
 			contentAdminTypes: config.contentAdminTokenType
 		});

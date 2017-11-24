@@ -1,0 +1,25 @@
+ <!-- view_promotions.ejs-->
+ <script>
+    var userToken= "<%= access_token %>" || null;
+    var tokenError="<%= tokenError %>" || null;
+
+    <% if(typeof properties != 'undefined') { %>          var config=JSON.parse('<%- JSON.stringify(properties) %>'); <% } %>
+    <% if(typeof contentID != 'undefined') { %>           var contentID=JSON.parse('<%- JSON.stringify(contentID) %>'); <% } %>
+    <% if(typeof promotionID != 'undefined') { %>         var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>'); <% } %>
+    <% if(typeof baseUrl != 'undefined') { %>             var baseUrl = '<%= baseUrl %>'; <% } %>
+    <% if(typeof contentUrl != 'undefined') { %>          var contentUrl = '<%= contentUrl %>'; <% } %>
+    <% if(typeof uploadUrl != 'undefined') { %>           var uploadUrl = '<%= uploadUrl %>'; <% } %>
+    <% if(typeof params != 'undefined') { %>              var params = '<%- params %>'; <% } %>
+    <% if(typeof query != 'undefined') { %>               var query = '<%- query %>'; <% } %>
+    <% if(typeof scheduleUrl != 'undefined') { %>         var _scheduleShip = '<%= scheduleUrl %>'; <% } %>
+    <% if(typeof contentAdminTypes != 'undefined') { %>   var contentAdminTypes = "<%= contentAdminTypes %> " <% } %>
+
+    <% if(typeof activityBody != 'undefined') { %>
+        var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
+    <% } else {%>
+        var activityBody = undefined;
+    <% } %>
+  
+    <% if(typeof params != 'undefined') { %>      params = JSON.parse(params); <% } %>
+    <% if(typeof query != 'undefined') { %>       query = JSON.parse(query); <% } %>
+</script>

@@ -164,29 +164,7 @@
 </div><!--/End Wrapepr-->
 
 
-
-
-<script type="text/javascript">
-    var baseUrl = '<%= baseUrl %>';
-    var contentUrl = '<%= contentUrl %>';
-    var uploadUrl = '<%= uploadUrl %>';
-    var params = '<%- params %>';
-    var query = '<%- query %>';
-    var config = {
-        contentUIUrl: baseUrl,
-        commonUIUrl: '<%= commonUIUrl %>'
-    }
-    <% if(activityBody) { %>
-        var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
-    <% } else {%>
-        var activityBody = undefined;
-    <% } %>
-    var userToken= "<%= access_token %>" || null;
-    var tokenError= "<%= tokenError %>" || null;
-    var contentAdminTypes = "<%= contentAdminTypes %>"
-    params = JSON.parse(params);
-    query = JSON.parse(query);
-</script>
+<% include ../config %>
 
 <script id="img-thumb" type="text/x-img-snippet">
     <div>

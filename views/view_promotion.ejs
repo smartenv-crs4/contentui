@@ -170,17 +170,17 @@
 
     <!-- JS Customization -->
     <script>
+        /*
         var config=JSON.parse('<%- JSON.stringify(properties) %>');
         console.log(config);
         var contentID=JSON.parse('<%- JSON.stringify(contentID) %>');
         var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>');
         var userToken= "<%= access_token %>" || null;
         var tokenError="<%= tokenError %>" || null;
-        var config = {
-            contentUIUrl = baseUrl,
-        }
+        */
     </script>
 
+    <% include config %>
 
     <script type="text/javascript" src="/assets/js/plugins/bootstrap-editable.min.js"></script>
     <script src="/assets/js/custom.js"></script>

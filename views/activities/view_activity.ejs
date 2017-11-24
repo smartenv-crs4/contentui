@@ -156,22 +156,7 @@
 </div><!--/End Wrapepr-->
 
 
-
-
-<script type="text/javascript">
-    var baseUrl = '<%= baseUrl %>';
-    var contentUrl = '<%= contentUrl %>';
-    var uploadUrl = '<%= uploadUrl %>';
-    var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
-    var userToken= "<%= access_token %>" || null;
-    var tokenError= "<%= tokenError %>" || null;
-    var config = {
-        contentUIUrl: baseUrl,
-        commonUIUrl: '<%= commonUIUrl %>'
-    }
-</script>
-
-
+<% include ../config %>
 
 <script id="img-thumb" type="text/x-img-snippet">
     <div>
