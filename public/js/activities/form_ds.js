@@ -1,5 +1,5 @@
 var _form_ds = {
-    admins     : undefined,
+    admins     : [],
     htplAdmin  : undefined,    
 }
 var _growl = undefined; //wa removeAdmin jquery+growl scope.... (?)
@@ -14,7 +14,7 @@ $(document).ready(function() {
             }
             else {
                 _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
-                _form_ds.admins = activityBody.admins || [];
+                _form_ds.admins = _form_ds.admins.concat(activityBody.admins);
 
                 common.getPromotions();
 
@@ -118,9 +118,7 @@ function editAdmins(uid, action, cb) {
 }
 
 
-//TODO nascondere chi è già admin
 //TODO popup conferma aggiunta
-
 var users = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -132,13 +130,15 @@ var users = new Bloodhound({
         },
         wildcard: '%QUERY',
         filter: function (users) {
-            $(".tt-dataset").addClass("container-fluid");
-            for(var i=0; i<users.length; i++) {
-                if((_form_ds.admins.indexOf(users[i]._id) != -1) || users[i]._id == activityBody.owner)
-                    users.splice(i,1);
+            $(".tt-dataset").addClass("container-fluid");            
+            var notAdmins = [];
+            for(var i=0; i<users.length; i++) {                
+                if((_form_ds.admins.indexOf(users[i]._id) == -1) && users[i]._id != activityBody.owner) {
+                    notAdmins.push(users[i]);
+                }
             }
             // Map the remote source JSON array to a JavaScript object array
-            return $.map(users, function (user) {
+            return $.map(notAdmins, function (user) {
                 return {
                     uid: user._id,
                     email: user.email,
