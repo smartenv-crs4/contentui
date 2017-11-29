@@ -193,7 +193,7 @@ function loadContent() {
 
     var imgThumb = $("#img-thumb").html();
     var imageContainer = document.getElementById("f_imageContainer");
-    
+
     if(activityBody) {
         for(let i=0; i<activityBody.images.length; i++) {
             let col = i % 4;
@@ -263,11 +263,11 @@ function storeContentToContentms(contentData) {
     contentType: 'application/json',
     data: JSON.stringify(contentData),
     success: function (response) {      
-      _growl({message: "Content Added"});
+      $.growl.notice({message: "Content Added"});
       window.location = baseUrl + "activities/" + response._id;
     },
     error: function (response) {      
-      _growl({message: "Error adding content "});
+      $.growl.error({message: "Error adding content "});
     }
   });
 }
@@ -285,6 +285,7 @@ function updateContentToContentms(contentData){
         activityBody = response; //!!!!!!!
         $(".editmode").hide();
         $(".viewmode").show();
+        console.log("AAAAAAAAAAAA")
         _growl.notice({message:"Update success"})
         initView();
     },
@@ -298,7 +299,7 @@ function updateContentToContentms(contentData){
 
 
 function updateContent(){
-
+    console.log("---------------UPDATECONTENT")
   // PUT in /contents/:id
 
   var name = $('#f_name').val();
@@ -328,7 +329,8 @@ function updateContent(){
 
   var oldImagesLength = contentData.images.length;
 
-  if (images_array_fd.length > 0 ) {
+//TODO RIFARE IMMAGINI!!!!!!!!!!!!
+  if(false) { //(images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);

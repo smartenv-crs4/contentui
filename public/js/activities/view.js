@@ -1,6 +1,8 @@
 $(document).ready(function () {
     initToken();
     initView();
+    initAdminTool();
+ 
 
     var admins = activityBody.admins;
     admins.push(activityBody.owner);
