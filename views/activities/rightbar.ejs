@@ -1,20 +1,20 @@
-<div class="col-md-3">
-
-    <div class="loggedonly">
-        <a href="promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
-        <hr>
-        <div class="search-open" style="display: block; margin-bottom:40px;">
-            <div class="input-group ">
-                <input type="text" class="form-control" placeholder="Filtro offerte/eventi ">
-                <span class="input-group-btn">
-                    <button class="btn-u" type="button">Go</button>
-                </span>
-            </div>
+<div class="editmode loggedonly" style="display:none;">
+    <a href="promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
+    <hr>
+    <div class="search-open" style="display: block; margin-bottom:40px;">
+        <div class="input-group ">
+            <input type="text" class="form-control" placeholder="Filtro offerte/eventi ">
+            <span class="input-group-btn">
+                <button class="btn-u" type="button">Go</button>
+            </span>
         </div>
     </div>
-
-    <div style="margin-top:20px;" id="promoList"></div>
 </div>
+
+<div style="margin-top:20px;" id="promoList"></div>
+
+
+
 
 <script id="promo-template2" type="text/x-handlebars-template">
     {{#each promos}}
@@ -26,8 +26,6 @@
     <hr>
     {{/each}}
 </script>
-
-
 
 <script id="promo-template" type="text/x-handlebars-template">
 {{#each promos}}

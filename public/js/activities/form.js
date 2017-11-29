@@ -3,68 +3,31 @@
  * Mantained by Dino from 04/17
  */
 
-let latitude = 39.21054;
-let longitude = 9.1191;
-let zoom = 12;
+var zoom = 12;
+var images_array_fd = [];
 
-images_array_fd = [];
-img_array_url = [];
-action = 'new';
-
-$(document).ready(function() {
-  if(activityBody) action = 'edit'
-
-  $("#addContentButton").click(function(e) {
-    addContent();
-  });
-
-
-  $("#fileUpload").change(function() {
-    loadImagePreview(this);
-  });
-
-
-
-  $('#datetimepicker12').datetimepicker({
-    inline: true,
-    format: 'DD/MM/YYYY',
-    allowInputToggle: true,
-    useCurrent : true
-  });
-
-  $("#updateContentButton").hide();
-  $("#addContentButton").show();
-
-  if (action === 'edit') {
-    loadContent();
-  }
-
-  App.init();
-  loadCat(action);
-  initMap(action);
-});
-
-
-(function(global) {
-  global.images_array_URL = [];
-}(this));
-
+var _form_ds = {
+  admins     : [],
+  htplAdmin  : undefined,
+  lat: 39.21054,
+  lon: 9.1191
+}
+var _growl = $.growl; //wa removeAdmin jquery+growl scope.... (?)
 
 function removePicture(elem){
-  var id = $(elem).closest('.img-wrap').find('img').data('id');
+    var id = $(elem).closest('.img-wrap').find('img').data('id');
 
-  bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
-    if (result) {
-      $(elem).parent().parent().remove();
-      for (var i = 0; i < images_array_fd.length; i++)
-        if (images_array_fd[i].id === id) {
-          images_array_fd.splice(i, 1);
+    bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
+      if (result) {
+        $(elem).parent().parent().remove();
+        for (var i = 0; i < images_array_fd.length; i++)
+            if (images_array_fd[i].id === id) {
+                images_array_fd.splice(i, 1);
+            }
         }
-    }
-//    console.log(JSON.stringify(images_array_fd));
-
-  });
+    });
 }
+
 
 function loadImagePreview(input) {
 
@@ -91,89 +54,6 @@ function loadImagePreview(input) {
 
 
   }
-}
-
-
-
-function initMap(action) {
-
-
-  if (action === 'edit'){
-    latitude = activityBody.lat;
-    longitude = activityBody.lon;
-  }
-
-    var map = new GMaps({
-      div: '#map',
-      scrollwheel: false,
-      lat: latitude,
-      lng: longitude,
-      zoom: zoom,
-      click: function (event) {
-        latitude = event.latLng.lat();
-        longitude = event.latLng.lng();
-        marker.setPosition(new google.maps.LatLng(latitude,longitude));
-        document.getElementById("latbox").innerHTML = latitude;
-        document.getElementById("lngbox").innerHTML = longitude;
-        geocodeLatLng(latitude, longitude);
-      }
-    });
-
-  var marker = map.addMarker({
-    lat: latitude,
-    lng: longitude
-  });
-
-    document.getElementById("latbox").innerHTML = latitude;
-    document.getElementById("lngbox").innerHTML = longitude;
-    geocodeLatLng(latitude, longitude);
-}
-
-
-
-function geocodeLatLng(lat, lng) {
-  let geocoder = new google.maps.Geocoder;
-  let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
-  let address = null;
-  geocoder.geocode({'location': latlng}, function(results, status) {
-    if (status === 'OK') {
-      if (results[1]) {
-        console.log(results[1].formatted_address);
-        address = results[1].formatted_address;
-      } else {
-        window.alert('No results found');
-      }
-    } else {
-      window.alert('Geocoder failed due to: ' + status);
-    }
-    document.getElementById("address").innerHTML = address;
-  });
-}
-
-
-
-
-function loadCat(action) {
-  $('#myModal-categories').modal('show');
-  $("#catDrop div").empty();
-  $.ajax(contentUrl + "categories/")
-    .done(function(data) {
-      var cats = data.categories;
-      var ctpl = $("#cp-cats").html();
-
-      console.log(cats.length);
-
-      for(var i=0; i<cats.length; i++) {
-        var col = i%4;
-        $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
-      }
-
-      if (i === cats.length && action === 'edit')
-        $.each(activityBody.category, function(i, val){
-          $("input[value='" + val + "']").prop('checked', true);
-        });
-    });
-
 }
 
 function getUploadmsImageURL(image, cb) {
@@ -203,56 +83,155 @@ function getUploadmsImageURL(image, cb) {
     });
 }
 
+function initMapEdit(lat, lon) {
+    var latitude = lat || _form_ds.lat;
+    var longitude = lon || _form_ds.lon;
 
-//---------- POST to actions/uploadprofileimage that goes to uploadms
-/* ds Albe
-function getUploadmsImageURL(image, cb) {
-  jQuery.ajax({
-    url: baseUrl + "actions/uploadimage",
-    data: image,
-    processData: false,
-    contentType: false,
-    type: 'POST',
-    success: function(data){
-      console.log("success uploading image");
-      cb(uploadUrl+"file/"+data.filecode);
-    },
-    error: function(xhr, status)
-    {
-      let errType="error." + xhr.status;
-      let msg = i18next.t(errType);
-      console.log(xhr);
-      try{
-        msg = msg + "Error uploading image! Check filesize. ";
-      }
-      catch(err){ }
-      jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
-    }
-  });
+    var map = new GMaps({
+        div: '#f_map',
+        scrollwheel: false,
+        lat: latitude,
+        lng: longitude,
+        zoom: zoom,
+        click: function (event) {
+            latitude = event.latLng.lat();
+            longitude = event.latLng.lng();
+            marker.setPosition(new google.maps.LatLng(latitude,longitude));
+            _form_ds.lat = latitude;
+            _form_ds.lon = longitude;
+            geocodeLatLng(latitude, longitude, 'f_address');
+        }
+    });
+
+    var marker = map.addMarker({
+        lat: latitude,
+        lng: longitude
+    });
+    geocodeLatLng(latitude, longitude, 'f_address');
 }
-*/
+
+
+function initMap(title, description, latitude, longitude) {
+    var map = new GMaps({
+        div: '#map',
+        scrollwheel: false,
+        lat: latitude,
+        lng: longitude,
+        zoom: zoom,
+        title: title,
+        infoWindow: {
+            content: '<p>HTML Content</p>'
+        }
+    });
+
+    var marker = map.addMarker({
+        lat: latitude,
+        lng: longitude
+    });
+
+    map.drawOverlay({
+        lat: latitude,
+        lng: longitude,
+        content: '<div class="overlay"><h3>'+title+'</h3></div>'
+    });
+
+    geocodeLatLng(latitude, longitude, "address");
+}
+
+
+function geocodeLatLng(lat, lng, adrlabel) {
+    let geocoder = new google.maps.Geocoder;
+    let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+    let address = null;
+    geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+            if (results[1]) {
+                address = results[1].formatted_address;
+            } 
+            else {
+                window.alert('No results found');
+            }
+        } 
+        else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+
+        document.getElementById(adrlabel).innerHTML = address;
+    });
+}
+
+
+function loadCat(action) {
+  $('#myModal-categories').modal('show');
+  $("#f_catDrop div").empty();
+  $.ajax(contentUrl + "categories/")
+    .done(function(data) {
+      var cats = data.categories;
+      var ctpl = $("#f_cp-cats").html();
+
+      for(var i=0; i<cats.length; i++) {
+        var col = i%4;
+        $("#f_catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
+      }
+      if(activityBody) {
+        if (i === cats.length && action == true)
+          $.each(activityBody.category, function(i, val){
+              $("input[value='" + val + "']").prop('checked', true);
+          });
+        }
+    });
+
+}
+
+
+
+function loadContent() {
+    if(activityBody) {
+        $("#f_name").val(activityBody.name);
+        $("#f_description").val(activityBody.description);
+    }
+
+    var imgThumb = $("#img-thumb").html();
+    var imageContainer = document.getElementById("f_imageContainer");
+    
+    if(activityBody) {
+        for(let i=0; i<activityBody.images.length; i++) {
+            let col = i % 4;
+            let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
+
+            $('#f_imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> ' +
+            '<div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> ' +
+            '<img name="image" data-id='+activityBody.images[i].split('/').pop()+' class="img-responsive rounded-2x" src='+activityBody.images[i]+' > </div> ' +
+            '</div>');
+
+            // $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
+        }
+    }
+
+}
+
+
 
 function addContent() {
 
-  var name = $('#name').val();
-  var description = $('#description').val();
+  var name = $('#f_name').val();
+  var description = $('#f_description').val();
   var published = true;
-  var town = $('#address').innerHTML;
-  var [lat, lng] = [$('#latbox').text(), $('#lngbox').text()];
+  var town = $('#f_address').innerHTML;
   var category_array = $('input[name="category"]:checked').map(function () {
     return this.value;
   }).get();
   var img_array_url = [];
   var contentData = {
     name: name,
-    type: "eventa_promotions",
+    type: "activity",
     description: description,
     published: true,
     town: town,
     category: category_array.slice(),
     images: [],
-    lat: lat,
-    lon: lng
+    lat: _form_ds.lat,
+    lon: _form_ds.lon
   };
 
   if (images_array_fd.length > 0 ) {
@@ -275,9 +254,6 @@ function addContent() {
 }
 
 function storeContentToContentms(contentData) {
-
-  console.log("\n\n\n storeContentToContentms");
-
   $.ajax({
     url: contentUrl + "contents",
     headers: {
@@ -285,83 +261,64 @@ function storeContentToContentms(contentData) {
     },
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify(contentData),            //stringify is important
-    success: function (response) {
-      console.log("RESPONSE DA post su contents: " + JSON.stringify(response));
-      //go to the content page:
-      bootbox.dialog({title: 'Success', message: "Content Added " + JSON.stringify(response)});
+    data: JSON.stringify(contentData),
+    success: function (response) {      
+      _growl({message: "Content Added"});
       window.location = baseUrl + "activities/" + response._id;
     },
-    error: function (response) {
-      console.log("ERROR DA post su contents ");
-      bootbox.dialog({title: 'Warning', message: "Error adding content "});
+    error: function (response) {      
+      _growl({message: "Error adding content "});
     }
   });
 }
 
-
-
-
-
-function loadContent(){
-  $("#name").val(activityBody.name);
-  $("#description").val(activityBody.description);
-
-  $("#updateContentButton").show();
-  $("#addContentButton").hide();
-
-  $("#updateContentButton").text("Update Activity");
-  $("#updateContentButton").click(function(e) {
-     updateContent();
+function updateContentToContentms(contentData){
+  $.ajax({
+    url: contentUrl + "contents/" + activityBody._id,
+    headers: {
+      Authorization: "Bearer " + userToken
+    },
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(contentData),
+    success: function (response) {
+        activityBody = response; //!!!!!!!
+        $(".editmode").hide();
+        $(".viewmode").show();
+        _growl.notice({message:"Update success"})
+        initView();
+    },
+    error: function (response) {      
+      _growl.error({message: "Error updating content "});
+    }
   });
 
-  $("#test").click(function(e) {
-    updateContent();
-  });
-
-  var imgThumb = $("#img-thumb").html();
-  var imageContainer = document.getElementById("imageContainer");
-
-  for(let i=0; i<activityBody.images.length; i++) {
-    let col = i % 4;
-    let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
-
-    $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> ' +
-      '<div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> ' +
-      '<img name="image" data-id='+activityBody.images[i].split('/').pop()+' class="img-responsive rounded-2x" src='+activityBody.images[i]+' > </div> ' +
-      '</div>');
-
-    // $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
-  }
 
 }
-
-
 
 
 function updateContent(){
 
   // PUT in /contents/:id
 
-  var name = $('#name').val();
-  var description = $('#description').val();
+  var name = $('#f_name').val();
+  var description = $('#f_description').val();
   var published = true;
-  var town = $('#address').innerHTML;
-  var [lat, lng] = [$('#latbox').text(), $('#lngbox').text()];
+  var town = $('#f_address').innerHTML;  
   var category_array = $('input[name="category"]:checked').map(function () {
     return this.value;
   }).get();
 
   var contentData = {
     name: name,
-    type: "test_activity",
+    type: "activity",
     description: description,
     published: true,
     town: town,
     category: category_array.slice(),
     images:[],
-    lat: lat,
-    lon: lng
+    lat: _form_ds.lat,
+    lon: _form_ds.lon
   };
 
   contentData.images = $('img[name="image"]').map(function () {
@@ -371,26 +328,10 @@ function updateContent(){
 
   var oldImagesLength = contentData.images.length;
 
-  console.log("name: ", name);
-  console.log("description: ", description);
-  console.log("published: ", published);
-  console.log("town: ", town);
-  console.log("lat, lon: ", [lat, lng]);
-  console.log("category_array", category_array);
-  console.log("contentData.images", contentData.images);
-
-
   if (images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);
-        console.log("contentData: ", JSON.stringify(contentData));
-        console.log("contentData.images.length: ", contentData.images.length);
-        console.log("images_array_fd.length: ", images_array_fd.length);
-        console.log("oldImagesLength: ", oldImagesLength);
-        console.log("(contentData.images.length - images_array_fd.length) === oldImagesLength: ", (contentData.images.length - images_array_fd.length) === oldImagesLength);
-
-
         if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte
           //console.log("contentData: ", JSON.stringify(contentData));
           updateContentToContentms(contentData);
@@ -398,34 +339,170 @@ function updateContent(){
       });
     });
   } else {
-    console.log("\n\n\n no images to upload");
     updateContentToContentms(contentData);
   }
-
+}
+  
+  
+function addPromotion(){
+    window.location = baseUrl + "activities/" + activityBody._id + '/promotions/new';
 }
 
-function updateContentToContentms(contentData){
-  console.log("\n\n\n updateContentToContentms");
 
-  $.ajax({
-    url: contentUrl + "contents/" + activityBody._id,
-    headers: {
-      Authorization: "Bearer " + userToken
-    },
-    type: 'PUT',
-    contentType: 'application/json',
-    data: JSON.stringify(contentData),            //stringify is important
-    success: function (response) {
-      console.log("RESPONSE DA put su contents: " + JSON.stringify(response));
-      //go to the content page:
-      bootbox.dialog({title: 'Success', message: "Content Updated " + JSON.stringify(response)});
-      window.location = baseUrl + "activities/" + response._id;
-    },
-    error: function (response) {
-      console.log("ERROR DA put su contents ");
-      bootbox.dialog({title: 'Warning', message: "Error updating content "});
+
+
+//////////////////////////////////////////
+//////////////////////////////////////////
+////// DS
+//////////////////////////////////////////
+//////////////////////////////////////////
+
+function spliceOwner(admins) {
+    var ret = [];
+    for(var i=0; i<admins.length; i++) {
+        if(admins[i]._id != activityBody.owner) {
+            ret.push(admins[i]);
+        }
     }
+    return ret;
+}
+
+function renderAdmins(admins) {
+  $("#adminlist").html(_form_ds.htplAdmin({admins:spliceOwner(admins)}));
+  $(".delAdmin").click(function(e) {        
+      e.preventDefault();
+      var uid = this.getAttribute("data-admin-id");
+      editAdmins(uid, 'remove', function(newadmins) {
+          _form_ds.admins = newadmins;
+          getAdmins(newadmins, renderAdmins);
+      });
+  })
+}
+
+
+
+function getAdmins(admList, cb) {    
+  if(admList.length > 0) {        
+      var adms = admList.join('&adm=');        
+      $.ajax({
+          url: baseUrl + "activities/admins" + "?adm=" + adms,
+          headers: {
+              Authorization: "Bearer " + userToken
+          },
+          cache: false,
+          method: 'GET',
+          success: function(data){              
+              if(cb) cb(data);
+          },
+          error: function(e) {
+              console.log(e);
+              _growl.warning({message: "Something went wrong when getting admins list"});
+          }
+      });
+  }
+}
+
+//TODO popup conferma rimozione
+function removeAdmin(uid, cb) {
+  if(uid) {        
+      var aid = activityBody._id;
+      $.ajax({
+          url: contentUrl + "contents/" + aid + "/actions/removeAdmin",
+          method: 'POST',
+          headers: {
+              Authorization: "Bearer " + userToken
+          },
+          data: {userId:uid},
+          success: function(d){
+              //console.log(d);
+              _growl.notice({message:"Admin successfully removed"});
+              if(cb) cb(d.admins);
+          },
+          error: function(e) {
+              console.log(e);
+              _growl.error({message: "Error removing admin"});
+          }
+      });
+  }
+  else throw("Missing admin ID");
+}
+
+function editAdmins(uid, action, cb) {
+  if(uid && action) {
+      var aid = activityBody._id;
+      $.ajax({
+          url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') 
+              + "contents/" + aid + "/actions/" 
+              + (action=='add' ? "addAdmin" : "removeAdmin"),
+          method: 'POST',
+          headers: {
+              Authorization: "Bearer " + userToken
+          },
+          data: {userId:uid},
+          success: function(d){
+              //console.log(d);
+              _growl.notice({message:"Admin list successfully modified"});
+              if(cb) cb(d.admins);
+          },
+          error: function(e) {
+              console.log(e);
+              _growl.error({message: "Error editing admins"});
+          }
+      });
+  }
+  else throw("Missing admin ID or action");
+}
+
+
+function initAdminTool() {
+  //TODO popup conferma aggiunta
+  var users = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      //prefetch: '../data/films/post_1960.json',
+      remote: {
+          url: baseUrl + (baseUrl.endsWith("/") ? '' : '/') + "activities/users/%QUERY",
+          headers : {
+              Authorization: "Bearer " + userToken
+          },
+          wildcard: '%QUERY',
+          filter: function (users) {
+              $(".tt-dataset").addClass("container-fluid");            
+              var notAdmins = [];
+              for(var i=0; i<users.length; i++) {                
+                  if((_form_ds.admins.indexOf(users[i]._id) == -1) && users[i]._id != activityBody.owner) {
+                      notAdmins.push(users[i]);
+                  }
+              }
+              // Map the remote source JSON array to a JavaScript object array
+              return $.map(notAdmins, function (user) {
+                  return {
+                      uid: user._id,
+                      email: user.email,
+                      name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
+                      avatar: user.avatar || "/img/avatar.png"
+                  };
+              });
+          }
+      }
+  });
+
+  $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+      var uid = suggestion.uid;
+      if(uid) {
+          editAdmins(uid, 'add', function(newadmins) {
+              _form_ds.admins = newadmins;            
+              getAdmins(newadmins, renderAdmins);
+          });
+      }
   });
 
 
+  $('#searchusers .typeahead').typeahead(null, {
+      display: 'email',
+      source: users,
+      templates: {
+          suggestion: Handlebars.compile($("#htpl-tah-menu").html())
+      }
+  });
 }

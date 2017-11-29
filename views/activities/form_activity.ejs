@@ -1,224 +1,76 @@
+<!-- Standard Form Controls -->
+<form class="tag-box tag-box-v3 form-page insertmode editmode" name="activity-form" id="content-form" style="display:none;">
 
+    <div class="headline"><h3>Modifica Attività</h3></div>
+    <!--Inputs-->
+    <h4>Nome Attività</h4>
+    <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
+    <!--End Inputs-->
+    <div class="margin-bottom-20"></div>
 
+    <!-- Descrizione section-->
+    <h4>Descrizione</h4>
+    <textarea id="f_description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." ></textarea>
+    <div class="margin-bottom-20"></div>
 
+    <!-- Image upload section-->
 
-<!DOCTYPE html>
-<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
-<!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
-<head>
-    <title>Cagliari Port 2020 | Activity portal</title>
+    <h4>Immagini</h4>
 
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <div class="margin-bottom-10"></div>
+    <div id="f_imageContainer" class="row margin-bottom-10">
+        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
+        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
+        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
+        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
+    </div>
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
+    <button class="btn-u fileinput-button" type="button">
+        <i class="fa fa-picture-o">
+            <input id="fileUpload" type="file" name="files[]">
+        </i>
+        <span>Carica Immagine</span>
+    </button>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/blocks.css">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <!--<div id="files" class="files"></div>-->
+    <hr>
+    <div class="margin-bottom-10"></div>
 
-    <link rel="stylesheet" href="<%= commonUI.headerCss %>">
-    <link rel="stylesheet" href="<%= commonUI.footerCss %>">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
+    <!-- Category Section -->
 
-    <!-- Web Fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin">
+    <h4>Categorie</h4>
+    <div class="margin-bottom-10"></div>
+    <div class="row" id="f_catDrop">
+        <div class="col-md-3" data-cp-cbox-pos="0"></div>
+        <div class="col-md-3" data-cp-cbox-pos="1"></div>
+        <div class="col-md-3" data-cp-cbox-pos="2"></div>
+        <div class="col-md-3" data-cp-cbox-pos="3"></div>
+    </div>
 
-    <!-- CP2020 CSS Customization -->
-    <link rel="stylesheet" href="/css/plugins/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="/css/plugins/jquery.growl.css">
-    <link rel="stylesheet" href="/css/custom_activity.css">
-</head>
+    <div class="margin-bottom-20"></div>
+    <hr>
 
-<body>
 
-<div class="wrapper">
+    <!-- Map Section -->
+    <h4>Mappa</h4>
 
-    <div id="header_p_HT"> <%- commonUI.header %> </div>
+    <p id="f_address"></p>
+    <div id="f_map" class="map margin-bottom-50"></div>
+    <hr>
+    <label id="image_array_url"></label>
+    <button id="addContentButton" class="btn-u btn-u-default insertmode" type="button">Add Activity</button>
+    <button id="updateContentButton" class="btn-u btn-u-default editmode" type="button">Update Activity</button>
+    <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
 
-    <!--=== Content Part ===-->
-    <div class="container content">
 
-        <%- include leftbar_edit %>
+    <script id="f_cp-cats" type="text/x-cp-snippet">
+        <label class="checkbox">
+            <input type="checkbox" value="" name="category" class=".ibtn">
+        </label>
+    </script>
 
-        <!-- Begin Content -->
-        <div class="col-md-7">
-            <div class="row">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                </div>
-            </div>
+</form>
 
-            <!--<div class="alert alert-info fade in">-->
-            <!--<button data-dismiss="alert" class="close" type="button">×</button>-->
-            <!--Individual form controls automatically receive some global styling. All textual <code>input</code>, <code>textarea</code>, and <code>select</code> elements with <code>.form-control</code> are set to <code>width: 100%;</code> by default. Wrap labels and controls in .form-group for optimum spacing.<br>-->
-            <!--<strong>You can find more example here:</strong> <a target="_blank" href="http://getbootstrap.com/css/#forms">http://getbootstrap.com/css/#forms</a>-->
-            <!--</div>-->
 
-
-            <!-- Standard Form Controls -->
-            <form class="tag-box tag-box-v3 form-page" name="activity-form" id="content-form">
-
-                <div class="headline"><h3>Inserimento Attività</h3></div>
-                <!--Inputs-->
-                <h4>Nome Attività</h4>
-                <input id="name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
-                <!--End Inputs-->
-                <div class="margin-bottom-20"></div>
-
-                <!-- Descrizione section-->
-                <h4>Descrizione</h4>
-                <textarea id="description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." ></textarea>
-                <div class="margin-bottom-20"></div>
-
-                <!-- Image upload section-->
-
-                <h4>Immagini</h4>
-
-                <div class="margin-bottom-10"></div>
-                <div id="imageContainer" class="row margin-bottom-10">
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
-                    <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
-                </div>
-
-                <!--<button class="btn-u fileinput-button">-->
-                    <!--<i class="fa fa-picture-o">-->
-                    <!--</i>-->
-                    <!--<input id="fileUpload" type="file" name="files[]"  >-->
-
-                <!--</button>-->
-
-                <button class="btn-u fileinput-button" type="button">
-                    <i class="fa fa-picture-o">
-                        <input id="fileUpload" type="file" name="files[]">
-                    </i>
-                    <span>Carica Immagine</span>
-                </button>
-
-
-                <!--<div id="files" class="files"></div>-->
-                <hr>
-                <div class="margin-bottom-10"></div>
-
-
-                <!-- Category Section -->
-
-                <h4>Categorie</h4>
-                <div class="margin-bottom-10"></div>
-                <div class="row" id="catDrop">
-                    <div class="col-md-3" data-cp-cbox-pos="0" ></div>
-                    <div class="col-md-3" data-cp-cbox-pos="1" ></div>
-                    <div class="col-md-3" data-cp-cbox-pos="2"></div>
-                    <div class="col-md-3" data-cp-cbox-pos="3" ></div>
-                </div>
-
-                <div class="margin-bottom-20"></div>
-                <hr>
-
-
-                <!-- Map Section -->
-                <h4>Mappa</h4>
-
-                <p id="latbox">--</p>
-                <p id="lngbox">--</p>
-                <p id="address">--</p>
-                <p>Clicca sulla mappa per indicare la posizione della tua attività</p>
-                <div id="map" class="map margin-bottom-50"></div>
-                <hr>
-
-
-
-            </form>
-
-            <label id="image_array_url"></label>
-            <button id="addContentButton" class="btn-u" type="button">Add Activity</button>
-            <button id="updateContentButton" class="btn-u" type="button">Update Activity</button>
-
-            <!-- End Content -->
-
-        </div>
-
-        <!-- Rightbar Menu -->
-        <%- include rightbar %>
-
-    </div><!--/container-->
-    <!--=== End Content Part ===-->
-
-    <div id="footer_p_HT"> <%- commonUI.footer %> </div>
-
-</div><!--/End Wrapepr-->
-
-
-<% include ../config %>
-
-<script id="img-thumb" type="text/x-img-snippet">
-    <div>
-     <img name="image" id="previewHolder" class="img-responsive rounded-2x" src="assets/img/demo.jpg" alt="">
-   </div>
-</script>
-
-<script id="cp-cats" type="text/x-cp-snippet">
-    <label class="checkbox">
-        <input type="checkbox" value="" name="category" class=".ibtn">
-    </label>
-</script>
-
-
-<!-- JS Global Compulsory -->
-<script src="<%- commonUI.headerScript %>"></script>
-<script src="<%- commonUI.footerScript %>"></script>
-
-<script type="text/javascript" src="/assets/plugins/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/jquery/jquery-migrate.min.js"></script>
-<script type="text/javascript" src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-
-<!-- JS Implementing Plugins -->
-<script type="text/javascript" src="/assets/plugins/back-to-top.js"></script>
-<script type="text/javascript" src="/assets/plugins/smoothScroll.js"></script>
-
-<!-- JS Customization -->
-<!--<script type="text/javascript" src="assets/js/custom.js"></script>-->
-<!-- JS Page Level -->
-<script type="text/javascript" src="/assets/js/app.js"></script>
-<!--<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>-->
-
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"  ></script>
-<script type="text/javascript" src="/assets/plugins/gmap/gmap.js"></script>
-
-<script src="/assets/plugins/respond.js"></script>
-<script src="/assets/plugins/html5shiv.js"></script>
-<script src="/assets/plugins/placeholder-IE-fixes.js"></script>
-
-
-<!-- CP2020 -->
-<script type="text/javascript" src="/js/plugins/handlebars-v4.0.5.js"></script>
-<script type="text/javascript" src="/js/plugins/typeahead.bundle.min.js"></script>
-<script type="text/javascript" src="/js/plugins/moment-with-locales.min.js"></script>
-<script type="text/javascript" src="/js/plugins/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="/js/plugins/jquery.growl.js"></script>
-<script type="text/javascript" src="/js/plugins/bootbox.min.js"></script>
-
-<script type="text/javascript" src="/customAssets/js/utils.js"></script>
-<script type="text/javascript" src="/customAssets/js/tokenManager.js"></script>
-<script type="text/javascript" src="/js/activities/common.js"></script>
-<script type="text/javascript" src="/js/activities/form.js"></script>
-<script type="text/javascript" src="/js/activities/form_ds.js"></script>
-
-</body>
-</html>

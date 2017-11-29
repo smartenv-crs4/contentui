@@ -8,7 +8,8 @@ var common = {
             type: 'GET',
             success: function(data){
                 var promos = data.promos;
-                $("#promoList").append(promoHtpl({promos:promos}));
+                
+                $("#promoList").html(promoHtpl({promos:promos}));
             },
             error: function(e) {
                 console.log(e);

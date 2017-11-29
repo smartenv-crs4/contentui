@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <title>Cagliari Port 2020 | Activity portal</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="<%= baseUrl %>favicon.ico">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="<%= baseUrl %>assets/css/style.css">
+    <link rel="stylesheet" href="<%= baseUrl %>assets/css/blocks.css">
+    <link rel="stylesheet" href="<%= baseUrl %>assets/css/app.css">
+    
+    <link rel="stylesheet" href="<%= commonUI.headerCss %>">
+    <link rel="stylesheet" href="<%= commonUI.footerCss %>">
+
+    <!-- Web Fonts -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin">
+
+    <!-- CP2020 CSS Customization -->
+    <link rel="stylesheet" href="<%= baseUrl %>css/plugins/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="<%= baseUrl %>css/plugins/jquery.growl.css">
+    <link rel="stylesheet" href="<%= baseUrl %>css/custom_activity.css">
+</head>
+<body>
+    <div class="wrapper">
+            
+        <div id="header_p_HT"> <%- commonUI.header %> </div>
+
+        <!--=== Content Part ===-->
+        <div class="container content">
+            <div class="col-md-2">
+                <% include leftbar %>
+            </div>
+            <div class="col-md-7">
+                <% if(typeof activityBody != 'undefined') {%> <%include view_activity%><% } %>
+                <% include form_activity %>
+            </div>
+            <div class="col-md-3">
+                <% include rightbar %>
+            </div>
+        </div>
+        
+        <div id="footer_p_HT"> <%- commonUI.footer %> </div>
+
+    </div><!--/End Wrapepr-->
+    
+    <% include ../config %>
+
+    <!-- JS Global Compulsory -->
+    <script src="<%- commonUI.headerScript %>"></script>
+    <script src="<%- commonUI.footerScript %>"></script>
+
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/jquery/jquery-migrate.min.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <!-- JS Implementing Plugins -->
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/back-to-top.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/smoothScroll.js"></script>
+
+    <!-- JS Page Level -->
+    <script type="text/javascript" src="<%= baseUrl %>assets/js/app.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"  ></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/gmap/gmap.js"></script>
+
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/respond.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/html5shiv.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>assets/plugins/placeholder-IE-fixes.js"></script>
+
+
+    <!-- CP2020 -->
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/typeahead.bundle.min.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/jquery.growl.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/plugins/bootbox.min.js"></script>
+
+    <script type="text/javascript" src="<%= baseUrl %>customAssets/js/utils.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>customAssets/js/tokenManager.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/activities/common.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/activities/form.js"></script>
+    <% if(typeof activityBody != 'undefined') { %> 
+        <script type="text/javascript" src="<%= baseUrl %>js/activities/view.js"></script>
+        <script type="text/javascript" src="<%= baseUrl %>js/activities/act_edit.js"></script>
+    <% } else { %>
+        <script type="text/javascript" src="<%= baseUrl %>js/activities/act_new.js"></script>
+    <% } %> 
+
+</body>
+</html>

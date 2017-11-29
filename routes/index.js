@@ -38,13 +38,14 @@ router.get('/',         (req, res, next) => {
 //new activity
 router.get('/activities/new',       (req, res, next) => {
   let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;		
-  return renderPage.renderPage(res, 'activities/form_activity', {
+  return renderPage.renderPage(res, 'activities/activity', {
     activityBody: undefined,
     params: JSON.stringify(req.params),
     query: JSON.stringify(req.query),
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
     contentUrl:contentUrl,
+    isNew: true,
     properties:{
       contentUIUrl:config.contentUIUrl ,
       commonUIUrl:config.commonUIUrl
@@ -55,16 +56,38 @@ router.get('/activities/new',       (req, res, next) => {
 });
 
 
-//Edit content
-router.get('/activities/:id/edit',  (req, res, next) => {
-  getActivity(req, res, true);
-});
-
-
 // activity get content
 router.get('/activities/:id',    (req, res, next) => {
-  getActivity(req, res);
+  let activity_id = req.params.id;
+	let abody = undefined;
+  let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
+  
+	rp(contentUrl+"contents/"+activity_id)
+	.then(body => {
+		abody = JSON.parse(body);		
+		renderPage.renderPage(res, 'activities/activity', {
+			activityBody: abody,
+			activityId: activity_id,
+			params: JSON.stringify(req.params) || undefined,
+			query: JSON.stringify(req.query) || undefined,
+			baseUrl: baseUrl,
+			uploadUrl: uploadUrl,
+      contentUrl: contentUrl,
+      properties:{
+        contentUIUrl:config.contentUIUrl ,
+        commonUIUrl:config.commonUIUrl
+      },
+			access_token: access_token,
+			contentAdminTypes: config.contentAdminTokenType
+		});
+	})
+	.catch(e => {
+		console.log(e);
+		res.boom.badImplementation();
+	})
 });   
+
+
 
 // promotions
 router.get('/activities/:aid/promotions/new', function(req, res, next) {
@@ -121,34 +144,3 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 });
 
 module.exports = router;
-
-
-
-function getActivity(req, res, edit) {
-	let activity_id = req.params.id;
-	let abody = undefined;
-	let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
-	rp(contentUrl+"contents/"+activity_id)
-	.then(body => {
-		abody = JSON.parse(body);		
-		renderPage.renderPage(res, 'activities/' + (edit ? 'form_activity' : 'view_activity'), {
-			activityBody: abody,
-			activityId: activity_id,
-			params: edit ? JSON.stringify(req.params) : undefined,
-			query: edit ? JSON.stringify(req.query) : undefined,
-			baseUrl: baseUrl,
-			uploadUrl: uploadUrl,
-      contentUrl: contentUrl,
-      properties:{
-        contentUIUrl:config.contentUIUrl ,
-        commonUIUrl:config.commonUIUrl
-      },
-			access_token: access_token,
-			contentAdminTypes: config.contentAdminTokenType
-		});
-	})
-	.catch(e => {
-		console.log(e);
-		res.boom.badImplementation();
-	})
-} 

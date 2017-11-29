@@ -1,3 +1,41 @@
-<div class="col-md-2">
+<div class="viewmode" style="display:none;">
 TODO: suggerimenti promo in base a qualche criterio (like, rate....)
 </div>
+
+<div id="lbar" class="editmode" style="display: none;">
+    <div id="searchusers" class="margin-bottom-30">
+        <input class="typeahead form-control" type="text" placeholder="Search for user">
+    </div>
+    <div id="adminlist"></div>
+</div>
+
+
+
+<script id="htpl-admin" type="text/x-handlebars-template">
+    {{#each admins}}
+    <div class="team-v4">
+        <div class="margin-bottom-50 text-center">
+            <a href="#" class="delAdmin" data-admin-id="{{this._id}}">
+                <span class="fa fa-remove text-right"></span>
+            </a>
+            <img style="width:60px;" src="{{this.avatar}}" alt="" />
+            <span>{{this.name}} {{this.surname}}</span>
+            <small><i class="fa fa-envelope-o"></i> {{this.email}}</small>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<script id="htpl-tah-menu" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <img src="{{avatar}}" class="tt-avatar" />
+            </div>
+            <div class="col-md-9">
+                <i class="fa fa-envelope-o"></i> <strong>{{email}}</strong><br>
+                {{#if name}}<i class="fa fa-user"></i> {{name}}{{/if}}
+            </div>
+        </div>
+    </div>
+</script>
