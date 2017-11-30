@@ -39,6 +39,25 @@ router.get('/users/:q',		 (req, res, next) => {
 });
 
 
+router.get('/image/:id', (req, res, next) => {
+	let id = req.params.id;
+    if(id) {
+        let options = {
+            url:  config.uploadUrl + "/file/" + id,
+            headers: {
+				'Authorization': "Bearer " + config.auth_token
+			}
+        };
+        request.get(options).pipe(res);
+	}
+	else {
+        res.status(400).send({error:"BadRequest", error_message:"File ID not valid"});
+    }
+});
+
+
+
+
 
 function getAdmins(admIds) {
 	if(admIds && admIds.length > 0) {

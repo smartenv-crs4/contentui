@@ -29,31 +29,25 @@ function removePicture(elem){
 }
 
 
-function loadImagePreview(input) {
+function loadImagePreview(input) {    
+    if (input.files && input.files[0]) {        
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let _id = "img-"+input.files[0].name.replace(/\s/g,'');
+            let objectURL = URL.createObjectURL(input.files[0]);
+            $('#f_imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img name="image" data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
 
-  if (input.files && input.files[0]) {
-    let reader = new FileReader();
-    reader.onload = function(e) {
+            let file = input.files[0];
+            let formData = new FormData();
+            formData.append(file.name.split(".")[0], file, file.name);
 
-      let _id = "img-"+input.files[0].name.replace(/\s/g,'');
-      let objectURL = URL.createObjectURL(input.files[0]);
-      $('#imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img name="image" data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
+            images_array_fd.push({id:_id, formData: formData});
 
-      let file = input.files[0];
-      let formData = new FormData();
-      formData.append(file.name.split(".")[0], file, file.name);
-
-      images_array_fd.push({id:_id, formData: formData});
-
-      //console.log(JSON.stringify(images_array_fd));
-
-    };
-
-    reader.readAsDataURL(input.files[0]);
-    //input.files[0].value = '';
-
-
-  }
+            //console.log(JSON.stringify(images_array_fd));
+        };
+        reader.readAsDataURL(input.files[0]);
+        //input.files[0].value = '';
+    }
 }
 
 function getUploadmsImageURL(image, cb) {
@@ -352,6 +346,15 @@ function addPromotion(){
 
 
 
+
+
+
+
+
+
+
+
+
 //////////////////////////////////////////
 //////////////////////////////////////////
 ////// DS
@@ -369,94 +372,75 @@ function spliceOwner(admins) {
 }
 
 function renderAdmins(admins) {
-  $("#adminlist").html(_form_ds.htplAdmin({admins:spliceOwner(admins)}));
-  $(".delAdmin").click(function(e) {        
-      e.preventDefault();
-      var uid = this.getAttribute("data-admin-id");
-      editAdmins(uid, 'remove', function(newadmins) {
-          _form_ds.admins = newadmins;
-          getAdmins(newadmins, renderAdmins);
-      });
-  })
+    $("#adminlist").html(_form_ds.htplAdmin({admins:spliceOwner(admins)}));
+    $(".delAdmin").click(function(e) {
+        e.preventDefault();
+        var uid = this.getAttribute("data-admin-id");
+        editAdmins(uid, 'remove', function(newadmins) {
+            _form_ds.admins = newadmins;
+            getAdmins(newadmins, renderAdmins);
+        });
+    })
 }
 
 
 
 function getAdmins(admList, cb) {    
-  if(admList.length > 0) {        
-      var adms = admList.join('&adm=');        
-      $.ajax({
-          url: baseUrl + "activities/admins" + "?adm=" + adms,
-          headers: {
-              Authorization: "Bearer " + userToken
-          },
-          cache: false,
-          method: 'GET',
-          success: function(data){              
-              if(cb) cb(data);
-          },
-          error: function(e) {
-              console.log(e);
-              _growl.warning({message: "Something went wrong when getting admins list"});
-          }
-      });
-  }
+    if(admList.length > 0) {
+        var adms = admList.join('&adm=');        
+        $.ajax({
+            url: baseUrl + "activities/admins" + "?adm=" + adms,
+            headers: {
+                Authorization: "Bearer " + userToken
+            },
+            cache: false,
+            method: 'GET',
+            success: function(data){              
+                if(cb) cb(data);
+            },
+            error: function(e) {
+                console.log(e);
+                _growl.warning({message: "Something went wrong when getting admins list"});
+            }
+        });
+    }
+    else if(cb) cb([]);
 }
 
-//TODO popup conferma rimozione
-function removeAdmin(uid, cb) {
-  if(uid) {        
-      var aid = activityBody._id;
-      $.ajax({
-          url: contentUrl + "contents/" + aid + "/actions/removeAdmin",
-          method: 'POST',
-          headers: {
-              Authorization: "Bearer " + userToken
-          },
-          data: {userId:uid},
-          success: function(d){
-              //console.log(d);
-              _growl.notice({message:"Admin successfully removed"});
-              if(cb) cb(d.admins);
-          },
-          error: function(e) {
-              console.log(e);
-              _growl.error({message: "Error removing admin"});
-          }
-      });
-  }
-  else throw("Missing admin ID");
-}
 
 function editAdmins(uid, action, cb) {
-  if(uid && action) {
-      var aid = activityBody._id;
-      $.ajax({
-          url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') 
-              + "contents/" + aid + "/actions/" 
-              + (action=='add' ? "addAdmin" : "removeAdmin"),
-          method: 'POST',
-          headers: {
-              Authorization: "Bearer " + userToken
-          },
-          data: {userId:uid},
-          success: function(d){
-              //console.log(d);
-              _growl.notice({message:"Admin list successfully modified"});
-              if(cb) cb(d.admins);
-          },
-          error: function(e) {
-              console.log(e);
-              _growl.error({message: "Error editing admins"});
-          }
-      });
-  }
-  else throw("Missing admin ID or action");
+    var isAdd = action == 'add';
+    if(uid && action) {
+        var aid = activityBody._id;
+        bootbox.confirm("Vuoi " + (isAdd ? "aggiungere" : "rimuovere") + " l'amministratore?", function(result){            
+            if(result) {
+                $.ajax({
+                    url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') 
+                        + "contents/" + aid + "/actions/" 
+                        + (isAdd ? "addAdmin" : "removeAdmin"),
+                    method: 'POST',
+                    headers: {
+                        Authorization: "Bearer " + userToken
+                    },
+                    data: {userId:uid},
+                    success: function(d){
+                        //console.log(d);
+                        _growl.notice({message:"Admin list successfully modified"});
+                        if(cb) cb(d.admins);
+                    },
+                    error: function(e) {
+                        console.log(e);
+                        _growl.error({message: "Error editing admins"});
+                    }
+                });
+            }
+        })
+    }
+    else throw("Missing admin ID or action");
 }
 
 
 function initAdminTool() {
-  //TODO popup conferma aggiunta
   var users = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -492,7 +476,7 @@ function initAdminTool() {
       var uid = suggestion.uid;
       if(uid) {
           editAdmins(uid, 'add', function(newadmins) {
-              _form_ds.admins = newadmins;            
+              _form_ds.admins = newadmins;
               getAdmins(newadmins, renderAdmins);
           });
       }
