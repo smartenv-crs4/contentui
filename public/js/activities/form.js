@@ -263,11 +263,11 @@ function storeContentToContentms(contentData) {
     contentType: 'application/json',
     data: JSON.stringify(contentData),
     success: function (response) {      
-      $.growl.notice({message: "Content Added"});
+      _growl.notice({message: "Content Added"});
       window.location = baseUrl + "activities/" + response._id;
     },
     error: function (response) {      
-      $.growl.error({message: "Error adding content "});
+      _growl.error({message: "Error adding content "});
     }
   });
 }
@@ -285,7 +285,7 @@ function updateContentToContentms(contentData){
         activityBody = response; //!!!!!!!
         $(".editmode").hide();
         $(".viewmode").show();
-        console.log("AAAAAAAAAAAA")
+        $(".loggedonly").show();        
         _growl.notice({message:"Update success"})
         initView();
     },
@@ -299,9 +299,6 @@ function updateContentToContentms(contentData){
 
 
 function updateContent(){
-    console.log("---------------UPDATECONTENT")
-  // PUT in /contents/:id
-
   var name = $('#f_name').val();
   var description = $('#f_description').val();
   var published = true;
@@ -329,7 +326,9 @@ function updateContent(){
 
   var oldImagesLength = contentData.images.length;
 
+//////////////////////////////////////////
 //TODO RIFARE IMMAGINI!!!!!!!!!!!!
+//////////////////////////////////////////
   if(false) { //(images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {
       getUploadmsImageURL(fd_img.formData, function (img_url) {

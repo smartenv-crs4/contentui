@@ -31,7 +31,7 @@ function initView() {
     $("#name").text(activityBody.name);
     $("#description").text(activityBody.description);
     
-    $('#addPromotionButton').click(function(e) { addPromotion(); });
+    $('#addPromotionButton').one("click", function(e) { addPromotion(); });
 
     var imgThumb = $("#img-thumb").html();
 
