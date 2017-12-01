@@ -1,7 +1,20 @@
 <!-- Standard Form Controls -->
-<form class="tag-box tag-box-v3 form-page insertmode editmode" name="activity-form" id="content-form" style="display:none;">
+<div class="tag-box tag-box-v3 form-page insertmode editmode" name="activity-form" id="content-form" style="display:none;border:0;padding:0;">
 
-    <div class="headline"><h3>Modifica Attività</h3></div>
+    <div class="headline">
+        <div class="row">
+            <div class="col-sm-10">
+                <h3>Modifica Attività</h3>
+            </div>                        
+            <div class="col-sm-2 loggedonly">
+                <ul class="list-inline posted-info">
+                    <li>
+                        <button id="undoedit" class="btn btn-default"><i class="fa fa-undo" ></i></button>
+                    </li>
+                </ul>
+            </div>                        
+        </div>
+    </div>
     <!--Inputs-->
     <h4>Nome Attività</h4>
     <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
@@ -18,12 +31,7 @@
     <h4>Immagini</h4>
 
     <div class="margin-bottom-10"></div>
-    <div id="f_imageContainer" class="row margin-bottom-10">
-        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="0" ></div>
-        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="1" ></div>
-        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="2"></div>
-        <div class="col-sm-3 col-xs-6 md-margin-bottom-20" data-img-thumb-pos="3" ></div>
-    </div>
+    <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;"></div>
 
     <button class="btn-u fileinput-button" type="button">
         <i class="fa fa-picture-o"></i>
@@ -32,8 +40,6 @@
     </button>
     
 
-
-    <!--<div id="files" class="files"></div>-->
     <hr>
     <div class="margin-bottom-10"></div>
 
@@ -71,6 +77,12 @@
         </label>
     </script>
 
-</form>
+    <script id="htpl-img-f" type="text/x-handlebars-template">
+        <div class="imgctn">
+            <span class="deletebutton" onclick="removePicture(this)">&times;</span>
+            <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' > 
+        </div>
+    </script>
+</div>
 
 

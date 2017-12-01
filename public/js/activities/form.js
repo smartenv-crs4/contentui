@@ -185,20 +185,14 @@ function loadContent() {
         $("#f_description").val(activityBody.description);
     }
 
-    var imgThumb = $("#img-thumb").html();
-    var imageContainer = document.getElementById("f_imageContainer");
+    var imgThumb = Handlebars.compile($("#htpl-img-f").html());
 
     if(activityBody) {
         for(let i=0; i<activityBody.images.length; i++) {
             let col = i % 4;
-            let img = $(imgThumb).find("img").attr("src", activityBody.images[i]);
-
-            $('#f_imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> ' +
-            '<div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> ' +
-            '<img name="image" data-id='+activityBody.images[i].split('/').pop()+' class="img-responsive rounded-2x" src='+activityBody.images[i]+' > </div> ' +
-            '</div>');
-
-            // $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
+            var imgurl = normalizeImgUrl(activityBody.images[i])
+            var id = activityBody.images[i].split('/').pop();
+            $('#f_imageContainer').append(imgThumb({id:id, src:imgurl}));
         }
     }
 
@@ -490,4 +484,34 @@ function initAdminTool() {
           suggestion: Handlebars.compile($("#htpl-tah-menu").html())
       }
   });
+}
+
+
+
+function normalizeImgUrl(url) {
+    /*
+    if(isURL(url)) return url;
+    else {
+        //TODO verificare sia un formato ObjectID valido
+        return baseUrl + "activities/image/" + url
+    }
+    */
+    //TODO sostituire con codice sopra dopo modifica contentms
+    var ret = url;
+    if(url.startsWith(uploadUrl)) {
+        var id = url.split('file/')[1];
+        ret = baseUrl + "activities/image/" + id;
+    }
+    return ret;
+}
+
+
+function isURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
+    return pattern.test(str);
 }

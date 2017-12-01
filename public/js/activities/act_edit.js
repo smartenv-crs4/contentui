@@ -16,3 +16,9 @@ $("#editContent").click(function() {
     loadCat(true);
     initMapEdit(activityBody.lat, activityBody.lon);
 })
+
+$("#undoedit").click(function() {    
+    $(".insertmode").hide();
+    $(".editmode").hide();
+    $(".viewmode").show();
+});

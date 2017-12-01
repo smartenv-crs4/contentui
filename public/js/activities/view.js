@@ -3,7 +3,6 @@ $(document).ready(function () {
     initView();
     initAdminTool();
  
-
     var admins = activityBody.admins;
     admins.push(activityBody.owner);
 
@@ -26,24 +25,23 @@ $(document).ready(function () {
     });
 });
 
-
 function initView() {
     $("#name").text(activityBody.name);
     $("#description").text(activityBody.description);
     
     $('#addPromotionButton').one("click", function(e) { addPromotion(); });
 
-    var imgThumb = $("#img-thumb").html();
+    var imgThumb = Handlebars.compile($("#htpl-img").html());
 
-    $("#imageContainer div").empty();
+    $("#imageContainer").empty();
     for(let i=0; i<activityBody.images.length; i++) {        
         let col = i % 4;
         var imgsrc = activityBody.images[i];
         //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
         //solo gli objectid, non gli url già completi
-        let img = $(imgThumb).find("img").attr("src", normalizeImgUrl(imgsrc));
         //TODO plugin per scorrere la gallery
-        $("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>'); //.find("img").attr("src", activityBody.images[0]));
+        //$("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>');
+        $("#imageContainer").append(imgThumb({src:normalizeImgUrl(imgsrc)||"assets/img/demo.jpg"}));
     }
     var catBox = $("#cp-cats").html();
     $("#catDrop div").empty();
@@ -56,33 +54,4 @@ function initView() {
     }
     initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
     common.getPromotions();
-}
-
-
-function normalizeImgUrl(url) {
-    /*
-    if(isURL(url)) return url;
-    else {
-        //TODO verificare sia un formato ObjectID valido
-        return baseUrl + "activities/image/" + url
-    }
-    */
-    //TODO sostituire con codice sopra dopo modifica contentms
-    var ret = url;
-    if(url.startsWith(uploadUrl)) {
-        var id = url.split('file/')[1];
-        ret = baseUrl + "activities/image/" + id;
-    }
-    return ret;
-}
-
-
-function isURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
-    return pattern.test(str);
 }
