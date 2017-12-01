@@ -185,6 +185,7 @@ function loadContent() {
         $("#f_description").val(activityBody.description);
     }
 
+    $('#f_imageContainer').empty();
     var imgThumb = Handlebars.compile($("#htpl-img-f").html());
 
     if(activityBody) {

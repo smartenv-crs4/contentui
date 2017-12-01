@@ -21,4 +21,5 @@ $("#undoedit").click(function() {
     $(".insertmode").hide();
     $(".editmode").hide();
     $(".viewmode").show();
+    $(".loggedonly").show();
 });
