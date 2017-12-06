@@ -69,6 +69,7 @@ router.get('/likes', (req, res, next) => {
     }
     rp(options)
     .then((results) => {
+        console.log(results);
         res.json(results);
     })
     .catch((err) => {

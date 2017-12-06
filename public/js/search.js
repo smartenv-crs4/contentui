@@ -412,7 +412,7 @@ function search() {
             var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
 
             $.each(qResults, function(i, item) {            
-                $.ajax(baseUrl + 'search/likes?idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                $.ajax(baseUrl + 'search/likes?type=promo&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
                 .done(function(likesCount) {
                     var hcontext = {
                         id: item._id,
