@@ -57,6 +57,7 @@ a.delAdmin{
   display:inline-block;  
   width:150px;
   margin-right:20px;
+  white-space: nowrap !important;
 }
 
 

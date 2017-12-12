@@ -8,8 +8,8 @@ $("#editContent").click(function() {
         updateContent();
     });
     
-    $("#fileUpload").on("change", function() {         
-        loadImagePreview(this); 
+    $("#fileUpload").on("change", function() {
+        loadImagePreview(this);
     });
 
     loadContent();

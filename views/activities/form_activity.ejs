@@ -33,12 +33,11 @@
     <div class="margin-bottom-10"></div>
     <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;width:auto;"></div>
 
-    <button class="btn-u fileinput-button" type="button">
-        <i class="fa fa-picture-o"></i>
-        <span>Carica Immagine</span>
-        <input id="fileUpload" type="file" name="files[]" multiple>
-    </button>
-    
+    <div class="sky-form">
+        <label for="fileUpload" class="input input-file">
+            <div class="button"><input type="file" id="fileUpload" name="files[]" multiple onchange="this.parentNode.nextSibling.value = this.value">Carica Immagine</div><input type="text" readonly="">
+        </label>
+    </div>
 
     <hr>
     <div class="margin-bottom-10"></div>
@@ -79,8 +78,8 @@
 
     <script id="htpl-img-f" type="text/x-handlebars-template">
         <div class="imgctn">
-            <span class="deletebutton" onclick="removePicture(this)">&times;</span>
-            <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' > 
+            <span class="deletebutton" onclick="removePicture(this, '{{id}}');">&times;</span>
+            <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' {{#if data}} data="{{data}}"{{/if}}> 
         </div>
     </script>
 </div>

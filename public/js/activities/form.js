@@ -14,12 +14,10 @@ var _form_ds = {
 }
 var _growl = $.growl; //wa removeAdmin jquery+growl scope.... (?)
 
-function removePicture(elem){
-    var id = $(elem).closest('.img-wrap').find('img').data('id');
-
+function removePicture(elem, id){
     bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
       if (result) {
-        $(elem).parent().parent().remove();
+        $(elem).parent().remove();
         for (var i = 0; i < images_array_fd.length; i++)
             if (images_array_fd[i].id === id) {
                 images_array_fd.splice(i, 1);
@@ -28,25 +26,35 @@ function removePicture(elem){
     });
 }
 
+function imageIsPresent(imgid, imgarr) {
+    for(var i=0; i<imgarr.length; i++) {
+        if(imgarr[i].id == imgid) 
+            return false
+    }
+    return true;
+}
 
 function loadImagePreview(input) {    
-    if (input.files && input.files[0]) {        
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            let _id = "img-"+input.files[0].name.replace(/\s/g,'');
-            let objectURL = URL.createObjectURL(input.files[0]);
-            $('#f_imageContainer').append('<div class="col-sm-3 col-xs-6 md-margin-bottom-20"> <div class="img-wrap"> <span class="deletebutton" onclick="removePicture(this)">&times;</span> <img name="image" data-id='+_id+' class="img-responsive rounded-2x" src='+objectURL+' data='+input.files[0]+'alt=""> </div> </div>');
+    if (input.files && input.files[0]) {
+        var imgid = 'img-' + input.files[0].name.replace(/\s/g,'')
+        if(imageIsPresent(imgid, images_array_fd)) {
+            var reader = new FileReader();
+            var imgtpl = Handlebars.compile($("#htpl-img-f").html());
 
-            let file = input.files[0];
-            let formData = new FormData();
-            formData.append(file.name.split(".")[0], file, file.name);
+            reader.onload = function(e) {
+                let _id = imgid;
+                let objectURL = URL.createObjectURL(input.files[0]);
+                $('#f_imageContainer').append(imgtpl({id:_id, src:objectURL}));
 
-            images_array_fd.push({id:_id, formData: formData});
-
-            //console.log(JSON.stringify(images_array_fd));
-        };
-        reader.readAsDataURL(input.files[0]);
-        //input.files[0].value = '';
+                let file = input.files[0];
+                let formData = new FormData();
+                formData.append(file.name.split(".")[0], file, file.name);
+                images_array_fd.push({id:_id, formData: formData});
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+        else _growl.warning({message: "Image already selected"})
+        
     }
 }
 
@@ -224,9 +232,8 @@ function addContent() {
   };
 
   if (images_array_fd.length > 0 ) {
-
     images_array_fd.forEach(function (fd_img) {
-      getUploadmsImageURL(fd_img.formData, function (img_url) {
+      getUploadmsImageURL(fd_img.formData, function (img_url) {        
         contentData.images.push(img_url);
         console.log("url is: ", img_url);
         if (contentData.images.length === images_array_fd.length) {
@@ -315,11 +322,10 @@ function updateContent(){
 
   var oldImagesLength = contentData.images.length;
 
-//////////////////////////////////////////
-//TODO RIFARE IMMAGINI!!!!!!!!!!!!
-//////////////////////////////////////////
-  if(false) { //(images_array_fd.length > 0 ) {
+
+  if(images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {
+    console.log("XXXX")
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);
         if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte
@@ -337,8 +343,6 @@ function updateContent(){
 function addPromotion(){
     window.location = baseUrl + "activities/" + activityBody._id + '/promotions/new';
 }
-
-
 
 
 
