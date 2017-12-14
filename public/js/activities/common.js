@@ -18,14 +18,17 @@ var common = {
     },
 
     isAdmin: function(contentAdmins, cb) {
+        if(contentAdmins == null) contentAdmins = [];
         if(!cb) throw ("Invalid callback")
         getAdminTokenType(function(adminTypes) {
             decodeToken(function(data) {
                 if(data.valid) {
-                    if((contentAdmins.indexOf(data.token._id) != -1) || (adminTypes.indexOf(data.token.type) != -1))
-                        cb(true);
+                    var isAuth = contentAdmins.indexOf(data.token._id) != -1;
+                    var isSuperAdmin = adminTypes.indexOf(data.token.type) != -1;
+                    if(isAuth || isSuperAdmin)
+                        cb(isAuth, isSuperAdmin);
                     else 
-                        cb(false)
+                        cb(false, false)
                 }
                 else cb(false)
             })

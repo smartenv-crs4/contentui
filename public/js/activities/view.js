@@ -9,7 +9,7 @@ $(document).ready(function () {
     $(".editmode").hide();
     $(".insertmode").hide();
     $(".viewmode").show();
-    common.isAdmin(admins, function(isAuth){
+    common.isAdmin(admins, function(isAuth, isSAdmin){
         if(isAuth) {
             _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
             _form_ds.admins = _form_ds.admins.concat(spliceOwner(admins));
@@ -17,6 +17,7 @@ $(document).ready(function () {
             getAdmins(_form_ds.admins, renderAdmins);
             $(".viewonly").hide();
             $(".loggedonly").show()
+            if(isSAdmin) $(".sadmin").show()
         }
         else {
             $(".loggedonly").hide();
