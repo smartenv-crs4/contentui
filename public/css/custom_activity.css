@@ -60,7 +60,11 @@ a.delAdmin{
   white-space: nowrap !important;
 }
 
-
+.locked {
+  display:none;
+  text-align:center;
+  margin:100px auto;
+}
 
 
 /* scaffolding */

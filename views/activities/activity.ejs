@@ -38,16 +38,16 @@
 </head>
 <body>
     <div class="wrapper">
-            
+        
         <div id="header_p_HT"> <%- commonUI.header %> </div>
-
+        <div class="locked"><h2>Contenuto non disponibile</h2></div>
         <!--=== Content Part ===-->
         <div class="container content">
             <div class="col-md-2">
                 <% include leftbar %>
             </div>
             <div class="col-md-7">
-                <% if(typeof activityBody != 'undefined') {%> <%include view_activity%><% } %>
+                <% if(typeof activityId != 'undefined') {%> <%include view_activity%><% } %>
                 <% include form_activity %>
             </div>
             <div class="col-md-3">
@@ -96,7 +96,7 @@
     <script type="text/javascript" src="<%= baseUrl %>customAssets/js/tokenManager.js"></script>
     <script type="text/javascript" src="<%= baseUrl %>js/activities/common.js"></script>
     <script type="text/javascript" src="<%= baseUrl %>js/activities/form.js"></script>
-    <% if(typeof activityBody != 'undefined') { %> 
+    <% if(typeof activityId != 'undefined') { %> 
         <script type="text/javascript" src="<%= baseUrl %>js/activities/view.js"></script>
         <script type="text/javascript" src="<%= baseUrl %>js/activities/act_edit.js"></script>
     <% } else { %>

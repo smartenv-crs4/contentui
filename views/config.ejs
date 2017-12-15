@@ -13,13 +13,7 @@
     <% if(typeof query != 'undefined') { %>               var query = '<%- query %>'; <% } %>
     <% if(typeof scheduleUrl != 'undefined') { %>         var _scheduleShip = '<%= scheduleUrl %>'; <% } %>
     <% if(typeof contentAdminTypes != 'undefined') { %>   var contentAdminTypes = "<%= contentAdminTypes %> " <% } %>
-
-    <% if(typeof activityBody != 'undefined') { %>
-        var activityBody = JSON.parse('<%- JSON.stringify(activityBody) %>');
-    <% } else {%>
-        var activityBody = undefined;
-    <% } %>
-  
+    <% if(typeof activityId != 'undefined') { %>          var activityId = "<%= activityId %>" <% } %>
     <% if(typeof params != 'undefined') { %>      params = JSON.parse(params); <% } %>
     <% if(typeof query != 'undefined') { %>       query = JSON.parse(query); <% } %>
 </script>

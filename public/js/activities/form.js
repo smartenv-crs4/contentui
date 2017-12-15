@@ -85,9 +85,9 @@ function getUploadmsImageURL(image, cb) {
     });
 }
 
-function initMapEdit(lat, lon) {
-    var latitude = lat || _form_ds.lat;
-    var longitude = lon || _form_ds.lon;
+function initMapEdit() {
+    var latitude = activityBody.lat || _form_ds.lat;
+    var longitude = activityBody.lon || _form_ds.lon;
 
     var map = new GMaps({
         div: '#f_map',

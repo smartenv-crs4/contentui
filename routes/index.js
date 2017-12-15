@@ -58,33 +58,24 @@ router.get('/activities/new',       (req, res, next) => {
 
 // activity get content
 router.get('/activities/:id',    (req, res, next) => {
-  let activity_id = req.params.id;
-	let abody = undefined;
-  let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
-  
-	rp(contentUrl+"contents/"+activity_id)
-	.then(body => {
-		abody = JSON.parse(body);		
-		renderPage.renderPage(res, 'activities/activity', {
-			activityBody: abody,
-			activityId: activity_id,
-			params: JSON.stringify(req.params) || undefined,
-			query: JSON.stringify(req.query) || undefined,
-			baseUrl: baseUrl,
-			uploadUrl: uploadUrl,
-      contentUrl: contentUrl,
-      properties:{
-        contentUIUrl:config.contentUIUrl ,
-        commonUIUrl:config.commonUIUrl
-      },
-			access_token: access_token,
-			contentAdminTypes: config.contentAdminTokenType
-		});
-	})
-	.catch(e => {
-		console.log(e);
-		res.boom.badImplementation();
-	})
+    let activity_id = req.params.id;
+    let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
+  				
+    renderPage.renderPage(res, 'activities/activity', {
+        activityBody: undefined,
+        activityId: activity_id,
+        params: JSON.stringify(req.params) || undefined,
+        query: JSON.stringify(req.query) || undefined,
+        baseUrl: baseUrl,
+        uploadUrl: uploadUrl,
+        contentUrl: contentUrl,
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        },
+        access_token: access_token,
+        contentAdminTypes: config.contentAdminTokenType
+    })
 });   
 
 
