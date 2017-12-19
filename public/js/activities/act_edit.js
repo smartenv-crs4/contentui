@@ -24,12 +24,12 @@ $("#lockContent").click(function() {
         if(d.published) {
             $(that).addClass("lock");
             $(that).attr("title","lock content")
-            $(that).find("i").first().removeClass("fa-unlock").addClass("fa-lock")
+            $(that).find("i").first().removeClass("fa-lock").addClass("fa-unlock")
         }
         else {
             $(that).removeClass("lock");
             $(that).attr("title","unlock content")
-            $(that).find("i").first().removeClass("fa-lock").addClass("fa-unlock")
+            $(that).find("i").first().removeClass("fa-unlock").addClass("fa-lock")
         }
     });
 })

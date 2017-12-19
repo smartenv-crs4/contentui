@@ -66,6 +66,9 @@ a.delAdmin{
   margin:100px auto;
 }
 
+#lockedContent {
+  color:red;
+}
 
 /* scaffolding */
 /* ----------- */

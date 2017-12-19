@@ -8,6 +8,7 @@ $(document).ready(function () {
             $(".editmode").hide();
             $(".insertmode").hide();
             $(".viewmode").hide();
+            $("#lockedContent").hide();
             $(".locked").show();
         }
         else {
@@ -21,6 +22,7 @@ $(document).ready(function () {
 
             $(".editmode").hide();
             $(".insertmode").hide();
+            $("#lockedContent").hide();
             $(".viewmode").show();
             common.isAdmin(admins, function(isAuth, isSAdmin){
                 if(isAuth) {
@@ -35,12 +37,18 @@ $(document).ready(function () {
                         if(activityBody.published) {
                             $("#lockContent").addClass("lock")
                             $("#lockContent").attr("title", "lock content")
-                            $("#lockContent i").addClass("fa-lock")
+                            $("#lockContent i").addClass("fa-unlock")
                         }
                         else {
-                            $("#lockContent i").addClass("fa-unlock")
+                            $("#lockContent i").addClass("fa-lock")
                             $("#lockContent").attr("title", "unlock content")
                         }
+                    }
+                    else if(!activityBody.published) {                        
+                        $("#lockedContent").show();
+                        $("#lockedContent").parent().click(function() {
+                            bootbox.alert("This content has been locked by the system administrator.");
+                        })
                     }
                 }
                 else {
