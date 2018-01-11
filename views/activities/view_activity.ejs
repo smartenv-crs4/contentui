@@ -6,12 +6,45 @@
             </div>                        
             <div class="col-sm-3 loggedonly">
                 <ul class="list-inline posted-info">
-                    <li><button id="lockContent" class="btn btn-default sadmin" style="display:none;" title=""><i class="fa" ></i></button></li>
+                    <li><button id="lockContent" class="btn btn-default sadmin" style="display:none;" title="" data-toggle="modal"><i class="fa" ></i></button></li>
                     <li><button id="editContent" class="btn btn-default" title="edit content"><i class="fa fa-pencil" ></i></button></li>
                 </ul>
             </div>
         </div>
     </div>
+
+
+
+
+
+    <div class="modal fade" id="lockmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel4"><i class="fa fa-lock"></i> Lock Content</h4>
+                </div>
+                <div class="modal-body">
+                    
+                    <div>                        
+                        <small>You are going to hide this content, tell the owner your reasons</small>
+                        <p><textarea id="lockreasons" class="form-control" type="textarea" rows="5"></textarea></p>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn-u btn-u-primary" id="lockmail">Send and Lock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
     <!--Inputs-->
     <h4>Nome Attività</h4>
     <label id="name" type="text"></label>

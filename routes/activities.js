@@ -55,8 +55,18 @@ router.get('/image/:id', (req, res, next) => {
     }
 });
 
-
-
+//TODO check auth, solo admin
+router.post('/email', (req, res, next) => {
+	let msg = req.body.msg;
+	let cid = req.body.cid;
+	
+	rp.get({
+		uri:contentUrl + "contents/" + cid
+	})
+	.then(c => {
+		console.log(c)
+	})
+})
 
 
 function getAdmins(admIds) {
