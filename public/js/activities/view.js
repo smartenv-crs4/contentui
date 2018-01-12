@@ -15,8 +15,8 @@ $(document).ready(function () {
             activityBody = content;
 
             initView();
-            initAdminTool();
-        
+            //initAdminTool();
+
             var admins = activityBody.admins;
             admins.push(activityBody.owner);
 
@@ -26,7 +26,6 @@ $(document).ready(function () {
             $(".viewmode").show();
             common.isAdmin(admins, function(isAuth, isSAdmin){
                 if(isAuth || isSAdmin) {
-                    
                     _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
                     _form_ds.admins = _form_ds.admins.concat(spliceOwner(admins));
 
@@ -110,26 +109,4 @@ function initView() {
     }
     initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
     common.getPromotions();
-}
-
-function lockContent(lock, cb) {
-    var aid = activityBody._id;
-    $.ajax({
-        url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') 
-            + "contents/" + aid + "/actions/" 
-            + (lock ? "lock" : "unlock"),
-        method: 'POST',
-        headers: {
-            Authorization: "Bearer " + userToken
-        },
-        success: function(d){
-            //console.log(d);
-            _growl.notice({message:"Content successfully locked"});
-            if(cb) cb(d);
-        },
-        error: function(e) {
-            console.log(e);
-            _growl.error({message: "Error editing admins"});
-        }
-    });
 }
