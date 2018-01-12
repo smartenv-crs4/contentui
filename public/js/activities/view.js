@@ -25,7 +25,8 @@ $(document).ready(function () {
             $("#lockedContent").hide();
             $(".viewmode").show();
             common.isAdmin(admins, function(isAuth, isSAdmin){
-                if(isAuth) {
+                if(isAuth || isSAdmin) {
+                    
                     _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
                     _form_ds.admins = _form_ds.admins.concat(spliceOwner(admins));
 
