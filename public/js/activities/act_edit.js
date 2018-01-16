@@ -33,41 +33,63 @@ $("#undoedit").click(function() {
 $("#lockContent").click(function() {
     function lockContentCB(d) {
         if(d.published) {
-            $(that).addClass("lock");
-            $(that).attr("title","lock content")
-            $(that).find("i").first().removeClass("fa-lock").addClass("fa-unlock")
+            $("#lockContent").addClass("lock");
+            $("#lockContent").attr("title","lock content")
+            $("#lockContent").find("i").first().removeClass("fa-lock").addClass("fa-unlock")
         }
         else {
-            $(that).removeClass("lock");
-            $(that).attr("title","unlock content")
-            $(that).find("i").first().removeClass("fa-unlock").addClass("fa-lock")
+            $("#lockContent").removeAttr("data-target");
+            $("#lockContent").removeClass("lock");
+            $("#lockContent").attr("title","unlock content")
+            $("#lockContent").find("i").first().removeClass("fa-unlock").addClass("fa-lock")
         }
     }
 
-    var that = this;
-    var doLock = $(that).hasClass("lock");
+    var doLock = $(this).hasClass("lock");
     var reasons = undefined;
 
     if(doLock) {
         $(this).attr("data-target","#lockmodal");
         $("#lockmail").off("click"); 
         $("#lockmail").click(function() {
-            reasons = $("#lockreasons").text();
-            
+            reasons = $("#lockreasons").val();
+            $("#lockreasons").val("");
+            console.log(reasons)
             if(!reasons || reasons.length < 3 )
                 _growl.warning({message:"Please give a reason"})
             else {
-                sendMail(lockContent(doLock, lockContentCB(d)));
+                //lockContent(doLock, lockContentCB)
+                
+                sendMail(reasons, function() {
+                    lockContent(doLock, lockContentCB)
+                });
             }
         })
     }
-    else lockContent(doLock, lockContentCB(d));
+    else lockContent(doLock, lockContentCB);
 })
 
 
-function sendMail(cb) {
-    //call ajax for mail
-    cb();
+function sendMail(msg, cb) {
+    $.ajax({
+        url: baseUrl + "activities/email",
+        method: 'POST',
+        headers: {
+            Authorization: "Bearer " + userToken
+        },
+        data: {
+            oid: activityBody.owner,
+            cid: activityBody._id,
+            msg: msg
+        },
+        success: function(){
+            if(cb) cb();
+        },
+        error: function(e) {
+            console.log(e);
+            _growl.error({message: "Error locking content"});
+        }
+    });
 }
 
 function lockContent(lock, cb) {
@@ -82,12 +104,12 @@ function lockContent(lock, cb) {
         },
         success: function(d){
             //console.log(d);
-            _growl.notice({message:"Content successfully locked"});
+            _growl.notice({message:"Content successfully " + (lock ? "locked" : "unlocked")});
             if(cb) cb(d);
         },
         error: function(e) {
             console.log(e);
-            _growl.error({message: "Error editing admins"});
+            _growl.error({message: "Error locking content"});
         }
     });
 }

@@ -10,7 +10,7 @@ let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/'
 config.contentUrl = contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
-
+let _mailerUrl = config.mailerUrl + (config.mailerUrl.endsWith('/') ? '' : '/');
 
 //ask userms for admins details
 router.get('/admins',	 (req, res, next) => {
@@ -58,13 +58,45 @@ router.get('/image/:id', (req, res, next) => {
 //TODO check auth, solo admin
 router.post('/email', (req, res, next) => {
 	let msg = req.body.msg;
+	let oid = req.body.oid;
 	let cid = req.body.cid;
 	
-	rp.get({
-		uri:contentUrl + "contents/" + cid
+	rp({
+		uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/' + oid,
+		method: 'GET',
+		json:true,
+		headers: {
+			authorization: req.headers.authorization
+		}
 	})
-	.then(c => {
-		console.log(c)
+	.then(user => { 
+		if(!user || !user.email) {
+			res.boom.badRequest("Invalid user ID");
+		}
+		else {
+			let ownermail = user.email;			
+			return rp({
+				uri:_mailerUrl + "email",
+				method: "POST",
+				headers: {
+					authorization: "Bearer " + config.auth_token
+				},
+				json: true,
+				body: {					
+					to:[ownermail],
+					subject:"Content " + cid + " Locked",
+					textBody: "Your content has been locked due to: \n\n" + msg
+				}
+			})
+		}
+	})
+	.then(result => {
+		console.log(result);
+		res.end()
+	})
+	.catch(e => {
+		console.log(e)
+		res.boom.badImplementation();
 	})
 })
 
