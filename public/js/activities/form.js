@@ -113,17 +113,14 @@ function initMapEdit() {
 }
 
 
-function initMap(title, description, latitude, longitude) {
+function initMap(title, latitude, longitude) {
     var map = new GMaps({
         div: '#map',
         scrollwheel: false,
         lat: latitude,
         lng: longitude,
         zoom: zoom,
-        title: title,
-        infoWindow: {
-            content: '<p>HTML Content</p>'
-        }
+        title: title
     });
 
     var marker = map.addMarker({
@@ -148,7 +145,7 @@ function geocodeLatLng(lat, lng, adrlabel) {
     geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
             if (results[1]) {
-                address = results[1].formatted_address;
+                address = results[0].formatted_address;
             } 
             else {
                 window.alert('No results found');
@@ -325,7 +322,6 @@ function updateContent(){
 
   if(images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {
-    console.log("XXXX")
       getUploadmsImageURL(fd_img.formData, function (img_url) {
         contentData.images.push(img_url);
         if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte

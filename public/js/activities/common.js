@@ -1,15 +1,17 @@
 var common = {
-    getPromotions: function getPromotions() {
-        var source = $("#promo-template").html();
-        promoHtpl = Handlebars.compile(source);
-
+    getPromotions: function getPromotions(cb, limit) {
+        var from = new Date();
         $.ajax({
-            url: contentUrl + "contents/" + activityBody._id+"/promotions/",
+            url: contentUrl + "contents/" + activityBody._id+"/promotions/?sdate=" + from + (limit ? "&limit=" + limit : ''),
             type: 'GET',
             success: function(data){
                 var promos = data.promos;
-                
-                $("#promoList").html(promoHtpl({promos:promos}));
+                for(var i=0; i<promos.length; i++) {
+                    promos[i].startDate = moment(promos[i].startDate).format("DD/MM/YYYY")
+                    promos[i].endDate  = moment(promos[i].endDate).format("DD/MM/YYYY")
+                    promos[i].lastUpdate = moment(promos[i].lastUpdate).format("DD/MM/YYYY")
+                }
+                if(cb) cb(promos)
             },
             error: function(e) {
                 console.log(e);

@@ -1,87 +1,95 @@
-<!-- Standard Form Controls -->
-<div class="tag-box tag-box-v3 form-page insertmode editmode" name="activity-form" id="content-form" style="display:none;border:0;padding:0;">
-
-    <div class="headline">
-        <div class="row">
-            <div class="col-sm-10">
-                <h3>Modifica Attività</h3>
-            </div>                        
-            <div class="col-sm-2 loggedonly">
-                <ul class="list-inline posted-info">
-                    <li>
-                        <button id="undoedit" class="btn btn-default"><i class="fa fa-undo" ></i></button>
-                    </li>
-                </ul>
-            </div>                        
-        </div>
-    </div>
-    <!--Inputs-->
-    <h4>Nome Attività</h4>
-    <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
-    <!--End Inputs-->
-    <div class="margin-bottom-20"></div>
-
-    <!-- Descrizione section-->
-    <h4>Descrizione</h4>
-    <textarea id="f_description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." ></textarea>
-    <div class="margin-bottom-20"></div>
-
-    <!-- Image upload section-->
-
-    <h4>Immagini</h4>
-
-    <div class="margin-bottom-10"></div>
-    <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;width:auto;"></div>
-
-    <div class="sky-form" style="border:0px;">
-        <label for="fileUpload" class="input input-file">
-            <div class="button"><input type="file" id="fileUpload" name="files[]" multiple onchange="this.parentNode.nextSibling.value = this.value">Carica Immagine</div><input type="text" readonly="">
-        </label>
-    </div>
-
-    <hr>
-    <div class="margin-bottom-10"></div>
-
-
-    <!-- Category Section -->
-
-    <h4>Categorie</h4>
-    <div class="margin-bottom-10"></div>
-    <div class="row" id="f_catDrop">
-        <div class="col-md-3" data-cp-cbox-pos="0"></div>
-        <div class="col-md-3" data-cp-cbox-pos="1"></div>
-        <div class="col-md-3" data-cp-cbox-pos="2"></div>
-        <div class="col-md-3" data-cp-cbox-pos="3"></div>
-    </div>
-
-    <div class="margin-bottom-20"></div>
-    <hr>
-
-
-    <!-- Map Section -->
-    <h4>Mappa</h4>
-
-    <p id="f_address"></p>
-    <div id="f_map" class="map margin-bottom-50"></div>
-    <hr>
-    <label id="image_array_url"></label>
-    <button id="addContentButton" class="btn-u btn-u-default insertmode" type="button">Add Activity</button>
-    <button id="updateContentButton" class="btn-u btn-u-default editmode" type="button">Update Activity</button>
-    <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
-
-
-    <script id="f_cp-cats" type="text/x-cp-snippet">
-        <label class="checkbox">
-            <input type="checkbox" value="" name="category" class=".ibtn">
-        </label>
-    </script>
-
-    <script id="htpl-img-f" type="text/x-handlebars-template">
-        <div class="imgctn">
-            <span class="deletebutton" onclick="removePicture(this, '{{id}}');">&times;</span>
-            <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' {{#if data}} data="{{data}}"{{/if}}> 
-        </div>
-    </script>
+<div class="col-md-2">
+    <% include leftbar %>
 </div>
 
+<div class="col-md-7">
+    <!-- Standard Form Controls -->
+    <div class="tag-box tag-box-v3 form-page insertmode editmode" name="activity-form" id="content-form" style="display:none;border:0;padding:0;">
 
+        <div class="headline">
+            <div class="row">
+                <div class="col-sm-10">
+                    <h3>Modifica Attività</h3>
+                </div>                        
+                <div class="col-sm-2 loggedonly">
+                    <ul class="list-inline posted-info">
+                        <li>
+                            <button id="undoedit" class="btn btn-default"><i class="fa fa-undo" ></i></button>
+                        </li>
+                    </ul>
+                </div>                        
+            </div>
+        </div>
+        <!--Inputs-->
+        <h4>Nome Attività</h4>
+        <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" required>
+        <!--End Inputs-->
+        <div class="margin-bottom-20"></div>
+
+        <!-- Descrizione section-->
+        <h4>Descrizione</h4>
+        <textarea id="f_description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." ></textarea>
+        <div class="margin-bottom-20"></div>
+
+        <!-- Image upload section-->
+
+        <h4>Immagini</h4>
+
+        <div class="margin-bottom-10"></div>
+        <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;width:auto;"></div>
+
+        <div class="sky-form" style="border:0px;">
+            <label for="fileUpload" class="input input-file">
+                <div class="button"><input type="file" id="fileUpload" name="files[]" multiple onchange="this.parentNode.nextSibling.value = this.value">Carica Immagine</div><input type="text" readonly="">
+            </label>
+        </div>
+
+        <hr>
+        <div class="margin-bottom-10"></div>
+
+
+        <!-- Category Section -->
+
+        <h4>Categorie</h4>
+        <div class="margin-bottom-10"></div>
+        <div class="row" id="f_catDrop">
+            <div class="col-md-3" data-cp-cbox-pos="0"></div>
+            <div class="col-md-3" data-cp-cbox-pos="1"></div>
+            <div class="col-md-3" data-cp-cbox-pos="2"></div>
+            <div class="col-md-3" data-cp-cbox-pos="3"></div>
+        </div>
+
+        <div class="margin-bottom-20"></div>
+        <hr>
+
+
+        <!-- Map Section -->
+        <h4>Mappa</h4>
+
+        <p id="f_address"></p>
+        <div id="f_map" class="map margin-bottom-50"></div>
+        <hr>
+        <label id="image_array_url"></label>
+        <button id="addContentButton" class="btn-u btn-u-default insertmode" type="button">Add Activity</button>
+        <button id="updateContentButton" class="btn-u btn-u-default editmode" type="button">Update Activity</button>
+        <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
+
+
+        <script id="f_cp-cats" type="text/x-cp-snippet">
+            <label class="checkbox">
+                <input type="checkbox" value="" name="category" class=".ibtn">
+            </label>
+        </script>
+
+        <script id="htpl-img-f" type="text/x-handlebars-template">
+            <div class="imgctn">
+                <span class="deletebutton" onclick="removePicture(this, '{{id}}');">&times;</span>
+                <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' {{#if data}} data="{{data}}"{{/if}}> 
+            </div>
+        </script>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <% include rightbar %>
+</div>

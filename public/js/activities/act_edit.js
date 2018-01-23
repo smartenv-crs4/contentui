@@ -1,74 +1,77 @@
 var initTools = false; //for calling initAdminTool only once... better way?
 
-$("#editContent").click(function() {
-    $(".viewmode").hide();
-    $(".insertmode").hide();
-    $(".editmode").show();
-    if(!initTools) {
-        initAdminTool();
-        initTools = true;
-    }
-    //bind only once!!!
-    $("#updateContentButton").off("click");
-    $("#updateContentButton").click(function(e) {
-        updateContent();
-    });
-    
-    $("#fileUpload").on("change", function() {
-        loadImagePreview(this);
-    });
+function initToolbar() {
+    common.getPromotions(renderPromoList);
 
-    loadContent();
-    loadCat(true);
-    initMapEdit();
-})
-
-$("#undoedit").click(function() {    
-    $(".insertmode").hide();
-    $(".editmode").hide();
-    $(".viewmode").show();
-    $(".loggedonly").show();
-});
-
-$("#lockContent").click(function() {
-    function lockContentCB(d) {
-        if(d.published) {
-            $("#lockContent").addClass("lock");
-            $("#lockContent").attr("title","lock content")
-            $("#lockContent").find("i").first().removeClass("fa-lock").addClass("fa-unlock")
+    $("#editContent").click(function() {
+        $(".viewmode").hide();
+        $(".insertmode").hide();
+        $(".editmode").show();
+        if(!initTools) {
+            initAdminTool();
+            initTools = true;
         }
-        else {
-            $("#lockContent").removeAttr("data-target");
-            $("#lockContent").removeClass("lock");
-            $("#lockContent").attr("title","unlock content")
-            $("#lockContent").find("i").first().removeClass("fa-unlock").addClass("fa-lock")
-        }
-    }
+        //bind only once!!!
+        $("#updateContentButton").off("click");
+        $("#updateContentButton").click(function(e) {
+            updateContent();
+        });
+        
+        $("#fileUpload").on("change", function() {
+            loadImagePreview(this);
+        });
 
-    var doLock = $(this).hasClass("lock");
-    var reasons = undefined;
+        loadContent();
+        loadCat(true);
+        initMapEdit();
+    })
 
-    if(doLock) {
-        $(this).attr("data-target","#lockmodal");
-        $("#lockmail").off("click"); 
-        $("#lockmail").click(function() {
-            reasons = $("#lockreasons").val();
-            $("#lockreasons").val("");
-            console.log(reasons)
-            if(!reasons || reasons.length < 3 )
-                _growl.warning({message:"Please give a reason"})
-            else {
-                //lockContent(doLock, lockContentCB)
-                
-                sendMail(reasons, function() {
-                    lockContent(doLock, lockContentCB)
-                });
+    $("#undoedit").click(function() {    
+        $(".insertmode").hide();
+        $(".editmode").hide();
+        $(".viewmode").show();
+        $(".loggedonly").show();
+    });
+
+    $("#lockContent").click(function() {
+        function lockContentCB(d) {
+            if(d.published) {
+                $("#lockContent").addClass("lock");
+                $("#lockContent").attr("title","lock content")
+                $("#lockContent").find("i").first().removeClass("fa-lock").addClass("fa-unlock")
             }
-        })
-    }
-    else lockContent(doLock, lockContentCB);
-})
+            else {
+                $("#lockContent").removeAttr("data-target");
+                $("#lockContent").removeClass("lock");
+                $("#lockContent").attr("title","unlock content")
+                $("#lockContent").find("i").first().removeClass("fa-unlock").addClass("fa-lock")
+            }
+        }
 
+        var doLock = $(this).hasClass("lock");
+        var reasons = undefined;
+
+        if(doLock) {
+            $(this).attr("data-target","#lockmodal");
+            $("#lockmail").off("click"); 
+            $("#lockmail").click(function() {
+                reasons = $("#lockreasons").val();
+                $("#lockreasons").val("");
+                console.log(reasons)
+                if(!reasons || reasons.length < 3 )
+                    _growl.warning({message:"Please give a reason"})
+                else {
+                    //lockContent(doLock, lockContentCB)
+                    
+                    sendMail(reasons, function() {
+                        lockContent(doLock, lockContentCB)
+                    });
+                }
+            })
+        }
+        else lockContent(doLock, lockContentCB);
+    })
+}
 
 function sendMail(msg, cb) {
     $.ajax({
@@ -112,4 +115,10 @@ function lockContent(lock, cb) {
             _growl.error({message: "Error locking content"});
         }
     });
+}
+
+function renderPromoList(promos) {
+    var source = $("#promo-template").html();
+    promoHtpl = Handlebars.compile(source);
+    $("#promoList").html(promoHtpl({promos:promos}));
 }

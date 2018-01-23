@@ -14,8 +14,7 @@ $(document).ready(function () {
         else {
             activityBody = content;
 
-            initView();
-            //initAdminTool();
+            initView(initToolbar);
 
             var admins = activityBody.admins;
             admins.push(activityBody.owner);
@@ -67,7 +66,6 @@ function getContent(aid, cb) {
             Authorization: "Bearer " + userToken
         },
         success: function(d){
-            //console.log(d);
             if(cb) cb(d);
         },
         error: function(e) {
@@ -80,33 +78,40 @@ function getContent(aid, cb) {
     });
 }
 
-function initView() {
-    $("#name").text(activityBody.name);
-    $("#description").text(activityBody.description);
+function initView(cb) {
+    var viewTpl = Handlebars.compile($("#htpl-view").html());
+    var contacts = [];
+
+    //TODO spostare in modello dati
+    if(activityBody.facebook) contacts.push({icon:"fa fa-facebook", url:activityBody.facebook, alt:"Facebook"});
+    if(activityBody.twitter) contacts.push({icon:"fa fa-twitter", url:activityBody.twitter, alt:"Twitter"});
+    if(activityBody.tripadvisor) contacts.push({icon:"fa fa-tripadvisor", url:activityBody.tripadvisor, alt:"Tripadvisor"});
+    if(activityBody.email) contacts.push({icon:"fa fa-envelope", url:"mailto:" + activityBody.email, alt:"Send an email"});
+
+    var model = {
+        name:activityBody.name,
+        description:activityBody.description,
+        contacts: contacts,
+        images: [],
+        cats:activityBody.category
+    }
     
-    $('#addPromotionButton').one("click", function(e) { addPromotion(); });
-
-    var imgThumb = Handlebars.compile($("#htpl-img").html());
-
-    $("#imageContainer").empty();
+    $('#addPromotionButton').off("click");
+    $('#addPromotionButton').click(function(e) { addPromotion(); });  //perchè è qui???
+    
     for(let i=0; i<activityBody.images.length; i++) {        
         let col = i % 4;
         var imgsrc = activityBody.images[i];
         //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
         //solo gli objectid, non gli url già completi
-        //TODO plugin per scorrere la gallery
-        //$("#imageContainer div[data-img-thumb-pos='" + col + "\']").append(img).append('<br>');
-        $("#imageContainer").append(imgThumb({src:normalizeImgUrl(imgsrc)||"assets/img/demo.jpg"}));
+        model.images.push(normalizeImgUrl(imgsrc)||"assets/img/demo.jpg");
     }
-    var catBox = $("#cp-cats").html();
-    $("#catDrop div").empty();
-    for(let i=0; i<activityBody.category.length; i++) {
-        $.ajax(contentUrl + "categories/"+activityBody.category[i])
-        .done(function(cat) {
-            var col = i%4;
-            $("#catDrop div[data-cp-cbox-pos='" + col + "\']").append($(catBox).append(cat.name));
-        })
-    }
-    initMap(activityBody.name, activityBody.description, activityBody.lat, activityBody.lon);
-    common.getPromotions();
+    common.getPromotions(function(promos) {
+        model.promos = promos;
+        $("#viewbox").html(viewTpl(model));
+        initMap(activityBody.name, activityBody.lat, activityBody.lon);
+    
+        if(cb) cb();
+    }, 4);
 }
+
