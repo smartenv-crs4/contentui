@@ -21,11 +21,24 @@
     </div>
 </div>
 
-
-<div id="viewbox"></div>
-
+<div id="viewbox" class="viewmode"></div>
 
 <script id="htpl-view" type="text/x-handlebars-template">
+    <div class="toolbar">
+        <ul class="list-inline">
+            <li>
+                <button id="lockContent" class="btn btn-default sadmin" style="display:none;" title="" data-toggle="modal">
+                    <i class="fa" ></i>
+                </button>
+            </li>
+            <li>
+                <button id="editContent" class="btn btn-default loggedonly" title="edit content">
+                    <i class="fa fa-pencil" ></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+        
     <!--=== Content Part ===-->
     <div class="container content">
         <div class="title-box-v2">

@@ -76,7 +76,7 @@ a.delAdmin{
 
 .carousel-inner {
   min-height:300px; /*1140x440 img*/
-  max-height:440px
+  max-height:440px;
   background-color: lightgrey;
   /* overflow:hidden */
 }
@@ -84,6 +84,12 @@ a.delAdmin{
 .carousel-inner > .item > img {
   margin:auto;
   max-height:440px;
+}
+
+.toolbar {  
+    position: absolute;
+    right: 20px;
+    margin-top:5px;
 }
 
 
