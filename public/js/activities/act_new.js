@@ -9,8 +9,7 @@ $(document).ready(function () {
 
     $("#addContentButton").click(function(e) { addContent(); });
     $("#fileUpload").change(function() { loadImagePreview(this); });
-            
 
-    loadCat(true);
+    loadCat();
     initMapEdit();
 });

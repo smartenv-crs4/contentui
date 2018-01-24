@@ -5,26 +5,30 @@ function initToolbar() {
 
     $("#editContent").click(function() {
         $(".viewmode").hide();
-        $(".insertmode").hide();
-        $(".editmode").show();
+        
         if(!initTools) {
             initAdminTool();
             initTools = true;
         }
-        //bind only once!!!
-        $("#updateContentButton").off("click");
-        $("#updateContentButton").click(function(e) {
-            updateContent();
-        });
-        
-        $("#fileUpload").on("change", function() {
-            loadImagePreview(this);
-        });
 
-        loadContent();
-        loadCat(true);
-        initMapEdit();
+        loadContent(function() {
+            $(".insertmode").hide();
+            $(".editmode").show();
+            initMapEdit();
+            //bind only once!!!
+            $("#updateContentButton").off("click");
+            $("#updateContentButton").click(function(e) {
+                updateContent();
+            });
+            
+            $("#fileUpload").on("change", function() {
+                loadImagePreview(this);
+            });
+        });
     })
+
+    $('#addPromotionButton').off("click");
+    $('#addPromotionButton').click(function(e) { addPromotion(); });  //perchè è qui???
 
     $("#undoedit").click(function() {    
         $(".insertmode").hide();

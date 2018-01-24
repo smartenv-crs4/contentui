@@ -2,8 +2,11 @@ var activityBody = undefined; //TODO rimuovere
 
 $(document).ready(function () {
     initToken();
+    doView(activityId);
+});
 
-    getContent(activityId, function(content) {
+function doView(aid) {
+    getContent(aid, function(content) {
         if(content == null) {
             $(".editmode").hide();
             $(".insertmode").hide();
@@ -57,7 +60,7 @@ $(document).ready(function () {
             });
         }
     });
-});
+}
 
 function getContent(aid, cb) {
     $.ajax({
@@ -95,9 +98,6 @@ function initView(cb) {
         images: [],
         cats:activityBody.category
     }
-    
-    $('#addPromotionButton').off("click");
-    $('#addPromotionButton').click(function(e) { addPromotion(); });  //perchè è qui???
     
     for(let i=0; i<activityBody.images.length; i++) {        
         let col = i % 4;

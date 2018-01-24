@@ -160,48 +160,48 @@ function geocodeLatLng(lat, lng, adrlabel) {
 }
 
 
-function loadCat(action) {
-  $('#myModal-categories').modal('show');
-  $("#f_catDrop div").empty();
-  $.ajax(contentUrl + "categories/")
-    .done(function(data) {
-      var cats = data.categories;
-      var ctpl = $("#f_cp-cats").html();
-
-      for(var i=0; i<cats.length; i++) {
-        var col = i%4;
-        $("#f_catDrop div[data-cp-cbox-pos='" + col + "\']").append($(ctpl).find("input").attr("value", cats[i]._id)).append(" " + cats[i].name).append('<br>');
-      }
-      if(activityBody) {
-        if (i === cats.length && action == true)
-          $.each(activityBody.category, function(i, val){
-              $("input[value='" + val + "']").prop('checked', true);
-          });
+function loadCat(cb) {
+    $.ajax({
+        url:contentUrl + "categories/",
+        success: function(data) {
+            var cats = data.categories;
+            
+            if(activityBody) {
+                for(var j=0; j<cats.length; j++) {
+                    cats[j].checked = false;
+                    for(var i=0; i<activityBody.category.length; i++) {
+                        if(activityBody.category[i]._id == cats[j]._id) {
+                            cats[j].checked = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(cb) cb(cats);
         }
     });
-
 }
 
 
 
-function loadContent() {
+function loadContent(cb) {
+    var formcontent = Handlebars.compile($("#htpl-form").html());
     if(activityBody) {
-        $("#f_name").val(activityBody.name);
-        $("#f_description").val(activityBody.description);
-    }
-
-    $('#f_imageContainer').empty();
-    var imgThumb = Handlebars.compile($("#htpl-img-f").html());
-
-    if(activityBody) {
-        for(let i=0; i<activityBody.images.length; i++) {
-            let col = i % 4;
-            var imgurl = normalizeImgUrl(activityBody.images[i])
-            var id = activityBody.images[i].split('/').pop();
-            $('#f_imageContainer').append(imgThumb({id:id, src:imgurl}));
+        var hmodel = activityBody;
+        for(var i=0; i<activityBody.images.length; i++) {
+            if(typeof activityBody.images[i] == "string") { //first editmode activation, img not formatted
+                var imgurl = normalizeImgUrl(activityBody.images[i]);
+                var id = activityBody.images[i].split('/').pop();
+                hmodel.images[i] = {id:id, src:imgurl};
+            }
+            else hmodel.images[i] = activityBody.images[i]; //editmode already activated
         }
+        loadCat(function(cats) {
+            hmodel.cats = cats;
+            $("#formbox").html(formcontent(hmodel));
+            if(cb) cb()
+        });
     }
-
 }
 
 
@@ -275,14 +275,10 @@ function updateContentToContentms(contentData){
     contentType: 'application/json',
     data: JSON.stringify(contentData),
     success: function (response) {
-        activityBody = response; //!!!!!!!
-        $(".editmode").hide();
-        $(".viewmode").show();
-        $(".loggedonly").show();        
         _growl.notice({message:"Update success"})
-        initView();
+        doView(response._id);
     },
-    error: function (response) {      
+    error: function (response) {
       _growl.error({message: "Error updating content "});
     }
   });
@@ -318,7 +314,6 @@ function updateContent(){
   }).get();
 
   var oldImagesLength = contentData.images.length;
-
 
   if(images_array_fd.length > 0 ) {
     images_array_fd.forEach(function (fd_img) {

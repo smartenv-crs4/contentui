@@ -13,20 +13,6 @@
 
 <div style="margin-top:20px;display:none;" id="promoList" class="editmode"></div>
 
-
-
-
-<script id="promo-template2" type="text/x-handlebars-template">
-    {{#each promos}}
-    <div class="tag-box tag-box-v3 margin-bottom-40">
-        <h2><a href="/activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h2>
-        <small style="color:green">dal {{this.startDate}} <br> al {{this.endDate}}</small>
-        <p>{{this.description}}</p>
-    </div>
-    <hr>
-    {{/each}}
-</script>
-
 <script id="promo-template" type="text/x-handlebars-template">
 {{#each promos}}
 <div class="row">
