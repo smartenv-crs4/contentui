@@ -61,9 +61,7 @@
             <hr>
             <div class="margin-bottom-10"></div>
 
-
             <!-- Category Section -->
-
             <h4>Categorie</h4>
             <div class="margin-bottom-10"></div>
             <div class="row" id="f_catDrop">
@@ -81,14 +79,40 @@
 
             <!-- Map Section -->
             <h4>Mappa</h4>
-
-            <p id="f_address"></p>
-            <div id="f_map" class="map margin-bottom-50"></div>
+            <small>Posizionare il puntatore sulla mappa in corrispondenza della propria attività</small><br />
+            <div id="f_map" class="map margin-bottom-10"></div>
+            <label for="f_address">Indirizzo</label><input id="f_address" class="sky-form" style="width:100%;" />
             <hr>
-            <label id="image_array_url"></label>
+            
+            <!-- Contact Section -->
+            <h4>Contatti</h4>
+            <small>Inserire il telefono, l'indirizzo email dell'attività e opzionalmente i link ai profili social</small>
+            <div class="contactsform">
+                <div class="row">
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-envelope"></i> <input type="text" placeholder="Email" id="f_email" value="{{email}}" required /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-phone"></i> <input type="text" placeholder="Phone" id="f_phone" value="{{phone}}" required /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-dark-blue fa fa-facebook"></i> <input type="text" placeholder="Facebook" id="f_fb" value="{{facebook}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-blue fa fa-twitter"></i> <input type="text" placeholder="Twitter" id="f_tw" value="{{twitter}}" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-brown fa fa-instagram"></i> <input type="text" placeholder="Instagram" id="f_inst" value="{{instagram}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-green fa fa-tripadvisor"></i> <input type="text" placeholder="Tripadvisor" id="f_ta" value="{{tripadvisor}}" /></div>
+                </div>
+            </div>
+            <hr>
+
             <button id="addContentButton" class="btn-u btn-u-default insertmode" type="button">Add Activity</button>
             <button id="updateContentButton" class="btn-u btn-u-default editmode" type="button">Update Activity</button>
             <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
         </div>
+    </div>
+</script>
+
+<script id="htpl-img-f" type="text/x-handlebars-template">
+    <div class="imgctn">
+        <span class="deletebutton" onclick="removePicture(this, '{{id}}');">&times;</span>
+        <img name="image" data-id='{{id}}' class="img-responsive rounded-2x" src='{{src}}' {{#if data}} data="{{data}}"{{/if}}> 
     </div>
 </script>

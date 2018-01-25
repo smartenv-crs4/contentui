@@ -86,8 +86,13 @@ function getUploadmsImageURL(image, cb) {
 }
 
 function initMapEdit() {
-    var latitude = activityBody.lat || _form_ds.lat;
-    var longitude = activityBody.lon || _form_ds.lon;
+    var latitude = _form_ds.lat;
+    var longitude = _form_ds.lon;
+
+    if(typeof activityBody != "undefined" && activityBody.lat && activityBody.lon) {
+        latitude = activityBody.lat;
+        longitude = activityBody.lon;
+    }
 
     var map = new GMaps({
         div: '#f_map',
@@ -101,7 +106,9 @@ function initMapEdit() {
             marker.setPosition(new google.maps.LatLng(latitude,longitude));
             _form_ds.lat = latitude;
             _form_ds.lon = longitude;
-            geocodeLatLng(latitude, longitude, 'f_address');
+            geocodeLatLng(latitude, longitude, function(address) {
+                $('#f_address').val(address);
+            });
         }
     });
 
@@ -109,7 +116,9 @@ function initMapEdit() {
         lat: latitude,
         lng: longitude
     });
-    geocodeLatLng(latitude, longitude, 'f_address');
+    geocodeLatLng(latitude, longitude, function(address) {
+        $('#f_address').val(address);
+    });
 }
 
 
@@ -134,28 +143,24 @@ function initMap(title, latitude, longitude) {
         content: '<div class="overlay"><h3>'+title+'</h3></div>'
     });
 
-    geocodeLatLng(latitude, longitude, "address");
+    //geocodeLatLng(latitude, longitude);
 }
 
 
-function geocodeLatLng(lat, lng, adrlabel) {
+function geocodeLatLng(lat, lng, cb) {
     let geocoder = new google.maps.Geocoder;
     let latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
-    let address = null;
+    let address = "Unknown address";
     geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
             if (results[1]) {
                 address = results[0].formatted_address;
             } 
-            else {
-                window.alert('No results found');
-            }
-        } 
-        else {
-            window.alert('Geocoder failed due to: ' + status);
+            if(cb) cb(address);
         }
-
-        document.getElementById(adrlabel).innerHTML = address;
+        else {
+            _growl.warning({message: "Gmaps was unable to find this address"})
+        }
     });
 }
 
@@ -166,7 +171,7 @@ function loadCat(cb) {
         success: function(data) {
             var cats = data.categories;
             
-            if(activityBody) {
+            if(typeof activityBody != "undefined") {
                 for(var j=0; j<cats.length; j++) {
                     cats[j].checked = false;
                     for(var i=0; i<activityBody.category.length; i++) {
@@ -186,8 +191,9 @@ function loadCat(cb) {
 
 function loadContent(cb) {
     var formcontent = Handlebars.compile($("#htpl-form").html());
-    if(activityBody) {
-        var hmodel = activityBody;
+    var hmodel = {};
+    if(typeof activityBody != 'undefined') {
+        hmodel = activityBody;
         for(var i=0; i<activityBody.images.length; i++) {
             if(typeof activityBody.images[i] == "string") { //first editmode activation, img not formatted
                 var imgurl = normalizeImgUrl(activityBody.images[i]);
@@ -202,134 +208,114 @@ function loadContent(cb) {
             if(cb) cb()
         });
     }
+    else loadCat(function(cats) {
+        hmodel.cats = cats;
+        $("#formbox").html(formcontent(hmodel));
+        if(cb) cb()
+    });
 }
 
 
+function getFormData() {
+    //TODO validations!!!!
+    var name = $('#f_name').val();
+    var description = $('#f_description').val();
+    var address = $('#f_address').val();  
+    var facebook = $("#f_fb").val();
+    var twitter = $("#f_tw").val();
+    var phone = $("#f_phone").val();
+    var email = $("#f_email").val();
+    var instagram = $("#f_inst").val();
+    var tripadvisor = $("#f_ta").val();
+
+    var category_array = $('input[name="category"]:checked').map(function () {
+        return this.value;
+    }).get();
+
+    var contentData = {
+        name: name,
+        type: "activity",
+        description: description,
+        address: address,
+        category: category_array.slice(),
+        facebook:facebook,
+        instagram:instagram,
+        email:email,
+        phone:phone,
+        tripadvisor:tripadvisor,
+        twitter:twitter,
+        images:[],
+        lat: _form_ds.lat,
+        lon: _form_ds.lon
+    };
+
+    return contentData;
+}
 
 function addContent() {
+    var contentData = getFormData();
 
-  var name = $('#f_name').val();
-  var description = $('#f_description').val();
-  var published = true;
-  var town = $('#f_address').innerHTML;
-  var category_array = $('input[name="category"]:checked').map(function () {
-    return this.value;
-  }).get();
-  var img_array_url = [];
-  var contentData = {
-    name: name,
-    type: "activity",
-    description: description,
-    published: true,
-    town: town,
-    category: category_array.slice(),
-    images: [],
-    lat: _form_ds.lat,
-    lon: _form_ds.lon
-  };
-
-  if (images_array_fd.length > 0 ) {
-    images_array_fd.forEach(function (fd_img) {
-      getUploadmsImageURL(fd_img.formData, function (img_url) {        
-        contentData.images.push(img_url);
-        console.log("url is: ", img_url);
-        if (contentData.images.length === images_array_fd.length) {
-          console.log("contentData: ", JSON.stringify(contentData));
-          storeContentToContentms(contentData);
-        }
-      });
-    });
-  } else {
-    console.log("\n\n\n no images to upload");
-    storeContentToContentms(contentData);
-  }
-
-}
-
-function storeContentToContentms(contentData) {
-  $.ajax({
-    url: contentUrl + "contents",
-    headers: {
-      Authorization: "Bearer " + userToken
-    },
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(contentData),
-    success: function (response) {      
-      _growl.notice({message: "Content Added"});
-      window.location = baseUrl + "activities/" + response._id;
-    },
-    error: function (response) {      
-      _growl.error({message: "Error adding content "});
-    }
-  });
-}
-
-function updateContentToContentms(contentData){
-  $.ajax({
-    url: contentUrl + "contents/" + activityBody._id,
-    headers: {
-      Authorization: "Bearer " + userToken
-    },
-    type: 'PUT',
-    contentType: 'application/json',
-    data: JSON.stringify(contentData),
-    success: function (response) {
-        _growl.notice({message:"Update success"})
-        doView(response._id);
-    },
-    error: function (response) {
-      _growl.error({message: "Error updating content "});
-    }
-  });
-
-
+    if (images_array_fd.length > 0 ) {
+        images_array_fd.forEach(function (fd_img) {
+            getUploadmsImageURL(fd_img.formData, function (img_url) {        
+                contentData.images.push(img_url);
+                if (contentData.images.length === images_array_fd.length) {
+                    storeContentToContentms(contentData, true);
+                }
+            });
+        });
+    } 
+    else storeContentToContentms(contentData, true);
 }
 
 
 function updateContent(){
-  var name = $('#f_name').val();
-  var description = $('#f_description').val();
-  var published = true;
-  var town = $('#f_address').innerHTML;  
-  var category_array = $('input[name="category"]:checked').map(function () {
-    return this.value;
-  }).get();
+    contentData = getFormData();
 
-  var contentData = {
-    name: name,
-    type: "activity",
-    description: description,
-    published: true,
-    town: town,
-    category: category_array.slice(),
-    images:[],
-    lat: _form_ds.lat,
-    lon: _form_ds.lon
-  };
+    contentData.images = $('img[name="image"]').map(function () {
+        if (!this.src.match("^blob"))
+            return this.src;
+    }).get();
 
-  contentData.images = $('img[name="image"]').map(function () {
-    if (!this.src.match("^blob"))
-      return this.src;
-  }).get();
+    var oldImagesLength = contentData.images.length;
 
-  var oldImagesLength = contentData.images.length;
-
-  if(images_array_fd.length > 0 ) {
-    images_array_fd.forEach(function (fd_img) {
-      getUploadmsImageURL(fd_img.formData, function (img_url) {
-        contentData.images.push(img_url);
-        if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {  // bisogna considearere le immagini già presenti per capire se le ha caricate tutte
-          //console.log("contentData: ", JSON.stringify(contentData));
-          updateContentToContentms(contentData);
-        }
-      });
-    });
-  } else {
-    updateContentToContentms(contentData);
-  }
+    if(images_array_fd.length > 0 ) {
+        images_array_fd.forEach(function (fd_img) {
+            getUploadmsImageURL(fd_img.formData, function (img_url) {
+                contentData.images.push(img_url);
+                // bisogna considerare le immagini già presenti per capire se le ha caricate tutte
+                if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {
+                    //console.log("contentData: ", JSON.stringify(contentData));
+                    storeContentToContentms(contentData);
+                }
+            });
+        });
+    } 
+    else storeContentToContentms(contentData);
 }
-  
+
+function storeContentToContentms(contentData, ins){
+    //console.log(contentData)
+    $.ajax({
+        url: contentUrl + "contents/" + (ins ? '' : activityBody._id),
+        headers: {
+            Authorization: "Bearer " + userToken
+        },
+        type: ins ? "POST" : "PUT",
+        contentType: 'application/json',
+        data: JSON.stringify(contentData),
+        success: function (response) {
+            images_array_fd = []; //!!!important
+            _growl.notice({message:"Update success"})
+            if(ins) window.location.href = baseUrl + "activities/" + response._id;
+            else doView(response._id);
+        },
+        error: function (response) {
+            _growl.error({message: "Error updating content "});
+        }
+    });
+}
+
   
 function addPromotion(){
     window.location = baseUrl + "activities/" + activityBody._id + '/promotions/new';

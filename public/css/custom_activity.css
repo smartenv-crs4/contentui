@@ -92,6 +92,9 @@ a.delAdmin{
     margin-top:5px;
 }
 
+.contactsform input {
+  width:80%;
+}
 
 /* scaffolding */
 /* ----------- */

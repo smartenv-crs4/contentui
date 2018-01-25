@@ -1,11 +1,14 @@
 var activityBody = undefined; //TODO rimuovere
 
 $(document).ready(function () {
-    initToken();
-    doView(activityId);
+    if(typeof activityId != "undefined") {
+        initToken();
+        doView(activityId);
+    }
 });
 
 function doView(aid) {
+    $("html, body").animate({ scrollTop: 0 }, "slow")
     getContent(aid, function(content) {
         if(content == null) {
             $(".editmode").hide();
@@ -76,7 +79,7 @@ function getContent(aid, cb) {
             if(e.status == 423) {
                 cb(null)
             }
-            //_growl.error({message: "Error loading content"});
+            _growl.error({message: "Error loading content"});
         }
     });
 }
@@ -85,16 +88,19 @@ function initView(cb) {
     var viewTpl = Handlebars.compile($("#htpl-view").html());
     var contacts = [];
 
-    //TODO spostare in modello dati
     if(activityBody.facebook) contacts.push({icon:"fa fa-facebook", url:activityBody.facebook, alt:"Facebook"});
     if(activityBody.twitter) contacts.push({icon:"fa fa-twitter", url:activityBody.twitter, alt:"Twitter"});
     if(activityBody.tripadvisor) contacts.push({icon:"fa fa-tripadvisor", url:activityBody.tripadvisor, alt:"Tripadvisor"});
-    if(activityBody.email) contacts.push({icon:"fa fa-envelope", url:"mailto:" + activityBody.email, alt:"Send an email"});
+    if(activityBody.instagram) contacts.push({icon:"fa fa-instagram", url:activityBody.instagram, alt:"Instagram"});
 
     var model = {
         name:activityBody.name,
         description:activityBody.description,
+        address: activityBody.address,
+        phone: activityBody.phone,
         contacts: contacts,
+        email: activityBody.email,
+        phone: activityBody.phone,
         images: [],
         cats:activityBody.category
     }
