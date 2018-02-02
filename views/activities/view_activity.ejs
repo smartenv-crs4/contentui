@@ -92,33 +92,36 @@
     </div>
     <!--=== End Content Part ===-->
 
-    <div class="parallax-team parallaxBg" style="background-position: 50% -68px;">
-        <div class="container content">
-            <div class="title-box-v2">
-                <h2>Promozioni e eventi <span class="color-green">correlati</span></h2>
-                <p></p>
-            </div>
-            
-            <div class="row">
-                {{#each promos}}
-                <!-- Team v2 -->
-                <div class="col-md-3 col-sm-6">
-                    <div class="team-v2">
-                        <div style="height:175px;overflow:hidden;"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></div>
-                        <div class="inner-team">
-                            <h3><a href="/activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h3>
-                            <small class="color-green">dal {{this.startDate}} al {{this.endDate}}</small>
-                            <p>{{this.description}}</p>
-                            <hr>
-                            <small>Last Update: {{this.lastUpdate}}</small>
+    {{#if promos.length}}
+        <div class="parallax-team parallaxBg" style="background-position: 50% -68px;">
+            <div class="container content">
+                <div class="title-box-v2">
+                    <h2>Promozioni e eventi <span class="color-green">correlati</span></h2>
+                    <p></p>
+                </div>
+                <div class="row">
+                    {{#each promos}}
+                    <!-- Team v2 -->
+                    <div class="col-md-3 col-sm-6">
+                        <div class="team-v2">
+                            <div style="height:175px;overflow:hidden;"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></div>
+                            <div class="inner-team">
+                                <h3><a href="/activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h3>
+                                <small class="color-green">dal {{this.startDate}} al {{this.endDate}}</small>
+                                <p>{{this.description}}</p>
+                                <hr>
+                                <small>Last Update: {{this.lastUpdate}}</small>
+                            </div>
                         </div>
                     </div>
+                    <!-- End Team v2 -->
+                    {{/each}}
                 </div>
-                <!-- End Team v2 -->
-                {{/each}}
             </div>
         </div>
-    </div>
+    {{else}}
+        <hr>
+    {{/if}}
 
 
     <!--=== Contacts ===-->
@@ -138,13 +141,15 @@
                     <h3>Indirizzo</h3>
                     <p>{{address}}</p>
                     <h3>Get In Touch</h3>
-                    <i class="icon-custom rounded-x icon-color-grey fa fa-envelope"></i> <a href="mailto:{{email}}">{{email}}</a><br />
-                    <i class="icon-custom rounded-x icon-color-grey fa fa-phone"></i> {{phone}}<br />
+                    {{#if email}}<i class="icon-custom rounded-x icon-color-grey fa fa-envelope"></i> <a href="mailto:{{email}}">{{email}}</a><br />{{/if}}
+                    {{#if phone}}<i class="icon-custom rounded-x icon-color-grey fa fa-phone"></i> {{phone}}<br />{{/if}}
                     
-                    <h3>Social</h3>
-                    {{#each contacts}}
-                        <a href="{{this.url}}" title="{{this.alt}}"><i class="icon-custom rounded-x icon-color-grey {{this.icon}}"></i></a>
-                    {{/each}}
+                    {{#if contacts.length}}
+                        <h3>Social</h3>
+                        {{#each contacts}}
+                            <a href="{{this.url}}" title="{{this.alt}}"><i class="icon-custom rounded-x icon-color-grey {{this.icon}}"></i></a>
+                        {{/each}}
+                    {{/if}}
                 </div>                
             </div>
         </div>

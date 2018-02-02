@@ -94,6 +94,14 @@ a.delAdmin{
 
 .contactsform input {
   width:80%;
+  display: inline-block;
+}
+
+input:focus:invalid, 
+textarea:focus:invalid,
+input:invalid, 
+textarea:invalid {
+  border: 1px solid red;
 }
 
 /* scaffolding */

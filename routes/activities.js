@@ -31,7 +31,9 @@ router.get('/admins',	 (req, res, next) => {
 router.get('/users', (req, res, next) => {res.json([])}); //TODO chiedere a ale di convertire da action in search con query string ?q=
 router.get('/users/:q',		 (req, res, next) => {	
 	getUsersByMail(req.params.q)
-	.then(users => {res.json(users)})
+	.then(users => {
+		res.json(users)
+	})
 	.catch(e => {
 		console.log(e);
 		res.boom.badImplementation();

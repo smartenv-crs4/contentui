@@ -18,6 +18,7 @@
 
 
 <script id="htpl-form" type="text/x-handlebars-template">
+    <form id="activityForm">
     <div class="col-md-7">
         <!-- Standard Form Controls -->
         <div class="tag-box tag-box-v3 form-page" name="activity-form" id="content-form" style="border:0;padding:0;">
@@ -29,13 +30,13 @@
             </div>
             <!--Inputs-->
             <h4>Nome Attività</h4>
-            <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" value="{{name}}"required>
+            <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" value="{{name}}" required maxlength="50">
             <!--End Inputs-->
             <div class="margin-bottom-20"></div>
 
             <!-- Descrizione section-->
             <h4>Descrizione</h4>
-            <textarea id="f_description" class="form-control" rows="7" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." >{{description}}</textarea>
+            <textarea id="f_description" class="form-control" rows="7" maxlength="2000" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required>{{description}}</textarea>
             <div class="margin-bottom-20"></div>
 
             <!-- Image upload section-->
@@ -81,7 +82,7 @@
             <h4>Mappa</h4>
             <small>Posizionare il puntatore sulla mappa in corrispondenza della propria attività</small><br />
             <div id="f_map" class="map margin-bottom-10"></div>
-            <label for="f_address">Indirizzo</label><input id="f_address" class="sky-form" style="width:100%;" />
+            <label for="f_address">Indirizzo</label><input id="f_address" class="sky-form" style="width:100%;" required/>
             <hr>
             
             <!-- Contact Section -->
@@ -89,16 +90,16 @@
             <small>Inserire il telefono, l'indirizzo email dell'attività e opzionalmente i link ai profili social</small>
             <div class="contactsform">
                 <div class="row">
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-envelope"></i> <input type="text" placeholder="Email" id="f_email" value="{{email}}" required /></div>
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-phone"></i> <input type="text" placeholder="Phone" id="f_phone" value="{{phone}}" required /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-envelope"></i> <input class="form-control" type="email" placeholder="Email" id="f_email" value="{{email}}" required /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-phone"></i> <input class="form-control" type="number" placeholder="Phone" id="f_phone" value="{{phone}}" required /></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-dark-blue fa fa-facebook"></i> <input type="text" placeholder="Facebook" id="f_fb" value="{{facebook}}" /></div>
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-blue fa fa-twitter"></i> <input type="text" placeholder="Twitter" id="f_tw" value="{{twitter}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-dark-blue fa fa-facebook"></i> <input class="form-control" type="url" placeholder="Facebook" id="f_fb" value="{{facebook}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-blue fa fa-twitter"></i> <input class="form-control" type="url" placeholder="Twitter" id="f_tw" value="{{twitter}}" /></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-brown fa fa-instagram"></i> <input type="text" placeholder="Instagram" id="f_inst" value="{{instagram}}" /></div>
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-green fa fa-tripadvisor"></i> <input type="text" placeholder="Tripadvisor" id="f_ta" value="{{tripadvisor}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-brown fa fa-instagram"></i> <input class="form-control" type="url" placeholder="Instagram" id="f_inst" value="{{instagram}}" /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-green fa fa-tripadvisor"></i> <input class="form-control" type="url" placeholder="Tripadvisor" id="f_ta" value="{{tripadvisor}}" /></div>
                 </div>
             </div>
             <hr>
@@ -108,6 +109,7 @@
             <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
         </div>
     </div>
+    </form>
 </script>
 
 <script id="htpl-img-f" type="text/x-handlebars-template">

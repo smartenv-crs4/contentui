@@ -268,8 +268,11 @@ function addContent() {
     else storeContentToContentms(contentData, true);
 }
 
-
 function updateContent(){
+    if(!$("#activityForm")[0].checkValidity()) {
+        _growl.error({message:"Invalid data, please check the red bordered fields"})
+        return;
+    }
     contentData = getFormData();
 
     contentData.images = $('img[name="image"]').map(function () {
