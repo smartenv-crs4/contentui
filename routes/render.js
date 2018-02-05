@@ -52,8 +52,15 @@ module.exports = {
                             res.send(content);
                         });
                     }else {
-
-                        var commonBody = body ? JSON.parse(body) : undefined;
+                        var commonBody = undefined;
+                        if(body) {
+                            try {
+                                commonBody = JSON.parse(body);
+                            }
+                            catch(e) {
+                                console.log(e);
+                            }
+                        }
 
                         if (commonBody && commonBody.error) {
                             let tmpError=commonBody.error_message;
