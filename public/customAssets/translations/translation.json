@@ -237,5 +237,47 @@
       "en":"Date range",
       "it":"Intervallo"
     }
+  },
+  "activity" : {
+    "relatedpromo": {
+      "en":"Related deals and events.",
+      "it":"Promozioni e eventi correlati"
+    },
+    "contact": {
+      "en":"Contacts",
+      "it":"Contatti"
+    },
+    "address": {
+      "en":"Address",
+      "it":"Indirizzo"
+    },
+    "edit": {
+      "en":"Edit Activity",
+      "it":"Modifica Attività"
+    },
+    "name": {
+      "it":"Nome Attività",
+      "en":"Name"
+    },
+    "desc": {
+      "it":"Descrizione",
+      "en":"Description"
+    },
+    "cats":{
+      "it":"Categorie",
+      "en":"Categories"
+    },
+    "map":{
+      "it":"Posizione",
+      "en":"Position"
+    },
+    "maphint": {
+      "it":"Posizionare il puntatore sulla mappa in corrispondenza della propria attività",
+      "en":"Place the marker over your building"
+    },
+    "contacthint": {
+      "it":"Inserire il telefono, l'indirizzo email dell'attività e opzionalmente i link ai profili social",
+      "en":"Insert your phone number and your email address, optionally you can also add your social links"
+    }
   }
 }

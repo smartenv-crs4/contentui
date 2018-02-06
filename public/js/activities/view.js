@@ -8,7 +8,24 @@ $(document).ready(function () {
     else { //new activity
         newActivity();
     }
+    initTranslation();
 });
+
+function initTranslation() {
+    $.ajax({
+        cache: false,
+        url: config.contentUIUrl + '/customAssets/translations/translation.json',
+        type:"get",
+        contentType:"application/json",
+        success: function(data) {
+            initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+            console.error(thrownError);
+        }
+    });
+}
 
 function doView(aid) {
     $("html, body").animate({ scrollTop: 0 }, "slow")

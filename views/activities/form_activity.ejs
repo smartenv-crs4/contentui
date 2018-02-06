@@ -25,23 +25,23 @@
 
             <div class="headline">
                 <div class="row">
-                    <div class="col-sm-10"><h3>Modifica Attività</h3></div>
+                    <div class="col-sm-10"><h3 data-i18n="activity.edit"></h3></div>
                 </div>
             </div>
             <!--Inputs-->
-            <h4>Nome Attività</h4>
+            <h4 data-i18n="activity.name"></h4>
             <input id="f_name" type="text" class="form-control" placeholder="es. Ristorante La Spigola" value="{{name}}" required maxlength="50">
             <!--End Inputs-->
             <div class="margin-bottom-20"></div>
 
             <!-- Descrizione section-->
-            <h4>Descrizione</h4>
+            <h4 data-i18n="activity.desc">Descrizione</h4>
             <textarea id="f_description" class="form-control" rows="7" maxlength="2000" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required>{{description}}</textarea>
             <div class="margin-bottom-20"></div>
 
             <!-- Image upload section-->
 
-            <h4>Immagini</h4>
+            <h4>Gallery</h4>
 
             <div class="margin-bottom-10"></div>
             <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;width:auto;">
@@ -63,7 +63,7 @@
             <div class="margin-bottom-10"></div>
 
             <!-- Category Section -->
-            <h4>Categorie</h4>
+            <h4 data-i18n="activity.cats"></h4>
             <div class="margin-bottom-10"></div>
             <div class="row" id="f_catDrop">
                 {{#each cats}}
@@ -79,15 +79,15 @@
 
 
             <!-- Map Section -->
-            <h4>Mappa</h4>
-            <small>Posizionare il puntatore sulla mappa in corrispondenza della propria attività</small><br />
+            <h4 data-i18n="activity.map"></h4>
+            <small data-i18n="maphint"></small><br />
             <div id="f_map" class="map margin-bottom-10"></div>
-            <label for="f_address">Indirizzo</label><input id="f_address" class="sky-form" style="width:100%;" required/>
+            <label for="f_address" data-i18n="activity.address"></label><input id="f_address" class="sky-form" style="width:100%;" required/>
             <hr>
             
             <!-- Contact Section -->
-            <h4>Contatti</h4>
-            <small>Inserire il telefono, l'indirizzo email dell'attività e opzionalmente i link ai profili social</small>
+            <h4 data-i18n="activity.contact"></h4>
+            <small data-i18n="activity.contacthint"></small>
             <div class="contactsform">
                 <div class="row">
                     <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-envelope"></i> <input class="form-control" type="email" placeholder="Email" id="f_email" value="{{email}}" required /></div>

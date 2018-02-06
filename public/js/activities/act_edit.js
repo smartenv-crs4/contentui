@@ -24,6 +24,7 @@ function initToolbar() {
             $("#fileUpload").on("change", function() {
                 loadImagePreview(this);
             });
+            initTranslation();
         });
     })
 
@@ -36,7 +37,7 @@ function initToolbar() {
         $(".viewmode").show();
         $(".loggedonly").show();
     });
-
+    
     $("#lockContent").click(function() {
         function lockContentCB(d) {
             if(d.published) {
