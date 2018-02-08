@@ -96,6 +96,8 @@ function arrayAreEquals(arr1,arr2){
 
 function logOut(){
     removeTokenAfterLogOut();
-    window.location.replace("/");
+    var acturl = window.location.href;
+    //TODO rimuovere eventuale access_token da acturl
+    window.location.replace(acturl);
 }
 
