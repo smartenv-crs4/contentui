@@ -867,7 +867,8 @@ function getPromotionPage(data,token){
         price:data.price,
         token:token,
         contentId:contentID,
-        access_token:userToken
+        access_token:userToken,
+        baseUrl:config.contentUIUrl
     };
 
     jQuery('#promotionContent').html(promotionHtml(prom));
