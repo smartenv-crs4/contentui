@@ -32,9 +32,10 @@ exports.parseuuId = function (req, res, next) {
         jsonDb.getKey(req.query.uuid,function (err,access_token) {
             if(!err && access_token) {
                 req.query.access_token = access_token;
+                req.gatewayPage=true;
                 jsonDb.deleteKey(req.query.uuid);
             }
-            next();
+           next();
         });
 
     }else{

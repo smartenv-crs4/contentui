@@ -14,9 +14,52 @@ let commonUIUrl = config.commonUIUrl + (config.commonUIUrl.endsWith('/') ? '' : 
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
 
+
+/* GET environment info page. */
+router.get('/env', function(req, res) {
+    var env;
+    if (process.env['NODE_ENV'] === 'dev')
+        env='dev';
+    else
+        env='production';
+
+    res.status(200).send({env:env});
+});
+
+
+
 ////////////////////////////////
 // Page rendering routes only //
 ////////////////////////////////
+
+
+router.use(function(req, res, next) {
+
+
+    var model={
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        }
+    };
+
+    if(req.query.access_token && req.gatewayPage) {  // is a redirection from middleware with uuid
+        next();
+    }else if(req.query.access_token && !req.gatewayPage){  // is access_token from url and not from middleware.js
+        model.access_token=req.query.access_token;
+        res.render('gatewayPage',model);
+    } else {  // if no access_token or valid uuid
+        if(req.query && (req.query.default=='true' )) { // page of not logged user. after blankPage Test
+            next();
+        }
+        else {  // notLogged User but BlankPage test is need.
+            model.access_token=null;
+            res.render('gatewayPage',model);
+        }
+    }
+
+});
+
 
 
 //search page
@@ -100,16 +143,6 @@ router.get('/activities/:aid/promotions/new', function(req, res, next) {
 });
 
 
-/* GET environment info page. */
-router.get('/env', function(req, res) {
-    var env;
-    if (process.env['NODE_ENV'] === 'dev')
-        env='dev';
-    else
-        env='production';
-
-    res.status(200).send({env:env});
-});
 
 
 

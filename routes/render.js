@@ -40,7 +40,7 @@ module.exports = {
             if(model.access_token)
                 commonUiURL+=("access_token="+model.access_token);
             else
-                commonUiURL=commonUiURLWithNoToken
+                commonUiURL=commonUiURLWithNoToken;
 
 
             console.log(model.access_token);
@@ -64,7 +64,7 @@ module.exports = {
 
                         if (commonBody && commonBody.error) {
                             let tmpError=commonBody.error_message;
-                            request.get(commonUiURLWithNoToken, function (error, response, body) {
+                            request.get(commonUiURLWithNoToken, function (error, response, body) {  //resend request to header for not logged in user
                                 if (error){
                                     commonFunctions.getErrorPage(500,"500","Internal Server Error",error,function(er,content){
                                         res.send(content);

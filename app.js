@@ -8,7 +8,7 @@ var token=require('./routes/token');
 var content=require('./routes/contents');
 var utilsJs=require('./routes/utils');
 var boom = require('express-boom');
-var extractHas=require('./routes/middlewares')
+var extractUuId=require('./routes/middlewares');
 
 
 var routes = require('./routes/index');
@@ -40,7 +40,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.use(extractHas.parseuuId);
+app.use(extractUuId.parseuuId);
 app.use('/utils',utilsJs);
 //app.use('/promotions',promotions);
 app.use('/contents',content);
