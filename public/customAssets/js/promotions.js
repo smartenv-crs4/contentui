@@ -428,7 +428,7 @@ function addNewPromotion(){
     var promotionHtml = Handlebars.compile(promotion_admin_template);
 
     var prom={
-        image:"/assets/img/team/img32-md.jpg",
+        image:config.contentUIUrl+"/assets/img/team/img32-md.jpg",
         isANewPromotion:true
     };
 
@@ -1123,7 +1123,7 @@ function initMap(latitude,longitude,zoom,editable) {
     marker.mrk = map.addMarker({
         lat: latitude,
         lng: longitude,
-        icon:'/customAssets/img/marker/port.png',
+        icon:config.contentUIUrl+"/customAssets/img/marker/port.png",
         draggable:editable,
         dragend:function(){
             if(editable) {

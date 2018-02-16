@@ -1,7 +1,7 @@
 
-if(undefined===tokenError){
-    let tokenError=null;
-}
+// if(undefined===tokenError){
+//     let tokenError=null;
+// }
 
 // if(!userToken) {
 //     if(window.localStorage.token) {
@@ -158,7 +158,7 @@ function initToken() {
         else
             window.localStorage.removeItem("token");
     }
-    else if(window.localStorage.token) {  // in new version from 12/02/18 commit, it should be not reachable due blankPage verification
+    else if(window.localStorage.token) {  // in new version from 12/02/18 commit, it should be not reachable due gatewayPage verification
         if(!tokenError)
             userToken = window.localStorage.token;
         else

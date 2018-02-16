@@ -49,10 +49,10 @@ router.use(function(req, res, next) {
         model.access_token=req.query.access_token;
         res.render('gatewayPage',model);
     } else {  // if no access_token or valid uuid
-        if(req.query && (req.query.default=='true' )) { // page of not logged user. after blankPage Test
+        if(req.query && (req.query.default=='true' )) { // page of not logged user. after gatewayPage Test
             next();
         }
-        else {  // notLogged User but BlankPage test is need.
+        else {  // notLogged User but gatewayPage test is need.
             model.access_token=null;
             res.render('gatewayPage',model);
         }
