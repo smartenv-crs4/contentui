@@ -562,7 +562,7 @@ function updatePromotion(){
     var promotionHtml = Handlebars.compile(promotion_admin_template);
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+currentPromotion.images[0],
+        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
         start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
@@ -858,7 +858,7 @@ function getPromotionPage(data,token){
     currentPromotion=data;
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+data.images[0],
+        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
         start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",

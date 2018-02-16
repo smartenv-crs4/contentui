@@ -167,9 +167,11 @@ router.get('/image', function(req, res, next) {
     var imageUrl=req.query.imageUrl;
 
     var rqparams = {
-        url:  imageUrl,
-        headers: {'Authorization': "Bearer " + (config.auth_token || "")},
+        url:  imageUrl
     };
+    if(imageUrl.indexOf(config.uploadUrl)>=0) {
+        rqparams.headers = {'Authorization': "Bearer " + (config.auth_token || "")};
+    }
     request.get(rqparams).pipe(res);
 });
 
