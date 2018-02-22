@@ -266,12 +266,8 @@
 		<div class="inner-results">
 			<h3><a href="{{link}}">{{title}}</a></h3>
 			<div class="overflow-h">
-				{{#if image}}
-					<img src="{{image}}" alt="">
-				{{else}}
-					<i class="fa fa-image photoHolder"></i>
-				{{/if}}
-				<div class="overflow-a">
+				<div class="img-round-crop" style="background-image: url('{{#if image}} {{image}} {{else}} <% baseUrl %>customAssets/img/port/no_image_available.png {{/if}}');"></div>
+				<div class="overflow-a entry-item">
 					<p>{{description}}</p>
 					<p> <span class="fa fa-map-marker"></span> {{town}}</p>
 					<ul class="list-inline down-ul">

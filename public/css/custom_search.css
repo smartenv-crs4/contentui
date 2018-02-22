@@ -9,12 +9,27 @@
     background-position: 50% 26px; 
 }
 
-.photoHolder {
-  font-size:34px !important;
-  float:left;
-  display:block;
-  margin:0 10px 5px 0;
+
+.img-round-crop {
+  width: 150px;
+  height: 150px;
+  display:inline-block;
+  background: #eee no-repeat center;
+  background-size: cover;
+
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
 }
+
+.entry-item {
+  display:inline-block;
+  vertical-align:top;
+  margin-left:10px;
+}
+
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 

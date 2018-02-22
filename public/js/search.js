@@ -82,7 +82,6 @@ $(document).ready(function() {
     })
 });
 
-
 $("#collapse-Map").on("shown.bs.collapse", function() {
     initMap();
 })
