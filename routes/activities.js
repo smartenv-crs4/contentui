@@ -134,15 +134,21 @@ function getAdmins(admIds) {
 function getUsersByMail(mail) {	
 	return new Promise((resolve, reject) => {
 		rp({
-			uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/actions/email/find/' + mail,
-			method: 'GET',
+			uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/actions/search/',
+			method: 'POST',
 			json:true,
+			body: {
+				searchterm: {
+					email: mail,
+					type: config.contentAdminTokenType
+				}
+			},
 			headers: {
 				authorization: "Bearer " + config.auth_token
 			}
 		})
 		.then(users => {
-			resolve(users.data)
+			resolve(users.users)
 		})
 		.catch(e => {
 			console.log(e);

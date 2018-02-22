@@ -1,5 +1,8 @@
+<div style="margin-top:20px;display:none;" id="promoList" class="editmode"></div>
+
+<script id="promo-template" type="text/x-handlebars-template">
 <div class="editmode" style="display:none;">
-    <a href="promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
+    <a href="<%= baseUrl %>activities/{{idcontent}}/promotions/new"><button id="addPromotionButton" class="btn-u" type="button"> Nuova Promozione</button></a>
     <hr>
     <div class="search-open" style="display: block; margin-bottom:40px;">
         <div class="input-group ">
@@ -11,9 +14,6 @@
     </div>
 </div>
 
-<div style="margin-top:20px;display:none;" id="promoList" class="editmode"></div>
-
-<script id="promo-template" type="text/x-handlebars-template">
 {{#each promos}}
 <div class="row">
     <div class="">
@@ -22,10 +22,10 @@
                 <div class="overflow-hidden">
                     <img class="img-responsive" src="{{this.images.[0]}}" alt="">
                 </div>
-                <a class="btn-more hover-effect" href="/activities/{{this.idcontent}}/promotions/{{this._id}}/">read more +</a>
+                <a class="btn-more hover-effect" href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/">read more +</a>
             </div>
             <div class="caption">
-                <h3><a class="hover-effect" href="/activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h3>
+                <h3><a class="hover-effect" href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h3>
                 <p>{{this.description}}</p>
             </div>
         </div>

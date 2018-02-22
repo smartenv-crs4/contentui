@@ -42,17 +42,14 @@
 </head>
 <body>
     <div class="wrapper">
-        
         <div id="header_p_HT"> <%- commonUI.header %> </div>
         <div class="locked"><h2>Contenuto non disponibile</h2></div>
+        
         <!--=== Content Part ===-->
-        <!--div class="container content"-->
-                <% if(typeof activityId != 'undefined') {%> <%include view_activity%><% } %>
-                <% include form_activity %>
-        <!--/div-->
+        <% if(typeof activityId != 'undefined') {%> <%include view_activity%><% } %>
+        <% include form_activity %>
         
         <div id="footer_p_HT"> <%- commonUI.footer %> </div>
-
     </div><!--/End Wrapepr-->
     
     <% include ../config %>
