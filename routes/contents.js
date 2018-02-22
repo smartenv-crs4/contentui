@@ -14,9 +14,10 @@ router.get('/:id', function(req, res, next) {
     var id=req.params.id || null;
     if(id){
         var rqparams = {
-            url:  config.contentUrl + "/contents/"+ id,
+            url:  config.contentUrl + "contents/"+ id,
             headers: {'Authorization': "Bearer " + (config.auth_token || "")},
         };
+        console.log(rqparams.url)
         request.get(rqparams).pipe(res);
     }else{
         res.status(400).send({error:"BadRequest", error_message:"content id field is mandatory"});
