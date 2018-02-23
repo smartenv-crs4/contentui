@@ -39,6 +39,8 @@ $(document).ready(function() {
         $("#homeBoxes").hide();
         $("#searchresults").empty();
         _filters.skip = 0;
+        $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
+        $(".bg-image-cp h2").hide();
         search();
     })
 
