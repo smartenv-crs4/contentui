@@ -236,6 +236,10 @@
     "advDateTab2": {
       "en":"Date range",
       "it":"Intervallo"
+    },
+    "more": {
+      "en": "Show More",
+      "it": "Mostra di pi&ugrave;"
     }
   },
   "activity" : {

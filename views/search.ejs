@@ -205,6 +205,9 @@
 
 		<div id="sResults" class="container s-results" style="display:none;">
 			<div id="searchresults" class="margin-top-30"></div>
+			<div style="text-align: center; padding:20px;">
+				<button id="moreresults" class="btn-u btn-u-lg rounded btn-u-red" type="button" data-i18n="search.more"></button>
+			</div>
 		</div>
 
 		<div id="footer_p_HT"> <%- commonUI.footer %> </div>
@@ -265,36 +268,46 @@
 	<script id="entry-template" type="text/x-handlebars-template">
 		<div class="inner-results">
 			<h3><a href="{{link}}">{{title}}</a></h3>
-			<div class="overflow-h">
-				<div class="img-round-crop" style="background-image: url('{{#if image}} {{image}} {{else}} <% baseUrl %>customAssets/img/port/no_image_available.png {{/if}}');"></div>
-				<div class="overflow-a entry-item">
-					<p>{{description}}</p>
-					<p> <span class="fa fa-map-marker"></span> {{town}}</p>
-					<ul class="list-inline down-ul">
-						<!--
-						<li>
-							<ul class="list-inline star-vote">
-								<li><i class="color-green fa fa-star"></i></li>
-								<li><i class="color-green fa fa-star"></i></li>
-								<li><i class="color-green fa fa-star"></i></li>
-								<li><i class="color-green fa fa-star"></i></li>
-								<li><i class="color-green fa fa-star-half-o"></i></li>
-							</ul>
-						</li>
-						-->
-						{{#if startDate}}
-							<li>Valido dal {{startDate}}
-						{{/if}}
-						{{#if endDate}}
-							 al {{endDate}}
-						{{else}}
+			<div class="">
+				<div class="entry-item">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-2">
+								<div class="img-round-crop" style="background-image: url('{{#if image}} {{image}} {{else}} <% baseUrl %>customAssets/img/port/no_image_available.png {{/if}}');"></div>
+							</div>
+							<div class="col-md-10" style="max-height:150px;overflow-y:scroll;"></div>
+								<p style="vertical-align: top;">{{description}}</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						{{#if town}}<p><span class="fa fa-map-marker"></span> {{town}}</p>{{/if}}
+						<ul class="list-inline down-ul">
+							<!--
+							<li>
+								<ul class="list-inline star-vote">
+									<li><i class="color-green fa fa-star"></i></li>
+									<li><i class="color-green fa fa-star"></i></li>
+									<li><i class="color-green fa fa-star"></i></li>
+									<li><i class="color-green fa fa-star"></i></li>
+									<li><i class="color-green fa fa-star-half-o"></i></li>
+								</ul>
+							</li>
+							-->
 							{{#if startDate}}
-								</li>
+								<li>Valido dal {{startDate}}
 							{{/if}}
-						{{/if}}
-						<li>Inserito il {{pubDate}}</li>
-						<li>{{likes}} like</li>
-					</ul>
+							{{#if endDate}}
+								al {{endDate}}
+							{{else}}
+								{{#if startDate}}
+									</li>
+								{{/if}}
+							{{/if}}
+							<li>Inserito il {{pubDate}}</li>
+							<li>{{likes}} like</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -7,6 +7,8 @@ var _filters = {
     edate: undefined,
     category: undefined,
     position: undefined,
+    limit: 10,
+    skip: 0,
     type: 'promo' //TODO tick per ricerca contenuti in adv panel!!!!!!!!
 };
 
@@ -33,6 +35,14 @@ $(document).ready(function() {
     showToolDates();
 
     $("#doSearch").click(function(e) {
+        $("#sResults").show();
+        $("#homeBoxes").hide();
+        $("#searchresults").empty();
+        _filters.skip = 0;
+        search();
+    })
+
+    $("#moreresults").click(function() {
         search();
     })
 
@@ -387,7 +397,6 @@ function toDict(objArray, prop) {
     return retObj;
 }
 
-// /promotion/:id
 function search() {
     var dateFmt = 'DD/MM/YYYY';
     var q = $("#qt").val(); //text query
@@ -405,11 +414,9 @@ function search() {
         }
         else {
             let promo = _filters.type == 'promo';
-            $("#sResults").show();
-            $("#homeBoxes").hide();
-            $("#searchresults").empty();
-            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+            _filters.skip += _filters.limit; //skip for next call
 
+            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
             $.each(qResults, function(i, item) {            
                 $.ajax(baseUrl + 'search/likes?type=promo&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
                 .done(function(likesCount) {
