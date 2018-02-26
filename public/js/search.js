@@ -9,7 +9,7 @@ var _filters = {
     position: undefined,
     limit: 10,
     skip: 0,
-    type: 'promo' //TODO tick per ricerca contenuti in adv panel!!!!!!!!
+    type: 'promo' 
 };
 
 
@@ -402,6 +402,7 @@ function toDict(objArray, prop) {
 function search() {
     var dateFmt = 'DD/MM/YYYY';
     var q = $("#qt").val(); //text query
+    _filters.type = $("#searchtype").val();    
     var filterString = '';
     Object.keys(_filters).forEach(function(k,i) {
         if(k == 'position' && _filters[k])
@@ -418,15 +419,15 @@ function search() {
             let promo = _filters.type == 'promo';
             _filters.skip += _filters.limit; //skip for next call
 
-            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+            var qResults = promo ? data.promos : (_filters.type == 'content') ? data.contents : data.promos; //TODO default merge results
             $.each(qResults, function(i, item) {            
-                $.ajax(baseUrl + 'search/likes?type=promo&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                $.ajax(baseUrl + 'search/likes?type=' + _filters.type + '&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
                 .done(function(likesCount) {
                     var hcontext = {
                         id: item._id,
                         title: item.name,
                         town:item.town,
-                        image:item.images[0]||undefined,
+                        image:item.images ? item.images[0] : undefined,
                         description: item.description,
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,

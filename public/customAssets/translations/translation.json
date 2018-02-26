@@ -185,6 +185,18 @@
       "en":"Search...",
       "it":"Cerca..."
     },
+    "optOffer" : {
+      "en" : "Events and deals",
+      "it" : "Eventi e Offerte"
+    },
+    "optContent" : {
+      "en" : "Activities and places",
+      "it" : "Attività e Luoghi"
+    },
+    "filterby": {
+      "it":"Filtra per",
+      "en":"Filter by"
+    },
     "title": {
       "en": "Plan your stay in Cagliari",
       "it": "Pianifica il tuo soggiorno a Cagliari"
@@ -239,7 +251,7 @@
     },
     "more": {
       "en": "Show More",
-      "it": "Mostra di pi&ugrave;"
+      "it": "Mostra di più"
     }
   },
   "activity" : {

@@ -67,6 +67,13 @@
 								<button id="doSearch" class="btn-u" type="button"><i class="fa fa-search"></i></button>
 							</span>
 						</div>
+						<div id="searchsettings" class="">
+							<span class="fa fa-filter" data-i18n="[title]search.filterby"></span> 
+							<select id="searchtype" class="form-control input-sm">
+								<option value="promo" data-i18n="search.optOffer"></option>
+								<option value="content" data-i18n="search.optContent"></option>
+							</select>
+						</div>
 
 						<div id="adv" class="panel-group acc-v1 animated fadeInDown" style="display:none;margin-top:8px;">
 							
@@ -76,7 +83,7 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false"><i data-i18n="search.advCatLabel"></i> <span id="advCat" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false"><span class="fa fa-tags"></span> <span data-i18n="search.advCatLabel"></span> <span id="advCat" class="advItem"></span>
 													</a>												
 												</h4>
 											</div>
@@ -102,7 +109,7 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">											
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Time" aria-expanded="false"><i data-i18n="search.advDateLabel"></i> <span id="advDate" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Time" aria-expanded="false"><span class="fa fa-clock-o"></span> <span data-i18n="search.advDateLabel"></span> <span id="advDate" class="advItem"></span>
 													</a>
 												</h4>
 											</div>
@@ -157,7 +164,7 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Map" aria-expanded="false"><i data-i18n="search.advPosLabel"></i> <span id="advPos" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Map" aria-expanded="false"><span class="fa fa-map-o"></span> <span data-i18n="search.advPosLabel"></span> <span id="advPos" class="advItem"></span>
 													</a>									
 												</h4>
 											</div>

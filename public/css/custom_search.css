@@ -33,6 +33,22 @@
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 
+#searchsettings {
+  background:white;
+  width:100%;
+  padding:3px 7px;
+  color: grey;
+  border:1px solid #ccc;
+  border-top:0;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+#searchtype {
+  width:200px; 
+  display:inline-block;
+}
+
 #sResults {
   padding-top:25px;
   min-height:300px;
