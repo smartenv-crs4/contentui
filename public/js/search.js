@@ -1,13 +1,13 @@
 var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
 var _mapMarker = undefined;
-var _defSliderVal = 500;
+var _defSliderVal = 100;
 var _filters = {
     sdate: undefined,
     edate: undefined,
     category: undefined,
     position: undefined,
-    limit: 10,
+    limit: 3,
     skip: 0,
     type: 'promo' 
 };
@@ -33,6 +33,10 @@ $(document).ready(function() {
 */
     showToolShips();
     showToolDates();
+
+    $("#mapview").click(function() {
+        $(this).toggleClass("btn-success")
+    })
 
     $("#doSearch").click(function(e) {
         $("#sResults").show();
@@ -158,12 +162,12 @@ function initMap() {
         map.setZoom(20);
     }, false);
 
-    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||500;
+    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||100;
     $('#slider1-value-rounded').text(radiusVal);
     $('#slider1-rounded').slider({
         value: radiusVal,
         min: _defSliderVal,
-        max: 100000,
+        max: 20000,
         step:_defSliderVal,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
@@ -414,8 +418,13 @@ function search() {
     .done(function(data) {
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
+            $("#moreresults").hide();
         }
         else {
+            if(data.metadata.totalCount > data.metadata.limit + (data.metadata.limit * data.metadata.skip))
+                $("#moreresults").show();
+            else
+                $("#moreresults").hide();
             let promo = _filters.type == 'promo';
             _filters.skip += _filters.limit; //skip for next call
 

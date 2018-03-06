@@ -57,7 +57,8 @@
 				<div class="headline-center headline-light">
 					<h2 data-i18n="search.title"></h2>
 
-					<div id="searchBox" class="text-left" style="max-width:800px">											
+					<div id="searchBox" class="text-left" style="max-width:800px">
+														
 						<div class="input-group">
 							<span class="input-group-btn">
 								<button id="doAdv" class="btn-u btn-u-default" type="button" title="Ricerca avanzata"><i class="fa fa-cogs"></i></button>
@@ -68,11 +69,12 @@
 							</span>
 						</div>
 						<div id="searchsettings" class="">
-							<span class="fa fa-filter" data-i18n="[title]search.filterby"></span> 
+							<span class="fa fa-filter"></span> <span data-i18n="search.filterby"></span> 
 							<select id="searchtype" class="form-control input-sm">
 								<option value="promo" data-i18n="search.optOffer"></option>
 								<option value="content" data-i18n="search.optContent"></option>
 							</select>
+							<button id="mapview" type="button" class="btn btn-default btn-sm"><i class="fa fa-map-o"></i> Map view</button>
 						</div>
 
 						<div id="adv" class="panel-group acc-v1 animated fadeInDown" style="display:none;margin-top:8px;">
@@ -94,7 +96,7 @@
 									
 								<div id="collapse-One" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 									<div class="panel-body">
-										<div class="row" id="catDrop">
+										<div class="row sky-form" id="catDrop">
 											<div class="col-md-4" data-cp-cbox-pos="0"></div>
 											<div class="col-md-4" data-cp-cbox-pos="1"></div>
 											<div class="col-md-4" data-cp-cbox-pos="2"></div>
@@ -131,26 +133,26 @@
 												</div>
 												<div class="tab-pane fade" id="interval">
 													<div id="intdates" class="adv">
-												        <div class="form-group">
-												            <div class='input-group date' id='dtp1'>
-												                <input type='text' class="form-control" readonly placeholder="Data inizio..." />
-												                <span class="input-group-addon">
-												                    <span class="fa fa-calendar"></span>
-												                </span>
-												            </div>
-												        </div>
-											            <div class="form-group">
-												            <div class='input-group date' id='dtp2'>
-												                <input type='text' class="form-control" readonly placeholder="Data fine..." />
-												                <span class="input-group-addon">
-												                    <span class="fa fa-calendar"></span>
-												                </span>
-												            </div>
-												        </div>
-												        <div class="text-right">
-												        	<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i></button>
-												        	<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i></button>
-												        </div>
+														<div class="form-group">
+															<div class='input-group date' id='dtp1'>
+																<input type='text' class="form-control" readonly placeholder="Data inizio..." />
+																<span class="input-group-addon">
+																	<span class="fa fa-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<div class="form-group">
+															<div class='input-group date' id='dtp2'>
+																<input type='text' class="form-control" readonly placeholder="Data fine..." />
+																<span class="input-group-addon">
+																	<span class="fa fa-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<div class="text-right">
+															<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i></button>
+															<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i></button>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -182,7 +184,8 @@
 									</div>
 								</div>
 							</div>
-						</div>							      				
+						</div>
+						
 	      			</div>
 				
 				</div><!--/end Headline Center-->

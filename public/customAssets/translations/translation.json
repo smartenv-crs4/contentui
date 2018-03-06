@@ -201,6 +201,10 @@
       "en": "Plan your stay in Cagliari",
       "it": "Pianifica il tuo soggiorno a Cagliari"
     },
+    "newpromo": {
+      "en" : "New Promotion",
+      "it" : "Nuova Promozione"
+    },
     "box1title": {
         "it":"Scegli",
         "en":"Choose"
