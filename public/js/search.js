@@ -421,7 +421,7 @@ function search() {
             $("#moreresults").hide();
         }
         else {
-            if(data.metadata.totalCount > data.metadata.limit + (data.metadata.limit * data.metadata.skip))
+            if(data.metadata.totalCount > data.metadata.limit + data.metadata.skip)
                 $("#moreresults").show();
             else
                 $("#moreresults").hide();
@@ -441,11 +441,13 @@ function search() {
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,
                         link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
-                        likes: likesCount.total,
-                        idcontent: item.idcontent||undefined,
-                        startDate: moment(item.startDate).format(dateFmt)||undefined,
-                        endDate: moment(item.endDate).format(dateFmt)||undefined
-                    };                    
+                        likes: likesCount.total,                        
+                    };
+                    if(promo) {
+                        hcontext.idcontent = item.idcontent||undefined,
+                        hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined,
+                        hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
+                    }
                     $("#searchresults").append(_searchItemTemplate(hcontext));
                 });
             });
