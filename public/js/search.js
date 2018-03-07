@@ -7,7 +7,7 @@ var _filters = {
     edate: undefined,
     category: undefined,
     position: undefined,
-    limit: 3,
+    limit: 5,
     skip: 0,
     type: 'promo' 
 };
@@ -416,6 +416,7 @@ function search() {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
+        console.log(data)
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
             $("#moreresults").hide();
@@ -431,12 +432,12 @@ function search() {
             var qResults = promo ? data.promos : (_filters.type == 'content') ? data.contents : data.promos; //TODO default merge results
             $.each(qResults, function(i, item) {            
                 $.ajax(baseUrl + 'search/likes?type=' + _filters.type + '&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
-                .done(function(likesCount) {
+                .done(function(likesCount) {                    
                     var hcontext = {
                         id: item._id,
                         title: item.name,
                         town:item.town,
-                        image:item.images ? item.images[0] : undefined,
+                        image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
                         description: item.description,
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,
