@@ -217,6 +217,12 @@ function setPositionValidity(value){
 }
 
 
+function openModalParticipants(){
+    $('#modalParticipants').modal('show');
+}
+
+
+
 // function savePromotion(){
 //
 //     getPositionLatLon(); // align address with lat lon
@@ -779,6 +785,9 @@ function getparticipants(){
         type: "POST",
         success: function(data, textStatus, xhr){
             $('#participatecount').text(data.total);
+
+            //todo
+            //participantslist to do
         },
         error: function(xhr, status){
 
@@ -868,7 +877,9 @@ function getPromotionPage(data,token){
         token:token,
         contentId:contentID,
         access_token:userToken,
-        baseUrl:config.contentUIUrl
+        baseUrl:config.contentUIUrl,
+        participants:data.participants.html || "",
+        participantsDetails:data.participants.htmldetails || ""
     };
 
     jQuery('#promotionContent').html(promotionHtml(prom));
@@ -888,6 +899,10 @@ function getPromotionPage(data,token){
     StyleSwitcher.initStyleSwitcher();
     initPageComingSoon(data.startDate);
     initMap(data.position[lat],data.position[lon],12,false);
+
+    // init tooltip for participants list
+    $('[data-toggle="tooltip"]').tooltip();
+
 }
 
 
@@ -911,6 +926,8 @@ function compilePromotion(){
         type: "GET",
         success: function(data, textStatus, xhr)
         {
+
+
             sessionStorage.setItem("currentPromotion",JSON.stringify(data)); // copy for value
 
             if(userToken){
@@ -993,7 +1010,49 @@ function compilePromotion(){
                                     // return;
                                 }
                             });
-                        }
+                        },
+                        // get participate list
+                        function(callback) {
+                            jQuery.ajax({
+                                url:config.contentUIUrl + "/contents/"+ contentID+ "/promotions/" + promotionID+"/participants?access_token="+ userToken,
+                                type: "GET",
+                                success: function(data, textStatus, xhr){
+                                    // max 10 user into tooltip
+                                    let times= data.users.length < 10 ? {number:data.users.length,all:true}:{number:10,all:false};
+                                    let html="<dl>";
+                                    for(let i=0;i<times.number;++i){
+                                        html+="<dt>"+data.users[i].name + " " + data.users[i].surname + "</dt>";
+                                    }
+                                    if(times.all)
+                                        html+="</dl>";
+                                    else{
+                                        html+="<dt><dl></dl><dl>.... " + i18next.t('promotion.moreparticipants') + " .... </dt></dl>";
+                                    }
+
+                                    let htmldetails="";
+                                    let imgThunb;
+                                    for(let i=0;i<data.users.length;++i){
+                                        imgThunb=data.users[i].avatar || config.contentUIUrl + "/assets/img/testimonials/user.jpg";
+                                        htmldetails+="<tr><td><img class='rounded-x' src='"+imgThunb+"' alt=''></td><td><h3>"+data.users[i].name + " " + data.users[i].surname +"</h3></td></tr>";
+                                    }
+                                    callback(null,{html:html,htmldetails:htmldetails});
+                                },
+                                error: function(xhr, status){
+                                    var msg;
+                                    try{
+                                        console.log(xhr.responseJSON);
+                                        msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.noparticipants");
+                                    }
+                                    catch(err){
+                                        msg = "invalid operation";
+                                    }
+                                    msg="compilepromotion Function " + msg;
+                                    jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+                                    callback(null,[]); // no admins token type
+                                    // return;
+                                }
+                            });
+                        },
                 ],
                 // optional callback
                 function(err, results) {
@@ -1001,6 +1060,7 @@ function compilePromotion(){
                         //jQuery.jGrowl(err, {theme:'bg-color-red', life: 5000});
                         getPromotionPage(data,null);
                     }else{
+                        data.participants=results[3];
                         var tokenOwner=results[0].token._id;
 
                         if(results[1].indexOf(results[0].token.type)>=0){

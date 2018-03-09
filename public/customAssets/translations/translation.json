@@ -95,9 +95,21 @@
     "tokenError":{
       "en":"Error: there are problems with your token",
       "it":"Errore: si sono verificati dei problemi con il tuo token"
+    },
+    "noparticipants":{
+      "en":"Was not possible to get participants list",
+      "it":"Non è stato possibile recuperare la lista dei partecipanti"
     }
   },
   "promotion": {
+    "moreparticipants": {
+      "en": "click to more",
+      "it": "clicca perla lista completta"
+    },
+    "participantslist":{
+      "en": "Participants list",
+      "it": "Partecipanti"
+    },
     "likes": {
       "en": "likes",
       "it": "mi piace"
