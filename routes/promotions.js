@@ -14,6 +14,8 @@ let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/'
 config.contentUrl=contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 config.uploadUrl=uploadUrl;
+let userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
+config.userUrl=userUrl;
 
 
 router.post('/:pid/actions/likes', function(req, res, next) {
@@ -128,6 +130,41 @@ router.post('/:pid/actions/doiparticipate', function(req, res, next) {
 });
 
 
+// http://[contentms]/contents/XYZ/promotions/HKJ/participants
+//get promotion participate list
+router.get('/:pid/participants', function(req, res, next) {
+
+    var promotionID=req.params.pid;
+    var contentID= req.contentId;
+    var access_token=(req.query && req.query.access_token)||"";
+
+    var rqparams = {
+        url:  contentUrl + "contents/"+ contentID+ "/promotions/" + promotionID+"/participants",
+        headers: {'Authorization': "Bearer " + access_token }
+    };
+    request.get(rqparams,function(error,response,body){
+        if(error){
+            return res.status(500).send({error:"InternalServerError",error_message:error});
+        }else{
+            var bodyresp=JSON.parse(body);
+            if(response.statusCode!=200){
+                return res.status(response.statusCode).send(bodyresp);
+            }else{
+                // get users by Id
+                var rqparams = {
+                    url:  userUrl + "users/actions/search",
+                    headers: {'content-type': 'application/json','Authorization': "Bearer " + (config.auth_token || "")},
+                    body: JSON.stringify({fields:["name","surname","avatar"],searchterm:{usersId:bodyresp.participants}})
+                };
+
+                return request.post(rqparams).pipe(res);
+            }
+        }
+    });
+});
+
+
+
 router.get('/:pid', function(req, res, next) {
 
     var promotionID=req.params.pid;
@@ -137,6 +174,7 @@ router.get('/:pid', function(req, res, next) {
         url:  contentUrl + "contents/"+ contentID+ "/promotions/" + promotionID,
         headers: {'Authorization': "Bearer " + (config.auth_token || "")},
     };
+
     request.get(rqparams).pipe(res);
 });
 

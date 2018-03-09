@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/style.css">
     <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/blog.style.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/page_search_inner_tables.css">
 
     <!-- CSS Header and Footer -->
     <link rel="stylesheet" href="<%= commonUI.headerCss %>">
@@ -243,6 +244,7 @@
         var canTranslate=false;
         jQuery(document).ready(function() {
             App.init();
+            StyleSwitcher.initStyleSwitcher();
             initToken();
             initPromotionsPage(JSON.parse('<%- JSON.stringify(isANewPromotion) %>'));
             $.ajax({

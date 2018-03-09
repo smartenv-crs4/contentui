@@ -58,4 +58,32 @@
 #participatecounticon,#participatecount{
     color: #2f7ed6;
 }
+
+#participatelisticon{
+    color: #2f7ed6;
+}
+
+
+.participatelisttooltip .tooltip-inner {
+    background: rgba(211,211,211,1);
+    color : black;
+}
+.participatelisttooltip .tooltip.top .tooltip-arrow {
+    border-top-color: rgba(211,211,211,1);
+}
+.participatelisttooltip .tooltip.right .tooltip-arrow {
+    border-right-color: rgba(211,211,211,1);
+}
+.participatelisttooltip .tooltip.bottom .tooltip-arrow {
+    border-bottom-color: rgba(211,211,211,1);
+}
+.participatelisttooltip .tooltip.left .tooltip-arrow {
+    border-left-color: rgba(211,211,211,1);
+}
+
+#myLargeModalLabel3{
+    color: #1D4976;
+}
+
+
 /*like and partecipate css end*/
