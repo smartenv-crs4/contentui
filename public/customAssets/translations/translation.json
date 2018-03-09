@@ -197,9 +197,25 @@
       "en":"Search...",
       "it":"Cerca..."
     },
+    "optOffer" : {
+      "en" : "Events and deals",
+      "it" : "Eventi e Offerte"
+    },
+    "optContent" : {
+      "en" : "Activities and places",
+      "it" : "Attività e Luoghi"
+    },
+    "filterby": {
+      "it":"Filtra per",
+      "en":"Filter by"
+    },
     "title": {
       "en": "Plan your stay in Cagliari",
       "it": "Pianifica il tuo soggiorno a Cagliari"
+    },
+    "newpromo": {
+      "en" : "New Promotion",
+      "it" : "Nuova Promozione"
     },
     "box1title": {
         "it":"Scegli",
@@ -248,6 +264,10 @@
     "advDateTab2": {
       "en":"Date range",
       "it":"Intervallo"
+    },
+    "more": {
+      "en": "Show More",
+      "it": "Mostra di più"
     }
   },
   "activity" : {

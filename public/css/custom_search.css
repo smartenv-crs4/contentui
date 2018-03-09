@@ -1,7 +1,7 @@
 .bg-image-cp {
     width: 100%;
     height: auto;
-    min-height:400px;
+    min-height: 400px;
     padding: 70px 0;
     
     background: url("../img/view.jpg") no-repeat fixed;
@@ -9,16 +9,48 @@
     background-position: 50% 26px; 
 }
 
-.photoHolder {
-  font-size:34px !important;
-  float:left;
-  display:block;
-  margin:0 10px 5px 0;
+
+.img-round-crop {
+  width: 150px;
+  height: 150px;
+  display:inline-block;
+  background: #eee no-repeat center;
+  background-size: cover;
+
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
 }
+
+.entry-item {
+  display:inline-block;
+  vertical-align:top;
+  margin-left:10px;
+}
+
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 
+#searchsettings {
+  background:white;
+  width:100%;
+  padding:4px 7px;
+  color: grey;
+  border:1px solid #ccc;
+  border-top:0;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+#searchtype {
+  width:200px; 
+  display:inline-block;
+}
+
 #sResults {
+  padding-top:25px;
   min-height:300px;
 }
 

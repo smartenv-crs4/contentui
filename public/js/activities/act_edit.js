@@ -125,5 +125,5 @@ function lockContent(lock, cb) {
 function renderPromoList(promos) {
     var source = $("#promo-template").html();
     promoHtpl = Handlebars.compile(source);
-    $("#promoList").html(promoHtpl({promos:promos}));
+    $("#promoList").html(promoHtpl({promos:promos, idcontent:activityBody._id}));
 }

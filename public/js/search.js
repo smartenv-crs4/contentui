@@ -1,13 +1,15 @@
 var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
 var _mapMarker = undefined;
-var _defSliderVal = 500;
+var _defSliderVal = 100;
 var _filters = {
     sdate: undefined,
     edate: undefined,
     category: undefined,
     position: undefined,
-    type: 'promo' //TODO tick per ricerca contenuti in adv panel!!!!!!!!
+    limit: 5,
+    skip: 0,
+    type: 'promo' 
 };
 
 
@@ -32,7 +34,21 @@ $(document).ready(function() {
     showToolShips();
     showToolDates();
 
+    $("#mapview").click(function() {
+        $(this).toggleClass("btn-success")
+    })
+
     $("#doSearch").click(function(e) {
+        $("#sResults").show();
+        $("#homeBoxes").hide();
+        $("#searchresults").empty();
+        _filters.skip = 0;
+        $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
+        $(".bg-image-cp h2").hide();
+        search();
+    })
+
+    $("#moreresults").click(function() {
         search();
     })
 
@@ -81,7 +97,6 @@ $(document).ready(function() {
         }
     })
 });
-
 
 $("#collapse-Map").on("shown.bs.collapse", function() {
     initMap();
@@ -147,12 +162,12 @@ function initMap() {
         map.setZoom(20);
     }, false);
 
-    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||500;
+    var radiusVal = (_filters.position ? _filters.position.radius : undefined)||100;
     $('#slider1-value-rounded').text(radiusVal);
     $('#slider1-rounded').slider({
         value: radiusVal,
         min: _defSliderVal,
-        max: 100000,
+        max: 20000,
         step:_defSliderVal,
         slide: function(event, ui) {
             $('#slider1-value-rounded').text(ui.value);
@@ -388,10 +403,10 @@ function toDict(objArray, prop) {
     return retObj;
 }
 
-// /promotion/:id
 function search() {
     var dateFmt = 'DD/MM/YYYY';
     var q = $("#qt").val(); //text query
+    _filters.type = $("#searchtype").val();    
     var filterString = '';
     Object.keys(_filters).forEach(function(k,i) {
         if(k == 'position' && _filters[k])
@@ -401,33 +416,39 @@ function search() {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
+        console.log(data)
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
+            $("#moreresults").hide();
         }
         else {
+            if(data.metadata.totalCount > data.metadata.limit + data.metadata.skip)
+                $("#moreresults").show();
+            else
+                $("#moreresults").hide();
             let promo = _filters.type == 'promo';
-            $("#sResults").show();
-            $("#homeBoxes").hide();
-            $("#searchresults").empty();
-            var qResults = promo ? data.promos : (_filters.type == 'contents') ? data.contents : data.promos; //TODO default merge results
+            _filters.skip += _filters.limit; //skip for next call
 
+            var qResults = promo ? data.promos : (_filters.type == 'content') ? data.contents : data.promos; //TODO default merge results
             $.each(qResults, function(i, item) {            
-                $.ajax(baseUrl + 'search/likes?type=promo&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
-                .done(function(likesCount) {
+                $.ajax(baseUrl + 'search/likes?type=' + _filters.type + '&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
+                .done(function(likesCount) {                    
                     var hcontext = {
                         id: item._id,
                         title: item.name,
                         town:item.town,
-                        image:item.images[0]||undefined,
+                        image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
                         description: item.description,
                         pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                         type: _filters.type,
                         link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
-                        likes: likesCount.total,
-                        idcontent: item.idcontent||undefined,
-                        startDate: moment(item.startDate).format(dateFmt)||undefined,
-                        endDate: moment(item.endDate).format(dateFmt)||undefined
-                    };                    
+                        likes: likesCount.total,                        
+                    };
+                    if(promo) {
+                        hcontext.idcontent = item.idcontent||undefined,
+                        hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined,
+                        hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
+                    }
                     $("#searchresults").append(_searchItemTemplate(hcontext));
                 });
             });

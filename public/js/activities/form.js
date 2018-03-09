@@ -196,7 +196,7 @@ function loadContent(cb) {
         hmodel = activityBody;
         for(var i=0; i<activityBody.images.length; i++) {
             if(typeof activityBody.images[i] == "string") { //first editmode activation, img not formatted
-                var imgurl = normalizeImgUrl(activityBody.images[i]);
+                var imgurl = common.normalizeImgUrl(activityBody.images[i]);
                 var id = activityBody.images[i].split('/').pop();
                 hmodel.images[i] = {id:id, src:imgurl};
             }
@@ -470,26 +470,6 @@ function initAdminTool() {
       }
   });
 }
-
-
-
-function normalizeImgUrl(url) {
-    /*
-    if(isURL(url)) return url;
-    else {
-        //TODO verificare sia un formato ObjectID valido
-        return baseUrl + "activities/image/" + url
-    }
-    */
-    //TODO sostituire con codice sopra dopo modifica contentms
-    var ret = url;
-    if(url.startsWith(uploadUrl)) {
-        var id = url.split('file/')[1];
-        ret = baseUrl + "activities/image/" + id;
-    }
-    return ret;
-}
-
 
 function isURL(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol

@@ -1,6 +1,9 @@
 var common = {
+    
     getPromotions: function getPromotions(cb, limit) {
+        var that = this;
         var from = new Date();
+        
         $.ajax({
             url: contentUrl + "contents/" + activityBody._id+"/promotions/?sdate=" + from + (limit ? "&limit=" + limit : ''),
             type: 'GET',
@@ -10,6 +13,9 @@ var common = {
                     promos[i].startDate = moment(promos[i].startDate).format("DD/MM/YYYY")
                     promos[i].endDate  = moment(promos[i].endDate).format("DD/MM/YYYY")
                     promos[i].lastUpdate = moment(promos[i].lastUpdate).format("DD/MM/YYYY")
+                    for(var j=0; j<promos[i].images.length; j++) {
+                        promos[i].images[j] = that.normalizeImgUrl(promos[i].images[j])
+                    }
                 }
                 if(cb) cb(promos)
             },
@@ -50,6 +56,25 @@ var common = {
                 else cb(false)
             })
         })
+    },
+
+    normalizeImgUrl: function(url) {
+        /*
+        if(isURL(url)) return url;
+        else {
+            //TODO verificare sia un formato ObjectID valido
+            return baseUrl + "activities/image/" + url
+        }
+        */
+        //TODO sostituire con codice sopra dopo modifica contentms
+        if(url) {
+            var ret = url;
+            if(url.startsWith(uploadUrl)) {
+                var id = url.split('file/')[1];
+                ret = baseUrl + "activities/image/" + id;
+            }
+            return ret;
+        }
     }
 }
 

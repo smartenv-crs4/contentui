@@ -20,6 +20,8 @@ router.get('/', (req, res, next) => {
     let type        = req.query.type || 'promo';
     let category    = req.query.category;
     let position    = req.query.position;
+    let limit       = req.query.limit;
+    let skip        = req.query.skip;
     if(position) postion = position.slice(',');
 
     if(sdate && edate) {
@@ -35,11 +37,15 @@ router.get('/', (req, res, next) => {
     }
     
     let url =  '?t=' + type 
-                + '&text=' + text 
+                + '&text=' + text
                 + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : '') 
                 + (category ? '&category=' + category : '')
-                + (position ? '&position=' + position : '');
+                + (position ? '&position=' + position : '')
+                + (limit ? '&limit=' + limit : '')
+                + (limit && skip ? '&skip=' + skip : '');
+
     console.log(url)
+
     let options = {
         method:'GET',
         uri:contentUrl + 'search' + url + '&access_token=' + config.auth_token,
@@ -50,8 +56,8 @@ router.get('/', (req, res, next) => {
         res.json(results);
     })
     .catch((err) => {
+        console.log("AAAAA" + err);
         res.status(500).send();;
-        console.log(err);
     });
 });
 

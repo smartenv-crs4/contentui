@@ -63,12 +63,13 @@ router.use(function(req, res, next) {
 
 
 //search page
-router.get('/',         (req, res, next) => {
+router.get('/',  (req, res, next) => {
   let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
   renderPage.renderPage(res, 'search', {
       baseUrl:baseUrl, 
       contentUrl:contentUrl, 
       scheduleUrl:scheduleUrl,
+      uploadUrl:uploadUrl,
       access_token: access_token,
       properties:{
         contentUIUrl:config.contentUIUrl ,
