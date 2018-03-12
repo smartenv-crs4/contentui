@@ -1,4 +1,3 @@
-var _searchItemTemplate = undefined;
 var _searchTemplate = undefined;
 var _mapMarker = undefined;
 var _defSliderVal = 100;
@@ -11,14 +10,14 @@ var _filters = {
     skip: 0,
     type: 'promo' 
 };
-
+var _queryResults = [];
 
 
 $(document).ready(function() {
     initToken();
 
-    var source   = $("#entry-template").html();
-    _searchItemTemplate = Handlebars.compile(source);
+    var source   = $("#search-template").html();
+    _searchTemplate = Handlebars.compile(source);
 
 /*
     $(".wrapper").backstretch([
@@ -36,6 +35,14 @@ $(document).ready(function() {
 
     $("#mapview").click(function() {
         $(this).toggleClass("btn-success")
+        $("#mapresults").toggle();
+        $("#searchresults").toggle();
+        if($(this).hasClass("btn-success")) {
+            initClusteredMap();
+        }
+        if(_queryResults.length > 0) {
+            showResults();
+        }
     })
 
     $("#doSearch").click(function(e) {
@@ -43,13 +50,15 @@ $(document).ready(function() {
         $("#homeBoxes").hide();
         $("#searchresults").empty();
         _filters.skip = 0;
+        _queryResults = []; //reset search history
         $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
         $(".bg-image-cp h2").hide();
-        search();
+        
+        search(showResults);
     })
 
     $("#moreresults").click(function() {
-        search();
+        search(showResults)
     })
 
     $.ajax({
@@ -108,6 +117,34 @@ $('body').on('keypress', "#qt", function(args) {
         return false;
     }
 });
+
+
+function showResults(qresults) {
+    if(qresults) _queryResults = _queryResults.concat(qresults);
+    if($("#mapview").hasClass("btn-success")) {
+        var locations = [];
+        var infowindows = [];
+        var qr = _queryResults; //just an alias
+        for(var i=0; i < qr.length; i++) {
+            if(qr[i].lat && qr[i].lon) {
+                locations.push({lat: qr[i].lat, lng: qr[i].lon});
+                infowindows.push(
+                    "<div><h3><a href='" 
+                    + qr[i].link + "'>" 
+                    + qr[i].title + "</a></h3>"
+                    + (qr[i].town ? "<i class='fa fa-map'></i> " + qr[i].town + '<br>': '')
+                    + (qr[i].address ? "<i class='fa fa-map-marker'></i> " + qr[i].address + '<br>': '')
+                    + (qr[i].likes ? "<i class='fa fa fa-thumbs-up'></i> " + qr[i].likes + '<br>': '')
+                    + "<i class='fa fa-calendar'></i> " + qr[i].startDate || qr[i].pubDate
+                    + "</div>")
+            }
+        }
+        setMapClusters(locations, infowindows);
+    }
+    else {
+        $("#searchresults").html(_searchTemplate({items:_queryResults}));
+    }
+}
 
 
 function resetFilterField(field) {
@@ -185,6 +222,57 @@ function initMap() {
         }
     });
 }
+
+function initClusteredMap() {
+    clusteredmap = new google.maps.Map(document.getElementById('mapresults'), {
+      zoom: 12,
+      center: {lat: 39.207737, lng: 9.157010}
+    });
+}
+ 
+
+function setMapClusters(locations, infowindows){    
+    // Create an array of alphabetical characters used to label the markers.
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    var markers = locations.map(function(location, i) {
+        var marker = new google.maps.Marker({
+            position: location,
+            animation: google.maps.Animation.DROP,
+            label: labels[i % labels.length]
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: infowindows[i]
+        });
+
+        marker.addListener('click', function() {
+            infowindow.open(clusteredmap, marker);
+        });
+
+        return marker;
+    });
+
+    // Add a marker clusterer to manage the markers.
+    var markerCluster = new MarkerClusterer(clusteredmap, markers, {
+        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }
+    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+        var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
+        var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
+        bounds.extend(extendPoint1);
+        bounds.extend(extendPoint2);
+     }
+
+    clusteredmap.fitBounds(bounds);
+}
+
+
 
 function mapZoom(){
     var event = new Event('zoomMap');
@@ -403,7 +491,7 @@ function toDict(objArray, prop) {
     return retObj;
 }
 
-function search() {
+function search(cb) {
     var dateFmt = 'DD/MM/YYYY';
     var q = $("#qt").val(); //text query
     _filters.type = $("#searchtype").val();    
@@ -416,7 +504,6 @@ function search() {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
-        console.log(data)
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
             $("#moreresults").hide();
@@ -430,28 +517,35 @@ function search() {
             _filters.skip += _filters.limit; //skip for next call
 
             var qResults = promo ? data.promos : (_filters.type == 'content') ? data.contents : data.promos; //TODO default merge results
-            $.each(qResults, function(i, item) {            
-                $.ajax(baseUrl + 'search/likes?type=' + _filters.type + '&idcontent=' + (promo ? item.idcontent + '&idpromo=': '') + item._id)
-                .done(function(likesCount) {                    
-                    var hcontext = {
-                        id: item._id,
-                        title: item.name,
-                        town:item.town,
-                        image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
-                        description: item.description,
-                        pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
-                        type: _filters.type,
-                        link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
-                        likes: likesCount.total,                        
-                    };
-                    if(promo) {
-                        hcontext.idcontent = item.idcontent||undefined,
-                        hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined,
-                        hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
-                    }
-                    $("#searchresults").append(_searchItemTemplate(hcontext));
-                });
+            var qres = [];
+            $.each(qResults, function(i, item) {
+                var hcontext = {
+                    id: item._id,
+                    title: item.name,
+                    town:item.town,
+                    image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
+                    description: item.description,
+                    pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
+                    type: _filters.type,
+                    link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
+                    likes: item.likes
+                };
+                if(promo) {
+                    hcontext.idcontent = item.idcontent||undefined,
+                    hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined,
+                    hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
+                }
+                if(item.position) {
+                    hcontext.lat = item.position[1];
+                    hcontext.lon = item.position[0];
+                }
+                else if(item.lat && item.lon) {
+                    hcontext.lat = item.lat;
+                    hcontext.lon = item.lon;
+                }
+                qres.push(hcontext);
             });
+            if(cb) cb(qres);
         }
     });
 }
