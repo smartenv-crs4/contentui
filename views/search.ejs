@@ -85,22 +85,21 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false"><span class="fa fa-tags"></span> <span data-i18n="search.advCatLabel"></span> <span id="advCat" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false">
+														<span class="fa fa-tags"></span> <span data-i18n="search.advCatLabel"></span> <span id="advCat" class="advItem"></span>
 													</a>												
 												</h4>
 											</div>
-											<div class="col-sm-1 offset-sm-11"><a href="#" title="reset filter" data-rst-field="category" class="rst"><i class="fa fa-eraser"></i></a></div>
+											<div class="col-sm-1 offset-sm-11">
+												<a href="#" title="reset filter" data-rst-field="category" class="rst"><i class="fa fa-eraser"></i></a>
+											</div>
 										</div>
 									</div>
 								</div>
 									
 								<div id="collapse-One" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 									<div class="panel-body">
-										<div class="row sky-form" id="catDrop">
-											<div class="col-md-4" data-cp-cbox-pos="0"></div>
-											<div class="col-md-4" data-cp-cbox-pos="1"></div>
-											<div class="col-md-4" data-cp-cbox-pos="2"></div>
-										</div>
+										<div class="row sky-form" id="catDrop"></div>
 									</div>
 								</div>						
 							</div>
@@ -317,10 +316,13 @@
 		{{/each}}
 	</script>
 
-	<script id="cp-cats" type="text/x-cp-snippet">
-		<label class="checkbox">
-            <input type="checkbox" value="">
-        </label>
+	<script id="cats-tpl" type="text/x-handlebars-template">
+		{{#each cats}}
+		<div class="col-md-4">
+			<input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+			<label for="cbox_{{this._id}}">{{this.name}}</label>
+		</div>
+		{{/each}}
 	</script>
 
 	</body>

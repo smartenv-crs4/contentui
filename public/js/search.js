@@ -135,7 +135,7 @@ function showResults(qresults) {
                     + (qr[i].town ? "<i class='fa fa-map'></i> " + qr[i].town + '<br>': '')
                     + (qr[i].address ? "<i class='fa fa-map-marker'></i> " + qr[i].address + '<br>': '')
                     + (qr[i].likes ? "<i class='fa fa fa-thumbs-up'></i> " + qr[i].likes + '<br>': '')
-                    + "<i class='fa fa-calendar'></i> " + qr[i].startDate || qr[i].pubDate
+                    + "<i class='fa fa-calendar'></i> " + (qr[i].startDate ? qr[i].startDate : qr[i].pubDate)
                     + "</div>")
             }
         }
@@ -273,11 +273,11 @@ function setMapClusters(locations, infowindows){
 }
 
 
-
 function mapZoom(){
     var event = new Event('zoomMap');
     dispatchEvent(event);
 }
+
 
 function gooGeocode(lat, lng, callback) {
     let geocoder = new google.maps.Geocoder;
@@ -367,6 +367,7 @@ function showToolShips() {
     });
 }
 
+
 function setFilterDates(start, stop) {
     if(start && stop) {
         var startstr    = moment(start).format("D/MM/YYYY");
@@ -384,6 +385,7 @@ function setFilterDates(start, stop) {
         $('#dtp2').data("DateTimePicker").clear();
     }
 }
+
 
 function getShips(cb) {
     $.ajax({
@@ -440,17 +442,13 @@ var substringMatcher = function(strs) {
 
 
 function loadCat() {    
-    $("#catDrop div").empty();
+    $("#catDrop").empty();
     $.ajax(contentUrl + "categories/")
 	.done(function(data) {
 	    var cats = data.categories;
-        var ctpl = $("#cp-cats").html();
-        for(var i=0; i<cats.length; i++) {
-            var col = i%3;            
-            $("#catDrop div[data-cp-cbox-pos='" + col + "\']")
-                .append($(ctpl).find("input").attr("value", cats[i]._id))
-                .append(" " + cats[i].name + '<br>');
-        }
+        var ctpl = Handlebars.compile($("#cats-tpl").html());
+
+        $("#catDrop").append(ctpl({cats:cats}));
 
         $("#catDrop :checkbox").change(function(e) {
             var cat = this.getAttribute("value");
