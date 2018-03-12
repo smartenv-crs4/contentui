@@ -130,7 +130,7 @@ function initView(cb) {
         var imgsrc = activityBody.images[i];
         //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
         //solo gli objectid, non gli url già completi
-        model.images.push(common.normalizeImgUrl(imgsrc)||"assets/img/demo.jpg");
+        model.images.push(common.normalizeImgUrl(imgsrc)|| config.contentUIUrl + "/assets/img/demo.jpg");
     }
     common.getPromotions(function(promos) {
         model.promos = promos;
