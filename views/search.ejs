@@ -18,33 +18,45 @@
 	<link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
 
 	<!-- CSS Global Compulsory -->
-	<link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/style.css">
 
 	<!-- CSS Header and Footer -->
-	<link rel="stylesheet" href="assets/css/headers/header-default.css">
-	<link rel="stylesheet" href="assets/css/footers/footer-v1.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/headers/header-default.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/footers/footer-v1.css">
 
 	<!-- CSS Implementing Plugins -->
-	<link rel="stylesheet" href="assets/plugins/animate.css">
-	<link rel="stylesheet" href="assets/plugins/line-icons/line-icons.css">
-	<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
-	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/animate.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/line-icons/line-icons.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
 	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="assets/css/pages/page_search_inner.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/pages/page_search_inner.css">
 
 	<!-- CSS Theme -->
-	<link rel="stylesheet" href="assets/css/theme-colors/default.css" id="style_color">
-	<link rel="stylesheet" href="assets/css/theme-skins/dark.css">
-	<link rel="stylesheet" href="assets/css/custom.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/theme-colors/default.css" id="style_color">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/theme-skins/dark.css">
+	<link rel="stylesheet" href="<%= baseUrl %>assets/css/custom.css">
 
 	<!-- CP2020 CSS Customization -->
-	<link rel="stylesheet" href="css/plugins/bootstrap-datetimepicker.min.css">
-	<link rel="stylesheet" href="css/plugins/jquery.growl.css">
-	<link rel="stylesheet" href="css/custom_search.css">
+	<link rel="stylesheet" href="<%= baseUrl %>css/plugins/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="<%= baseUrl %>css/plugins/jquery.growl.css">
+	<link rel="stylesheet" href="<%= baseUrl %>css/custom_search.css">
 
 	<link rel="stylesheet" href="<%= commonUI.headerCss %>">
+	<style>
+		.bg-image-cp {
+			width: 100%;
+			height: auto;
+			min-height: 400px;
+			padding: 70px 0;
+			
+			background: url("<%= baseUrl %>/img/view.jpg") no-repeat fixed;
+			background-size: cover;
+			background-position: 50% 26px; 
+		}
+	</style>
 </head>
 
 <body>
@@ -85,22 +97,21 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false"><span class="fa fa-tags"></span> <span data-i18n="search.advCatLabel"></span> <span id="advCat" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-One" aria-expanded="false">
+														<span class="fa fa-tags"></span> <span data-i18n="search.advCatLabel"></span> <span id="advCat" class="advItem"></span>
 													</a>												
 												</h4>
 											</div>
-											<div class="col-sm-1 offset-sm-11"><a href="#" title="reset filter" data-rst-field="category" class="rst"><i class="fa fa-eraser"></i></a></div>
+											<div class="col-sm-1 offset-sm-11">
+												<a href="#" title="reset filter" data-rst-field="category" class="rst"><i class="fa fa-eraser"></i></a>
+											</div>
 										</div>
 									</div>
 								</div>
 									
 								<div id="collapse-One" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 									<div class="panel-body">
-										<div class="row sky-form" id="catDrop">
-											<div class="col-md-4" data-cp-cbox-pos="0"></div>
-											<div class="col-md-4" data-cp-cbox-pos="1"></div>
-											<div class="col-md-4" data-cp-cbox-pos="2"></div>
-										</div>
+										<div class="row sky-form" id="catDrop"></div>
 									</div>
 								</div>						
 							</div>
@@ -228,30 +239,30 @@
 	<% include config %>
 
 	<!-- JS Global Compulsory -->
-	<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
-	<script type="text/javascript" src="assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/jquery/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-	<script type="text/javascript" src="assets/plugins/gmap/gmap.js"></script>
-	<script type="text/javascript" src="js/plugins/jquery.backstretch.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/gmap/gmap.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/jquery.backstretch.min.js"></script>
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 	<!--script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&callback=initClusteredMap"></script-->
 
 	<!-- CP2020 -->
-	<script type="text/javascript" src="js/plugins/handlebars-v4.0.5.js"></script>
-	<script type="text/javascript" src="js/plugins/typeahead.bundle.min.js"></script>
-	<script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
-	<script type="text/javascript" src="js/plugins/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript" src="js/plugins/jquery.growl.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/handlebars-v4.0.5.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/typeahead.bundle.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/moment-with-locales.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/plugins/jquery.growl.js"></script>
 
 	<!-- JS Implementing Plugins -->
-	<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
-	<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/back-to-top.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/plugins/smoothScroll.js"></script>
 	<!-- JS Customization -->
-	<script type="text/javascript" src="assets/js/custom.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/js/custom.js"></script>
 	<!-- JS Page Level -->
-	<script type="text/javascript" src="assets/js/app.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>assets/js/app.js"></script>
 
 	<!--[if lt IE 9]>
 	<script src="assets/plugins/respond.js"></script>
@@ -263,10 +274,10 @@
     <script src="<%- commonUI.footerScript %>"></script>
 	<script src="<%- commonUI.languagemanager %>"></script>
 	
-	<script type="text/javascript" src="customAssets/js/utils.js"></script>
-	<script type="text/javascript" src="customAssets/js/tokenManager.js"></script>
-	<script type="text/javascript" src="js/activities/common.js"></script>
-    <script type="text/javascript" src="js/search.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>customAssets/js/utils.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>customAssets/js/tokenManager.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>js/activities/common.js"></script>
+    <script type="text/javascript" src="<%= baseUrl %>js/search.js"></script>
 
 	<script id="search-template" type="text/x-handlebars-template">
 		{{#each items}}
@@ -317,10 +328,13 @@
 		{{/each}}
 	</script>
 
-	<script id="cp-cats" type="text/x-cp-snippet">
-		<label class="checkbox">
-            <input type="checkbox" value="">
-        </label>
+	<script id="cats-tpl" type="text/x-handlebars-template">
+		{{#each cats}}
+		<div class="col-md-4">
+			<input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+			<label for="cbox_{{this._id}}">{{this.name}}</label>
+		</div>
+		{{/each}}
 	</script>
 
 	</body>
