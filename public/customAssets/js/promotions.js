@@ -113,7 +113,7 @@ function loadPromotionImage(){
         type: 'POST',
         success: function(data){
             $('#promotionImage').attr("src",data.resourceUrl);
-            updatePromotionField('images',data.filecode==currentPromotion.images[0] ? null:[data.filecode],true);
+            updatePromotionField('images',data.filecode==(currentPromotion.images && currentPromotion.images[0]) ? null:[data.filecode],true);
 
         },
         error: function(xhr, status)
@@ -275,14 +275,16 @@ function savePromotion(iSANewPromotion){
             dataType: "json",
             success: function (dataResp, textStatus, xhr) {
                 promotionID= dataResp._id;
-                compilePromotion();
+                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                //compilePromotion();
             },
             error: function (xhr, status) {
+
                 var respBlock = jQuery("#responseBlock");
                 var msg;
 
                 try {
-                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message || i18next.t("error.nofullfield");
                 }
                 catch (err) {
                     msg = i18next.t("error.internal_server_error");
@@ -1018,22 +1020,24 @@ function compilePromotion(){
                                 type: "GET",
                                 success: function(data, textStatus, xhr){
                                     // max 10 user into tooltip
-                                    let times= data.users.length < 10 ? {number:data.users.length,all:true}:{number:10,all:false};
-                                    let html="<dl>";
-                                    for(let i=0;i<times.number;++i){
-                                        html+="<dt>"+data.users[i].name + " " + data.users[i].surname + "</dt>";
-                                    }
-                                    if(times.all)
-                                        html+="</dl>";
-                                    else{
-                                        html+="<dt><dl></dl><dl>.... " + i18next.t('promotion.moreparticipants') + " .... </dt></dl>";
-                                    }
-
+                                    let times= data.users.length <= 10 ? {number:data.users.length,all:true}:{number:10,all:false};
+                                    let html="";
                                     let htmldetails="";
-                                    let imgThunb;
-                                    for(let i=0;i<data.users.length;++i){
-                                        imgThunb=data.users[i].avatar || config.contentUIUrl + "/assets/img/testimonials/user.jpg";
-                                        htmldetails+="<tr><td><img class='rounded-x' src='"+imgThunb+"' alt=''></td><td><h3>"+data.users[i].name + " " + data.users[i].surname +"</h3></td></tr>";
+                                    if(times>0){
+                                        html="<dl>";
+                                        for(let i=0;i<times.number;++i){
+                                            html+="<dt>"+data.users[i].name + " " + data.users[i].surname + "</dt>";
+                                        }
+                                        if(times.all)
+                                            html+="</dl>";
+                                        else{
+                                            html+="<dt><dt></dt><dt>.... " + i18next.t('promotion.moreparticipants') + " .... </dt></dl>";
+                                        }
+                                        let imgThunb;
+                                        for(let i=0;i<data.users.length;++i){
+                                            imgThunb=data.users[i].avatar || config.contentUIUrl + "/assets/img/testimonials/user.jpg";
+                                            htmldetails+="<tr><td><img class='rounded-x' src='"+imgThunb+"' alt=''></td><td><h3>"+data.users[i].name + " " + data.users[i].surname +"</h3></td></tr>";
+                                        }
                                     }
                                     callback(null,{html:html,htmldetails:htmldetails});
                                 },

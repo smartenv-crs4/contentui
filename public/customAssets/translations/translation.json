@@ -99,6 +99,10 @@
     "noparticipants":{
       "en":"Was not possible to get participants list",
       "it":"Non è stato possibile recuperare la lista dei partecipanti"
+    },
+    "nofullfield":{
+      "en":"bad request, due to some missing fields",
+      "it":"richiesta non valida, mancano dei campi richiesti"
     }
   },
   "promotion": {
