@@ -30,6 +30,11 @@
   margin-left:10px;
 }
 
+.item-desc {
+  max-height:150px;
+  overflow-y:hidden;
+}
+
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 

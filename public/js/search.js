@@ -123,13 +123,23 @@ function showResults(qresults) {
     if(qresults) _queryResults = _queryResults.concat(qresults);
     if($("#mapview").hasClass("btn-success")) {
         var locations = [];
+        var infowindows = [];
         var qr = _queryResults; //just an alias
         for(var i=0; i < qr.length; i++) {
             if(qr[i].lat && qr[i].lon) {
                 locations.push({lat: qr[i].lat, lng: qr[i].lon});
+                infowindows.push(
+                    "<div><h3><a href='" 
+                    + qr[i].link + "'>" 
+                    + qr[i].title + "</a></h3>"
+                    + (qr[i].town ? "<i class='fa fa-map'></i> " + qr[i].town + '<br>': '')
+                    + (qr[i].address ? "<i class='fa fa-map-marker'></i> " + qr[i].address + '<br>': '')
+                    + (qr[i].likes ? "<i class='fa fa fa-thumbs-up'></i> " + qr[i].likes + '<br>': '')
+                    + "<i class='fa fa-calendar'></i> " + qr[i].startDate || qr[i].pubDate
+                    + "</div>")
             }
         }
-        setMapClusters(locations);
+        setMapClusters(locations, infowindows);
     }
     else {
         $("#searchresults").html(_searchTemplate({items:_queryResults}));
@@ -221,22 +231,45 @@ function initClusteredMap() {
 }
  
 
-function setMapClusters(locations){
-    console.log(locations)
+function setMapClusters(locations, infowindows){    
     // Create an array of alphabetical characters used to label the markers.
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     var markers = locations.map(function(location, i) {
-        return new google.maps.Marker({
+        var marker = new google.maps.Marker({
             position: location,
+            animation: google.maps.Animation.DROP,
             label: labels[i % labels.length]
         });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: infowindows[i]
+        });
+
+        marker.addListener('click', function() {
+            infowindow.open(clusteredmap, marker);
+        });
+
+        return marker;
     });
 
     // Add a marker clusterer to manage the markers.
     var markerCluster = new MarkerClusterer(clusteredmap, markers, {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     });
+
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }
+    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+        var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
+        var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
+        bounds.extend(extendPoint1);
+        bounds.extend(extendPoint2);
+     }
+
+    clusteredmap.fitBounds(bounds);
 }
 
 
@@ -471,7 +504,6 @@ function search(cb) {
 
     $.ajax(baseUrl + 'search?q=' + q + filterString)
     .done(function(data) {
-        console.log(data)
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
             $("#moreresults").hide();
