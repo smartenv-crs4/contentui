@@ -63,7 +63,7 @@ $(document).ready(function() {
 
     $.ajax({
         cache: false,
-        url: 'customAssets/translations/translation.json',
+        url: baseUrl + 'customAssets/translations/translation.json',
         type:"get",
         contentType:"application/json",
         success: function(data) {
