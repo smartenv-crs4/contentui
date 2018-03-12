@@ -878,8 +878,8 @@ function getPromotionPage(data,token){
         contentId:contentID,
         access_token:userToken,
         baseUrl:config.contentUIUrl,
-        participants:data.participants.html || "",
-        participantsDetails:data.participants.htmldetails || ""
+        participants:(data.participants && data.participants.html) || "",
+        participantsDetails:(data.participants && data.participants.htmldetails) || ""
     };
 
     jQuery('#promotionContent').html(promotionHtml(prom));

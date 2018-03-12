@@ -59,31 +59,36 @@
                 <li class="blog-grid-participate participatelisttooltip">
                     <a href="javascript:setParticipate();"><i  id="participatecounticon" class="fa fa-user"></i> <span id="participatecount">0</span></a>
                     <span data-i18n="promotion.participants">partecipanti</span>
-                    <a id="participantslist" href="javascript:openModalParticipants();" data-toggle="tooltip" data-html="true" title="{{participants}}" data-placement="bottom"><i  id="participatelisticon" class="fa fa-caret-down"></i></a>
+                    {{#if  participants}}
+                        <a id="participantslist" href="javascript:openModalParticipants();" data-toggle="tooltip" data-html="true" title="{{participants}}" data-placement="bottom"><i  id="participatelisticon" class="fa fa-caret-down"></i></a>
+                    {{/if}}
                 </li>
             </ul>
 
+
             <!--Begin modal participants list-->
-            <div id="modalParticipants" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                            <h4 id="myLargeModalLabel3" class="modal-title" data-i18n="promotion.participantslist"></h4>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Begin Table Search Panel v2 -->
-                            <div class="table-search-v2 panel panel-dark margin-bottom-50">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <tbody>{{{participantsDetails}}}</tbody>
-                                    </table>
+            {{#if  participants}}
+                <div id="modalParticipants" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h4 id="myLargeModalLabel3" class="modal-title" data-i18n="promotion.participantslist"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Begin Table Search Panel v2 -->
+                                <div class="table-search-v2 panel panel-dark margin-bottom-50">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <tbody>{{{participantsDetails}}}</tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {{/if}}
             <!--End modal participants list-->
 
 
