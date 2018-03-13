@@ -169,6 +169,7 @@ function fillInAddress(){
     let pos=[null,null];
     pos[lat]=place.geometry.location.lat();
     pos[lon]=place.geometry.location.lng();
+    currentPromotion.position=(currentPromotion.position) || ["nd","nd"];
     updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
 
 }
@@ -205,6 +206,7 @@ function getPositionLatLon(){
                 let pos=[null,null];
                 pos[lat]=position.position.lat();
                 pos[lon]=position.position.lng();
+                currentPromotion.position=(currentPromotion.position) || ["nd","nd"];
                 updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
             }
         });
@@ -1203,6 +1205,7 @@ function initMap(latitude,longitude,zoom,editable) {
                 let pos=[null,null];
                 pos[lat]=cPos.lat();
                 pos[lon]=cPos.lng();
+                currentPromotion.position=(currentPromotion.position) || ["nd","nd"];
                 updatePromotionField('position',arrayAreEquals(pos,currentPromotion.position)?null:pos,true);
 
             }
