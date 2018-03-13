@@ -148,9 +148,15 @@ function getUsersByMail(mail) {
 			}
 		})
 		.then(users => {
+
 			resolve(users.users)
 		})
 		.catch(e => {
+			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+		
 			console.log(e);
 			reject(e);
 		})

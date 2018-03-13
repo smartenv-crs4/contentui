@@ -28,6 +28,10 @@ function initToolbar() {
         });
     })
 
+    $("#addPromo").click(function() {
+        window.location.href = baseUrl + "activities/" + activityBody._id + "/promotions/new";
+    });
+
     $('#addPromotionButton').off("click");
     $('#addPromotionButton').click(function(e) { addPromotion(); });  //perchè è qui???
 
