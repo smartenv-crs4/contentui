@@ -29,7 +29,7 @@ function initTranslation() {
 
 function doView(aid) {
     $("html, body").animate({ scrollTop: 0 }, "slow")
-    getContent(aid, function(content) {
+    getContent(aid, function(content) {        
         if(content == null) {
             $(".editmode").hide();
             $(".insertmode").hide();
@@ -87,7 +87,7 @@ function doView(aid) {
 
 function getContent(aid, cb) {
     $.ajax({
-        url: contentUrl + (contentUrl.endsWith("/") ? '' : '/') + "contents/" + aid,
+        url: config.contentUIUrl + "/activities/activitycontent/" + aid,
         headers: {
             Authorization: "Bearer " + userToken
         },
@@ -115,7 +115,7 @@ function initView(cb) {
 
     var model = {
         name:activityBody.name,
-        description:activityBody.description,
+        description:common.markup(activityBody.description),
         address: activityBody.address,
         phone: activityBody.phone,
         contacts: contacts,
@@ -127,7 +127,7 @@ function initView(cb) {
     
     for(let i=0; i<activityBody.images.length; i++) {
         let col = i % 4;
-        var imgsrc = activityBody.images[i];
+        var imgsrc = activityBody.images[i];        
         //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
         //solo gli objectid, non gli url già completi
         model.images.push(common.normalizeImgUrl(imgsrc)|| config.contentUIUrl + "/assets/img/demo.jpg");

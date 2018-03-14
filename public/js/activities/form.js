@@ -74,7 +74,8 @@ function getUploadmsImageURL(image, cb) {
         contentType: false,
         type: 'POST',
         success: function(data){            
-            cb(uploadUrl+"file/"+data.filecode);
+            //cb(uploadUrl+"file/"+data.filecode);
+            cb(data.filecode);
         },
         error: function(xhr, status)
         {
@@ -140,12 +141,13 @@ function initMap(title, latitude, longitude) {
         lat: latitude,
         lng: longitude
     });
-
+/*
     map.drawOverlay({
         lat: latitude,
         lng: longitude,
         content: '<div class="overlay"><h3>'+title+'</h3></div>'
     });
+*/
 
     //geocodeLatLng(latitude, longitude);
 }
@@ -278,10 +280,9 @@ function updateContent(){
         return;
     }
     contentData = getFormData();
-
     contentData.images = $('img[name="image"]').map(function () {
         if (!this.src.match("^blob"))
-            return this.src;
+            return $(this).attr("data-id");
     }).get();
 
     var oldImagesLength = contentData.images.length;
@@ -302,7 +303,6 @@ function updateContent(){
 }
 
 function storeContentToContentms(contentData, ins){
-    //console.log(contentData)
     $.ajax({
         url: contentUrl + "contents/" + (ins ? '' : activityBody._id),
         headers: {

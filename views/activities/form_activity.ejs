@@ -36,13 +36,14 @@
 
             <!-- Descrizione section-->
             <h4 data-i18n="activity.desc">Descrizione</h4>
+            <small>Use [b] <b> for bold text</b> [/b] and [i] <i>for italic text</i> [/i]</small>
             <textarea id="f_description" class="form-control" rows="7" maxlength="2000" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required>{{description}}</textarea>
             <div class="margin-bottom-20"></div>
 
             <!-- Image upload section-->
 
             <h4>Gallery</h4>
-
+            <small>Max 300K</small>
             <div class="margin-bottom-10"></div>
             <div id="f_imageContainer" class="row margin-bottom-20" style="overflow-x:scroll;width:auto;">
                 {{#each images}}

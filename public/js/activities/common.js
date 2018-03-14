@@ -82,6 +82,12 @@ var common = {
             '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
             '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
         return pattern.test(str);
+    },
+
+    markup: function(str) {
+        str = str.replace(/\[b\]/g,"<b>").replace(/\[\/b\]/g,"</b>");
+        str = str.replace(/\[i\]/,"<i>").replace(/\[\/i\]/,"</i>");
+        return str;
     }
 }
 
