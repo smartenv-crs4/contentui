@@ -138,6 +138,8 @@ function initView(cb) {
             var d = promos[i].description
             if(d.length > 200)
                 promos[i].description = d.substring(0,d.indexOf(' ', 200)) + '...';
+            if(promos[i].images.length == 0)
+                promos[i].images.push(config.contentUIUrl + "/img/no_image_available_175.png")
         }
         model.promos = promos;
         $("#viewbox").html(viewTpl(model));
