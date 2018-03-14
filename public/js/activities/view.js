@@ -134,6 +134,11 @@ function initView(cb) {
     }
     common.getPromotions(function(promos) {
         console.log(promos)
+        for(var i=0; i<promos.length; i++) {
+            var d = promos[i].description
+            if(d.length > 200)
+                promos[i].description = d.substring(0,d.indexOf(' ', 200)) + '...';
+        }
         model.promos = promos;
         $("#viewbox").html(viewTpl(model));
         initMap(activityBody.name, activityBody.lat, activityBody.lon);
