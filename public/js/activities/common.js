@@ -63,7 +63,7 @@ var common = {
         //e non link completi quando si tratta di immagini di uploadms
         if(url) {
             var ret = url;
-            if(isURL(url)) {
+            if(this.isURL(url)) {
                 if(url.startsWith(uploadUrl)) { //is a wrong link (uploadms linked by contentms instead of contentui)
                     var id = url.split('file/')[1];
                     ret = baseUrl + "activities/image/" + id;
@@ -72,6 +72,16 @@ var common = {
             else ret = baseUrl + "activities/image/" + url; //is an objectid from upload ms
             return ret;
         }
+    },
+
+    isURL: function(str) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
+        return pattern.test(str);
     }
 }
 
