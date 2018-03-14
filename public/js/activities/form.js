@@ -29,15 +29,19 @@ function removePicture(elem, id){
 function imageIsPresent(imgid, imgarr) {
     for(var i=0; i<imgarr.length; i++) {
         if(imgarr[i].id == imgid) 
-            return false
+            return true
     }
-    return true;
+    return false;
 }
 
 function loadImagePreview(input) {    
     if (input.files && input.files[0]) {
+        if(input.files[0].size > 307200) {
+            _growl.error({message: "Image size too big (max 300k)"});
+            return;
+        }
         var imgid = 'img-' + input.files[0].name.replace(/\s/g,'')
-        if(imageIsPresent(imgid, images_array_fd)) {
+        if(!imageIsPresent(imgid, images_array_fd)) {
             var reader = new FileReader();
             var imgtpl = Handlebars.compile($("#htpl-img-f").html());
 
