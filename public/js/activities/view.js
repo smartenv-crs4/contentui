@@ -125,7 +125,7 @@ function initView(cb) {
         cats:activityBody.category
     }
     
-    for(let i=0; i<activityBody.images.length; i++) {        
+    for(let i=0; i<activityBody.images.length; i++) {
         let col = i % 4;
         var imgsrc = activityBody.images[i];
         //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
@@ -133,6 +133,7 @@ function initView(cb) {
         model.images.push(common.normalizeImgUrl(imgsrc)|| config.contentUIUrl + "/assets/img/demo.jpg");
     }
     common.getPromotions(function(promos) {
+        console.log(promos)
         model.promos = promos;
         $("#viewbox").html(viewTpl(model));
         initMap(activityBody.name, activityBody.lat, activityBody.lon);

@@ -59,20 +59,17 @@ var common = {
     },
 
     normalizeImgUrl: function(url) {
-        /*
-        if(isURL(url)) return url;
-        else {
-            //TODO verificare sia un formato ObjectID valido
-            return baseUrl + "activities/image/" + url
-        }
-        */
-        //TODO sostituire con codice sopra dopo modifica contentms
+        //TODO modificare contentms in modo che restituisca solo ID 
+        //e non link completi quando si tratta di immagini di uploadms
         if(url) {
             var ret = url;
-            if(url.startsWith(uploadUrl)) {
-                var id = url.split('file/')[1];
-                ret = baseUrl + "activities/image/" + id;
+            if(isURL(url)) {
+                if(url.startsWith(uploadUrl)) { //is a wrong link (uploadms linked by contentms instead of contentui)
+                    var id = url.split('file/')[1];
+                    ret = baseUrl + "activities/image/" + id;
+                }
             }
+            else ret = baseUrl + "activities/image/" + url; //is an objectid from upload ms
             return ret;
         }
     }
