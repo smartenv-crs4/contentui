@@ -44,7 +44,7 @@ router.get('/image/:id', (req, res, next) => {
 	let id = req.params.id;
     if(id) {
         let options = {
-            url:  config.uploadUrl + "/file/" + id,
+            url:  uploadUrl + "file/" + id,
             headers: {
 				'Authorization': "Bearer " + config.auth_token
 			}
@@ -60,12 +60,13 @@ router.get('/activitycontent/:id', (req, res, next) => {
 	let id = req.params.id;
     if(id) {
         let options = {
-            url:  config.contentUrl + "/contents/" + id,
+            url:  contentUrl + "contents/" + id,
             headers: {
 				'Authorization': "Bearer " + config.auth_token
 			},
 			json:true
 		};		
+		console.log(options.url);
 		rp(options)
 		.then(rr => {
 			rr.description = rr.description.replace(/</g,"&lt;").replace(/>/g, "&gt;");
@@ -161,17 +162,16 @@ function getUsersByMail(mail) {
 			method: 'POST',
 			json:true,
 			body: {
-				searchterm: [{
+				searchterm: {
 					email: mail,
 					type: config.contentAdminTokenType
-				}]
+				}
 			},
 			headers: {
 				authorization: "Bearer " + config.auth_token
 			}
 		})
 		.then(users => {
-
 			resolve(users.users)
 		})
 		.catch(e => {
