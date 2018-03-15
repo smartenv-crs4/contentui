@@ -161,10 +161,10 @@ function getUsersByMail(mail) {
 			method: 'POST',
 			json:true,
 			body: {
-				searchterm: {
+				searchterm: [{
 					email: mail,
 					type: config.contentAdminTokenType
-				}
+				}]
 			},
 			headers: {
 				authorization: "Bearer " + config.auth_token
@@ -175,12 +175,7 @@ function getUsersByMail(mail) {
 			resolve(users.users)
 		})
 		.catch(e => {
-			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-			console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-		
-			console.log(e);
+			//console.log(e);
 			reject(e);
 		})
 	});
