@@ -135,9 +135,7 @@ function initView(cb) {
     common.getPromotions(function(promos) {
         console.log(promos)
         for(var i=0; i<promos.length; i++) {
-            var d = promos[i].description
-            if(d.length > 200)
-                promos[i].description = d.substring(0,d.indexOf(' ', 200)) + '...';
+            promos[i].description = common.resizeString(promos[i].description, 200) + '...';
             if(promos[i].images.length == 0)
                 promos[i].images.push(config.contentUIUrl + "/img/no_image_available_175.png")
         }

@@ -88,6 +88,11 @@ var common = {
         str = str.replace(/\[b\]/g,"<b>").replace(/\[\/b\]/g,"</b>");
         str = str.replace(/\[i\]/,"<i>").replace(/\[\/i\]/,"</i>");
         return str;
+    },
+
+    resizeString(str, size) {
+        var n = str.length > size ? str.indexOf(' ', size) : str.length;
+        return str.substring(0, n);
     }
 }
 
