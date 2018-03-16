@@ -522,7 +522,7 @@ function search(cb) {
                     title: item.name,
                     town:item.town,
                     image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
-                    description: common.markup(item.description),
+                    description: common.markup(item.description.substring(0,item.description.indexOf(' ', 350))),
                     pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                     type: _filters.type,
                     link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
