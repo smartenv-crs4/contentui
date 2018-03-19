@@ -27,20 +27,20 @@ router.get('/', (req, res, next) => {
     try {
         if(sdate && edate) {
             console.log(sdate);
-            sdate = moment(sdate).format("YYYY-MM-DD");
-            edate = moment(edate).format("YYYY-MM-DD");
+            sdate = moment(sdate).startOf('day').format("YYYY-MM-DD HH:mm");
+            edate = moment(edate).endOf('day').format("YYYY-MM-DD HH:mm");
         }
         
         else if(sdate && !edate)
-            sdate = moment(sdate).format("YYYY-MM-DD");
+            sdate = moment(sdate).startOf('day').format("YYYY-MM-DD HH:mm");
         else if(!sdate && edate)
-            edate = moment(edate).format("YYYY-MM-DD");
+            edate = moment(edate).endOf('day').format("YYYY-MM-DD HH:mm");
         else
-            sdate = moment(new Date()).format("YYYY-MM-DD");
+            sdate = moment(new Date()).startOf('day').format("YYYY-MM-DD HH:mm");
     }
     catch(e) {
         sdate = edate = undefined;
-        sdate = moment(new Date()).format("YYYY-MM-DD");
+        sdate = moment(new Date()).format("YYYY-MM-DD HH:mm");
         console.log(e)
     }
 
