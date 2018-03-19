@@ -60,6 +60,10 @@
     margin-left:20px;
 }
 
+#interval {
+  min-height:200px;
+}
+
 #searchBox {
    margin:20px auto;
 }

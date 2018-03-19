@@ -312,7 +312,8 @@ function showToolDates() {
     var opt = {
         format: 'DD/MM/YYYY',
         allowInputToggle: true,
-        ignoreReadonly: true
+        ignoreReadonly: true,
+        widgetPositioning: {horizontal:"left", vertical:"bottom"}
     }
     opt.useCurrent = true;
     $('#dtp1').datetimepicker(opt);

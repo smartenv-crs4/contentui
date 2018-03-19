@@ -5,7 +5,9 @@ var common = {
         var from = new Date();
         
         $.ajax({
-            url: contentUrl + "contents/" + activityBody._id+"/promotions/?sdate=" + from + (limit ? "&limit=" + limit : ''),
+            url: contentUrl + "contents/" + activityBody._id + "/promotions/" 
+                + "?limit=" + (limit ? limit : '') 
+                + "&ord=creationDate", //+ "&sdate=" + from,
             type: 'GET',
             success: function(data){
                 var promos = data.promos;

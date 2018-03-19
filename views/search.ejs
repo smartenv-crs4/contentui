@@ -60,7 +60,6 @@
 </head>
 
 <body>
-	
 	<div class="wrapper">
 		<div id="header_p_HT"> <%- commonUI.header %> </div>
 
@@ -80,6 +79,7 @@
 								<button id="doSearch" class="btn-u" type="button"><i class="fa fa-search"></i></button>
 							</span>
 						</div>
+
 						<div id="searchsettings" class="">
 							<span class="fa fa-filter"></span> <span data-i18n="search.filterby"></span> 
 							<select id="searchtype" class="form-control input-sm">
@@ -90,7 +90,65 @@
 						</div>
 
 						<div id="adv" class="panel-group acc-v1 animated fadeInDown" style="display:none;margin-top:8px;">
-							
+
+							<!-- adv by time -->
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<div class="advMenuItem">
+										<div class="row">
+											<div class="col-sm-11">
+												<h4 class="panel-title">											
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Time" aria-expanded="false"><span class="fa fa-clock-o"></span> <span data-i18n="search.advDateLabel"></span> <span id="advDate" class="advItem"></span>
+													</a>
+												</h4>
+											</div>
+											<div class="col-sm-1 offset-sm-11"><a href="#" title="reset filter" data-rst-field="date" class="rst"><i class="fa fa-eraser"></i></a></div>
+										</div>
+									</div>
+								</div>
+								
+								<div id="collapse-Time" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+									<div class="panel-body">
+
+										<div class="tab-v2">
+											<ul class="nav nav-tabs">
+												<li class="active"><a href="#byship" class="advTimeMenu" data-cp-tm="d-ship" data-toggle="tab" aria-expanded="false" data-i18n="search.advDateTab1"></a></li>
+												<li class=""><a href="#interval" class="advTimeMenu" data-cp-tm="d-int" aria-expanded="true" data-toggle="tab" aria-expanded="false" data-i18n="search.advDateTab2"></a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane fade active in" id="byship" style="margin:25px 0;">
+													<input class="typeahead form-control adv" placeholder="Nome nave">
+												</div>
+												<div class="tab-pane fade" id="interval">
+													<div id="intdates" class="adv">
+														<div class="form-group">
+															<div class='input-group date' id='dtp1' style="margin:25px 0;">
+																<input type='text' class="form-control" readonly placeholder="Data inizio..." />
+																<span class="input-group-addon">
+																	<span class="fa fa-calendar"></span>
+																</span>
+															</div>
+														
+															<div class='input-group date' id='dtp2' style="margin-bottom:25px">
+																<input type='text' class="form-control" readonly placeholder="Data fine..." />
+																<span class="input-group-addon">
+																	<span class="fa fa-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<div class="text-right">
+															<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i></button>
+															<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i></button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- adv by category -->
 							<div class="panel panel-default">
 								<div class="panel-heading">	
 									<div class="advMenuItem">
@@ -115,62 +173,8 @@
 									</div>
 								</div>						
 							</div>
-							
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<div class="advMenuItem">
-										<div class="row">
-											<div class="col-sm-11">
-												<h4 class="panel-title">											
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Time" aria-expanded="false"><span class="fa fa-clock-o"></span> <span data-i18n="search.advDateLabel"></span> <span id="advDate" class="advItem"></span>
-													</a>
-												</h4>
-											</div>
-											<div class="col-sm-1 offset-sm-11"><a href="#" title="reset filter" data-rst-field="date" class="rst"><i class="fa fa-eraser"></i></a></div>
-										</div>
-									</div>
-								</div>
-								<div id="collapse-Time" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-									<div class="panel-body">
 
-										<div class="tab-v2">
-											<ul class="nav nav-tabs">
-												<li class="active"><a href="#byship" class="advTimeMenu" data-cp-tm="d-ship" data-toggle="tab" aria-expanded="false" data-i18n="search.advDateTab1"></a></li>
-												<li class=""><a href="#interval" class="advTimeMenu" data-cp-tm="d-int" aria-expanded="true" data-toggle="tab" aria-expanded="false" data-i18n="search.advDateTab2"></a></li>
-											</ul>
-											<div class="tab-content">
-												<div class="tab-pane fade active in" id="byship">
-													<input class="typeahead form-control adv" placeholder="Nome nave">
-												</div>
-												<div class="tab-pane fade" id="interval">
-													<div id="intdates" class="adv">
-														<div class="form-group">
-															<div class='input-group date' id='dtp1'>
-																<input type='text' class="form-control" readonly placeholder="Data inizio..." />
-																<span class="input-group-addon">
-																	<span class="fa fa-calendar"></span>
-																</span>
-															</div>
-														</div>
-														<div class="form-group">
-															<div class='input-group date' id='dtp2'>
-																<input type='text' class="form-control" readonly placeholder="Data fine..." />
-																<span class="input-group-addon">
-																	<span class="fa fa-calendar"></span>
-																</span>
-															</div>
-														</div>
-														<div class="text-right">
-															<button class="btn-u btn-u-green cp-ok" type="button"><i class="fa fa-check"></i></button>
-															<button class="btn-u btn-u-red cp-undo" type="button"><i class="fa fa-undo"></i></button>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+							<!-- adv by radius -->
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<div class="advMenuItem">

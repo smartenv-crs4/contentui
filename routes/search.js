@@ -23,24 +23,35 @@ router.get('/', (req, res, next) => {
     let limit       = req.query.limit;
     let skip        = req.query.skip;
     if(position) postion = position.slice(',');
-
-    if(sdate && edate) {
-        try {
+    
+    try {
+        if(sdate && edate) {
             console.log(sdate);
             sdate = moment(sdate).format("YYYY-MM-DD");
             edate = moment(edate).format("YYYY-MM-DD");
         }
-        catch(e) {
-            sdate = edate = undefined;
-            console.log(e)
-        }
+        
+        else if(sdate && !edate)
+            sdate = moment(sdate).format("YYYY-MM-DD");
+        else if(!sdate && edate)
+            edate = moment(edate).format("YYYY-MM-DD");
+        else
+            sdate = moment(new Date()).format("YYYY-MM-DD");
     }
-    
+    catch(e) {
+        sdate = edate = undefined;
+        sdate = moment(new Date()).format("YYYY-MM-DD");
+        console.log(e)
+    }
+
     let url =  '?t=' + type 
                 + '&text=' + text
-                + (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : '') 
+                //+ (sdate && edate ? "&sdate=" + sdate + "&edate=" + edate : '') 
+                + (sdate ? "&sdate=" + sdate : '')
+                + (edate ? "&edate=" + edate : '') 
                 + (category ? '&category=' + category : '')
                 + (position ? '&position=' + position : '')
+                + '&ord=endDate'
                 + (limit ? '&limit=' + limit : '')
                 + (limit && skip ? '&skip=' + skip : '');
 
