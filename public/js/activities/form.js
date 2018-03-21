@@ -29,15 +29,19 @@ function removePicture(elem, id){
 function imageIsPresent(imgid, imgarr) {
     for(var i=0; i<imgarr.length; i++) {
         if(imgarr[i].id == imgid) 
-            return false
+            return true
     }
-    return true;
+    return false;
 }
 
 function loadImagePreview(input) {    
     if (input.files && input.files[0]) {
+        if(input.files[0].size > 307200) {
+            _growl.error({message: "Image size too big (max 300k)"});
+            return;
+        }
         var imgid = 'img-' + input.files[0].name.replace(/\s/g,'')
-        if(imageIsPresent(imgid, images_array_fd)) {
+        if(!imageIsPresent(imgid, images_array_fd)) {
             var reader = new FileReader();
             var imgtpl = Handlebars.compile($("#htpl-img-f").html());
 
@@ -70,7 +74,8 @@ function getUploadmsImageURL(image, cb) {
         contentType: false,
         type: 'POST',
         success: function(data){            
-            cb(uploadUrl+"file/"+data.filecode);
+            //cb(uploadUrl+"file/"+data.filecode);
+            cb(data.filecode);
         },
         error: function(xhr, status)
         {
@@ -136,12 +141,13 @@ function initMap(title, latitude, longitude) {
         lat: latitude,
         lng: longitude
     });
-
+/*
     map.drawOverlay({
         lat: latitude,
         lng: longitude,
         content: '<div class="overlay"><h3>'+title+'</h3></div>'
     });
+*/
 
     //geocodeLatLng(latitude, longitude);
 }
@@ -274,10 +280,9 @@ function updateContent(){
         return;
     }
     contentData = getFormData();
-
     contentData.images = $('img[name="image"]').map(function () {
         if (!this.src.match("^blob"))
-            return this.src;
+            return $(this).attr("data-id");
     }).get();
 
     var oldImagesLength = contentData.images.length;
@@ -298,7 +303,6 @@ function updateContent(){
 }
 
 function storeContentToContentms(contentData, ins){
-    //console.log(contentData)
     $.ajax({
         url: contentUrl + "contents/" + (ins ? '' : activityBody._id),
         headers: {
@@ -444,7 +448,7 @@ function initAdminTool() {
                       uid: user._id,
                       email: user.email,
                       name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
-                      avatar: user.avatar || "/img/avatar.png"
+                      avatar: user.avatar || baseUrl + (baseUrl.endsWith("/") ? '' : '/') + "/img/avatar.png"
                   };
               });
           }
@@ -469,14 +473,4 @@ function initAdminTool() {
           suggestion: Handlebars.compile($("#htpl-tah-menu").html())
       }
   });
-}
-
-function isURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
-    return pattern.test(str);
 }

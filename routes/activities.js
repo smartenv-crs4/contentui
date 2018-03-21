@@ -4,7 +4,6 @@ var config = require('propertiesmanager').conf;
 var common = require('./render');
 var express = require('express');
 var router = express.Router();
-
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
 config.contentUrl = contentUrl;
@@ -45,12 +44,37 @@ router.get('/image/:id', (req, res, next) => {
 	let id = req.params.id;
     if(id) {
         let options = {
-            url:  config.uploadUrl + "/file/" + id,
+            url:  uploadUrl + "file/" + id,
             headers: {
 				'Authorization': "Bearer " + config.auth_token
 			}
         };
         request.get(options).pipe(res);
+	}
+	else {
+        res.status(400).send({error:"BadRequest", error_message:"File ID not valid"});
+    }
+});
+
+router.get('/activitycontent/:id', (req, res, next) => {
+	let id = req.params.id;
+    if(id) {
+        let options = {
+            url:  contentUrl + "contents/" + id,
+            headers: {
+				'Authorization': "Bearer " + config.auth_token
+			},
+			json:true
+		};		
+		console.log(options.url);
+		rp(options)
+		.then(rr => {
+			rr.description = rr.description.replace(/</g,"&lt;").replace(/>/g, "&gt;");
+			res.json(rr)
+		})
+		.catch(e => {
+			res.boom.badImplementation();
+		})
 	}
 	else {
         res.status(400).send({error:"BadRequest", error_message:"File ID not valid"});
@@ -151,7 +175,7 @@ function getUsersByMail(mail) {
 			resolve(users.users)
 		})
 		.catch(e => {
-			console.log(e);
+			//console.log(e);
 			reject(e);
 		})
 	});

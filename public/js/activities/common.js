@@ -5,7 +5,9 @@ var common = {
         var from = new Date();
         
         $.ajax({
-            url: contentUrl + "contents/" + activityBody._id+"/promotions/?sdate=" + from + (limit ? "&limit=" + limit : ''),
+            url: contentUrl + "contents/" + activityBody._id + "/promotions/" 
+                + "?limit=" + (limit ? limit : '') 
+                + "&ord=creationDate", //+ "&sdate=" + from,
             type: 'GET',
             success: function(data){
                 var promos = data.promos;
@@ -59,22 +61,40 @@ var common = {
     },
 
     normalizeImgUrl: function(url) {
-        /*
-        if(isURL(url)) return url;
-        else {
-            //TODO verificare sia un formato ObjectID valido
-            return baseUrl + "activities/image/" + url
-        }
-        */
-        //TODO sostituire con codice sopra dopo modifica contentms
+        //TODO modificare contentms in modo che restituisca solo ID 
+        //e non link completi quando si tratta di immagini di uploadms
         if(url) {
             var ret = url;
-            if(url.startsWith(uploadUrl)) {
-                var id = url.split('file/')[1];
-                ret = baseUrl + "activities/image/" + id;
+            if(this.isURL(url)) {
+                if(url.startsWith(uploadUrl)) { //is a wrong link (uploadms linked by contentms instead of contentui)
+                    var id = url.split('file/')[1];
+                    ret = baseUrl + "activities/image/" + id;
+                }
             }
+            else ret = baseUrl + "activities/image/" + url; //is an objectid from upload ms
             return ret;
         }
+    },
+
+    isURL: function(str) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
+        return pattern.test(str);
+    },
+
+    markup: function(str) {
+        str = str.replace(/\[b\]/g,"<b>").replace(/\[\/b\]/g,"</b>");
+        str = str.replace(/\[i\]/,"<i>").replace(/\[\/i\]/,"</i>");
+        return str;
+    },
+
+    resizeString(str, size) {
+        var n = str.length > size ? str.indexOf(' ', size) : str.length;
+        return str.substring(0, n);
     }
 }
 

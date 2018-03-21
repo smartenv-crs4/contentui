@@ -28,6 +28,10 @@ function initToolbar() {
         });
     })
 
+    $("#addPromo").click(function() {
+        window.location.href = baseUrl + "activities/" + activityBody._id + "/promotions/new";
+    });
+
     $('#addPromotionButton').off("click");
     $('#addPromotionButton').click(function(e) { addPromotion(); });  //perchè è qui???
 
@@ -123,6 +127,11 @@ function lockContent(lock, cb) {
 }
 
 function renderPromoList(promos) {
+    for(var i=0; i<promos.length; i++) {
+        var d = promos[i].description
+        if(d.length > 200)
+        promos[i].description = d.substring(0,d.indexOf(' ', 100)) + '...';
+    }
     var source = $("#promo-template").html();
     promoHtpl = Handlebars.compile(source);
     $("#promoList").html(promoHtpl({promos:promos, idcontent:activityBody._id}));

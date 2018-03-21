@@ -18,11 +18,6 @@
   margin-left:10px;
 }
 
-.item-desc {
-  max-height:150px;
-  overflow-y:hidden;
-}
-
 .advItem {font-style: italic;}
 .advMenuItem {background-color:white;}
 
@@ -47,7 +42,7 @@
 }
 
 #searchresults {
-  width:1170px;
+  width:70%;
   margin:0 auto;
   padding-top:25px;
 }
@@ -63,6 +58,10 @@
 
 .checkbox {
     margin-left:20px;
+}
+
+#interval {
+  min-height:200px;
 }
 
 #searchBox {

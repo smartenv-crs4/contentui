@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////
 if(!sessionStorage.auth) {
 	sessionStorage.auth = JSON.stringify({
-		token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU5ZTcxNTdhNDA3NWRkMDAxN2ZiZTEyOCIsImVtYWlsIjoiY3BvcnQyMDIwQGdtYWlsLmNvbSIsInR5cGUiOiJjb250ZW50QWRtaW4iLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3MjkyNjMzODU5NTR9.ixFX2mdta2hJmFxThA1efcRXh4pDaDhksJ8DghRMXLQ",
-		uid: "59e7157a4075dd0017fbe128"
+		token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU5ZGRmNmI4Zjg5MjMyMDAxNzdmODdkNCIsImVtYWlsIjoiY29zdGFudGluby5zb3J1QGNyczQuaXQiLCJ0eXBlIjoiYWRtaW4iLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3NDE5NjQwMjUwODR9.C0aagqMIcWMKVCesmlyY8AGn4Iwfmm2D-Uu1Mtq79_M",
+		uid: "59ddf6b8f8923200177f87d4"
 	});
 }
 //////////////////////////////////////////////////////

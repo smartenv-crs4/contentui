@@ -312,7 +312,8 @@ function showToolDates() {
     var opt = {
         format: 'DD/MM/YYYY',
         allowInputToggle: true,
-        ignoreReadonly: true
+        ignoreReadonly: true,
+        widgetPositioning: {horizontal:"left", vertical:"bottom"}
     }
     opt.useCurrent = true;
     $('#dtp1').datetimepicker(opt);
@@ -522,7 +523,7 @@ function search(cb) {
                     title: item.name,
                     town:item.town,
                     image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
-                    description: item.description,
+                    description: common.markup(common.resizeString(item.description, 350)),
                     pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                     type: _filters.type,
                     link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
