@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <title>Profile Settings | Cagliari Port 2020</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Web Fonts -->
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/style.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/blog.style.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/page_search_inner_tables.css">
+
+    <!-- CSS Header and Footer -->
+    <link rel="stylesheet" href="<%= commonUI.headerCss %>">
+
+    <!--<link rel="stylesheet" href="assets/css/headers/header-default.css">-->
+    <!--<link rel="stylesheet" href="assets/css/footers/footer-v1.css">-->
+
+
+    <!-- CSS Implementing Plugins -->
+
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/animate.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/line-icons/line-icons.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/jquery.jgrowl.min.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/login-signup-modal-window/css/style.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/page_coming_soon_v3.css">
+
+
+
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/slick/slick.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/fancybox/source/jquery.fancybox.css">
+    <!--<link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/event.style.css">-->
+
+
+    <!--date and time picker-->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/plugins/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+
+    <!-- CSS Page Style -->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/profile.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/line-icons-pro/styles.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+
+
+    <!-- CSS Theme -->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/theme-skins/dark.css" id="style_color">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/theme-colors/dark-red_.css">
+
+
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/custom.css">
+    <!-- CSS Page Style Import-->
+
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/page_log_reg_v3.css">
+
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/custom.css">
+
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/typeaheadjs.css">
+
+
+    <!-- CSS Page Style -->
+    <!--<link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v6.css">-->
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v1.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v2.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v3.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v4.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v5.css">
+    <!--<link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/pricing/pricing_v8.css">-->
+
+
+    <!--<link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/imgthumbnail.css">-->
+
+    <style type="text/css">
+        .giveMeEllipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 5; /* number of lines to show */
+            /*  line-height: 1;  fallback */
+            max-height: 5; /* fallback */
+        }
+
+        .sidebar-showhide {
+            max-width: 25%;
+            float: left;
+            display: flex;
+            padding: 15px;
+            padding-top: 0;
+        }
+
+        .autoexpand {
+            width: auto;
+            display: flex;
+        }
+
+        #pagination_container {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            max-width: 530px;
+            width: 530px;
+        }
+    </style>
+
+
+
+</head>
+
+<body >
+<div class="wrapper">
+    <!--=== Header ===-->
+    <div id="header_p_HT"> <%- commonUI.header %> </div>
+    <!--=== End Header ===-->
+
+
+        <div id="favouriteContent" class="container content height-500">
+             <!--see promontion content in promotion.js -->
+        </div>
+
+
+
+
+
+    <!--=== Footer Version 1 ===-->
+    <div id="footer_p_HT"> <%- commonUI.footer %> </div>
+    <!--=== End Footer Version 1 ===-->
+</div><!--/wrapper-->
+
+
+    <!-- JS Global Compulsory -->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/jquery/jquery-migrate.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+    <!--&lt;!&ndash; JS Translation &ndash;&gt;-->
+    <!--<script src="assets/js/plugins/i18next.min.js"></script>-->
+    <!--<script src="customAssets/translations/translation.json"></script>-->
+    <!--<script src="assets/js/plugins/jquery-i18next.min.js"></script>-->
+
+    <!-- JS Implementing Plugins -->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/back-to-top.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/smoothScroll.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+
+
+    <% include config %>
+
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/bootstrap-editable.min.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/js/custom.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/plugins/masonry/masonry.pkgd.min.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/plugins/masonry/imagesloaded.pkgd.min.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/plugins/modernizr.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/plugins/login-signup-modal-window/js/main.js"></script> <!-- Gem jQuery -->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/countdown/jquery.plugin.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/countdown/jquery.countdown.js"></script>
+    <!--<script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/pages/page_coming_soon.js"></script>-->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/favourites.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/moment.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/utils.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/tokenManager.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/async/dist/async.min.js"></script>
+
+    <!--date and time picker-->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/plugins/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+
+    <!--JS Maps-->
+    <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ"></script>-->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD7svax8fUAqTVVvtjynvTAf105rMbEEsQ&&libraries=places"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/gmap/gmap.js"></script>
+    <!--<script type="text/javascript" src="http://www.google.com/jsapi"></script>-->
+
+    <!-- <script type="text/javascript" src="assets/js/userUiCustom.js"></script>
+    JS Page Level -->
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/app.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/forms/reg.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/forms/checkout.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/datepicker.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/handlebars.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/jquery.jgrowl.min.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/js/plugins/blog-masonry.js"></script>
+    <script src="<%=properties.contentUIUrl%>/assets/js/plugins/style-switcher.js"></script>
+
+
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/bootstrap-filestyle.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/typeahead.bundle.js"></script>
+
+
+
+    <!--template-->
+    <% include template/favourites_template.ejs %>
+
+
+
+    <script src="<%- commonUI.headerScript %>"></script>
+    <script src="<%- commonUI.footerScript %>"></script>
+    <script src="<%- commonUI.languagemanager %>"></script>
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        var canTranslate=false;
+        jQuery(document).ready(function() {
+            App.init();
+            StyleSwitcher.initStyleSwitcher();
+            initfavouritePage();
+            initToken();
+            $.ajax({
+                cache: false,
+                url: '<%=properties.contentUIUrl%>/customAssets/translations/translation.json',
+                type:"get",
+                contentType:"application/json",
+                success: function(data) {
+                    initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+                    //wai to languageManager to be loaded then tranlsalte
+//                    addEventListener('promotionLanguageManagerInitialized', function (e) {
+//                        canTranslate=true;
+//                        $('body').localize();
+//                    }, false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                    console.error(thrownError);
+                }
+            });
+
+
+
+        });
+    </script>
+
+
+    <!--<script>-->
+    <!--DefaultValuesInit();-->
+    <!--</script>-->
+
+
+
+
+    <!--[if lt IE 9]>
+    <script src="assets/plugins/respond.js"></script>
+    <script src="assets/plugins/html5shiv.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="assets/plugins/sky-forms-pro/skyforms/js/sky-forms-ie8.js"></script>
+    <![endif]-->
+
+    <!--[if lt IE 10]>
+    <script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.placeholder.min.js"></script>
+    <![endif]-->
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

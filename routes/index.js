@@ -79,6 +79,26 @@ router.get('/',  (req, res, next) => {
 });
 
 
+
+// favourites
+router.get('/favourites', function(req, res, next) {
+
+    var access_token=req.query.access_token || (req.parseHasTagAsQuery && req.parseHasTagAsQuery.access_token) || null;
+
+
+    console.log("Fvourites");
+
+
+    renderPage.renderPage(res,'view_favourites',{
+        access_token:access_token,
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        }
+    });
+});
+
+
 //new activity
 router.get('/activities/new',       (req, res, next) => {
   let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;		
@@ -167,5 +187,9 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
         isANewPromotion:false
     });
 });
+
+
+
+
 
 module.exports = router;

@@ -238,7 +238,7 @@ function openModalParticipants(){
 //         dataType: "json",
 //         success: function(dataResp, textStatus, xhr)
 //         {
-//             compilePromotion();
+//             compileFavourites();
 //         },
 //         error: function(xhr, status)
 //         {
@@ -278,7 +278,7 @@ function savePromotion(iSANewPromotion){
             success: function (dataResp, textStatus, xhr) {
                 promotionID= dataResp._id;
                 window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
-                //compilePromotion();
+                //compileFavourites();
             },
             error: function (xhr, status) {
 
@@ -479,6 +479,29 @@ function addNewPromotion(){
     };
 
 
+
+    let promotype=$('#promotype');
+    // promotionWhere.val(currentPromotion.address);
+    promotype.get(0).onchange=function(){
+        var selectedOption = $("#promotype input:radio:checked").val();
+        let value="1"; // offer
+        if(selectedOption=="event")
+            value="2";
+        updatePromotionField('type',value==currentPromotion.type?null:value,true);
+    };
+
+    let categories=$('#categories');
+    // promotionWhere.val(currentPromotion.address);
+    categories.get(0).onchange=function(){
+        let value=[]; // offer
+        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+            value.push(this.value);
+
+        });
+        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+    };
+
+
     let promotionPicture=$('#updatePicture');
     //promotionPicture.val(currentPromotion.images[0]);
     promotionPicture.get(0).onchange=function(){
@@ -620,6 +643,31 @@ function updatePromotion(){
         let value=promotionWhere.val();
         updatePromotionField('address',value==currentPromotion.address?null:value,true);
     };
+
+
+    let promotype=$('#promotype');
+    let tmpv=$("#promotype input[value='"+currentPromotion.type+"']:radio");
+    tmpv.prop('checked', true);
+
+    promotype.get(0).onchange=function(){
+        var value = $("#promotype input:radio:checked").val();
+        updatePromotionField('type',value==currentPromotion.type?null:value,true);
+    };
+
+    let categories=$('#categories');
+    currentPromotion.category.forEach(function(catValue){
+        $("input[name='category'][value='"+ catValue +"']:checkbox").prop('checked', true);
+    });
+
+    categories.get(0).onchange=function(){
+        let value=[]; // offer
+        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+            value.push(this.value);
+
+        });
+        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+    };
+
 
 
     let promotionPicture=$('#updatePicture');
@@ -883,7 +931,9 @@ function getPromotionPage(data,token){
         access_token:userToken,
         baseUrl:config.contentUIUrl,
         participants:(data.participants && data.participants.html) || "",
-        participantsDetails:(data.participants && data.participants.htmldetails) || ""
+        participantsDetails:(data.participants && data.participants.htmldetails) || "",
+        event_type:"type_" + data.type,
+        categories:data.category
     };
 
     jQuery('#promotionContent').html(promotionHtml(prom));
