@@ -595,7 +595,7 @@ function updatePromotion(){
     var promotionHtml = Handlebars.compile(promotion_admin_template);
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
+        promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
         start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
@@ -761,22 +761,32 @@ function doILike(){
 }
 
 
-
 function getLikes(){
-    jQuery.ajax({
-        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/likes",
-        type: "POST",
-        success: function(data, textStatus, xhr){
-            $('#likecount').text(data.total);
-        },
-        error: function(xhr, status){
-            $('#likecount').text( i18next.t("error.getlikes"));
-            // return;
-        }
+
+    getPromotionLikes(contentID,promotionID,function(err,total){
+        if(err) $('#likecount').text(err);
+        else $('#likecount').text(total);       
     });
 
     doILike();
 }
+
+//
+// function getLikes(){
+//     jQuery.ajax({
+//         url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/likes",
+//         type: "POST",
+//         success: function(data, textStatus, xhr){
+//             $('#likecount').text(data.total);
+//         },
+//         error: function(xhr, status){
+//             $('#likecount').text( i18next.t("error.getlikes"));
+//             // return;
+//         }
+//     });
+//
+//     doILike();
+// }
 
 
 function setLike(){
@@ -832,23 +842,30 @@ function doIParticipate(){
 }
 
 function getparticipants(){
-    jQuery.ajax({
-        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
-        type: "POST",
-        success: function(data, textStatus, xhr){
-            $('#participatecount').text(data.total);
 
-            //todo
-            //participantslist to do
-        },
-        error: function(xhr, status){
-
-            $('#participatecount').text(i18next.t("error.getparticipants"));
-            // return;
-        }
+    getPromotionParticipants(contentID,promotionID,function(err,total){
+        if(err)  $('#participatecount').text(err);
+        else $('#participatecount').text(total);
     });
+
     doIParticipate();
 }
+
+// function getparticipants(){
+//     jQuery.ajax({
+//         url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
+//         type: "POST",
+//         success: function(data, textStatus, xhr){
+//             $('#participatecount').text(data.total);
+//         },
+//         error: function(xhr, status){
+//
+//             $('#participatecount').text(i18next.t("error.getparticipants"));
+//             // return;
+//         }
+//     });
+//     doIParticipate();
+// }
 
 
 
@@ -919,7 +936,7 @@ function getPromotionPage(data,token){
     currentPromotion=data;
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
+        promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
         start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
@@ -935,6 +952,11 @@ function getPromotionPage(data,token){
         event_type:"type_" + data.type,
         categories:data.category
     };
+
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(prom);
+
 
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();

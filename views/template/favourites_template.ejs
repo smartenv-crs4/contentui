@@ -19,73 +19,86 @@
     <div>
         <div class="profile-body">
             <!--Promotions-->
-            {{#list people}}
-                <div class="row">
+            {{#if promotions}}
+                {{#list promotions}}
+                    <div class="row">
 
-                        <div class="col-sm-6">
-                            <div class="service-or easy-block-v2 no-margin-bottom">
-                                <img class="img-responsive" src="assets/img/main/img16.jpg" alt="">
-                                <div class="easy-bg-v2 {{col1.flag.color}}">{{col1.flag.text}}</div>
-                            </div>
-                            <div class="projects">
-                                <h2><a class="color-dark" href="#">{{col1.title}}</a></h2>
-                                <ul class="list-unstyled list-inline blog-info-v2">
-                                    <li>By: <a class="color-green" href="#">{{col1.activity_name}}</a></li>
-                                    <li>start: <i class="fa fa-clock-o"></i> {{col1.start_date}} </li>
-                                    <li>end: <i class="fa fa-clock-o"></i> {{col1.end_date}} </li>
-                                </ul>
-                                <p>{{col1.description}}</p>
-                                <br>
-                                <h3 class="heading-xs"><span data-i18n="promotion.Completeness"></span> <span class="pull-right">{{col1.completeness}}%</span></h3>
-                                <div class="progress progress-u progress-xxs">
-                                    <div class="progress-bar progress-bar-u" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" style="width: {{col1.completeness}}%">
+                            <div class="col-sm-6">
+                                <div class="service-or easy-block-v2 no-margin-bottom">
+                                    <img class="img-responsive" src="{{col1.image}}" style="width:555px;height:370px;" alt="">
+                                    <div class="easy-bg-v2 {{col1.flag.color}}" data-i18n="promotion.type_{{col1.flag.text}}">{{col1.flag.text}}</div>
+                                </div>
+                                <div class="projects">
+                                    <h2><a class="color-dark" href="{{col1.promo_link}}">{{col1.title}}</a></h2>
+                                    <ul class="list-unstyled list-inline blog-info-v2">
+                                        <li>By: <a class="color-red" href="{{col1.activity_link}}">{{col1.activity_name}}</a></li>
+                                        <li><i class="fa fa-clock-o color-blue"></i> <span class="color-blue">{{col1.start_date}}</span> </li>
+                                        <li><span class="color-blue"> - </span> </li>
+                                        <li><i class="fa fa-clock-o color-blue"></i> <span class="color-blue">{{col1.end_date}}</span> </li>
+                                    </ul>
+                                    <p>{{col1.description}}</p>
+                                    <br>
+                                    <h3 class="heading-xs"><span data-i18n="promotion.Completeness"></span> <span class="pull-right color-red">{{col1.completeness}}%</span></h3>
+                                    <div class="progress progress-u progress-xxs">
+                                        <div class="progress-bar progress-bar-u" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" style="width: {{col1.completeness}}%">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="project-share">
-                                <ul class="list-inline comment-list-v2 pull-left">
-                                    <li><i class="fa fa-thumbs-up"></i> <a href="#">{{col1.likes}}</a></li>
-                                    <li><i class="fa fa-users"></i> <a href="#">{{col1.participants}}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    {{#if col2}}
-                        <div class="col-sm-6">
-                            <div class="service-or easy-block-v2 no-margin-bottom">
-                                <img class="img-responsive" src="assets/img/main/img16.jpg" alt="">
-                                <div class="easy-bg-v2 {{col2.flag.color}}">{{col2.flag.text}}</div>
-                            </div>
-                            <div class="projects">
-                                <h2><a class="color-dark" href="#">{{col2.title}}</a></h2>
-                                <ul class="list-unstyled list-inline blog-info-v2">
-                                    <li>By: <a class="color-green" href="#">{{col2.activity_name}}</a></li>
-                                    <li>start: <i class="fa fa-clock-o"></i> {{col2.start_date}} </li>
-                                    <li>end: <i class="fa fa-clock-o"></i> {{col2.end_date}} </li>
-                                </ul>
-                                <p>{{col2.description}}</p>
-                                <br>
-                                <h3 class="heading-xs"><span data-i18n="promotion.Completeness"></span> <span class="pull-right">{{col2.completeness}}%</span></h3>
-                                <div class="progress progress-u progress-xxs">
-                                    <div class="progress-bar progress-bar-u" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" style="width: {{col2.completeness}}%">
-                                    </div>
+                                <div class="project-share">
+                                    <ul class="list-inline comment-list-v2 pull-left">
+                                        <li><i class="color-blue fa fa-thumbs-up"></i> <a class="color-blue" href="#">{{col1.likes}}</a></li>
+                                        <li><i class="color-blue fa fa-users"></i> <a class="color-blue" href="#">{{col1.participants}}</a></li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="project-share">
-                                <ul class="list-inline comment-list-v2 pull-left">
-                                    <li><i class="fa fa-thumbs-up"></i> <a href="#">{{col2.likes}}</a></li>
-                                    <li><i class="fa fa-users"></i> <a href="#">{{col2.participants}}</a></li>
-                                </ul>
+
+                        {{#if col2}}
+                            <div class="col-sm-6">
+                                <div class="service-or easy-block-v2 no-margin-bottom">
+                                    <img class="img-responsive" src="{{col2.image}}" style="width:555px;height:370px;" alt="">
+                                    <div class="easy-bg-v2 {{col2.flag.color}}" data-i18n="promotion.type_{{col2.flag.text}}">{{col2.flag.text}}</div>
+                                </div>
+                                <div class="projects">
+                                    <h2><a class="color-dark" href="{{col2.promo_link}}">{{col2.title}}</a></h2>
+                                    <ul class="list-unstyled list-inline blog-info-v2">
+                                        <li>By: <a class="color-red" href="{{col1.activity_link}}">{{col2.activity_name}}</a></li>
+                                        <li><i class="fa fa-clock-o color-blue"></i> <span class="color-blue"> {{col2.start_date}} </span> </li>
+                                        <li><span class="color-blue"> - </span> </li>
+                                        <li><i class="fa fa-clock-o color-blue"></i> <span class="color-blue">{{col2.end_date}}</span> </li>
+                                    </ul>
+                                    <p>{{col2.description}}</p>
+                                    <br>
+                                    <h3 class="heading-xs"><span data-i18n="promotion.Completeness"></span> <span class="pull-right color-red">{{col2.completeness}}%</span></h3>
+                                    <div class="progress progress-u progress-xxs">
+                                        <div class="progress-bar progress-bar-u" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" style="width: {{col2.completeness}}%">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-share">
+                                    <ul class="list-inline comment-list-v2 pull-left">
+                                        <li><i class="color-blue fa fa-thumbs-up"></i> <a class="color-blue" href="#">{{col2.likes}}</a></li>
+                                        <li><i class="color-blue fa fa-users"></i> <a class="color-blue" href="#">{{col2.participants}}</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    {{/if}}
+                        {{/if}}
 
 
 
-                </div>
-            <hr>
+                    </div>
+                <hr>
 
-            {{/list}}
+                {{/list}}
+            {{else}}
+
+            <div class="shadow-wrapper">
+                <blockquote class="hero box-shadow shadow-effect-2">
+                    <center><h3 class="color-darker" data-i18n="promotion.nopromo">Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai</h3></center>
+                </blockquote>
+            </div>
+
+
+            {{/if}}
 
             <!--/end row-->
             <!--End Projects-->

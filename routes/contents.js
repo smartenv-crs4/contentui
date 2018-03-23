@@ -42,6 +42,17 @@ router.get('/actions/involvements', function(req, res, next) {
 
 
 
+router.get('/actions/search', function(req, res, next) {
+
+    var rqparams = {
+        url:  contentUrl + "search?ids="+req.query.ids+"&t="+req.query.t
+    };
+
+    return request.get(rqparams).pipe(res);
+
+});
+
+
 router.use('/:cid/promotions',function(req,res,next){
     req.contentId=req.params.cid;
     next();

@@ -106,6 +106,10 @@
     }
   },
   "promotion": {
+    "nopromo":{
+      "en": "In your favourite list there isnt't any promotion",
+      "it": "Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai"
+    },
     "type":{
       "en": "Type",
       "it": "Tipo"

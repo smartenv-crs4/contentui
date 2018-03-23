@@ -48,7 +48,8 @@ function validateRequestAndUpdateUrl(access_token){
                 removeParams(["default","access_token"],tmpHref,function(err,newLink){
                     if(!err){
                         setOrReplaceQueryParam("uuid",newLink,data.uuId,function(err,newUrl){
-                            window.location.href = newUrl;
+                            //window.location.href = newUrl;
+                            window.location.replace(newUrl);
                         });
                     }
                 });
@@ -72,7 +73,8 @@ function validateRequestAndUpdateUrl(access_token){
                     let tmpHref=window.location.href;
                     removeParams(["default","access_token"],tmpHref,function(err,newLink){
                         setOrReplaceQueryParam("uuid",newLink,data.uuId,function(err,newUrl){
-                            window.location.href = newUrl;
+                            window.location.replace(newUrl);
+                            //window.location.href = newUrl;
                         });
                     });
                 },
@@ -87,7 +89,8 @@ function validateRequestAndUpdateUrl(access_token){
             // window.localStorage.removeItem("token");
             removeParams(["uuid","access_token"],window.location.href,function(err,newLink){
                 setOrReplaceQueryParam('default',newLink,"true",function(err,newUrl){
-                    window.location.href = newUrl;
+                    window.location.replace(newUrl);
+                    //window.location.href = newUrl;
                 });
             });
         }
