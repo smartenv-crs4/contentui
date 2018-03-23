@@ -107,7 +107,7 @@
   },
   "promotion": {
     "nopromo":{
-      "en": "In your favourite list there isnt't any promotion",
+      "en": "In your favourite list there isn't any promotion",
       "it": "Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai"
     },
     "type":{

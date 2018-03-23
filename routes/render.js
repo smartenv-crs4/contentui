@@ -28,7 +28,13 @@ module.exports = {
 
 
             if(value && value.startsWith("*")){
-                commonUiURL+=(key+"="+config[value.substr(1)]+"&");
+                let plus=value.indexOf("+");
+                if(plus<0)
+                    commonUiURL+=(key+"="+config[value.substr(1)]+"&");
+                else{
+                    commonUiURL+=(key+"="+config[value.substring(1,plus)]+ value.substr(plus+1) + "&");
+                }
+
             }else{
                 if (value)  commonUiURL+=(key+"="+value+"&");
             }
@@ -43,8 +49,7 @@ module.exports = {
                 commonUiURL=commonUiURLWithNoToken;
 
 
-            console.log(model.access_token);
-
+            //console.log(model.access_token);
 
             request.get(commonUiURL,function (error, response, body) {
                     if(error) {

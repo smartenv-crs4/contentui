@@ -129,31 +129,36 @@ function getFavoutiteList(callback){
 
 function getPromotionsById(promotionsId, callbackPromotionsById){
 
-    console.log(promotionsId);
 
-    jQuery.ajax({
-        url: config.contentUIUrl + "/contents/actions/search?t=promo&ids="+promotionsId.join(),
-        type: "GET",
-        success: function(data, textStatus, xhr){
-            console.log("!!!!!!!!!!!!!!!GetPromoByID!!!!!!!!!!!!!!!!");
-            console.log(data);
-            callbackPromotionsById(null,data.promos);
-        },
-        error: function(xhr, status)
-        {
-            console.log(xhr);
-            var msg;
-            try{
-                msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.500");
+    if(promotionsId.length>0){
+        jQuery.ajax({
+            url: config.contentUIUrl + "/contents/actions/search?t=promo&ids="+promotionsId.join(),
+            type: "GET",
+            success: function(data, textStatus, xhr){
+                console.log("!!!!!!!!!!!!!!!GetPromoByID!!!!!!!!!!!!!!!!");
+                console.log(data);
+                callbackPromotionsById(null,data.promos);
+            },
+            error: function(xhr, status)
+            {
+                console.log(xhr);
+                var msg;
+                try{
+                    msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.500");
+                }
+                catch(err){
+                    msg = (xhr.statusText) ||  i18next.t("error.500");
+                }
+                msg="getPromotionsById function:" + msg;
+                jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+                callbackPromotionsById(msg,null);
             }
-            catch(err){
-                msg = (xhr.statusText) ||  i18next.t("error.500");
-            }
-            msg="getPromotionsById function:" + msg;
-            jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
-            callbackPromotionsById(msg,null);
-        }
-    });
+        });
+    }else{
+        callbackPromotionsById(null,[]);
+    }
+
+
 }
 
 
@@ -275,6 +280,10 @@ function getFavouritePage(){
                                 msg="getFavouritePage function:" + err;
                                 jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
                             } else {
+
+                                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                console.log(promotionsToRender);
+
                                 compileAndSetFavouriteContent(promotionsToRender);
                             }
                         });

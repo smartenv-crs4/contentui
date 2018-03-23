@@ -21,7 +21,8 @@
       "defaultRedirectToCurrentPage":"true",
       "loginHomeRedirect": "*contentUIUrl",
       "whoWeAre" : null,
-      "FastSearchUrl" : "/"
+      "FastSearchUrl" : "/",
+      "favourite":"*contentUIUrl+/favourites"
     }
   },
   "dev": {
@@ -46,7 +47,8 @@
       "defaultRedirectToCurrentPage":"true",
       "loginHomeRedirect": "*contentUIUrl",
       "whoWeAre" : null,
-      "FastSearchUrl" : "/"
+      "FastSearchUrl" : "/",
+      "favourite":"*contentUIUrl+/favourites"
     }
   }
 }
