@@ -538,7 +538,7 @@ function addNewPromotion(){
     });
 
 
-    mapInit=initMap(9.0933586,39.2253991,6,true);
+    mapInit=initMap(39.2253991,9.0933586,6,true);
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -550,14 +550,16 @@ function addNewPromotion(){
             updatePromotionField('position',pos,false);
         },function(){
             //The Geolocation service failed
-            handleLocationError("The Geolocation service failed",[9.0933586,39.2253991]);
-            updatePromotionWhere(9.0933586,39.2253991,false);
+            handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
+            updatePromotionWhere(39.2253991,9.0933586,false);
+            // updatePromotionField('position',[39.2253991,9.0933586],false);
             updatePromotionField('position',[9.0933586,39.2253991],false);
         });
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError("Browser doesn't support Geolocation",[9.0933586,39.2253991]);
-        updatePromotionWhere(9.0933586,39.2253991,false);
+        handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
+        updatePromotionWhere(39.2253991,9.0933586,false);
+        //updatePromotionField('position',[39.2253991,9.0933586],false);
         updatePromotionField('position',[9.0933586,39.2253991],false);
     }
 
