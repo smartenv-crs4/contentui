@@ -439,7 +439,8 @@ function addNewPromotion(){
 
     var prom={
         image:config.contentUIUrl+"/assets/img/team/img32-md.jpg",
-        isANewPromotion:true
+        isANewPromotion:true,
+        baseUrl:config.contentUIUrl
     };
 
     jQuery('#promotionContent').html(promotionHtml(prom));
@@ -604,7 +605,8 @@ function updatePromotion(){
         name:currentPromotion.name,
         description:currentPromotion.description,
         price:currentPromotion.price,
-        isANewPromotion:false
+        isANewPromotion:false,
+        baseUrl:config.contentUIUrl
     };
 
     stopComingSoon();

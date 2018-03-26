@@ -106,6 +106,10 @@
     }
   },
   "promotion": {
+    "language":{
+      "en": "Description and Title Language",
+      "it": "Lingua Descrizione e Titolo"
+    },
     "nopromo":{
       "en": "In your favourite list there isn't any promotion",
       "it": "Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai"
