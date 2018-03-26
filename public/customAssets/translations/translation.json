@@ -106,6 +106,90 @@
     }
   },
   "promotion": {
+    "nopromo":{
+      "en": "In your favourite list there isn't any promotion",
+      "it": "Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai"
+    },
+    "type":{
+      "en": "Type",
+      "it": "Tipo"
+    },
+    "cats":{
+      "en": "Categories",
+      "it": "Categorie"
+    },
+    "category_1":{
+      "en": "Hotel",
+      "it": "Hotel"
+    },
+    "category_2":{
+      "en": "Restaurants",
+      "it": "Ristoranti"
+    },
+    "category_3":{
+      "en": "Museums",
+      "it": "Musei"
+    },
+    "category_4":{
+      "en": "Festivals",
+      "it": "Sagre"
+    },
+    "category_5":{
+      "en": "Monuments",
+      "it": "Monumenti"
+    },
+    "category_6":{
+      "en": "Feast",
+      "it": "Feste"
+    },
+    "category_7":{
+      "en": "Traditions",
+      "it": "Tradizioni"
+    },
+    "category_8":{
+      "en": "Institutions",
+      "it": "Istituzioni"
+    },
+    "category_9":{
+      "en": "Science",
+      "it": "Scienza"
+    },
+    "category_10":{
+      "en": "Sport",
+      "it": "Sport"
+    },
+    "category_11":{
+      "en": "Sea",
+      "it": "Mare"
+    },
+    "category_12":{
+      "en": "Nature",
+      "it": "Natura"
+    },
+    "typeandcat":{
+      "en": "Event type and Categories",
+      "it": "Tipo di Evento e Categorie di Appartenenza"
+    },
+    "type_2":{
+      "en": "Event",
+      "it": "Evento"
+    },
+    "type_1":{
+      "en": "Offer",
+      "it": "Offerta"
+    },
+    "event":{
+      "en": "Event",
+      "it": "Evento"
+    },
+    "offer":{
+      "en": "Offer",
+      "it": "Offerta"
+    },
+    "Completeness":{
+      "en": "Completeness",
+      "it": "Completamento"
+    },
     "moreparticipants": {
       "en": "click to more",
       "it": "clicca perla lista completta"

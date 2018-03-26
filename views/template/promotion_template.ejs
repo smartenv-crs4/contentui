@@ -1,3 +1,38 @@
+<!--categories(label) images dictionary-->
+<script>
+ var imagedictionary={
+     1:"icon-hotel-restaurant-001",
+     2:"icon-hotel-restaurant-020",
+     3:"icon-education-074",
+     4:"icon-travel-122",
+     5:"icon-travel-052",
+     6:"icon-food-010",
+     7:"icon-education-034",
+     8:"icon-education-113",
+     9:"icon-education-029",
+     10:"icon-sport-137",
+     11:"icon-travel-003",
+     12:"glyphicon glyphicon-leaf"
+ }
+
+ var imageTypedictionary={
+     type_1:"icon-finance-202",
+     type_2:"icon-food-004"
+ }
+
+ Handlebars.registerHelper('image', function(item,type, options) {
+
+     if(type=='type')
+         return imageTypedictionary[item]
+     else
+         return imagedictionary[item];
+ });
+
+
+
+</script>
+
+
 <script id="promotion_template" type="text/x-handlebars-template">
     <div class="masonry-box" style="position: relative; height: 1183.56px;">
 
@@ -13,7 +48,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="picture">
                         <div class="row">
-                            <img class="img-responsive" src="{{image}}" alt="" style='height: 100%; width: 100%;'>
+                            <img class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="details">
@@ -24,9 +59,46 @@
                 </div>
             </div>
 
+            <hr class="devider devider-db">
 
 
-        <!-- End events date-->
+            <div>
+                <!-- Panel with Equal Height -->
+                <div class="panel panel-default equal-height-column">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-tasks"></i><span data-i18n="promotion.typeandcat"></span></h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <div>
+                            <h5><span data-i18n="promotion.type">Event Type</span><span> :  </span> <span class="{{#image event_type 'type'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.{{event_type}}"></span></h5>
+                        </div>
+
+                        <!--space start-->
+                        <div class="margin-bottom-20"></div>
+                        <hr>
+                        <div class="margin-bottom-20"></div>
+                        <!--space end-->
+
+
+                        <!--categorie start-->
+                        <h5>
+                            <span data-i18n="promotion.cats">Categories</span>
+                            <span> : </span>
+                            {{#each categories}}
+                                <span class="{{#image this 'category'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.category_{{this}}"></span> {{#unless @last}} -- {{/unless}}
+                            {{/each}}
+                        </h5>
+
+                        <!--categories end-->
+                    </div>
+
+                </div>
+                <!-- End Red Panel with Equal Height -->
+            </div>
+
+
+
         </div>
         <!-- End Blog Grid Left -->
 
@@ -90,17 +162,6 @@
                 </div>
             {{/if}}
             <!--End modal participants list-->
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -208,7 +269,7 @@
                         <div class="row thumbnails thumbnail-style">
                             <div class="thumbnail-img">
                                 <div class="overflow-hidden">
-                                    <img id="promotionImage" class="img-responsive" src="{{image}}" alt="" style='height: 100%; width: 100%;'>
+                                    <img id="promotionImage" class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
                                 </div>
                                 <a class="btn-more hover-effect" onclick="promotionPictureOpenDialog()">
                                     <span><i class="fa fa-pencil"></i> <span data-i18n="promotion.browse"></span></span>
@@ -223,6 +284,111 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+            <hr class="devider devider-db">
+
+
+            <div>
+                <!-- Red Panel with Equal Height -->
+                <div class="panel panel-default equal-height-column">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-tasks"></i><span data-i18n="promotion.typeandcat"></span></h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <div>
+
+                            <h5><span data-i18n="promotion.type">Event Type</span><span> : </span></h5>
+
+
+
+                            <!--Radio group-->
+                            <div id="promotype">
+                                <div class="col-md-4 form-check">
+                                    <input value="1" class="form-check-input" name="grouptype" type="radio">
+                                    <label class="form-check-label"><span class="icon-finance-202"></span>  <span data-i18n="promotion.offer">Option 1</span></label>
+                                </div>
+
+                                <div class="col-md-4 form-check">
+                                    <input value="2" class="form-check-input" name="grouptype" type="radio">
+                                    <label class="form-check-label"><span class="icon-food-004"></span>  <span data-i18n="promotion.event">Option 2</span></label>
+                                </div>
+                            </div>
+                            <!--Radio group-->
+
+
+                            <!--Checkbox butons-->
+                        </div>
+
+                        <!--space start-->
+                        <div class="margin-bottom-20"></div>
+                        <hr>
+                        <div class="margin-bottom-20"></div>
+                        <!--space end-->
+
+
+                        <!--sategorie start-->
+                        <h5><span data-i18n="promotion.cats">Categories</span><span> : </span></h5>
+                        <div id="categories" class="row" id="f_catDrop">
+                            <div class="col-md-4">
+                                <input id="cbox_1" type="checkbox" value="1" name="category" class="ibtn">
+                                <label for="cbox_1">&nbsp;<span class="icon-hotel-restaurant-001"></span> - <span>Hotel</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_2" type="checkbox" value="2" name="category" class="ibtn">
+                                <label for="cbox_2">&nbsp;<span class="icon-hotel-restaurant-020"></span> - <span>Ristoranti</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_3" type="checkbox" value="3" name="category" class="ibtn">
+                                <label for="cbox_3">&nbsp;<span class="icon-education-074"></span> - <span>Musei</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_4" type="checkbox" value="4" name="category" class="ibtn">
+                                <label for="cbox_4">&nbsp;<span class="icon-travel-122"></span>  -  <span>Sagre</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_5" type="checkbox" value="5" name="category" class="ibtn">
+                                <label for="cbox_5">&nbsp;<span class="icon-travel-052"></span>  -  <span>Monumenti</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_6" type="checkbox" value="6" name="category" class="ibtn">
+                                <label for="cbox_6">&nbsp;<span class="icon-food-010"></span> - <span>Feste</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_7" type="checkbox" value="7" name="category" class="ibtn">
+                                <label for="cbox_7">&nbsp;<span class="icon-education-034"></span> - <span>Tradizioni</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_8" type="checkbox" value="8" name="category" class="ibtn">
+                                <label for="cbox_8">&nbsp;<span class="icon-education-113"></span> - <span>Istituzioni</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_9" type="checkbox" value="9" name="category" class="ibtn">
+                                <label for="cbox_9">&nbsp;<span class="icon-education-029"></span> - <span>Scienza</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_10" type="checkbox" value="10" name="category" class="ibtn">
+                                <label for="cbox_10">&nbsp;<span class="icon-sport-137"></span> - <span>Sport</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_11" type="checkbox" value="11" name="category" class="ibtn">
+                                <label for="cbox_11">&nbsp;<span class="icon-travel-003"></span> - <span>Mare</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="cbox_12" type="checkbox" value="12" name="category" class="ibtn">
+                                <label for="cbox_12">&nbsp;<span class="glyphicon glyphicon-leaf"></span> - <span>Natura</span></label>
+                            </div>
+                        </div>
+                        <!--categories end-->
+                    </div>
+
+                </div>
+                <!-- End Red Panel with Equal Height -->
+            </div>
+
         </div>
         <!-- End Blog Grid Left -->
 

@@ -24,6 +24,35 @@ router.get('/:id', function(req, res, next) {
     }
 });
 
+
+
+
+router.get('/actions/involvements', function(req, res, next) {
+
+    var access_token=(req.query && req.query.access_token)||"";
+
+    var rqparams = {
+        url:  contentUrl + "involvements",
+        headers: {'Authorization': "Bearer " + access_token }
+    };
+
+    return request.get(rqparams).pipe(res);
+
+});
+
+
+
+router.get('/actions/search', function(req, res, next) {
+
+    var rqparams = {
+        url:  contentUrl + "search?ids="+req.query.ids+"&t="+req.query.t
+    };
+
+    return request.get(rqparams).pipe(res);
+
+});
+
+
 router.use('/:cid/promotions',function(req,res,next){
     req.contentId=req.params.cid;
     next();

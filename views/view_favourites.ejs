@@ -132,7 +132,7 @@
     <!--=== End Header ===-->
 
 
-        <div id="promotionContent" class="container content height-500">
+        <div id="favouriteContent" class="container content height-500">
              <!--see promontion content in promotion.js -->
         </div>
 
@@ -169,18 +169,6 @@
 
 
 
-    <!-- JS Customization -->
-    <script>
-        /*
-        var config=JSON.parse('<%- JSON.stringify(properties) %>');
-        console.log(config);
-        var contentID=JSON.parse('<%- JSON.stringify(contentID) %>');
-        var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>');
-        var userToken= "<%= access_token %>" || null;
-        var tokenError="<%= tokenError %>" || null;
-        */
-    </script>
-
     <% include config %>
 
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/plugins/bootstrap-editable.min.js"></script>
@@ -192,12 +180,13 @@
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/countdown/jquery.plugin.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/countdown/jquery.countdown.js"></script>
     <!--<script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/js/pages/page_coming_soon.js"></script>-->
-    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/promotions.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/favourites.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/promotions_common.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/moment.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/utils.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/tokenManager.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/async/dist/async.min.js"></script>
+    <script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/moment/min/moment.min.js"></script>
 
     <!--date and time picker-->
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/plugins/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
@@ -227,7 +216,7 @@
 
 
     <!--template-->
-    <% include template/promotion_template.ejs %>
+    <% include template/favourites_template.ejs %>
 
 
 
@@ -246,8 +235,8 @@
         jQuery(document).ready(function() {
             App.init();
             StyleSwitcher.initStyleSwitcher();
+            initfavouritePage();
             initToken();
-            initPromotionsPage(JSON.parse('<%- JSON.stringify(isANewPromotion) %>'));
             $.ajax({
                 cache: false,
                 url: '<%=properties.contentUIUrl%>/customAssets/translations/translation.json',

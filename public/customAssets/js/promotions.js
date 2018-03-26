@@ -238,7 +238,7 @@ function openModalParticipants(){
 //         dataType: "json",
 //         success: function(dataResp, textStatus, xhr)
 //         {
-//             compilePromotion();
+//             compileFavourites();
 //         },
 //         error: function(xhr, status)
 //         {
@@ -278,7 +278,7 @@ function savePromotion(iSANewPromotion){
             success: function (dataResp, textStatus, xhr) {
                 promotionID= dataResp._id;
                 window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
-                //compilePromotion();
+                //compileFavourites();
             },
             error: function (xhr, status) {
 
@@ -479,6 +479,29 @@ function addNewPromotion(){
     };
 
 
+
+    let promotype=$('#promotype');
+    // promotionWhere.val(currentPromotion.address);
+    promotype.get(0).onchange=function(){
+        var selectedOption = $("#promotype input:radio:checked").val();
+        let value="1"; // offer
+        if(selectedOption=="event")
+            value="2";
+        updatePromotionField('type',value==currentPromotion.type?null:value,true);
+    };
+
+    let categories=$('#categories');
+    // promotionWhere.val(currentPromotion.address);
+    categories.get(0).onchange=function(){
+        let value=[]; // offer
+        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+            value.push(this.value);
+
+        });
+        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+    };
+
+
     let promotionPicture=$('#updatePicture');
     //promotionPicture.val(currentPromotion.images[0]);
     promotionPicture.get(0).onchange=function(){
@@ -529,13 +552,15 @@ function addNewPromotion(){
             //The Geolocation service failed
             handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
             updatePromotionWhere(39.2253991,9.0933586,false);
-            updatePromotionField('position',[39.2253991,9.0933586],false);
+            // updatePromotionField('position',[39.2253991,9.0933586],false);
+            updatePromotionField('position',[9.0933586,39.2253991],false);
         });
     } else {
         // Browser doesn't support Geolocation
         handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
         updatePromotionWhere(39.2253991,9.0933586,false);
-        updatePromotionField('position',[39.2253991,9.0933586],false);
+        //updatePromotionField('position',[39.2253991,9.0933586],false);
+        updatePromotionField('position',[9.0933586,39.2253991],false);
     }
 
 
@@ -572,7 +597,7 @@ function updatePromotion(){
     var promotionHtml = Handlebars.compile(promotion_admin_template);
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
+        promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
         start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
@@ -620,6 +645,31 @@ function updatePromotion(){
         let value=promotionWhere.val();
         updatePromotionField('address',value==currentPromotion.address?null:value,true);
     };
+
+
+    let promotype=$('#promotype');
+    let tmpv=$("#promotype input[value='"+currentPromotion.type+"']:radio");
+    tmpv.prop('checked', true);
+
+    promotype.get(0).onchange=function(){
+        var value = $("#promotype input:radio:checked").val();
+        updatePromotionField('type',value==currentPromotion.type?null:value,true);
+    };
+
+    let categories=$('#categories');
+    currentPromotion.category.forEach(function(catValue){
+        $("input[name='category'][value='"+ catValue +"']:checkbox").prop('checked', true);
+    });
+
+    categories.get(0).onchange=function(){
+        let value=[]; // offer
+        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+            value.push(this.value);
+
+        });
+        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+    };
+
 
 
     let promotionPicture=$('#updatePicture');
@@ -713,22 +763,32 @@ function doILike(){
 }
 
 
-
 function getLikes(){
-    jQuery.ajax({
-        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/likes",
-        type: "POST",
-        success: function(data, textStatus, xhr){
-            $('#likecount').text(data.total);
-        },
-        error: function(xhr, status){
-            $('#likecount').text( i18next.t("error.getlikes"));
-            // return;
-        }
+
+    getPromotionLikes(contentID,promotionID,function(err,total){
+        if(err) $('#likecount').text(err);
+        else $('#likecount').text(total);       
     });
 
     doILike();
 }
+
+//
+// function getLikes(){
+//     jQuery.ajax({
+//         url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/likes",
+//         type: "POST",
+//         success: function(data, textStatus, xhr){
+//             $('#likecount').text(data.total);
+//         },
+//         error: function(xhr, status){
+//             $('#likecount').text( i18next.t("error.getlikes"));
+//             // return;
+//         }
+//     });
+//
+//     doILike();
+// }
 
 
 function setLike(){
@@ -784,23 +844,30 @@ function doIParticipate(){
 }
 
 function getparticipants(){
-    jQuery.ajax({
-        url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
-        type: "POST",
-        success: function(data, textStatus, xhr){
-            $('#participatecount').text(data.total);
 
-            //todo
-            //participantslist to do
-        },
-        error: function(xhr, status){
-
-            $('#participatecount').text(i18next.t("error.getparticipants"));
-            // return;
-        }
+    getPromotionParticipants(contentID,promotionID,function(err,total){
+        if(err)  $('#participatecount').text(err);
+        else $('#participatecount').text(total);
     });
+
     doIParticipate();
 }
+
+// function getparticipants(){
+//     jQuery.ajax({
+//         url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
+//         type: "POST",
+//         success: function(data, textStatus, xhr){
+//             $('#participatecount').text(data.total);
+//         },
+//         error: function(xhr, status){
+//
+//             $('#participatecount').text(i18next.t("error.getparticipants"));
+//             // return;
+//         }
+//     });
+//     doIParticipate();
+// }
 
 
 
@@ -871,7 +938,7 @@ function getPromotionPage(data,token){
     currentPromotion=data;
 
     var prom={
-        image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
+        promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
         start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
         end:moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'),
         where:"Location",
@@ -883,8 +950,15 @@ function getPromotionPage(data,token){
         access_token:userToken,
         baseUrl:config.contentUIUrl,
         participants:(data.participants && data.participants.html) || "",
-        participantsDetails:(data.participants && data.participants.htmldetails) || ""
+        participantsDetails:(data.participants && data.participants.htmldetails) || "",
+        event_type:"type_" + data.type,
+        categories:data.category
     };
+
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(prom);
+
 
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
