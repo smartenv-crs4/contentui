@@ -5,6 +5,7 @@
 
 var zoom = 12;
 var images_array_fd = [];
+var images_to_remove = [];
 
 var _form_ds = {
   admins     : [],
@@ -14,16 +15,41 @@ var _form_ds = {
 }
 var _growl = $.growl; //wa removeAdmin jquery+growl scope.... (?)
 
-function removePicture(elem, id){
-    bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
-      if (result) {
-        $(elem).parent().remove();
-        for (var i = 0; i < images_array_fd.length; i++)
-            if (images_array_fd[i].id === id) {
-                images_array_fd.splice(i, 1);
-            }
+
+function deleteUploadedPicture(id, cb) {
+    jQuery.ajax({
+        url: uploadUrl + "file/" + id,
+        headers: {
+          Authorization: "Bearer " + userToken
+        },
+        type: 'DELETE',
+        success: function(data) {
+            cb(data.filecode);
+        },
+        error: function(xhr, status) {
+            cb(null, {status:status})
         }
     });
+}
+
+function removePicture(elem, id){
+    bootbox.confirm("Vuoi rimuovere l'immagine "+id, function(result){
+        if (result) {
+            if(imageIsPresent(id, images_array_fd)) {
+                for (var i = 0; i < images_array_fd.length; i++) {
+                    if (images_array_fd[i].id === id) {
+                        images_array_fd.splice(i, 1);
+                        $(elem).parent().remove();
+                        break;
+                    }
+                }
+            }
+            else {
+                images_to_remove.push(id);
+                $(elem).parent().remove();
+            }
+        }
+    });    
 }
 
 function imageIsPresent(imgid, imgarr) {
@@ -279,10 +305,22 @@ function updateContent(){
         _growl.error({message:"Invalid data, please check the red bordered fields"})
         return;
     }
+
+    //rimozione immagini da uploadms
+    for(var i=0; i<images_to_remove.length; i++) {
+        deleteUploadedPicture(images_to_remove[i], function(r, e) {
+            if(e) {
+                var msg = ((e.status == 401) ? "You are not the owner of the image " : "Unable to delete the image ") + images_to_remove[i];
+                _growl.warning({message:msg}); //unauthorized is non blocking, the image remains available
+            }
+        });
+    }
+    images_to_remove = []; //important!
+
     contentData = getFormData();
     contentData.images = $('img[name="image"]').map(function () {
         if (!this.src.match("^blob"))
-            return $(this).attr("data-id");
+            return $(this).attr("data-id"); //solo quelle senza blob (img già uploadate)
     }).get();
 
     var oldImagesLength = contentData.images.length;
