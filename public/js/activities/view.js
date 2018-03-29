@@ -133,7 +133,7 @@ function initView(cb) {
         model.images.push(common.normalizeImgUrl(imgsrc)|| config.contentUIUrl + "/assets/img/demo.jpg");
     }
     common.getPromotions(function(promos) {
-        console.log(promos)
+        //console.log(promos)
         for(var i=0; i<promos.length; i++) {
             promos[i].description = common.resizeString(promos[i].description, 200) + '...';
             if(promos[i].images.length == 0)
