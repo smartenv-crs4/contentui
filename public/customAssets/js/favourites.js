@@ -243,18 +243,10 @@ function getFavouritePage(){
                             completeInformationAboutpromotions(currentPromo,function(err,updatedpromotions){
                                 if(!err) {
                                     current = {};
-                                    current.title = updatedpromotions.name;
-                                    current.description = updatedpromotions.description.substring(0, (updatedpromotions.description.substring(200, 300).indexOf(" ")+200) || 200);
-                                    if(current.description.length<200){
-                                        let dif=200-current.description.length;
-                                        for(let counter=0;counter<dif;++counter){
-                                            current.description+="\xa0";
-                                        }
-                                    }else{
-                                        current.description+="....";
-                                    }
-
-
+                                    initTitleJsonMultilanguage(updatedpromotions.name,updatedpromotions._id);
+                                    current.title = updatedpromotions._id +".title";
+                                    initDescriptionJsonMultilanguage(updatedpromotions.description,updatedpromotions._id,200,"\xa0");
+                                    current.description = updatedpromotions._id +".description";
                                     current.activity_name = updatedpromotions.activity_name;
                                     current.activity_link=updatedpromotions.activity_link;
                                     current.promo_link=updatedpromotions.promo_link;

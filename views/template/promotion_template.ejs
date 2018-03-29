@@ -53,7 +53,7 @@
                     </div>
                     <div class="tab-pane fade" id="details">
                         <div id="descr" class="row">
-                            <p>{{description}}</p>
+                            <p data-i18n="promo_multilanguage.description">{{description}}</p>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
 
 
 
-            <h3>{{name}} </h3>
+            <h3 data-i18n="promo_multilanguage.title">{{name}} </h3>
             <ul class="blog-grid-info">
                 <li class="blog-grid-like"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
                 <li class="blog-grid-participate participatelisttooltip">
@@ -406,16 +406,16 @@
                     <!--language writing Start-->
                     <section>
                         <label class="label" data-i18n="promotion.language">Titolo</label>
-                        <select style='background-color:transparent;'>
-                            <option value='archived'>&#x1F1EE;&#x1F1F9;&nbsp;Italiano</option>
-                            <option value='archived'>&#x1F1EC;&#x1F1E7;&nbsp;Inglese</option>
-                            <option value='archived'>&#x1F1EB;&#x1F1F7;&nbsp;Francese</option>
-                            <option value='archived'>&#x1F1EA;&#x1F1F8;&nbsp;Spagnolo</option>
-                            <option value='archived'>&#x1F1E9;&#x1F1EA;&nbsp;Tedesco</option>
-                            <option value='archived'>&#x1F1F5;&#x1F1F9;&nbsp;Portoghese</option>
-                            <option value='archived'>&#x1F1F7;&#x1F1FA;&nbsp;Russo</option>
-                            <option value='archived'>&#x1F1EC;&#x1F1F7;&nbsp;Greco</option>
-                            <option value='archived'>&#x1F1E7;&#x1F1F7;&nbsp;Brasiliano</option>
+                        <select id="multilanguageselect" style='background-color:transparent;'>
+                            <option value='it'>&#x1F1EE;&#x1F1F9;&nbsp;Italiano</option>
+                            <option value='en'>&#x1F1EC;&#x1F1E7;&nbsp;Inglese</option>
+                            <option value='fr'>&#x1F1EB;&#x1F1F7;&nbsp;Francese</option>
+                            <option value='es'>&#x1F1EA;&#x1F1F8;&nbsp;Spagnolo</option>
+                            <option value='de'>&#x1F1E9;&#x1F1EA;&nbsp;Tedesco</option>
+                            <option value='pt'>&#x1F1F5;&#x1F1F9;&nbsp;Portoghese</option>
+                            <option value='ru'>&#x1F1F7;&#x1F1FA;&nbsp;Russo</option>
+                            <option value='gr'>&#x1F1EC;&#x1F1F7;&nbsp;Greco</option>
+                            <option value='br'>&#x1F1E7;&#x1F1F7;&nbsp;Brasiliano</option>
                         </select>
                     </section>
                     <!--language writing End-->

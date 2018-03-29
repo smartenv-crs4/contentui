@@ -455,13 +455,23 @@ function addNewPromotion(){
     let promotionTitle=$('#promotionTitle');
     promotionTitle.get(0).oninput=function(){
         let nameValue=promotionTitle.val();
-        updatePromotionField('name',nameValue==currentPromotion.name?null:nameValue,true);
+        getmultilanguageTitle(nameValue,function(err,titleWithTags){
+            if(!err) {
+                updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
+            }
+        });
+
     };
 
     let promotionDescription=$('#promotionDescription');
     promotionDescription.get(0).oninput=function(){
         let value=promotionDescription.val();
-        updatePromotionField('description',value==currentPromotion.description?null:value,true);
+        getmultilanguageDescription(value,function(err,descriptionWithTags){
+            if(!err) {
+                updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
+            }
+        });
+
     };
 
 
@@ -539,6 +549,8 @@ function addNewPromotion(){
     });
 
 
+
+
     mapInit=initMap(39.2253991,9.0933586,6,true);
 
     if (navigator.geolocation) {
@@ -569,6 +581,11 @@ function addNewPromotion(){
     // When the user selects an address from the dropdown, populate the address
     // fields in the form.
     autocomplete.addListener('place_changed', fillInAddress);
+
+
+
+
+    initMultilanguage();
 
     //
     // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
@@ -616,20 +633,34 @@ function updatePromotion(){
     StyleSwitcher.initStyleSwitcher();
     //Datepicker.initDatepicker();
 
+
+    initMultilanguage();
     newPromotion={};
+
     // set Title
+    initTitleJsonMultilanguage(currentPromotion.name);
     let promotionTitle=$('#promotionTitle');
-    promotionTitle.val(currentPromotion.name);
+    promotionTitle.val(getCurrentLanguageTitle());
     promotionTitle.get(0).oninput=function(){
         let nameValue=promotionTitle.val();
-        updatePromotionField('name',nameValue==currentPromotion.name?null:nameValue,true);
+        getmultilanguageTitle(nameValue,function(err,titleWithTags){
+            if(!err) {
+                updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
+            }
+        });
     };
 
+
+    initDescriptionJsonMultilanguage(currentPromotion.description);
     let promotionDescription=$('#promotionDescription');
-    promotionDescription.val(currentPromotion.description);
+    promotionDescription.val(getCurrentLanguageDescription());
     promotionDescription.get(0).oninput=function(){
         let value=promotionDescription.val();
-        updatePromotionField('description',value==currentPromotion.description?null:value,true);
+        getmultilanguageDescription(value,function(err,descriptionWithTags){
+            if(!err) {
+                updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
+            }
+        });
     };
 
 
@@ -939,6 +970,9 @@ function getPromotionPage(data,token){
     var promotionHtml = Handlebars.compile(promotion_template);
     currentPromotion=data;
 
+    initDescriptionJsonMultilanguage(data.description);
+    initTitleJsonMultilanguage(data.name);
+
     var prom={
         promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
         start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
@@ -957,9 +991,6 @@ function getPromotionPage(data,token){
         categories:data.category
     };
 
-
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log(prom);
 
 
     jQuery('#promotionContent').html(promotionHtml(prom));
