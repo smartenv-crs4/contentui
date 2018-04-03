@@ -121,17 +121,24 @@ $('body').on('keypress', "#qt", function(args) {
 
 function showResults(qresults) {
     if(qresults) _queryResults = _queryResults.concat(qresults);
+    for(var i=0; i < _queryResults.length; i++) {
+        initTitleJsonMultilanguage(_queryResults[i].title, _queryResults[i].id);
+        _queryResults[i].titleLangId = _queryResults[i].id + '.title';
+        initDescriptionJsonMultilanguage(_queryResults[i].description, _queryResults[i].id, 300);
+        _queryResults[i].descLangId = _queryResults[i].id + '.description';
+    }
+
     if($("#mapview").hasClass("btn-success")) {
         var locations = [];
         var infowindows = [];
         var qr = _queryResults; //just an alias
-        for(var i=0; i < qr.length; i++) {
+        for(var i=0; i < qr.length; i++) {     
+
             if(qr[i].lat && qr[i].lon) {
                 locations.push({lat: qr[i].lat, lng: qr[i].lon});
                 infowindows.push(
                     "<div><h3><a href='" 
-                    + qr[i].link + "'>" 
-                    + qr[i].title + "</a></h3>"
+                    + qr[i].link + "' data-i18n='" + qr[i].titleLangId + "'></a></h3>"
                     + (qr[i].town ? "<i class='fa fa-map'></i> " + qr[i].town + '<br>': '')
                     + (qr[i].address ? "<i class='fa fa-map-marker'></i> " + qr[i].address + '<br>': '')
                     + (qr[i].likes ? "<i class='fa fa fa-thumbs-up'></i> " + qr[i].likes + '<br>': '')
@@ -140,10 +147,13 @@ function showResults(qresults) {
             }
         }
         setMapClusters(locations, infowindows);
+        $('body').localize();
     }
     else {
+        console.log(_queryResults)
         $("#searchresults").html(_searchTemplate({items:_queryResults}));
     }
+    $('body').localize();
 }
 
 
@@ -523,7 +533,7 @@ function search(cb) {
                     title: item.name,
                     town:item.town,
                     image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
-                    description: common.markup(common.resizeString(item.description, 350)),
+                    description: item.description, //common.markup(common.resizeString(item.description, 350)),
                     pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
                     type: _filters.type,
                     link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,

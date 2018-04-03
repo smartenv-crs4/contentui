@@ -10,7 +10,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="">
-
+	
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="favicon.ico">
 
@@ -280,13 +280,14 @@
 	
 	<script type="text/javascript" src="<%= baseUrl %>customAssets/js/utils.js"></script>
 	<script type="text/javascript" src="<%= baseUrl %>customAssets/js/tokenManager.js"></script>
+	<script type="text/javascript" src="<%= baseUrl %>customAssets/js/multilanguage.js"></script>
 	<script type="text/javascript" src="<%= baseUrl %>js/activities/common.js"></script>
     <script type="text/javascript" src="<%= baseUrl %>js/search.js"></script>
 
 	<script id="search-template" type="text/x-handlebars-template">
 		{{#each items}}
 			<div class="inner-results">
-				<h3><a href="{{this.link}}">{{this.title}}</a></h3>
+				<h3><a href="{{this.link}}" data-i18n="{{this.titleLangId}}"></a></h3>
 				<div class="entry-item">
 					<div class="container">
 						<div class="row">
@@ -294,7 +295,7 @@
 								<div class="img-round-crop" style="background-image: url('{{#if this.image}} {{this.image}} {{else}} <%= baseUrl %>/img/no_image_available_175.png {{/if}}');"></div>
 							</div>
 							<div class="col-md-10 item-desc">
-								<p style="vertical-align: top;">{{{this.description}}}... <a href="{{this.link}}" style="color:green;font-style:italic;">read more</a></p>
+								<p style="vertical-align: top;"><span data-i18n="{{this.descLangId}}"></span> <a href="{{this.link}}" style="color:green;font-style:italic;">read more</a></p>
 							</div>
 						</div>
 					</div>

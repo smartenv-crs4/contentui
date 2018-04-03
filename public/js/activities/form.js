@@ -236,6 +236,8 @@ function loadContent(cb) {
         }
         loadCat(function(cats) {
             hmodel.cats = cats;
+            initTitleJsonMultilanguage(activityBody.name)
+            initDescriptionJsonMultilanguage(activityBody.description)
             $("#formbox").html(formcontent(hmodel));
             if(cb) cb()
         });
@@ -250,8 +252,17 @@ function loadContent(cb) {
 
 function getFormData() {
     //TODO validations!!!!
-    var name = $('#f_name').val();
-    var description = $('#f_description').val();
+    //var name = $('#f_name').val();
+    var name = '';
+    getContentWithTags(titleMultilanguage, function(e, v) {
+        name = v;
+    });
+    
+    //var description = $('#f_description').val();
+    var description = '';
+    getContentWithTags(descriptionMultilanguage, function(e, v) {
+        description = v;
+    });
     var address = $('#f_address').val();  
     var facebook = $("#f_fb").val();
     var twitter = $("#f_tw").val();

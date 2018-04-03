@@ -69,6 +69,7 @@ function createJsonMultilanguage(content,multilanguage){
 
 // call function to transform text with title language tags to json
 function initTitleJsonMultilanguage(content, nsKey){
+    titleMultilanguage = {};
     createJsonMultilanguage(content,titleMultilanguage);
     addCurrentLanguageDescriptionToI18n(titleMultilanguage,"title",nsKey);
 
@@ -79,6 +80,7 @@ function initTitleJsonMultilanguage(content, nsKey){
 
 // call function to transform text with description language tags to json
 function initDescriptionJsonMultilanguage(content,nsKey,maxSize,spaceRefactor){
+    descriptionMultilanguage={};
     createJsonMultilanguage(content,descriptionMultilanguage);
     addCurrentLanguageDescriptionToI18n(descriptionMultilanguage,"description",nsKey,maxSize,spaceRefactor);
 }
@@ -96,7 +98,7 @@ function addCurrentLanguageDescriptionToI18n(multilanguage,field,nskey,maxSize,s
                 oldValue=value;
                 value= value.substring(0, tmpIndex);
                 if(oldValue.length>value.length)
-                    value+="....";
+                    value+="...";
 
             }
             if(spaceRefactor){
@@ -132,9 +134,9 @@ function getContentWithTags(content,callbackcontentWithTags){
 
         if( err ) { // never reacheable due no error callback
             console.log(err);
-            callbackcontentWithTags(err,null);
+            if(callbackcontentWithTags) callbackcontentWithTags(err,null);
         } else {
-            callbackcontentWithTags(null,contentwithTags);
+            if(callbackcontentWithTags) callbackcontentWithTags(null,contentwithTags);
         }
     });
 }
@@ -150,9 +152,9 @@ function getmultilanguageTitle(currentDescription,callbackGetmultilanguageTitle)
     // get tagged content
     getContentWithTags(titleMultilanguage, function(err,contntWithTags){
         if(err){
-            callbackGetmultilanguageTitle(err,null);
+            if(callbackGetmultilanguageTitle) callbackGetmultilanguageTitle(err,null);
         }else{
-            callbackGetmultilanguageTitle(null,contntWithTags);
+            if(callbackGetmultilanguageTitle) callbackGetmultilanguageTitle(null,contntWithTags);
         }
     })
 }
@@ -167,9 +169,9 @@ function getmultilanguageDescription(currentDescription,callbackGetmultilanguage
     // get tagged content
     getContentWithTags(descriptionMultilanguage, function(err,descriptionWithTags){
         if(err){
-            callbackGetmultilanguageDescription(err,null);
+            if(callbackGetmultilanguageDescription) callbackGetmultilanguageDescription(err,null);
         }else{
-            callbackGetmultilanguageDescription(null,descriptionWithTags);
+            if(callbackGetmultilanguageDescription) callbackGetmultilanguageDescription(null,descriptionWithTags);
         }
     })
 }

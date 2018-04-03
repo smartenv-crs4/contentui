@@ -47,8 +47,8 @@
     <!--=== Content Part ===-->
     <div class="container content">
         <div class="title-box-v2">
-            <h2><span class="color-green">{{name}}</span></h2>
-            <p>{{{description}}}</p>
+            <h2><span class="color-green" data-i18n="activitycontent.title"></span></h2>
+            <p data-i18n="activitycontent.description"></p>
         </div>
 
         <!-- About Sldier -->
@@ -111,9 +111,9 @@
                         <div class="team-v2">
                             <div style="height:175px;overflow:hidden;"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></div>
                             <div class="inner-team">
-                                <h3><a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/">{{this.name}}</a></h3>
+                                <h3><a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/" data-i18n="{{this.promoLangId}}.title"></a></h3>
                                 <small class="color-green">dal {{this.startDate}} al {{this.endDate}}</small>
-                                <p>{{this.description}}</p>
+                                <p data-i18n="{{this.promoLangId}}.description"></p>
                                 <hr>
                                 <small>Last Update: {{this.lastUpdate}}</small>
                             </div>

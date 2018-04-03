@@ -28,16 +28,30 @@
                     <div class="col-sm-10"><h3 data-i18n="activity.edit"></h3></div>
                 </div>
             </div>
+
+            <!--language writing Start-->
+            <select id="multilanguageselect" class="form-control">
+                <option value='it'>&#x1F1EE;&#x1F1F9;&nbsp;Italiano</option>
+                <option value='en'>&#x1F1EC;&#x1F1E7;&nbsp;Inglese</option>
+                <option value='fr'>&#x1F1EB;&#x1F1F7;&nbsp;Francese</option>
+                <option value='es'>&#x1F1EA;&#x1F1F8;&nbsp;Spagnolo</option>
+                <option value='de'>&#x1F1E9;&#x1F1EA;&nbsp;Tedesco</option>
+                <option value='pt'>&#x1F1F5;&#x1F1F9;&nbsp;Portoghese</option>
+                <option value='ru'>&#x1F1F7;&#x1F1FA;&nbsp;Russo</option>
+                <option value='gr'>&#x1F1EC;&#x1F1F7;&nbsp;Greco</option>
+                <option value='br'>&#x1F1E7;&#x1F1F7;&nbsp;Brasiliano</option>
+            </select>
+            <!--language writing End-->
+
             <!--Inputs-->
             <h4 data-i18n="activity.name"></h4>
-            <input id="f_name" type="text" class="form-control" placeholder="es. Centro di ricerca CRS4" value="{{name}}" required maxlength="100">
+            <input id="f_name" type="text" class="form-control" placeholder="es. Centro di ricerca CRS4" required maxlength="100">
             <!--End Inputs-->
             <div class="margin-bottom-20"></div>
 
             <!-- Descrizione section-->
             <h4 data-i18n="activity.desc">Descrizione</h4>
-            <small>Use [b] <b> for bold text</b> [/b] and [i] <i>for italic text</i> [/i]</small>
-            <textarea id="f_description" class="form-control" rows="7" maxlength="2000" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required>{{description}}</textarea>
+            <textarea id="f_description" class="form-control" rows="7" maxlength="2000" placeholder="es. Il ristorante La Spigola è conosciuto come uno dei migliori ristoranti di Cagliari..." required></textarea>
             <div class="margin-bottom-20"></div>
 
             <!-- Image upload section-->

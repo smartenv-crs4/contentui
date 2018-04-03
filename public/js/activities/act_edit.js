@@ -24,6 +24,16 @@ function initToolbar() {
             $("#fileUpload").on("change", function() {
                 loadImagePreview(this);
             });
+
+            initMultilanguage();
+            $("#f_name").focusout(function() {
+                getmultilanguageTitle(this.value);
+            })
+            $("#f_description").focusout(function() {
+                getmultilanguageDescription(this.value);
+            })
+
+            
             initTranslation();
         });
     })
@@ -128,11 +138,36 @@ function lockContent(lock, cb) {
 
 function renderPromoList(promos) {
     for(var i=0; i<promos.length; i++) {
-        var d = promos[i].description
-        if(d.length > 200)
-        promos[i].description = d.substring(0,d.indexOf(' ', 100)) + '...';
+        initTitleJsonMultilanguage(promos[i].name, promos[i]._id);
+        initDescriptionJsonMultilanguage(promos[i].description, promos[i]._id, 200);
+        
+        promos[i].promoLangId = promos[i]._id
     }
     var source = $("#promo-template").html();
     promoHtpl = Handlebars.compile(source);
     $("#promoList").html(promoHtpl({promos:promos, idcontent:activityBody._id}));
+}
+
+
+function initMultilanguage(){
+    lang=window.localStorage.lng;
+    // lang=$('#multilanguageselect').get(0).value;
+
+    $('#multilanguageselect').change(function() {
+        lang=this.value;
+
+        // console.log("Language:--->"+ lang);
+        // console.log(titleMultilanguage[lang]);
+        if(!(titleMultilanguage[lang]))
+            titleMultilanguage[lang] = "";
+
+        if(!(descriptionMultilanguage[lang]))
+            descriptionMultilanguage[lang] = "";
+
+        $('#f_name').val(titleMultilanguage[lang]);
+        $('#f_description').val(descriptionMultilanguage[lang]);
+
+    });
+
+    $('#multilanguageselect').val(window.localStorage.lng).change();
 }

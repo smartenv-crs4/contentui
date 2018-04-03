@@ -112,10 +112,10 @@ function initView(cb) {
     if(activityBody.twitter) contacts.push({icon:"fa fa-twitter", url:activityBody.twitter, alt:"Twitter"});
     if(activityBody.tripadvisor) contacts.push({icon:"fa fa-tripadvisor", url:activityBody.tripadvisor, alt:"Tripadvisor"});
     if(activityBody.instagram) contacts.push({icon:"fa fa-instagram", url:activityBody.instagram, alt:"Instagram"});
-
+    
     var model = {
-        name:activityBody.name,
-        description:common.markup(activityBody.description),
+        //name:activityBody.name,
+        //description:common.markup(activityBody.description),
         address: activityBody.address,
         phone: activityBody.phone,
         contacts: contacts,
@@ -128,21 +128,25 @@ function initView(cb) {
     for(let i=0; i<activityBody.images.length; i++) {
         let col = i % 4;
         var imgsrc = activityBody.images[i];        
-        //TODO nel caso di immagini su uploadms, contentms dovrebbe restituire 
-        //solo gli objectid, non gli url già completi
         model.images.push(common.normalizeImgUrl(imgsrc)|| config.contentUIUrl + "/assets/img/demo.jpg");
     }
     common.getPromotions(function(promos) {
         //console.log(promos)
         for(var i=0; i<promos.length; i++) {
-            promos[i].description = common.resizeString(promos[i].description, 200) + '...';
+            initTitleJsonMultilanguage(promos[i].name, promos[i]._id);
+            initDescriptionJsonMultilanguage(promos[i].description, promos[i]._id, 200);
+            promos[i].promoLangId = promos[i]._id;
             if(promos[i].images.length == 0)
                 promos[i].images.push(config.contentUIUrl + "/img/no_image_available_175.png")
         }
         model.promos = promos;
         $("#viewbox").html(viewTpl(model));
+        initTitleJsonMultilanguage(activityBody.name, "activitycontent");
+        initDescriptionJsonMultilanguage(activityBody.description, "activitycontent");
+
         initMap(activityBody.name, activityBody.lat, activityBody.lon);
-    
+        $('body').localize();
+
         if(cb) cb();
     }, 4);
 }
