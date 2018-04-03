@@ -2,13 +2,16 @@ var activityBody = undefined; //TODO rimuovere
 
 $(document).ready(function () {
     initToken();
-    if(typeof activityId != "undefined") {    
-        doView(activityId);
-    }
-    else { //new activity
-        newActivity();
-    }
     initTranslation();
+
+    addEventListener('promotionLanguageManagerInitialized', function (e) {
+        if(typeof activityId != "undefined") {    
+            doView(activityId);
+        }
+        else { //new activity
+            newActivity();
+        }
+    }, false); 
 });
 
 function initTranslation() {

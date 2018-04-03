@@ -15,96 +15,84 @@ var _queryResults = [];
 
 $(document).ready(function() {
     initToken();
+    initTranslation();
 
-    var source   = $("#search-template").html();
-    _searchTemplate = Handlebars.compile(source);
+    addEventListener('promotionLanguageManagerInitialized', function (e) {
+        var source   = $("#search-template").html();
+        _searchTemplate = Handlebars.compile(source);
 
-/*
-    $(".wrapper").backstretch([
-        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_1.jpg",
-        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_2.jpg",
-        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_3.jpg",
-        "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_8.jpg"
-    ], {
-        fade: 1000,
-        duration: 7000
-    });
-*/
-    showToolShips();
-    showToolDates();
+        /*
+            $(".wrapper").backstretch([
+                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_1.jpg",
+                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_2.jpg",
+                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_3.jpg",
+                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_8.jpg"
+            ], {
+                fade: 1000,
+                duration: 7000
+            });
+        */
+        showToolShips();
+        showToolDates();
 
-    $("#mapview").click(function() {
-        $(this).toggleClass("btn-success")
-        $("#mapresults").toggle();
-        $("#searchresults").toggle();
-        if($(this).hasClass("btn-success")) {
-            initClusteredMap();
-        }
-        if(_queryResults.length > 0) {
-            showResults();
-        }
-    })
+        $("#mapview").click(function() {
+            $(this).toggleClass("btn-success")
+            $("#mapresults").toggle();
+            $("#searchresults").toggle();
+            if($(this).hasClass("btn-success")) {
+                initClusteredMap();
+            }
+            if(_queryResults.length > 0) {
+                showResults();
+            }
+        })
 
-    $("#doSearch").click(function(e) {
-        $("#sResults").show();
-        $("#homeBoxes").hide();
-        $("#searchresults").empty();
-        _filters.skip = 0;
-        _queryResults = []; //reset search history
-        $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
-        $(".bg-image-cp h2").hide();
-        
-        search(showResults);
-    })
+        $("#doSearch").click(function(e) {
+            $("#sResults").show();
+            $("#homeBoxes").hide();
+            $("#searchresults").empty();
+            _filters.skip = 0;
+            _queryResults = []; //reset search history
+            $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
+            $(".bg-image-cp h2").hide();
+            
+            search(showResults);
+        })
 
-    $("#moreresults").click(function() {
-        search(showResults)
-    })
+        $("#moreresults").click(function() {
+            search(showResults)
+        })
+        $("#doAdv").click(function(e) {
+            if($("#adv").is(":visible")) {
+                //resetFilters();
+                $("#adv").hide();
+            }
+            else {
+                $("#adv").show();
+                loadCat();
 
-    $.ajax({
-        cache: false,
-        url: baseUrl + 'customAssets/translations/translation.json',
-        type:"get",
-        contentType:"application/json",
-        success: function(data) {
-            initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.log(xhr);
-            console.error(thrownError);
-        }
-    });
+                $(".rst").click(function(e) {
+                    var f=this.getAttribute('data-rst-field');
+                    e.preventDefault();
+                    resetFilterField(f)
+                })
 
-    $("#doAdv").click(function(e) {
-        if($("#adv").is(":visible")) {
-            //resetFilters();
-            $("#adv").hide();
-        }
-        else {
-            $("#adv").show();
-            loadCat();
-
-            $(".rst").click(function(e) {
-                var f=this.getAttribute('data-rst-field');
-                e.preventDefault();
-                resetFilterField(f)
-            })
-
-            $(".advTimeMenu").click(function(e) {
-                var t = this.getAttribute('data-cp-tm');
-                switch(t) {
-                    case 'd-today':
-                        setFilterDates(new Date(), new Date(moment().endOf('day')));
-                        break;
-                    case 'd-tom':
-                        setFilterDates(new Date(moment().add(1, 'day').startOf('day')), new Date(moment().add(1,'day').endOf('day')));
-                        break;
-                    default:
-                        break;
-                }
-            })
-        }
-    })
+                $(".advTimeMenu").click(function(e) {
+                    var t = this.getAttribute('data-cp-tm');
+                    switch(t) {
+                        case 'd-today':
+                            setFilterDates(new Date(), new Date(moment().endOf('day')));
+                            break;
+                        case 'd-tom':
+                            setFilterDates(new Date(moment().add(1, 'day').startOf('day')), new Date(moment().add(1,'day').endOf('day')));
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            }
+        })
+    }, false); 
 });
 
 $("#collapse-Map").on("shown.bs.collapse", function() {
@@ -118,6 +106,21 @@ $('body').on('keypress', "#qt", function(args) {
     }
 });
 
+function initTranslation() {
+    $.ajax({
+        cache: false,
+        url: baseUrl + 'customAssets/translations/translation.json',
+        type:"get",
+        contentType:"application/json",
+        success: function(data) {
+            initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr);
+            console.error(thrownError);
+        }
+    });
+}
 
 function showResults(qresults) {
     if(qresults) _queryResults = _queryResults.concat(qresults);
@@ -150,7 +153,6 @@ function showResults(qresults) {
         $('body').localize();
     }
     else {
-        console.log(_queryResults)
         $("#searchresults").html(_searchTemplate({items:_queryResults}));
     }
     $('body').localize();
