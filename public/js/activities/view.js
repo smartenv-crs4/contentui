@@ -52,15 +52,16 @@ function doView(aid) {
             $(".insertmode").hide();
             $("#lockedContent").hide();
             $(".viewmode").show();
-            common.isAdmin(admins, function(isAuth, isSAdmin){
-                if(isAuth || isSAdmin) {
+            common.isAdmin(admins, function(auths){
+                if(auths.isAuth || auths.isSuperAdmin) {
                     _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
                     _form_ds.admins = _form_ds.admins.concat(spliceOwner(admins));
 
                     getAdmins(_form_ds.admins, renderAdmins);
                     $(".viewonly").hide();
                     $(".loggedonly").show()
-                    if(isSAdmin) {
+                    if(auths.uid == activityBody.owner || auths.isSuperAdmin) $(".owner").show();
+                    if(auths.isSuperAdmin) {
                         $(".sadmin").show()
                         if(activityBody.published) {
                             $("#lockContent").addClass("lock")
@@ -80,6 +81,7 @@ function doView(aid) {
                     }
                 }
                 else {
+                    $(".owner").hide();
                     $(".loggedonly").hide();
                     $(".viewonly").show();
                 }
