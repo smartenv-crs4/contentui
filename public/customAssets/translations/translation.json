@@ -402,6 +402,14 @@
     "contacthint": {
       "it":"Inserire il telefono, l'indirizzo email dell'attività e opzionalmente i link ai profili social",
       "en":"Insert your phone number and your email address, optionally you can also add your social links"
+    },
+    "delConfirmTitle": {
+      "it":"Sei sicuro di voler rimuovere questa attività?",
+      "en":"Are you sure you want delete this activity?"
+    },
+    "delConfirmDesc": {
+      "it": "Rimuovendo questa attività verranno rimosse anche tutte le promozioni e gli eventi associati e tutte le foto caricate",
+      "en": "By removing this content all the related promo and events will be also deleted"
     }
   }
 }
