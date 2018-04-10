@@ -189,6 +189,10 @@
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/async/dist/async.min.js"></script>
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/moment/min/moment.min.js"></script>
 
+
+    <!--template manager-->
+    <script type="text/javascript" src="<%=properties.commonUIUrl%>/customAssets/js/templateManager.js"></script>
+
     <!--date and time picker-->
     <script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/plugins/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
@@ -228,13 +232,10 @@
 
 
 
-
-
-
     <script type="text/javascript">
         var canTranslate=false;
         jQuery(document).ready(function() {
-            App.init();
+            initApp(); //App.init();
             StyleSwitcher.initStyleSwitcher();
             initfavouritePage();
             initToken();

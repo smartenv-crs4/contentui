@@ -44,7 +44,7 @@ $(document).ready(function() {
     loadContent();
   }
 
-  App.init();
+  initApp();// App.init();
   initMap(action);
 
 

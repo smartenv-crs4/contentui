@@ -71,7 +71,7 @@ function createJsonMultilanguage(content,multilanguage){
 function initTitleJsonMultilanguage(content, nsKey){
     titleMultilanguage = {};
     createJsonMultilanguage(content,titleMultilanguage);
-    addCurrentLanguageDescriptionToI18n(titleMultilanguage,"title",nsKey);
+    addCurrentLanguageContentToI18n(titleMultilanguage,"title",nsKey);
 
 
 
@@ -82,15 +82,15 @@ function initTitleJsonMultilanguage(content, nsKey){
 function initDescriptionJsonMultilanguage(content,nsKey,maxSize,spaceRefactor){
     descriptionMultilanguage={};
     createJsonMultilanguage(content,descriptionMultilanguage);
-    addCurrentLanguageDescriptionToI18n(descriptionMultilanguage,"description",nsKey,maxSize,spaceRefactor);
+    addCurrentLanguageContentToI18n(descriptionMultilanguage,"description",nsKey,maxSize,spaceRefactor);
 }
 
 
 
-function addCurrentLanguageDescriptionToI18n(multilanguage,field,nskey,maxSize,spaceRefactor){
+function addCurrentLanguageContentToI18n(multilanguage, field, nskey, maxSize, spaceRefactor){
     let tmpIndex;
     let oldValue;
-    async.eachOf(multilanguage, function(value,key, callback) {
+    _.each(multilanguage, function(value,key) {
         if(value.length>0){
             if(maxSize){
                 tmpIndex=value.substring(maxSize, maxSize+100).indexOf(" ");
@@ -102,17 +102,43 @@ function addCurrentLanguageDescriptionToI18n(multilanguage,field,nskey,maxSize,s
 
             }
             if(spaceRefactor){
-                    let dif=200-value.length;
-                    for(let counter=0;counter<dif;++counter){
-                        value+=spaceRefactor;
-                    }
+                let dif=200-value.length;
+                for(let counter=0;counter<dif;++counter){
+                    value+=spaceRefactor;
+                }
             }
 
             addResourcetoi18nDictionary(key, "translation", (nskey ? nskey:"promo_multilanguage")+ "." + field, value);
         }
-        callback();
     });
 }
+
+// function addCurrentLanguageContentToI18n(multilanguage,field,nskey,maxSize,spaceRefactor){
+//     let tmpIndex;
+//     let oldValue;
+//     async.eachOf(multilanguage, function(value,key, callback) {
+//         if(value.length>0){
+//             if(maxSize){
+//                 tmpIndex=value.substring(maxSize, maxSize+100).indexOf(" ");
+//                 tmpIndex= tmpIndex >=0 ? tmpIndex+maxSize : maxSize;
+//                 oldValue=value;
+//                 value= value.substring(0, tmpIndex);
+//                 if(oldValue.length>value.length)
+//                     value+="...";
+//
+//             }
+//             if(spaceRefactor){
+//                     let dif=200-value.length;
+//                     for(let counter=0;counter<dif;++counter){
+//                         value+=spaceRefactor;
+//                     }
+//             }
+//
+//             addResourcetoi18nDictionary(key, "translation", (nskey ? nskey:"promo_multilanguage")+ "." + field, value);
+//         }
+//         callback();
+//     });
+// }
 
 
 function addResourcetoi18nDictionary(lng,ns,key,value){
@@ -121,59 +147,61 @@ function addResourcetoi18nDictionary(lng,ns,key,value){
 
 
 // transform multilangiage json to text with language tags
-function getContentWithTags(content,callbackcontentWithTags){
+function getContentWithTags(content){
     // assuming openFiles is an array of file names
     let contentwithTags="";
-    async.eachOf(content, function(value,key, callback) {
+    _.each(content, function(value,key) {
         if(value.length>0)
             contentwithTags+="[["+key+"]]" + value + "[[/"+key+"]]";
 
-        callback();
-
-    }, function(err) {
-
-        if( err ) { // never reacheable due no error callback
-            console.log(err);
-            if(callbackcontentWithTags) callbackcontentWithTags(err,null);
-        } else {
-            if(callbackcontentWithTags) callbackcontentWithTags(null,contentwithTags);
-        }
     });
+
+    return contentwithTags;
 }
+
+// transform multilangiage json to text with language tags
+// function getContentWithTags(content,callbackcontentWithTags){
+//     // assuming openFiles is an array of file names
+//     let contentwithTags="";
+//     async.eachOf(content, function(value,key, callback) {
+//         if(value.length>0)
+//             contentwithTags+="[["+key+"]]" + value + "[[/"+key+"]]";
+//
+//         callback();
+//
+//     }, function(err) {
+//
+//         if( err ) { // never reacheable due no error callback
+//             console.log(err);
+//             if(callbackcontentWithTags) callbackcontentWithTags(err,null);
+//         } else {
+//             if(callbackcontentWithTags) callbackcontentWithTags(null,contentwithTags);
+//         }
+//     });
+// }
 
 
 
 
 // get title with language tags
-function getmultilanguageTitle(currentDescription,callbackGetmultilanguageTitle){
+function getmultilanguageTitle(currentDescription){
     //add current description
     titleMultilanguage[lang]=currentDescription;
 
     // get tagged content
-    getContentWithTags(titleMultilanguage, function(err,contntWithTags){
-        if(err){
-            if(callbackGetmultilanguageTitle) callbackGetmultilanguageTitle(err,null);
-        }else{
-            if(callbackGetmultilanguageTitle) callbackGetmultilanguageTitle(null,contntWithTags);
-        }
-    })
+    return(getContentWithTags(titleMultilanguage));
 }
 
 
 
 // get description with language tags
-function getmultilanguageDescription(currentDescription,callbackGetmultilanguageDescription){
+function getmultilanguageDescription(currentDescription){
     //add current description
     descriptionMultilanguage[lang]=currentDescription;
 
     // get tagged content
-    getContentWithTags(descriptionMultilanguage, function(err,descriptionWithTags){
-        if(err){
-            if(callbackGetmultilanguageDescription) callbackGetmultilanguageDescription(err,null);
-        }else{
-            if(callbackGetmultilanguageDescription) callbackGetmultilanguageDescription(null,descriptionWithTags);
-        }
-    })
+   return getContentWithTags(descriptionMultilanguage);
+
 }
 
 

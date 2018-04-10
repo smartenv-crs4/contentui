@@ -455,22 +455,17 @@ function addNewPromotion(){
     let promotionTitle=$('#promotionTitle');
     promotionTitle.get(0).oninput=function(){
         let nameValue=promotionTitle.val();
-        getmultilanguageTitle(nameValue,function(err,titleWithTags){
-            if(!err) {
-                updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
-            }
-        });
+        titleWithTags=getmultilanguageTitle(nameValue);
+        updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
+
 
     };
 
     let promotionDescription=$('#promotionDescription');
     promotionDescription.get(0).oninput=function(){
         let value=promotionDescription.val();
-        getmultilanguageDescription(value,function(err,descriptionWithTags){
-            if(!err) {
-                updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
-            }
-        });
+        descriptionWithTags=getmultilanguageDescription(value);
+        updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
 
     };
 
@@ -643,11 +638,8 @@ function updatePromotion(){
     promotionTitle.val(getCurrentLanguageTitle());
     promotionTitle.get(0).oninput=function(){
         let nameValue=promotionTitle.val();
-        getmultilanguageTitle(nameValue,function(err,titleWithTags){
-            if(!err) {
-                updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
-            }
-        });
+        titleWithTags=getmultilanguageTitle(nameValue);
+        updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
     };
 
 
@@ -656,11 +648,8 @@ function updatePromotion(){
     promotionDescription.val(getCurrentLanguageDescription());
     promotionDescription.get(0).oninput=function(){
         let value=promotionDescription.val();
-        getmultilanguageDescription(value,function(err,descriptionWithTags){
-            if(!err) {
-                updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
-            }
-        });
+        descriptionWithTags=getmultilanguageDescription(value);
+        updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
     };
 
 

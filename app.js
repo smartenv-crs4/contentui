@@ -10,7 +10,6 @@ var utilsJs=require('./routes/utils');
 var boom = require('express-boom');
 var extractUuId=require('./routes/middlewares');
 
-
 var routes = require('./routes/index');
 
 var app = express();
