@@ -368,10 +368,11 @@ function showToolShips() {
 
         $("#collapse-Time .typeahead").on("typeahead:select", function(e, o) {
             var namecomp = o.split("-")
-            getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(last){                
-                if(last.ships.length == 1) {
-                    var start = new Date(last.ships[0].arrival);
-                    var stop = new Date(last.ships[0].departure);                    
+            getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(ships){
+                if(ships.ships.length == 1) {
+                    var last = ships.ships[0];                    
+                    var start = new Date(last.arrival);
+                    var stop = new Date(last.departure);                    
                 }
                 else $.growl.warning({ message: "Nessun arrivo previsto per la nave selezionata" })
                 setFilterDates(start, stop);
@@ -383,12 +384,12 @@ function showToolShips() {
 
 function setFilterDates(start, stop) {
     if(start && stop) {
-        var startstr    = moment(start).format("D/MM/YYYY");
-        var stopstr     = moment(stop).format("D/MM/YYYY");
+        var startstr    = moment(start).format("D/MM/YYYY HH:mm");
+        var stopstr     = moment(stop).format("D/MM/YYYY HH:mm");
         var intervalstr = (startstr != stopstr) ? startstr + " - " + stopstr : startstr;
         $("#advDate").text(intervalstr);
-        _filters.sdate = moment(start).format("YYYY-MM-DD");
-        _filters.edate = moment(stop).format("YYYY-MM-DD");
+        _filters.sdate = moment(start).utc().format("YYYY-MM-DD HH:mm");
+        _filters.edate = moment(stop).utc().format("YYYY-MM-DD HH:mm");
     }
     else if(!(start && stop)) {
         $("#advDate").text('');
@@ -543,7 +544,7 @@ function search(cb) {
                 };
                 if(promo) {
                     hcontext.idcontent = item.idcontent||undefined,
-                    hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined,
+                    hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined, //converte da UTC a locale
                     hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
                 }
                 if(item.position) {

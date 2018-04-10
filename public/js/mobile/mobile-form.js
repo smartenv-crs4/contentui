@@ -49,8 +49,8 @@ $(document).on( "pagecreate", function() {
                 address: _Address,
                 town: _Town
             }
-            if(stdate) promo.startDate = stdate;
-            if(enddate) promo.endDate = enddate;
+            if(stdate) promo.startDate = moment(stdate).utc();
+            if(enddate) promo.endDate = moment(enddate).utc();
             
             $.ajax({
                 type: "POST",

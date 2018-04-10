@@ -90,6 +90,16 @@ function initToolbar() {
         }
         else lockContent(doLock, lockContentCB);
     })
+
+    $("#delContent").click(function() {
+        var delmsg = document.getElementById("confirmDelSnpt").innerText;
+        //TODO i18next non traduce su modal hidden (funziona solo al primo fire)
+        bootbox.confirm(delmsg, function(result){
+            if(result) {
+                //DELETE
+            }
+        });
+    })
 }
 
 function sendMail(msg, cb) {

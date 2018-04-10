@@ -35,10 +35,12 @@ var common = {
                 if(data.valid) {
                     var isAuth = contentAdmins.indexOf(data.token._id) != -1;
                     var isSuperAdmin = adminTypes.indexOf(data.token.type) != -1;
-                    if(isAuth || isSuperAdmin)
-                        cb(isAuth, isSuperAdmin);
-                    else 
-                        cb(false, false)
+                    var auths = {isAuth:false, isSuperAdmin: false, uid: data.token._id};
+                    if(isAuth || isSuperAdmin) {
+                        auths.isAuth = isAuth;
+                        auths.isSuperAdmin = isSuperAdmin;
+                    }
+                    cb(auths);
                 }
                 else cb(false)
             })

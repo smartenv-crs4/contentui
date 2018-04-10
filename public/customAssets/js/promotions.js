@@ -267,7 +267,8 @@ function openModalParticipants(){
 function savePromotion(iSANewPromotion){
 
     getPositionLatLon(); // align address with lat lon
-
+    newPromotion.startDate  = moment(newPromotion.startDate).utc();
+    newPromotion.endDate    = moment(newPromotion.endDate).utc();
     if(iSANewPromotion){
         jQuery.ajax({
             url: config.contentUIUrl + "/contents/" + contentID +"/promotions",

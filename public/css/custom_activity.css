@@ -47,7 +47,7 @@ a.delAdmin{
   color:red;
 }
 
-.loggedonly {display:none;}
+.loggedonly, .owner {display:none;}
 
 
 .imgctn {
