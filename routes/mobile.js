@@ -24,7 +24,7 @@ router.get('/promos',  (req, res, next) => {
     let options = {
         method:'GET',
         headers: {Authorization: "Bearer " + config.auth_token},
-        uri:contentUrl + 'contents/' + req.query.cid + '/promotions/',
+        uri:contentUrl + 'contents/' + req.query.cid + '/promotions/?lng=it',
         json:true
     }
     sendReq(res, options, "promos");
@@ -46,7 +46,7 @@ router.get('/activities',       (req, res, next) => {
     let options = {
         method:'GET',
         headers: {Authorization: "Bearer " + config.auth_token},
-        uri:contentUrl + 'search/?t=content' + '&by_uid=' + uid,
+        uri:contentUrl + 'search/?t=content' + '&by_uid=' + uid + '&lng=it',
         json:true
     }
     sendReq(res, options, "contents");
@@ -58,8 +58,8 @@ router.post('/save/:cid',       (req, res, next) => {
         idcontent: req.params.cid,
         name: req.body.title,
         description: req.body.desc,
-        startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
-        endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
+        startDate: req.body.startDate ? moment(req.body.startDate).utc() : undefined,
+        endDate: req.body.endDate ? moment(req.body.endDate).utc() : undefined,
         position: [Number(req.body.lon), Number(req.body.lat)],
         lat: Number(req.body.lat),
         lon: Number(req.body.lon),
@@ -92,7 +92,8 @@ router.delete('/delete/:cid/:pid',  (req, res, next) => {
 
 function sendReq(res, options, label) {
     rp(options)
-    .then((results) => { 
+    .then((results) => {
+        console.log(results)
         res.json(label ? results[label] : results);
     })
     .catch((err) => {
