@@ -6,30 +6,41 @@
 let lang=window.localStorage.lng;
 let titleMultilanguage={},descriptionMultilanguage={};
 
-function initMultilanguage(){
 
+
+function initMultilanguage(callback){
+
+    ThrowWhenUnderscoreIsLoad(function(err,done){
+        if(callback) callback(err,done);
+    });
 
     lang=window.localStorage.lng;
     // lang=$('#multilanguageselect').get(0).value;
 
-    $('#multilanguageselect').change(function() {
-        lang=this.value;
+    var multilanguageselect=$('#multilanguageselect') || null;
 
-        // console.log("Language:--->"+ lang);
-        // console.log(titleMultilanguage[lang]);
+    if(multilanguageselect){
+        multilanguageselect.change(function() {
+            lang=this.value;
 
-        if(!(titleMultilanguage[lang]))
-            titleMultilanguage[lang] = "";
+            // console.log("Language:--->"+ lang);
+            // console.log(titleMultilanguage[lang]);
 
-        if(!(descriptionMultilanguage[lang]))
-            descriptionMultilanguage[lang] = "";
+            if(!(titleMultilanguage[lang]))
+                titleMultilanguage[lang] = "";
 
-        $('#promotionTitle').val(titleMultilanguage[lang]);
-        $('#promotionDescription').val(descriptionMultilanguage[lang]);
+            if(!(descriptionMultilanguage[lang]))
+                descriptionMultilanguage[lang] = "";
 
-    });
+            $('#promotionTitle').val(titleMultilanguage[lang]);
+            $('#promotionDescription').val(descriptionMultilanguage[lang]);
 
-    $('#multilanguageselect').val(window.localStorage.lng).change();
+        });
+
+        multilanguageselect.val(window.localStorage.lng).change();
+    }
+
+
 }
 
 
@@ -72,9 +83,6 @@ function initTitleJsonMultilanguage(content, nsKey){
     titleMultilanguage = {};
     createJsonMultilanguage(content,titleMultilanguage);
     addCurrentLanguageContentToI18n(titleMultilanguage,"title",nsKey);
-
-
-
 }
 
 
@@ -86,8 +94,30 @@ function initDescriptionJsonMultilanguage(content,nsKey,maxSize,spaceRefactor){
 }
 
 
+function AddUndescoreJS(callback){
+    tmpScript=document.createElement("script");
+    tmpScript.type = "text/javascript"; // set the type attribute
+    tmpScript.src = config.contentUIUrl + "/node_modules/async/dist/async.min.js"; // make the script element load file
+    tmpScript.onload = function () { // when underscore is loaded
+        callback(null,"Ok");
+    };
+    // finally insert the js element to the body element in order to load the script
+    document.body.appendChild(tmpScript);
+}
+
+
+function ThrowWhenUnderscoreIsLoad(callback){
+    if(!callback) callback=function(err,done){};
+    if(window._===undefined){
+        AddUndescoreJS(callback);
+    }else {
+        callback(null,"Ok");
+    }
+}
+
 
 function addCurrentLanguageContentToI18n(multilanguage, field, nskey, maxSize, spaceRefactor){
+
     let tmpIndex;
     let oldValue;
     _.each(multilanguage, function(value,key) {
@@ -111,6 +141,7 @@ function addCurrentLanguageContentToI18n(multilanguage, field, nskey, maxSize, s
             addResourcetoi18nDictionary(key, "translation", (nskey ? nskey:"promo_multilanguage")+ "." + field, value);
         }
     });
+
 }
 
 // function addCurrentLanguageContentToI18n(multilanguage,field,nskey,maxSize,spaceRefactor){
@@ -148,6 +179,7 @@ function addResourcetoi18nDictionary(lng,ns,key,value){
 
 // transform multilangiage json to text with language tags
 function getContentWithTags(content){
+
     // assuming openFiles is an array of file names
     let contentwithTags="";
     _.each(content, function(value,key) {
