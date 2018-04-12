@@ -14,6 +14,7 @@
     <% if(typeof scheduleUrl != 'undefined') { %>         var _scheduleShip = '<%= scheduleUrl %>'; <% } %>
     <% if(typeof contentAdminTypes != 'undefined') { %>   var contentAdminTypes = "<%= contentAdminTypes %> " <% } %>
     <% if(typeof activityId != 'undefined') { %>          var activityId = "<%= activityId %>" <% } %>
-    <% if(typeof params != 'undefined') { %>      params = JSON.parse(params); <% } %>
-    <% if(typeof query != 'undefined') { %>       query = JSON.parse(query); <% } %>
+    <% if(typeof params != 'undefined') { %>              params = JSON.parse(params); <% } %>
+    <% if(typeof query != 'undefined') { %>               query = JSON.parse(query); <% } %>
+    <% if(typeof tz != 'undefined') { %>                  const _tz = "<%= tz %>" <% } %>
 </script>

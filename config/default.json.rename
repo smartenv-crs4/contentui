@@ -13,6 +13,7 @@
     "decodedTokenFieldName": "contentms",
     "languageManagerLibUrl":"your_language_manager_lib_url",
     "contentAdminTokenType": ["contentAdmin"],
+    "timezone":"Europe/Rome",
     "headerParams":{
       "homePage" : "/",
       "pageFaq" :  null,

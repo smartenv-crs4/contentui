@@ -81,10 +81,10 @@ $(document).ready(function() {
                     var t = this.getAttribute('data-cp-tm');
                     switch(t) {
                         case 'd-today':
-                            setFilterDates(new Date(), new Date(moment().endOf('day')));
+                            setFilterDates(moment.tz(_tz).toDate(), moment.tz(_tz).endOf('day').toDate());
                             break;
                         case 'd-tom':
-                            setFilterDates(new Date(moment().add(1, 'day').startOf('day')), new Date(moment().add(1,'day').endOf('day')));
+                            setFilterDates(moment.tz(_tz).add(1, 'day').startOf('day').toDate(), moment.tz(_tz).add(1,'day').endOf('day').toDate());
                             break;
                         default:
                             break;
@@ -370,9 +370,10 @@ function showToolShips() {
             var namecomp = o.split("-")
             getLastSchedule(namecomp[1].trim(), namecomp[0].trim(), function(ships){
                 if(ships.ships.length == 1) {
-                    var last = ships.ships[0];                    
-                    var start = new Date(last.arrival);
-                    var stop = new Date(last.departure);                    
+                    var last = ships.ships[0];
+                    //Time in shipms is stored in UTC
+                    var start = moment.tz(last.arrival, _tz).toDate();
+                    var stop = moment.tz(last.departure, _tz).toDate();
                 }
                 else $.growl.warning({ message: "Nessun arrivo previsto per la nave selezionata" })
                 setFilterDates(start, stop);
@@ -537,7 +538,7 @@ function search(cb) {
                     town:item.town,
                     image:item.images ? common.normalizeImgUrl(item.images[0]) : undefined,
                     description: item.description, //common.markup(common.resizeString(item.description, 350)),
-                    pubDate: moment(new Date(parseInt(item._id.substring(0, 8), 16) * 1000)).format(dateFmt), //mongo specific
+                    pubDate: moment.tz(new Date(parseInt(item._id.substring(0, 8), 16) * 1000), _tz).format(dateFmt), //mongo specific
                     type: _filters.type,
                     link: baseUrl + 'activities/' + (promo ? item.idcontent + '/promotions/' : '') + item._id,
                     likes: item.likes

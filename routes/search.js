@@ -25,6 +25,7 @@ router.get('/', (req, res, next) => {
     if(position) postion = position.slice(',');
     
     try {
+        //WARNING contentms store dates in UTC, convert to UTC or format without timezone
         if(sdate && edate) {
             console.log(sdate);
             //sdate = moment(sdate).startOf('day').format("YYYY-MM-DD HH:mm");
@@ -41,11 +42,11 @@ router.get('/', (req, res, next) => {
             edate = moment(edate).format("YYYY-MM-DD HH:mm");
         else
             //sdate = moment(new Date()).startOf('day').format("YYYY-MM-DD HH:mm");
-            sdate = moment(new Date()).format("YYYY-MM-DD HH:mm");
+            sdate = moment().utc().format("YYYY-MM-DD HH:mm");
     }
     catch(e) {
         sdate = edate = undefined;
-        sdate = moment(new Date()).format("YYYY-MM-DD HH:mm");
+        sdate = moment().utc().format("YYYY-MM-DD HH:mm");
         console.log(e)
     }
 
@@ -72,7 +73,7 @@ router.get('/', (req, res, next) => {
         res.json(results);
     })
     .catch((err) => {
-        console.log("AAAAA" + err);
+        console.log(err);
         res.status(500).send();;
     });
 });

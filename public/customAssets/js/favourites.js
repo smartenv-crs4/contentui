@@ -87,6 +87,7 @@
 
 const lat=1;
 const lon=0;
+
 let mapInit;
 let autocomplete;
 let positionValid=false;
@@ -250,11 +251,16 @@ function getFavouritePage(){
                                     current.activity_name = updatedpromotions.activity_name;
                                     current.activity_link=updatedpromotions.activity_link;
                                     current.promo_link=updatedpromotions.promo_link;
-                                    current.start_date = moment(updatedpromotions.startDate).format('MMMM Do YYYY, HH:mm');
-                                    current.end_date = moment(updatedpromotions.endDate).format('MMMM Do YYYY, HH:mm');
-                                    currentTime = (new Date()).getTime();
-                                    startTime = (new Date(updatedpromotions.startDate)).getTime();
-                                    endTime = (new Date(updatedpromotions.endDate)).getTime();
+                                    //current.start_date = moment(updatedpromotions.startDate).format('MMMM Do YYYY, HH:mm');
+                                    current.start_date = moment.tz(updatedpromotions.startDate, _tz).format('MMMM Do YYYY, HH:mm');
+                                    //current.end_date = moment(updatedpromotions.endDate).format('MMMM Do YYYY, HH:mm');
+                                    current.end_date = moment.tz(updatedpromotions.endDate, _tz).format('MMMM Do YYYY, HH:mm');
+                                    //currentTime = (new Date()).getTime();
+                                    currentTime = moment.tz(_tz).valueOf();
+                                    //startTime = (new Date(updatedpromotions.startDate)).getTime();
+                                    startTime = moment.tz(updatedpromotions.startDate, _tz).valueOf();
+                                    //endTime = (new Date(updatedpromotions.endDate)).getTime();
+                                    endTime = moment.tz(updatedpromotions.endDate, _tz).valueOf();
                                     current.completeness = (currentTime < startTime) ? 0 : (currentTime > endTime) ? 100 : Math.round((((currentTime - startTime) / (endTime - startTime))*100));
                                     current.participants = updatedpromotions.participants;
                                     current.likes = updatedpromotions.likes;
