@@ -581,7 +581,7 @@ function addNewPromotion(){
 
 
 
-    initMultilanguage();
+    MultilanguageEditInit();
 
     //
     // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
@@ -630,7 +630,7 @@ function updatePromotion(){
     //Datepicker.initDatepicker();
 
 
-    initMultilanguage();
+    MultilanguageEditInit();
     newPromotion={};
 
     // set Title

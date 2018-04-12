@@ -7,6 +7,7 @@ let lang=window.localStorage.lng;
 let titleMultilanguage={},descriptionMultilanguage={};
 
 
+// initMultilanguage
 
 function initMultilanguage(callback){
 
@@ -14,6 +15,11 @@ function initMultilanguage(callback){
         if(callback) callback(err,done);
     });
 
+    lang=window.localStorage.lng;
+}
+
+
+function MultilanguageEditInit(){
     lang=window.localStorage.lng;
     // lang=$('#multilanguageselect').get(0).value;
 
@@ -39,8 +45,6 @@ function initMultilanguage(callback){
 
         multilanguageselect.val(window.localStorage.lng).change();
     }
-
-
 }
 
 
