@@ -1,7 +1,7 @@
 var async=require('async');
 var request = require('request');
 var config = require('propertiesmanager').conf;
-var commonFunction=require('./commonFunctions');
+var commonFunctions=require('./commonFunctions');
 let baseUrl = config.contentUIUrl + '/';
 
 function render(res,page,model,commonBody) {
@@ -53,7 +53,7 @@ module.exports = {
 
             request.get(commonUiURL,function (error, response, body) {
                     if(error) {
-                        commonFunctions.getErrorPage(500,"500","Internal Server Error",error,function(er,content){
+                        commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
                             res.send(content);
                         });
                     }else {
@@ -71,7 +71,7 @@ module.exports = {
                             let tmpError=commonBody.error_message;
                             request.get(commonUiURLWithNoToken, function (error, response, body) {  //resend request to header for not logged in user
                                 if (error){
-                                    commonFunctions.getErrorPage(500,"500","Internal Server Error",error,function(er,content){
+                                    commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
                                         res.send(content);
                                     });
                                 }else {

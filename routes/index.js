@@ -80,6 +80,19 @@ router.get('/',  (req, res, next) => {
 
 
 
+// logout Page
+router.get('/logoutapp', function(req, res, next) {
+
+    renderPage.renderPage(res,'logoutPage',{
+        properties:{
+            contentUIUrl:config.contentUIUrl ,
+            commonUIUrl:config.commonUIUrl
+        }
+    });
+});
+
+
+
 // favourites
 router.get('/favourites', function(req, res, next) {
 
