@@ -13,7 +13,7 @@ let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/'
 let commonUIUrl = config.commonUIUrl + (config.commonUIUrl.endsWith('/') ? '' : '/');
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let scheduleUrl = config.scheduleUrl + (config.scheduleUrl.endsWith('/') ? '' : '/');
-
+let timezone = config.timezone || "Europe/Rome";
 
 /* GET environment info page. */
 router.get('/env', function(req, res) {
@@ -66,6 +66,7 @@ router.use(function(req, res, next) {
 router.get('/',  (req, res, next) => {
   let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
   renderPage.renderPage(res, 'search', {
+      tz: timezone,
       baseUrl:baseUrl, 
       contentUrl:contentUrl, 
       scheduleUrl:scheduleUrl,
@@ -104,6 +105,7 @@ router.get('/favourites', function(req, res, next) {
 
     renderPage.renderPage(res,'view_favourites',{
         access_token:access_token,
+        tz: timezone,
         properties:{
             contentUIUrl:config.contentUIUrl ,
             commonUIUrl:config.commonUIUrl
@@ -117,6 +119,7 @@ router.get('/activities/new',       (req, res, next) => {
   let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;		
   return renderPage.renderPage(res, 'activities/activity', {
     activityBody: undefined,
+    tz: timezone,
     params: JSON.stringify(req.params),
     query: JSON.stringify(req.query),
     baseUrl:baseUrl,
@@ -139,6 +142,7 @@ router.get('/activities/:id',    (req, res, next) => {
     let access_token = req.query.access_token || null; //SOSTITUIRE CON req.headers.authorization.split(' ')[1] || null;
   				
     renderPage.renderPage(res, 'activities/activity', {
+        tz: timezone,
         activityBody: undefined,
         activityId: activity_id,
         params: JSON.stringify(req.params) || undefined,
@@ -165,6 +169,7 @@ router.get('/activities/:aid/promotions/new', function(req, res, next) {
 
 
     renderPage.renderPage(res,'view_promotion',{
+        tz: timezone,
         access_token:access_token,
         properties:{
             contentUIUrl:config.contentUIUrl ,
@@ -190,6 +195,7 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
 
     renderPage.renderPage(res,'view_promotion',{
+        tz: timezone,
         access_token:access_token,
         properties:{
             contentUIUrl:config.contentUIUrl ,

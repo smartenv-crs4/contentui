@@ -87,6 +87,7 @@
 
 const lat=1;
 const lon=0;
+
 let mapInit;
 let autocomplete;
 let positionValid=false;
@@ -1027,7 +1028,9 @@ function compilePromotion(){
         type: "GET",
         success: function(data, textStatus, xhr)
         {
-
+            //ContentMS store promo dates in UTC, convert to local timezone
+            data.startDate = moment.tz(data.startDate, _tz).format();
+            data.endDate = moment.tz(data.endDate, _tz).format();
 
             sessionStorage.setItem("currentPromotion",JSON.stringify(data)); // copy for value
 

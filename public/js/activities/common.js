@@ -2,19 +2,18 @@ var common = {
     
     getPromotions: function getPromotions(cb, limit) {
         var that = this;
-        var from = new Date();
         
         $.ajax({
             url: contentUrl + "contents/" + activityBody._id + "/promotions/" 
                 + "?limit=" + (limit ? limit : '') 
-                + "&ord=creationDate", //+ "&sdate=" + from,
+                + "&ord=creationDate",
             type: 'GET',
             success: function(data){
                 var promos = data.promos;
                 for(var i=0; i<promos.length; i++) {
-                    promos[i].startDate = moment(promos[i].startDate).format("DD/MM/YYYY")
-                    promos[i].endDate  = moment(promos[i].endDate).format("DD/MM/YYYY")
-                    promos[i].lastUpdate = moment(promos[i].lastUpdate).format("DD/MM/YYYY")
+                    promos[i].startDate = moment.tz(promos[i].startDate, _tz).format("DD/MM/YYYY")
+                    promos[i].endDate  = moment.tz(promos[i].endDate, _tz).format("DD/MM/YYYY")
+                    promos[i].lastUpdate = moment.tz(promos[i].lastUpdate, _tz).format("DD/MM/YYYY")
                     for(var j=0; j<promos[i].images.length; j++) {
                         promos[i].images[j] = that.normalizeImgUrl(promos[i].images[j])
                     }
