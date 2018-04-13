@@ -233,11 +233,10 @@
 
 
     <script type="text/javascript">
-        var canTranslate=false;
         jQuery(document).ready(function() {
             initApp(); //App.init();
             StyleSwitcher.initStyleSwitcher();
-            initfavouritePage();
+//            initfavouritePage();
             initToken();
             $.ajax({
                 cache: false,
@@ -245,7 +244,11 @@
                 type:"get",
                 contentType:"application/json",
                 success: function(data) {
-                    initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+
+                    dictionaryInit(data,config.commonUIUrl,function(err,done){
+                        if(!err) openFavouritePage();
+                    });
+//                    initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
                     //wai to languageManager to be loaded then tranlsalte
 //                    addEventListener('promotionLanguageManagerInitialized', function (e) {
 //                        canTranslate=true;

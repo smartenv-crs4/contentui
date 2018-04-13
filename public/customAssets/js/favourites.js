@@ -247,7 +247,8 @@ function getFavouritePage(){
                                     current.title = updatedpromotions._id +".title";
                                     initDescriptionJsonMultilanguage(updatedpromotions.description,updatedpromotions._id,200,"\xa0");
                                     current.description = updatedpromotions._id +".description";
-                                    current.activity_name = updatedpromotions.activity_name;
+                                    initGenericContentJsonMultilanguage(updatedpromotions.activity_name,updatedpromotions._id,"activity_name");
+                                    current.activity_name = updatedpromotions._id +".activity_name";
                                     current.activity_link=updatedpromotions.activity_link;
                                     current.promo_link=updatedpromotions.promo_link;
                                     current.start_date = moment(updatedpromotions.startDate).format('MMMM Do YYYY, HH:mm');
@@ -330,19 +331,11 @@ function openFavouritePage(){
 
 
 
-function initfavouritePage()
-{
-   if(canTranslate){
-       openFavouritePage();
-   } else{
-       addEventListener('promotionLanguageManagerInitialized', function (e) {
-           canTranslate=true;
-           openFavouritePage();
-       }, false);
-   }
-
-
-}
+// function initfavouritePage(){
+//    addEventListener('promotionLanguageManagerInitialized', function (e) {
+//        openFavouritePage();
+//    }, false);
+// }
 
 
 

@@ -98,6 +98,14 @@ function initDescriptionJsonMultilanguage(content,nsKey,maxSize,spaceRefactor){
 }
 
 
+// call function to transform text with title language tags to json
+function initGenericContentJsonMultilanguage(content, nsKey, genericcontent,maxSize,spaceRefactor){
+    var contentMultilanguage = {};
+    createJsonMultilanguage(content,contentMultilanguage);
+    addCurrentLanguageContentToI18n(contentMultilanguage,genericcontent,nsKey,maxSize,spaceRefactor);
+}
+
+
 function AddUndescoreJS(callback){
     tmpScript=document.createElement("script");
     tmpScript.type = "text/javascript"; // set the type attribute
