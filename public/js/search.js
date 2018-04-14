@@ -7,9 +7,10 @@ var _filters = {
     category: undefined,
     position: undefined,
     limit: 5,
-    skip: 0,
-    type: 'promo' 
+    type: 'promo',
+    q:undefined
 };
+var _skip = 0;
 var _queryResults = [];
 
 
@@ -21,19 +22,9 @@ $(document).ready(function() {
         var source   = $("#search-template").html();
         _searchTemplate = Handlebars.compile(source);
 
-        /*
-            $(".wrapper").backstretch([
-                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_1.jpg",
-                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_2.jpg",
-                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_3.jpg",
-                "http://smartapi.crs4.it/ui/user/customAssets/img/port/login_8.jpg"
-            ], {
-                fade: 1000,
-                duration: 7000
-            });
-        */
         showToolShips();
         showToolDates();
+        executeSearch()
 
         $("#mapview").click(function() {
             $(this).toggleClass("btn-success")
@@ -48,15 +39,10 @@ $(document).ready(function() {
         })
 
         $("#doSearch").click(function(e) {
-            $("#sResults").show();
-            $("#homeBoxes").hide();
-            $("#searchresults").empty();
-            _filters.skip = 0;
-            _queryResults = []; //reset search history
-            $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
-            $(".bg-image-cp h2").hide();
-            
-            search(showResults);
+            //reload page including query parameters to enable browser history
+            _filters.q = $("#qt").val(); //text query
+            _filters.type = $("#searchtype").val();
+            window.location.href = window.location.href.split("?")[0] + "?" + getQueryString(_filters);
         })
 
         $("#moreresults").click(function() {
@@ -105,6 +91,60 @@ $('body').on('keypress', "#qt", function(args) {
         return false;
     }
 });
+
+function executeSearch() {
+    var urlParams;
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        re = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = re.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+    
+    if(urlParams.q !== undefined) {
+        $("#sResults").show();
+        $("#homeBoxes").hide();
+        $("#searchresults").empty();
+        $(".bg-image-cp").css({"min-height":0, "height":"auto", "padding":"15px"})
+        $(".bg-image-cp h2").hide();
+
+        var sdate = undefined;
+        var edate = undefined;
+        Object.keys(_filters).forEach(function(k,i) {
+            if(urlParams[k] || k=='q') _filters[k] = urlParams[k];
+            switch(k) {
+                case 'q':
+                    $("#qt").val(_filters[k]);
+                    break;
+                case 'type':
+                    $("#searchtype option[value=" + _filters[k] + "]").attr('selected','selected');
+                    break;
+                case 'sdate':
+                    sdate = _filters[k];
+                    break;
+                case 'edate':
+                    edate = _filters[k];
+                    break;
+                case 'category':
+                    if(_filters[k]) {
+                        _filters[k] = _filters[k].split(',');
+                        for(var i=0; i<_filters[k].length; i++) _filters[k][i] = Number(_filters[k][i]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        if(sdate && edate) setFilterDates(moment.utc(sdate).tz(_tz).toDate(), moment.utc(edate).tz(_tz).toDate());
+
+        _skip = 0;
+        _queryResults = []; //reset search history
+        search(showResults);
+    }
+}
 
 function initTranslation() {
     $.ajax({
@@ -460,36 +500,50 @@ function loadCat() {
     $("#catDrop").empty();
     $.ajax(contentUrl + "categories/")
 	.done(function(data) {
-	    var cats = data.categories;
-        var ctpl = Handlebars.compile($("#cats-tpl").html());
+        var cats = data.categories;
 
+        if(_filters.category && _filters.category.length > 0) {
+            for(var i=0; i<cats.length; i++) {
+                if(_filters.category.indexOf(cats[i]._id) > -1) 
+                    cats[i].checked = true;
+            }
+        }
+
+        var ctpl = Handlebars.compile($("#cats-tpl").html());
         $("#catDrop").append(ctpl({cats:cats}));
 
-        $("#catDrop :checkbox").change(function(e) {
-            var cat = this.getAttribute("value");
-            var evcats = toDict(cats, '_id');
+        showCatString(cats);
 
+        $("#catDrop :checkbox").change(function(e) {
+            var cat = Number(this.getAttribute("value"));
             if(!_filters.category) _filters.category = [];
 
             if(this.checked)
                 _filters.category.push(cat);
             else {
                 var pos = _filters.category.indexOf(cat);
+                console.log(pos)
                 if(pos > -1) _filters.category.splice(pos, 1);
             }
-            if(_filters.category && _filters.category.length > 0) {
-                var catStr = '';
-                var subCats = _filters.category.slice(0, 2)
-                for(var c in subCats) {
-                    catStr += (catStr.length > 0 ? ', ' : '') + evcats[subCats[c]].name
-                }
-                if(catStr.length > 0 && _filters.category.length > subCats.length)
-                    catStr += '... +' + (_filters.category.length - subCats.length)
-                $("#advCat").html(catStr);
-            }
-            else $("#advCat").empty();
+            showCatString(cats);
         });
 	})
+}
+
+
+function showCatString(cats) {
+    var evcats = toDict(cats, '_id');
+    if(_filters.category && _filters.category.length > 0) {
+        var catStr = '';
+        var subCats = _filters.category.slice(0, 2)
+        for(var c in subCats) {
+            catStr += (catStr.length > 0 ? ', ' : '') + evcats[subCats[c]].name
+        }
+        if(catStr.length > 0 && _filters.category.length > subCats.length)
+            catStr += '... +' + (_filters.category.length - subCats.length)
+        $("#advCat").html(catStr);
+    }
+    else $("#advCat").empty();
 }
 
 
@@ -504,18 +558,28 @@ function toDict(objArray, prop) {
     return retObj;
 }
 
+
+//call onclick to construct the url
+function getQueryString(obj) {    
+    var filterString = '';
+    Object.keys(obj).forEach(function(k,i) {
+        if(k == 'position' && obj[k])
+            filterString += (filterString.length > 0 ? '&' : '') + k + '=' + obj[k].lon + ',' + obj[k].lat + ',' + (obj[k].radius/1000)
+        else if(k=="q") 
+            filterString += (filterString.length > 0 ? '&' : '') + k + "=" + obj[k];
+        else if(_filters[k]) 
+            filterString += (filterString.length > 0 ? '&' : '') + k + "=" + obj[k];
+    });
+    return filterString;
+}
+
+
+
+
 function search(cb) {
     var dateFmt = 'DD/MM/YYYY';
-    var q = $("#qt").val(); //text query
-    _filters.type = $("#searchtype").val();    
-    var filterString = '';
-    Object.keys(_filters).forEach(function(k,i) {
-        if(k == 'position' && _filters[k])
-            filterString += '&'+ k + '=' + _filters[k].lon + ',' + _filters[k].lat + ',' + (_filters[k].radius/1000)
-        else if(_filters[k]) filterString += "&" + k + "=" + _filters[k];
-    });
 
-    $.ajax(baseUrl + 'search?q=' + q + filterString)
+    $.ajax(baseUrl + 'search?' + getQueryString(_filters) + "&skip=" + _skip)
     .done(function(data) {
         if(data.metadata.totalCount == 0) {
             $.growl.warning({message: "La ricerca non ha prodotto risultati"});
@@ -527,7 +591,7 @@ function search(cb) {
             else
                 $("#moreresults").hide();
             let promo = _filters.type == 'promo';
-            _filters.skip += _filters.limit; //skip for next call
+            _skip += Number(_filters.limit); //skip for next call
 
             var qResults = promo ? data.promos : (_filters.type == 'content') ? data.contents : data.promos; //TODO default merge results
             var qres = [];

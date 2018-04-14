@@ -338,7 +338,7 @@
 	<script id="cats-tpl" type="text/x-handlebars-template">
 		{{#each cats}}
 		<div class="col-md-4">
-			<input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+			<input id="cbox_{{this._id}}" type="checkbox" {{#if this.checked}}checked="true"{{/if}} value="{{this._id}}" name="category" class="ibtn">
 			<label for="cbox_{{this._id}}">{{this.name}}</label>
 		</div>
 		{{/each}}
