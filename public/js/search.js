@@ -5,7 +5,7 @@ var _filters = {
     sdate: undefined,
     edate: undefined,
     category: undefined,
-    position: undefined,
+    position: undefined, // {lon, lat, pos}
     limit: 5,
     type: 'promo',
     q:undefined
@@ -134,6 +134,19 @@ function executeSearch() {
                         for(var i=0; i<_filters[k].length; i++) _filters[k][i] = Number(_filters[k][i]);
                     }
                     break;
+                case 'position':
+                    if(_filters[k]) {
+                        var pos = _filters[k].split(',');
+                        _filters[k] = {
+                            lon: Number(pos[0]),
+                            lat: Number(pos[1]),
+                            radius: Number(pos[2]) * 1000
+                        }
+                        gooGeocode(_filters[k].lat, _filters[k].lon, function(address) {                            
+                            setPositionSearchLabel(_filters[k].radius, address)
+                        });
+                    }
+                    break;
                 default:
                     break;
             }
@@ -144,6 +157,11 @@ function executeSearch() {
         _queryResults = []; //reset search history
         search(showResults);
     }
+}
+
+function setPositionSearchLabel(dist, address) {
+    $("#advPosDist").text(dist + "m from ");
+    $("#advPos").text(address);
 }
 
 function initTranslation() {
@@ -181,7 +199,7 @@ function showResults(qresults) {
                 locations.push({lat: qr[i].lat, lng: qr[i].lon});
                 infowindows.push(
                     "<div><h3><a href='" 
-                    + qr[i].link + "' data-i18n='" + qr[i].titleLangId + "'></a></h3>"
+                    + qr[i].link + "'>" + i18next.t(qr[i].titleLangId) + "</a></h3>"
                     + (qr[i].town ? "<i class='fa fa-map'></i> " + qr[i].town + '<br>': '')
                     + (qr[i].address ? "<i class='fa fa-map-marker'></i> " + qr[i].address + '<br>': '')
                     + (qr[i].likes ? "<i class='fa fa fa-thumbs-up'></i> " + qr[i].likes + '<br>': '')
@@ -237,7 +255,7 @@ function initMap() {
             _filters.position = {lat: clicklat, lon: clicklon, radius: $('#slider1-rounded').slider("value")};
 
             gooGeocode(clicklat, clicklon, function(address) {
-                $("#advPos").text(address);
+                setPositionSearchLabel(_filters.position.radius, address)                
             });
         }
     });
@@ -562,6 +580,7 @@ function toDict(objArray, prop) {
 //call onclick to construct the url
 function getQueryString(obj) {    
     var filterString = '';
+    console.log(obj)
     Object.keys(obj).forEach(function(k,i) {
         if(k == 'position' && obj[k])
             filterString += (filterString.length > 0 ? '&' : '') + k + '=' + obj[k].lon + ',' + obj[k].lat + ',' + (obj[k].radius/1000)
