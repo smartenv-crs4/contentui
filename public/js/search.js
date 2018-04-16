@@ -222,6 +222,7 @@ function resetFilterField(field) {
         case 'position':
             _filters.position = undefined;
             $("#advPos").empty();
+            $("#advPosDist").empty();
             $('#slider1-value-rounded').text(_defSliderVal); 
             $('#slider1-rounded').slider({value: _defSliderVal})
             break;
