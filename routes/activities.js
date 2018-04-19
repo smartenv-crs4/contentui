@@ -122,9 +122,60 @@ router.post('/email', (req, res, next) => {
 	})
 	.catch(e => {
 		console.log(e)
-		res.boom.badImplementation();
+		if(e.statusCode == 401)
+			res.boom.unauthorized();
+		else
+			res.boom.badImplementation();
 	})
 })
+
+router.delete('/:id/promo/:pid', (req, res, next) => {
+
+})
+
+router.delete('/:id', (req, res, next) => {
+	let id = req.params.id;
+	rp({
+		uri:contentUrl + 'contents/' + id,
+		method: 'GET',
+		json:true,
+		headers: {
+			authorization: req.headers.authorization
+		}
+	})
+	.then(content => {
+		let imgs = content.images;
+		return deleteImages(imgs)
+	})
+	.then(r => {
+		res.json(r)
+	})
+	.catch(e => {
+		console.log(e)
+		if(e.statusCode == 401)
+			res.boom.unauthorized()
+		else
+			res.boom.badImplementation();
+	})
+})
+
+
+function deleteImages(imgIdsArr) {
+	let promiseArr = [];
+	for(let i=0; i<imgIdsArr.length; i++) {
+		promiseArr.push(
+			rp({
+				uri:uploadUrl + 'file/' + imgIdsArr[i],
+				method: "DELETE",
+				headers: {
+					authorization: "Bearer " + config.auth_token
+				},
+				json: true
+			})
+		)
+	}
+	return Promise.all(promiseArr)
+}
 
 
 function getAdmins(admIds) {
