@@ -164,7 +164,7 @@ router.delete('/:id', (req, res, next) => {
 		return deleteImages(imgsAllowed)
 	})
 	.then(r => {
-		//TODO 
+		//TODO get promo e delete promo
 		res.json(r)
 	})
 	.catch(e => {
