@@ -130,11 +130,13 @@ router.post('/email', (req, res, next) => {
 })
 
 router.delete('/:id/promo/:pid', (req, res, next) => {
-
+	res.boom.notImplemented()
 })
 
+//TODO check token
 router.delete('/:id', (req, res, next) => {
 	let id = req.params.id;
+	let content = undefined;
 	rp({
 		uri:contentUrl + 'contents/' + id,
 		method: 'GET',
@@ -143,11 +145,26 @@ router.delete('/:id', (req, res, next) => {
 			authorization: req.headers.authorization
 		}
 	})
-	.then(content => {
+	.then(cnt => {
+		content = cnt;
 		let imgs = content.images;
-		return deleteImages(imgs)
+		return checkOwnership(imgs)
+	})
+	.then(owners => {
+		let imgsAllowed = [];
+		for(let i=0; i<owners.length; i++) {
+			//verifica che l'owner della foto sia compreso tra gli admin del content
+			//impedisce la cancellazione di foto non proprie quando si utilizza il token applicativo 
+			//su DELETE di uploadms
+			//Se le immagini hanno un owner che non e' più admin, su uploadms rimarranno orfane
+			if(content.admins.indexOf(owners[i].owner) != -1 || owners[i].owner == content.owner) {
+				imgsAllowed.push(owners[i].id);
+			}
+		}
+		return deleteImages(imgsAllowed)
 	})
 	.then(r => {
+		//TODO 
 		res.json(r)
 	})
 	.catch(e => {
@@ -159,6 +176,17 @@ router.delete('/:id', (req, res, next) => {
 	})
 })
 
+function checkOwnership(ids) {
+	let promiseArr = [];
+	for(let i=0; i<ids.length; i++) {
+		promiseArr.push(rp({
+			uri:uploadUrl + 'file/' + ids[i] + '/actions/owner',
+			method: "POST",
+			json: true
+		}))
+	}
+	return Promise.all(promiseArr)
+}
 
 function deleteImages(imgIdsArr) {
 	let promiseArr = [];
