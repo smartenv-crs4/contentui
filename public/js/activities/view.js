@@ -175,5 +175,13 @@ function newActivity() {
         $("#fileUpload").on("change", function() {
             loadImagePreview(this);
         });
+
+        initMultilanguage();
+        $("#f_name").focusout(function() {
+            getmultilanguageTitle(this.value);
+        })
+        $("#f_description").focusout(function() {
+            getmultilanguageDescription(this.value);
+        })
     });
 }
