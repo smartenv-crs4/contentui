@@ -1,8 +1,10 @@
 var request = require('request');
+const auth = require('tokenmanager');
 var rp = require('request-promise');
 var config = require('propertiesmanager').conf;
 var common = require('./render');
 var express = require('express');
+let authField = config.decodedTokenFieldName
 var router = express.Router();
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
@@ -10,6 +12,12 @@ config.contentUrl = contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
 let _mailerUrl = config.mailerUrl + (config.mailerUrl.endsWith('/') ? '' : '/');
+
+auth.configure({
+    authorizationMicroserviceUrl:config.authUrl + '/tokenactions/checkiftokenisauth',
+    decodedTokenFieldName:config.decodedTokenFieldName,
+    authorizationMicroserviceToken:config.auth_token
+});
 
 //ask userms for admins details
 router.get('/admins',	 (req, res, next) => {
@@ -82,7 +90,7 @@ router.get('/activitycontent/:id', (req, res, next) => {
 });
 
 //TODO check auth, solo admin
-router.post('/email', (req, res, next) => {
+router.post('/email', auth.checkAuthorization, (req, res, next) => {
 	let msg = req.body.msg;
 	let oid = req.body.oid;
 	let cid = req.body.cid;
@@ -129,43 +137,99 @@ router.post('/email', (req, res, next) => {
 	})
 })
 
-router.delete('/:id/promo/:pid', (req, res, next) => {
-	res.boom.notImplemented()
+router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
+	let authHeader = {authorization: req.headers.authorization};
+	let uid = req[authField].token._id;
+	let id = req.params.id;
+	let pid = req.params.pid;
+	let content = undefined;
+
+	rp({
+		uri:contentUrl + 'contents/' + id,
+		method: 'GET',
+		json:true
+	})
+	.then(r => {
+		content = r;
+		if(!checkContentAuth(r.admins.concat(r.owner), uid)) throw({statusCode:401});
+		return rp({
+			uri:contentUrl + 'contents/' + id + "/promotions/" + pid,
+			method: 'GET',
+			json:true
+		})
+	})
+	.then(r => {
+		if(r.idcontent != id) throw({statusCode:400})
+		r.admins = content.admins;
+		return deletePromo(r, authHeader);
+	})
+	.then(r => {
+		res.json(r);
+	})
+	.catch(e => {
+		console.log(e)
+		if(e.statusCode == 401)
+			res.boom.unauthorized()
+		else if(e.statusCode == 400)
+			res.boom.badRequest();
+		else
+			res.boom.badImplementation();
+	})
 })
 
-//TODO check token
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
+	let uid = req[authField].token._id;
 	let id = req.params.id;
 	let content = undefined;
+	let authHeader = {authorization: req.headers.authorization};
+	/*
+	//TODO per il lock serve il token admin, come bloccare senza?
+	rp({ //lock activity prima di rimozione, per evitare contenuti monchi se le op intermedie falliscono
+		uri:contentUrl + 'contents/' + id + '/actions/lock',
+		method: 'POST',
+		json:true,
+		headers: {authorization:"Bearer " + config.auth_token}
+	})
+	.then(r => {
+	*/
 	rp({
 		uri:contentUrl + 'contents/' + id,
 		method: 'GET',
 		json:true,
-		headers: {
-			authorization: req.headers.authorization
-		}
+		headers: authHeader
 	})
 	.then(cnt => {
 		content = cnt;
-		let imgs = content.images;
-		return checkOwnership(imgs)
-	})
-	.then(owners => {
-		let imgsAllowed = [];
-		for(let i=0; i<owners.length; i++) {
-			//verifica che l'owner della foto sia compreso tra gli admin del content
-			//impedisce la cancellazione di foto non proprie quando si utilizza il token applicativo 
-			//su DELETE di uploadms
-			//Se le immagini hanno un owner che non e' più admin, su uploadms rimarranno orfane
-			if(content.admins.indexOf(owners[i].owner) != -1 || owners[i].owner == content.owner) {
-				imgsAllowed.push(owners[i].id);
-			}
-		}
-		return deleteImages(imgsAllowed)
+		
+		//verifica che il chiamante sia admin del contenuto
+		if(!checkContentAuth(content.admins.concat(content.owner), uid)) throw({statusCode:401});
+		
+		return rp({
+			uri:contentUrl + 'contents/' + id + '/promotions',
+			method: 'GET',
+			json:true,
+			headers: authHeader
+		})
 	})
 	.then(r => {
-		//TODO get promo e delete promo
-		res.json(r)
+		let promoPromiArr = [];
+		for(let i=0; i<r.promos.length; i++) {
+			r.promos[i].admins = content.admins.concat(content.owner);
+			promoPromiArr.push(deletePromo(r.promos[i], authHeader));
+		}
+		return Promise.all(promoPromiArr);
+	})
+	.then(r => {
+		deleteImages(content.images, content.admins.concat([content.owner])) //WARN e' inviato asincrono!!!
+		return rp({
+			uri:contentUrl + 'contents/' + id,
+			method: 'DELETE',
+			json:true,
+			headers: authHeader
+		})
+	})
+	.then(r => {
+		res.json(r);
 	})
 	.catch(e => {
 		console.log(e)
@@ -176,6 +240,22 @@ router.delete('/:id', (req, res, next) => {
 	})
 })
 
+function checkContentAuth(admins, uid) {
+	//TODO aggiungere admin agli autorizzati (getSuperusers)
+	return admins.indexOf(uid) != -1;
+}
+
+//p e' il json di una promo, che deve prima essere aggiornato con p.admins = [admin del content padre]
+function deletePromo(p, authHeader) {	
+	deleteImages(p.images, p.admins); //WARN e' inviato asincrono!!!
+	return rp({
+		uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
+		method: 'DELETE',
+		json:true,
+		headers: authHeader
+	})
+}
+
 function checkOwnership(ids) {
 	let promiseArr = [];
 	for(let i=0; i<ids.length; i++) {
@@ -185,24 +265,46 @@ function checkOwnership(ids) {
 			json: true
 		}))
 	}
-	return Promise.all(promiseArr)
+	return Promise.all(promiseArr.map(p => p.catch(() => undefined))) //se l'immagine non esiste (db ex)
 }
 
-function deleteImages(imgIdsArr) {
+
+function deleteImages(imgIdsArr, admins) {
 	let promiseArr = [];
-	for(let i=0; i<imgIdsArr.length; i++) {
-		promiseArr.push(
-			rp({
-				uri:uploadUrl + 'file/' + imgIdsArr[i],
-				method: "DELETE",
-				headers: {
-					authorization: "Bearer " + config.auth_token
-				},
-				json: true
-			})
-		)
-	}
-	return Promise.all(promiseArr)
+	checkOwnership(imgIdsArr)
+	.then(owners => {
+		let imgsAllowed = [];
+		for(let i=0; i<owners.length; i++) {
+			//verifica che l'owner della foto sia compreso tra gli admin del content, in tal caso rimuove 
+			//la foto utilizzando il token applicativo di contentui (il tipo token deve essere autorizzato 
+			//e presente nel campo appAdminTokenType del config di uploadms)
+			//impedisce la cancellazione di foto non proprie quando si utilizza il token applicativo 
+			//su DELETE di uploadms
+			//Se le immagini hanno un owner che non e' più admin, su uploadms rimarranno orfane
+			if(owners[i] != undefined) {
+				if(admins.indexOf(owners[i].owner) != -1) {
+					imgsAllowed.push(owners[i].id);
+				}
+			}
+		}
+
+		for(let i=0; i<imgsAllowed.length; i++) {
+			promiseArr.push(
+				rp({
+					uri:uploadUrl + 'file/' + imgsAllowed[i],
+					method: "DELETE",
+					headers: {
+						authorization: "Bearer " + config.auth_token
+					},
+					json: true
+				})
+			)
+		}
+		Promise.all(promiseArr)
+	})
+	.catch(e => {
+		console.log(e);
+	})
 }
 
 
