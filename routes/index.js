@@ -72,6 +72,7 @@ router.get('/',  (req, res, next) => {
       scheduleUrl:scheduleUrl,
       uploadUrl:uploadUrl,
       access_token: access_token,
+      contentAdminTypes: config.contentAdminTokenType,
       properties:{
         contentUIUrl:config.contentUIUrl ,
         commonUIUrl:config.commonUIUrl

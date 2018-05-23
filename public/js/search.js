@@ -6,13 +6,13 @@ var _filters = {
     edate: undefined,
     category: undefined,
     position: undefined, // {lon, lat, pos}
+    by_uid: undefined,
     limit: 5,
-    type: 'promo',
+    type: 'promo',    
     q:undefined
 };
 var _skip = 0;
 var _queryResults = [];
-
 
 $(document).ready(function() {
     initToken();
@@ -21,7 +21,7 @@ $(document).ready(function() {
     addEventListener('promotionLanguageManagerInitialized', function (e) {
         var source   = $("#search-template").html();
         _searchTemplate = Handlebars.compile(source);
-
+        renderBoxes()
         showToolShips();
         showToolDates();
         executeSearch()
@@ -40,6 +40,7 @@ $(document).ready(function() {
 
         $("#doSearch").click(function(e) {
             //reload page including query parameters to enable browser history
+            _filters.by_uid = undefined; //if present in history parameters must be reset on new searches
             _filters.q = $("#qt").val(); //text query
             _filters.type = $("#searchtype").val();
             window.location.href = window.location.href.split("?")[0] + "?" + getQueryString(_filters);
@@ -92,6 +93,28 @@ $('body').on('keypress', "#qt", function(args) {
     }
 });
 
+function renderBoxes() {
+
+    var model = {
+        uid:undefined,
+        contentAdmin:false
+    }
+    
+    jQuery.ajax({
+        url: config.contentUIUrl + "/token/decode?decode_token="+ userToken,
+        type: "GET",
+        success: function(data, textStatus, xhr){
+            if(data.valid){
+                model.uid = data.token._id;
+                model.contentAdmin = contentAdminTypes.indexOf(data.token.type) != -1;
+            }
+        }
+    }).done(function() {
+        var boxes = Handlebars.compile($("#boxes-template").html());
+        $("#homeBoxes div").append(boxes(model));
+    });
+}
+
 function executeSearch() {
     var urlParams;
     var match,
@@ -113,6 +136,7 @@ function executeSearch() {
 
         var sdate = undefined;
         var edate = undefined;
+        var byuid = undefined;
         Object.keys(_filters).forEach(function(k,i) {
             if(urlParams[k] || k=='q') _filters[k] = urlParams[k];
             switch(k) {
@@ -127,6 +151,9 @@ function executeSearch() {
                     break;
                 case 'edate':
                     edate = _filters[k];
+                    break;
+                case 'by_uid':
+                    byuid = _filters[k];
                     break;
                 case 'category':
                     if(_filters[k]) {

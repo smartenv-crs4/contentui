@@ -22,6 +22,7 @@ router.get('/', (req, res, next) => {
     let position    = req.query.position;
     let limit       = req.query.limit;
     let skip        = req.query.skip;
+    let byuid       = req.query.by_uid;
     if(position) postion = position.slice(',');
     
     try {
@@ -57,6 +58,7 @@ router.get('/', (req, res, next) => {
                 + (edate ? "&edate=" + edate : '') 
                 + (category ? '&category=' + category : '')
                 + (position ? '&position=' + position : '')
+                + (byuid ? '&by_uid=' + byuid : '')
                 + '&ord=endDate'
                 + (limit ? '&limit=' + limit : '')
                 + (limit && skip ? '&skip=' + skip : '');

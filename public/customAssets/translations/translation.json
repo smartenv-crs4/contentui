@@ -313,25 +313,49 @@
         "it":"Scegli",
         "en":"Choose"
     },
+    "box1titleCA": {
+        "it":"Promuovi",
+        "en":"Promote"
+    },
     "box1text": {
       "it":"Cerca tra le tante opportunità turistiche, gastronomiche, culturali e sportive offerte dalla città di Cagliari riservate ai crocieristi.",
       "en":"Search among many gastronomic, cultural and sporting opportunities offered by the city of Cagliari reserved for cruisers"
+    },
+    "box1textCA": {
+      "it":"Promuovi una tua attività con una pagina dedicata sulla piattaforma Cagliari Port",
+      "en":"Promote your activity on Cagliari Port Platform with a customizable web page"
     },
     "box2title":{
         "it":"Pianifica",
         "en":"Plan"
     },
+    "box2titleCA":{
+        "it":"Le tue attività",
+        "en":"Your Activities"
+    },
     "box2text": {
         "it":"Usa i risultati della ricerca per organizzare la tua visita in città o nei dintorni in base alle tue esigenze di viaggio.",
         "en":"Use the search results to organize your city and surrounding area visit according to your travel needs."
+    },
+    "box2textCA": {
+        "it":"Visualizza la lista delle tue attività su Cagliari Port 2020",
+        "en":"View your activities on Cagliari Port 2020"
     },
     "box3title":{
         "it":"Scopri",
         "en":"Enjoy"
     },
+    "box3titleCA":{
+        "it":"Le tue Promo & eventi",
+        "en":"Your Deals & events"
+    },
     "box3text": {
         "it":"Esplora le bellezze di Cagliari e fruisci dei servizi esclusivi che hai individuato.",
         "en":"Explore the beauties of Cagliari and enjoy the exclusive services you've found."
+    },
+    "box3textCA": {
+        "it":"Visualizza l'elenco delle promozioni che hai pubblicato",
+        "en":"View the list of your events and deals"
     },
     "advDateLabel": {
         "en":"Time range",
