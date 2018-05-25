@@ -108,8 +108,8 @@ function renderBoxes() {
                 model.uid = data.token._id;
                 model.contentAdmin = contentAdminTypes.indexOf(data.token.type) != -1;
             }
-        }
-    }).done(function() {
+        },
+    }).always(function() {
         var boxes = Handlebars.compile($("#boxes-template").html());
         $("#homeBoxes div").append(boxes(model));
     });
