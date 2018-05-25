@@ -288,7 +288,9 @@
 			<p data-i18n="{{#if contentAdmin}}search.box2textCA{{else}}search.box2text{{/if}}"></p>
 		</div>
 		<div class="col-md-4 content-boxes-v6">
-			<i class="rounded-x fa {{#if contentAdmin}}fa-calendar{{else}}fa-child{{/if}}"></i>
+			{{#if contentAdmin}}<a href="#" id="mypromolist" data-uid={{uid}}>{{/if}}
+				<i class="rounded-x fa {{#if contentAdmin}}fa-calendar{{else}}fa-child{{/if}}"></i>
+			{{#if contentAdmin}}</a>{{/if}}
 			<h2 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="{{#if contentAdmin}}search.box3titleCA{{else}}search.box3title{{/if}}"></h2>
 			<p data-i18n="{{#if contentAdmin}}search.box3textCA{{else}}search.box3text{{/if}}"></p>
 		</div>

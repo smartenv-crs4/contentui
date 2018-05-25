@@ -7,6 +7,7 @@ var _filters = {
     category: undefined,
     position: undefined, // {lon, lat, pos}
     by_uid: undefined,
+    idcontent: undefined,
     limit: 5,
     type: 'promo',    
     q:undefined
@@ -41,6 +42,7 @@ $(document).ready(function() {
         $("#doSearch").click(function(e) {
             //reload page including query parameters to enable browser history
             _filters.by_uid = undefined; //if present in history parameters must be reset on new searches
+            _filters.idcontent = undefined; //if present in history parameters must be reset on new searches
             _filters.q = $("#qt").val(); //text query
             _filters.type = $("#searchtype").val();
             window.location.href = window.location.href.split("?")[0] + "?" + getQueryString(_filters);
@@ -112,7 +114,27 @@ function renderBoxes() {
     }).always(function() {
         var boxes = Handlebars.compile($("#boxes-template").html());
         $("#homeBoxes div").append(boxes(model));
+
+        $("#mypromolist").click(function() {
+            getMyPromos(this.getAttribute("data-uid"))
+        });
     });
+}
+
+function getMyPromos(uid) {
+    
+    jQuery.ajax({
+        url: contentUrl + "/search?type=content&by_uid=" + uid,
+        type: "GET",
+        success: function(data, textStatus, xhr){
+            var cts = data.contents;
+            var cntIds = [];
+            for(var i=0; i<cts.length; i++) {
+                cntIds.push(cts[i]._id);
+            }
+            window.location.href = baseUrl + "?type=promo&&q=&idcontent=" + cntIds.join(',');
+        }
+    })
 }
 
 function executeSearch() {
@@ -137,6 +159,7 @@ function executeSearch() {
         var sdate = undefined;
         var edate = undefined;
         var byuid = undefined;
+        var idcontent = undefined;
         Object.keys(_filters).forEach(function(k,i) {
             if(urlParams[k] || k=='q') _filters[k] = urlParams[k];
             switch(k) {
@@ -154,6 +177,9 @@ function executeSearch() {
                     break;
                 case 'by_uid':
                     byuid = _filters[k];
+                    break;
+                case 'idcontent':
+                    idcontent = _filters[k];
                     break;
                 case 'category':
                     if(_filters[k]) {
