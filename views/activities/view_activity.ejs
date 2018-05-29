@@ -27,6 +27,9 @@
     <div class="toolbar">
         <ul class="list-inline">
             <li>
+                <select class="form-control" id="myActList" style="display:none;"></select>
+            </li>
+            <li>
                 <button id="lockContent" class="btn btn-default sadmin" style="display:none;" title="" data-toggle="modal">
                     <i class="fa" ></i>
                 </button>
@@ -126,6 +129,11 @@
                     </div>
                     <!-- End Team v2 -->
                     {{/each}}
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12" style="text-align: center">
+                        <a href="<%= baseUrl %>?type=promo&q=&idcontent={{idcontent}}" data-i18n="activity.allpromo"></a>
+                    </div>
                 </div>
             </div>
         </div>

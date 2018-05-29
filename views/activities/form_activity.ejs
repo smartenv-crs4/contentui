@@ -33,20 +33,22 @@
             <select id="multilanguageselect" class="form-control">
                 <option value='it'>&#x1F1EE;&#x1F1F9;&nbsp;Italiano</option>
                 <option value='en'>&#x1F1EC;&#x1F1E7;&nbsp;Inglese</option>
-                <option value='fr'>&#x1F1EB;&#x1F1F7;&nbsp;Francese</option>
+                <!--option value='fr'>&#x1F1EB;&#x1F1F7;&nbsp;Francese</option>
                 <option value='es'>&#x1F1EA;&#x1F1F8;&nbsp;Spagnolo</option>
                 <option value='de'>&#x1F1E9;&#x1F1EA;&nbsp;Tedesco</option>
                 <option value='pt'>&#x1F1F5;&#x1F1F9;&nbsp;Portoghese</option>
                 <option value='ru'>&#x1F1F7;&#x1F1FA;&nbsp;Russo</option>
                 <option value='gr'>&#x1F1EC;&#x1F1F7;&nbsp;Greco</option>
-                <option value='br'>&#x1F1E7;&#x1F1F7;&nbsp;Brasiliano</option>
+                <option value='br'>&#x1F1E7;&#x1F1F7;&nbsp;Brasiliano</option-->
             </select>
             <!--language writing End-->
 
-            <!--Inputs-->
             <h4 data-i18n="activity.name"></h4>
             <input id="f_name" type="text" class="form-control" placeholder="es. Centro di ricerca CRS4" required maxlength="100">
-            <!--End Inputs-->
+            <div class="margin-bottom-20"></div>
+
+            <h4 data-i18n="activity.vat"></h4>
+            <input id="f_vat" type="text" class="form-control" pattern="[A-Za-z0-9]{11,16}" maxlength="16" value="{{vat}}">
             <div class="margin-bottom-20"></div>
 
             <!-- Descrizione section-->
@@ -106,7 +108,7 @@
             <div class="contactsform">
                 <div class="row">
                     <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-envelope"></i> <input class="form-control" type="email" placeholder="Email" id="f_email" value="{{email}}" required /></div>
-                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-phone"></i> <input class="form-control" type="number" placeholder="Phone" id="f_phone" value="{{phone}}" required /></div>
+                    <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-white fa fa-phone"></i> <input class="form-control" type="text" pattern="[\+\s0-9]{8,}" placeholder="Phone" id="f_phone" value="{{phone}}" required /></div>
                 </div>
                 <div class="row">
                     <div class="col-md-6"><i class="icon-custom icon-sm rounded-x icon-bg-dark-blue fa fa-facebook"></i> <input class="form-control" type="url" placeholder="Facebook" id="f_fb" value="{{facebook}}" /></div>
@@ -121,7 +123,7 @@
 
             <button id="addContentButton" class="btn-u btn-u-default insertmode" type="button">Add Activity</button>
             <button id="updateContentButton" class="btn-u btn-u-default editmode" type="button">Update Activity</button>
-            <button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button>
+            <!--button id="deleteContentButton" class="btn-u btn-u-red editmode" type="button">Delete Activity</button-->
         </div>
     </div>
     </form>

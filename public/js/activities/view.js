@@ -43,6 +43,7 @@ function doView(aid) {
         else {
             activityBody = content;
 
+
             initView(initToolbar);
 
             var admins = activityBody.admins;
@@ -56,6 +57,22 @@ function doView(aid) {
                 if(auths.isAuth || auths.isSuperAdmin) {
                     _form_ds.htplAdmin = Handlebars.compile($("#htpl-admin").html());
                     _form_ds.admins = _form_ds.admins.concat(spliceOwner(admins));
+
+                    getActivityList(auths.uid, function(list) {
+                        if(list.length > 0) {
+                            $("#myActList").show();
+                            for(var i=0; i<list.length;i++) {
+                                initTitleJsonMultilanguage(list[i].name, "ac" + i);
+                                
+                                $("#myActList").append("<option value='" + list[i]._id + "'" +
+                                (list[i]._id == activityBody._id ? " selected" : "") + ">" + i18next.t("ac"+i+".title") +"</option>")
+                            }
+
+                            $("#myActList").change(function() {
+                                window.location.href = config.contentUIUrl + '/activities/' + this.value
+                            })
+                        }
+                    })
 
                     getAdmins(_form_ds.admins, renderAdmins);
                     $(".viewonly").hide();
@@ -90,6 +107,26 @@ function doView(aid) {
     });
 }
 
+function getActivityList(uid, cb) {
+    $.ajax({
+        url: contentUrl + "search?t=contents&by_uid=" + uid,
+        headers: {
+            Authorization: "Bearer " + userToken
+        },
+        success: function(d){
+            if(cb) cb(d.contents);
+        },
+        error: function(e) {
+            console.log(e)
+            if(e.status == 423) {
+                cb(null)
+            }
+            _growl.error({message: "Error getting user info"});
+        }
+    });
+}
+
+
 function getContent(aid, cb) {
     $.ajax({
         url: config.contentUIUrl + "/activities/activitycontent/" + aid,
@@ -121,6 +158,7 @@ function initView(cb) {
     var model = {
         //name:activityBody.name,
         //description:common.markup(activityBody.description),
+        idcontent: activityBody._id,
         address: activityBody.address,
         phone: activityBody.phone,
         contacts: contacts,
@@ -145,10 +183,10 @@ function initView(cb) {
                 promos[i].images.push(config.contentUIUrl + "/img/no_image_available_175.png")
         }
         model.promos = promos;
-        $("#viewbox").html(viewTpl(model));
+        
         initTitleJsonMultilanguage(activityBody.name, "activitycontent");
         initDescriptionJsonMultilanguage(activityBody.description, "activitycontent");
-
+        $("#viewbox").html(viewTpl(model));
         initMap(activityBody.name, activityBody.lat, activityBody.lon);
         $('body').localize();
 

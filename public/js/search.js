@@ -594,7 +594,6 @@ function loadCat() {
                 _filters.category.push(cat);
             else {
                 var pos = _filters.category.indexOf(cat);
-                console.log(pos)
                 if(pos > -1) _filters.category.splice(pos, 1);
             }
             showCatString(cats);
@@ -634,7 +633,6 @@ function toDict(objArray, prop) {
 //call onclick to construct the url
 function getQueryString(obj) {    
     var filterString = '';
-    console.log(obj)
     Object.keys(obj).forEach(function(k,i) {
         if(k == 'position' && obj[k])
             filterString += (filterString.length > 0 ? '&' : '') + k + '=' + obj[k].lon + ',' + obj[k].lat + ',' + (obj[k].radius/1000)

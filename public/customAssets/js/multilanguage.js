@@ -68,7 +68,7 @@ function createJsonMultilanguage(content,multilanguage){
         do{
             indexStartTag+=2;// +2 due to [[
             tmpLang=content.substr(indexStartTag,2);
-            indexEndTag=content.search(new RegExp("\\[\\[\\/\\" + tmpLang + "\\]\\]","igm"));
+            indexEndTag=content.search(new RegExp("\\[\\[\\/\\" + tmpLang + "\\]\\]","igm")); 
             multilanguage[tmpLang]=content.substring(indexStartTag+4,indexEndTag); //+4 due to xx]]
             content=content.substr(indexEndTag+7);// 7 due to [[/xx]]
             indexStartTag=content.search(/\[\[\w{2}\]\]/igm) ;

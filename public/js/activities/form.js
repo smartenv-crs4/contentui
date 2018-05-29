@@ -225,6 +225,7 @@ function loadContent(cb) {
     var formcontent = Handlebars.compile($("#htpl-form").html());
     var hmodel = {};
     if(typeof activityBody != 'undefined') {
+        console.log(activityBody)
         hmodel = activityBody;
         for(var i=0; i<activityBody.images.length; i++) {
             if(typeof activityBody.images[i] == "string") { //first editmode activation, img not formatted
@@ -266,6 +267,7 @@ function getFormData() {
     var email = $("#f_email").val();
     var instagram = $("#f_inst").val();
     var tripadvisor = $("#f_ta").val();
+    var vat = $("#f_vat").val();
 
     var category_array = $('input[name="category"]:checked').map(function () {
         return this.value;
@@ -273,6 +275,7 @@ function getFormData() {
 
     var contentData = {
         name: name,
+        vat: vat,
         type: "activity",
         description: description,
         address: address,

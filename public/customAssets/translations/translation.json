@@ -391,6 +391,10 @@
       "en":"Related deals and events.",
       "it":"Promozioni e eventi correlati"
     },
+    "allpromo" : {
+      "en":"Show all active promo...",
+      "it":"Mostra tutte le promozioni attive..."
+    },
     "contact": {
       "en":"Contacts",
       "it":"Contatti"
@@ -406,6 +410,10 @@
     "name": {
       "it":"Nome Attività",
       "en":"Name"
+    },
+    "vat": {
+      "it":"Codice Fiscale o Partita IVA",
+      "en":"VAT"
     },
     "desc": {
       "it":"Descrizione",
