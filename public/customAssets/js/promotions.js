@@ -1024,7 +1024,7 @@ function compilePromotion(){
     newPromotion={};
 
     jQuery.ajax({
-        url: config.contentUIUrl + "/contents/"+ contentID+ "/promotions/" + promotionID ,
+        url: config.contentUIUrl + "/contents/"+ contentID+ "/promotions/promoid/" + promotionID ,
         type: "GET",
         success: function(data, textStatus, xhr)
         {
@@ -1090,7 +1090,7 @@ function compilePromotion(){
                         // Get Content Admins
                         function(callback) {
                             jQuery.ajax({
-                                url: config.contentUIUrl + "/contents/"+ contentID,
+                                url: config.contentUIUrl + "/contents/contentid/"+ contentID,
                                 type: "GET",
                                 success: function(data, textStatus, xhr){
                                     var admins=[data.owner];

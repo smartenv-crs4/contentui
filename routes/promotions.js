@@ -165,7 +165,7 @@ router.get('/:pid/participants', function(req, res, next) {
 
 
 
-router.get('/:pid', function(req, res, next) {
+router.get('/promoid/:pid', function(req, res, next) {
 
     var promotionID=req.params.pid;
     var contentID= req.contentId;
