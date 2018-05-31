@@ -69,13 +69,12 @@
                     </div>
                 {{/each}}
             </div>
-
-            <div class="sky-form" style="border:0px;">
-                <label for="fileUpload" class="input input-file">
-                    <div class="button"><input type="file" id="fileUpload" name="files[]" multiple onchange="this.parentNode.nextSibling.value = this.value">Carica Immagine</div><input type="text" readonly="">
-                </label>
-            </div>
-
+            
+            <input type="file" id="fileUpload" name="files[]" style="display: none;" />
+            <button class="btn-u btn-u-red" type="button" onclick="document.getElementById('fileUpload').click();">
+                <i class="fa fa-folder-open"></i> <span data-i18n="activity.file"></span>
+            </button>
+            
             <hr>
             <div class="margin-bottom-10"></div>
 

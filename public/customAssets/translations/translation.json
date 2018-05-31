@@ -399,6 +399,10 @@
       "en":"Contacts",
       "it":"Contatti"
     },
+    "file": {
+      "en":"Upload image",
+      "it":"Carica immagine"
+    },
     "address": {
       "en":"Address",
       "it":"Indirizzo"

@@ -366,7 +366,8 @@ function storeContentToContentms(contentData, ins){
             else doView(response._id);
         },
         error: function (response) {
-            _growl.error({message: "Error updating content "});
+            var msg = response.responseJSON.message ? ': ' + response.responseJSON.message : '';
+            _growl.error({message: "Error updating content" + msg});
         }
     });
 }
