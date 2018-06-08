@@ -15,12 +15,13 @@ function initToolbar() {
             $(".insertmode").hide();
             $(".editmode").show();
             initMapEdit();
+            initAutocompletePlaces();
             //bind only once!!!
             $("#updateContentButton").off("click");
             $("#updateContentButton").click(function(e) {
                 updateContent();
             });
-            
+
             $("#fileUpload").on("change", function() {
                 loadImagePreview(this);
             });
@@ -32,7 +33,6 @@ function initToolbar() {
             $("#f_description").focusout(function() {
                 getmultilanguageDescription(this.value);
             })
-
             
             initTranslation();
         });
@@ -76,7 +76,7 @@ function initToolbar() {
             $("#lockmail").click(function() {
                 reasons = $("#lockreasons").val();
                 $("#lockreasons").val("");
-                console.log(reasons)
+                
                 if(!reasons || reasons.length < 3 )
                     _growl.warning({message:"Please give a reason"})
                 else {
@@ -196,4 +196,27 @@ function initMultilanguage(){
     });
 
     $('#multilanguageselect').val(window.localStorage.lng).change();
+}
+
+function initAutocompletePlaces() {
+    function cb() {
+        var place = autocomplete.getPlace();
+        if (!place || !place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            /*
+            var name = place ? place.name : $("#f_address").val();
+            window.alert("No details available for input: '" + name + "'");*/
+            return;
+        }
+        _addressFound = true;
+        _form_ds.lat = place.geometry.location.lat();
+        _form_ds.lon = place.geometry.location.lng();
+        _map.markers[0].setPosition(place.geometry.location);
+        _map.setCenter(_form_ds.lat, _form_ds.lon)   
+    }
+    _addressFound = false;
+    var input = document.getElementById('f_address');  
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener('place_changed', cb);   
 }

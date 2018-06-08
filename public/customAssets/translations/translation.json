@@ -427,6 +427,14 @@
       "it":"Categorie",
       "en":"Categories"
     },
+    "adrChanged":{
+      "it": "La posizione indicata sulla mappa corrisponde all'indirizzo:",
+      "en": "The specified coordinates point to:"
+    },
+    "adrChange": {
+      "it": "Usa questo indirizzo",
+      "en": "Use this address"
+    },
     "map":{
       "it":"Posizione",
       "en":"Position"

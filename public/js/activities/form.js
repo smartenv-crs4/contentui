@@ -137,19 +137,30 @@ function initMapEdit() {
             marker.setPosition(new google.maps.LatLng(latitude,longitude));
             _form_ds.lat = latitude;
             _form_ds.lon = longitude;
+            
             geocodeLatLng(latitude, longitude, function(address) {
-                $('#f_address').val(address);
-            });
+                $('#fAddressChanged').fadeIn();
+                $('#fAddressChanged .newAdr').text(address);
+                $("#changeAddress").off("click");
+                $("#changeAddress").click(function() {
+                    _addressFound = true;
+                    $("#f_address").val(address);
+                    $('#fAddressChanged').hide();
+                })
+                
+            });   
         }
     });
-
+    _map = map;
     var marker = map.addMarker({
         lat: latitude,
         lng: longitude
     });
+/*    
     geocodeLatLng(latitude, longitude, function(address) {
         $('#f_address').val(address);
     });
+*/
 }
 
 
@@ -225,7 +236,7 @@ function loadContent(cb) {
     var formcontent = Handlebars.compile($("#htpl-form").html());
     var hmodel = {};
     if(typeof activityBody != 'undefined') {
-        console.log(activityBody)
+        
         hmodel = activityBody;
         for(var i=0; i<activityBody.images.length; i++) {
             if(typeof activityBody.images[i] == "string") { //first editmode activation, img not formatted
@@ -260,7 +271,7 @@ function getFormData() {
     //var description = $('#f_description').val();
     var description = '';
     description=getContentWithTags(descriptionMultilanguage);
-    var address = $('#f_address').val();  
+    var address = $('#f_address').val();
     var facebook = $("#f_fb").val();
     var twitter = $("#f_tw").val();
     var phone = $("#f_phone").val();
@@ -295,19 +306,35 @@ function getFormData() {
 }
 
 function addContent() {
-    var contentData = getFormData();
+    positionCheck(function(edit) {
+        if(!edit) {
+            var contentData = getFormData();
 
-    if (images_array_fd.length > 0 ) {
-        images_array_fd.forEach(function (fd_img) {
-            getUploadmsImageURL(fd_img.formData, function (img_url) {        
-                contentData.images.push(img_url);
-                if (contentData.images.length === images_array_fd.length) {
-                    storeContentToContentms(contentData, true);
-                }
-            });
+            if (images_array_fd.length > 0 ) {
+                images_array_fd.forEach(function (fd_img) {
+                    getUploadmsImageURL(fd_img.formData, function (img_url) {        
+                        contentData.images.push(img_url);
+                        if (contentData.images.length === images_array_fd.length) {
+                            storeContentToContentms(contentData, true);
+                        }
+                    });
+                });
+            } 
+            else storeContentToContentms(contentData, true);
+        }
+    })
+}
+
+
+function positionCheck(cb) {
+    //geolocate failed e indirizzo attuale diverso da quello salvato
+    if((!_addressFound && !activityBody)
+        ||(!_addressFound && $("#f_address").val() != activityBody.address)) {
+        bootbox.confirm("The system can't geolocate the activity address, would you set the coordinates on the map manually?", function(result){            
+            cb(result)
         });
-    } 
-    else storeContentToContentms(contentData, true);
+    }
+    else cb(false);
 }
 
 function updateContent(){
@@ -316,38 +343,42 @@ function updateContent(){
         return;
     }
 
-    //rimozione immagini da uploadms
-    for(var i=0; i<images_to_remove.length; i++) {
-        deleteUploadedPicture(images_to_remove[i], function(r, e) {
-            if(e) {
-                var msg = ((e.status == 401) ? "You are not the owner of the image " : "Unable to delete the image ") + images_to_remove[i];
-                _growl.warning({message:msg}); //unauthorized is non blocking, the image remains available
+    positionCheck(function(edit) {
+        if(!edit) {
+            //rimozione immagini da uploadms
+            for(var i=0; i<images_to_remove.length; i++) {
+                deleteUploadedPicture(images_to_remove[i], function(r, e) {
+                    if(e) {
+                        var msg = ((e.status == 401) ? "You are not the owner of the image " : "Unable to delete the image ") + images_to_remove[i];
+                        _growl.warning({message:msg}); //unauthorized is non blocking, the image remains available
+                    }
+                });
             }
-        });
-    }
-    images_to_remove = []; //important!
+            images_to_remove = []; //important!
 
-    contentData = getFormData();
-    contentData.images = $('img[name="image"]').map(function () {
-        if (!this.src.match("^blob"))
-            return $(this).attr("data-id"); //solo quelle senza blob (img già uploadate)
-    }).get();
+            contentData = getFormData();
+            contentData.images = $('img[name="image"]').map(function () {
+                if (!this.src.match("^blob"))
+                    return $(this).attr("data-id"); //solo quelle senza blob (img già uploadate)
+            }).get();
 
-    var oldImagesLength = contentData.images.length;
+            var oldImagesLength = contentData.images.length;
 
-    if(images_array_fd.length > 0 ) {
-        images_array_fd.forEach(function (fd_img) {
-            getUploadmsImageURL(fd_img.formData, function (img_url) {
-                contentData.images.push(img_url);
-                // bisogna considerare le immagini già presenti per capire se le ha caricate tutte
-                if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {
-                    //console.log("contentData: ", JSON.stringify(contentData));
-                    storeContentToContentms(contentData);
-                }
-            });
-        });
-    } 
-    else storeContentToContentms(contentData);
+            if(images_array_fd.length > 0 ) {
+                images_array_fd.forEach(function (fd_img) {
+                    getUploadmsImageURL(fd_img.formData, function (img_url) {
+                        contentData.images.push(img_url);
+                        // bisogna considerare le immagini già presenti per capire se le ha caricate tutte
+                        if ((contentData.images.length - images_array_fd.length) === oldImagesLength) {
+                            //console.log("contentData: ", JSON.stringify(contentData));
+                            storeContentToContentms(contentData);
+                        }
+                    });
+                });
+            } 
+            else storeContentToContentms(contentData);
+        }
+    })
 }
 
 function storeContentToContentms(contentData, ins){

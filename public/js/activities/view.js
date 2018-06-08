@@ -202,6 +202,7 @@ function newActivity() {
         $(".editmode").hide();
         $(".insertmode").show();
         initMapEdit();
+        initAutocompletePlaces();
 
         $(".headline h3").html("Inserimento Attivit&agrave;")
         
