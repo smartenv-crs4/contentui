@@ -209,13 +209,13 @@ function initAutocompletePlaces() {
             window.alert("No details available for input: '" + name + "'");*/
             return;
         }
-        _addressFound = true;
+        _addressFound = document.getElementById('f_address').value;
         _form_ds.lat = place.geometry.location.lat();
         _form_ds.lon = place.geometry.location.lng();
         _map.markers[0].setPosition(place.geometry.location);
         _map.setCenter(_form_ds.lat, _form_ds.lon)   
     }
-    _addressFound = false;
+    _addressFound = undefined;
     var input = document.getElementById('f_address');  
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.addListener('place_changed', cb);   

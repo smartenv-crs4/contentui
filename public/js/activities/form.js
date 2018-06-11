@@ -143,7 +143,7 @@ function initMapEdit() {
                 $('#fAddressChanged .newAdr').text(address);
                 $("#changeAddress").off("click");
                 $("#changeAddress").click(function() {
-                    _addressFound = true;
+                    _addressFound = address;
                     $("#f_address").val(address);
                     $('#fAddressChanged').hide();
                 })
@@ -331,6 +331,11 @@ function positionCheck(cb) {
     if((!_addressFound && !activityBody)
         ||(!_addressFound && $("#f_address").val() != activityBody.address)) {
         bootbox.confirm("The system can't geolocate the activity address, would you set the coordinates on the map manually?", function(result){            
+            cb(result)
+        });
+    }
+    else if(_addressFound != $("#f_address").val()) {
+        bootbox.confirm("The inserted address has changed, would you check the coordinates on the map?", function(result){            
             cb(result)
         });
     }
