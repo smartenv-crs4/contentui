@@ -66,6 +66,16 @@ a.delAdmin{
   margin:100px auto;
 }
 
+#fAddressChanged {
+  display:none;
+  width:100%;
+  background-color:#e6ffe6;
+}
+
+.newAdr {
+  font-weight:bold;
+}
+
 #lockedContent {
   color:red;
 }

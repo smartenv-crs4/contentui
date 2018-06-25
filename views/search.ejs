@@ -181,7 +181,9 @@
 										<div class="row">
 											<div class="col-sm-11">
 												<h4 class="panel-title">
-													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Map" aria-expanded="false"><span class="fa fa-map-o"></span> <span data-i18n="search.advPosLabel"></span> <span id="advPos" class="advItem"></span>
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#adv" href="#collapse-Map" aria-expanded="false">
+														<span class="fa fa-map-o"></span> <span data-i18n="search.advPosLabel"></span> 
+														<span id="advPosDist" class="advItem"></span><span id="advPos" class="advItem"></span>
 													</a>									
 												</h4>
 											</div>
@@ -209,23 +211,7 @@
 
 
 		<div id="homeBoxes" class="container content-sm">
-			<div class="row">
-				<div class="col-md-4 content-boxes-v6 md">
-					<i class="rounded-x fa fa-search"></i>
-					<h1 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="search.box1title"></h1>
-					<p data-i18n="search.box1text"></p>
-				</div>
-				<div class="col-md-4 content-boxes-v6 md-margin-bottom-50">
-					<i class="rounded-x fa fa-map-o"></i>
-					<h2 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="search.box2title"></h2>
-					<p data-i18n="search.box2text"></p>
-				</div>
-				<div class="col-md-4 content-boxes-v6">
-					<i class="rounded-x fa fa-child"></i>
-					<h2 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="search.box3title"></h2>
-					<p data-i18n="search.box3text"></p>
-				</div>
-			</div><!--/row-->
+			<div class="row"></div>
 		</div>
 
 		<div id="sResults" class="s-results" style="display:none;">
@@ -286,6 +272,30 @@
 	<script type="text/javascript" src="<%= baseUrl %>js/activities/common.js"></script>
     <script type="text/javascript" src="<%= baseUrl %>js/search.js"></script>
 
+	<script id="boxes-template" type="text/x-handlebars-template">
+		<div class="col-md-4 content-boxes-v6 md">
+			{{#if contentAdmin}}<a href="<%= baseUrl %>activities/new">{{/if}}
+				<i class="rounded-x fa {{#if contentAdmin}}fa-edit{{else}}fa-search{{/if}}"></i>
+			{{#if contentAdmin}}</a>{{/if}}
+			<h1 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="{{#if contentAdmin}}search.box1titleCA{{else}}search.box1title{{/if}}"></h1>
+			<p data-i18n="{{#if contentAdmin}}search.box1textCA{{else}}search.box1text{{/if}}"></p>
+		</div>
+		<div class="col-md-4 content-boxes-v6 md-margin-bottom-50">
+			{{#if contentAdmin}}<a href="<%= baseUrl %>?type=content&q=&by_uid={{uid}}">{{/if}}
+				<i class="rounded-x fa {{#if contentAdmin}}fa-money{{else}}fa-map-o{{/if}}"></i>
+			{{#if contentAdmin}}</a>{{/if}}
+			<h2 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="{{#if contentAdmin}}search.box2titleCA{{else}}search.box2title{{/if}}"></h2>
+			<p data-i18n="{{#if contentAdmin}}search.box2textCA{{else}}search.box2text{{/if}}"></p>
+		</div>
+		<div class="col-md-4 content-boxes-v6">
+			{{#if contentAdmin}}<a href="#" id="mypromolist" data-uid={{uid}}>{{/if}}
+				<i class="rounded-x fa {{#if contentAdmin}}fa-calendar{{else}}fa-child{{/if}}"></i>
+			{{#if contentAdmin}}</a>{{/if}}
+			<h2 class="title-v3-md text-uppercase margin-bottom-10" data-i18n="{{#if contentAdmin}}search.box3titleCA{{else}}search.box3title{{/if}}"></h2>
+			<p data-i18n="{{#if contentAdmin}}search.box3textCA{{else}}search.box3text{{/if}}"></p>
+		</div>
+	</script>
+
 	<script id="search-template" type="text/x-handlebars-template">
 		{{#each items}}
 			<div class="inner-results">
@@ -338,7 +348,7 @@
 	<script id="cats-tpl" type="text/x-handlebars-template">
 		{{#each cats}}
 		<div class="col-md-4">
-			<input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+			<input id="cbox_{{this._id}}" type="checkbox" {{#if this.checked}}checked="true"{{/if}} value="{{this._id}}" name="category" class="ibtn">
 			<label for="cbox_{{this._id}}">{{this.name}}</label>
 		</div>
 		{{/each}}

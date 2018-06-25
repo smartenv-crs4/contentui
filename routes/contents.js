@@ -9,7 +9,7 @@ let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/'
 config.contentUrl=contentUrl;
 
 
-router.get('/:id', function(req, res, next) {
+router.get('/contentid/:id', function(req, res, next) {
 
     var id=req.params.id || null;
     if(id){
