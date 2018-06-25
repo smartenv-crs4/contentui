@@ -94,10 +94,22 @@ function arrayAreEquals(arr1,arr2){
     return(arr1.join()===arr2.join());
 }
 
+function removeQueryParameter(url,parameter){
+    let splitedUrl=url.split(parameter+"=");
+    let newUrl;
+    let ampersend;
+    splitedUrl[1]=splitedUrl[1] ? splitedUrl[1] : "";
+    ampersend=splitedUrl[1].indexOf("&");
+    ampersend= (ampersend>=0) ? ampersend : splitedUrl[1].length;
+    newUrl=splitedUrl[0]+ splitedUrl[1].slice(ampersend+1);
+    newUrl=newUrl[newUrl.length-1]=='?' ? newUrl.slice(0,-1):newUrl;
+    return(newUrl);
+
+}
+
 function logOut(acturl){
     removeTokenAfterLogOut();
     acturl = acturl || window.location.href;
-    //TODO rimuovere eventuale access_token da acturl
-    window.location.replace(acturl);
+    window.location.replace(removeQueryParameter(acturl,"access_token"));
 }
 

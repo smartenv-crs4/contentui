@@ -4,6 +4,7 @@ var router = express.Router();
 var rp = require('request-promise');
 var request = require('request');
 var jsonDb=require('./jsonDb');
+var commonFunctions=require('./commonFunctions');
 
 
 
@@ -31,16 +32,20 @@ router.get('/decode', function(req, res, next) {
 
 
     var decode_token=req.query.decode_token || null;
-    if(decode_token){
-        var rqparams = {
-            url:  config.authUrl + "/tokenactions/decodeToken",
-            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (config.auth_token || "")},
-            body:JSON.stringify({decode_token:decode_token})
-        };
-        request.post(rqparams).pipe(res);
-    }else{
-        res.status(400).send({error:"BadRequest", error_message:"decode_token field is mandatory"});
-    }
+    commonFunctions.decodeToken(decode_token,function(stausCode,response){
+        res.status(stausCode).send(response);
+    });
+
+    // if(decode_token){
+    //     var rqparams = {
+    //         url:  config.authUrl + "/tokenactions/decodeToken",
+    //         headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (config.auth_token || "")},
+    //         body:JSON.stringify({decode_token:decode_token})
+    //     };
+    //     request.post(rqparams).pipe(res);
+    // }else{
+    //     res.status(400).send({error:"BadRequest", error_message:"decode_token field is mandatory"});
+    // }
 });
 
 

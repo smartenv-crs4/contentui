@@ -1,5 +1,9 @@
 {
   "error": {
+    "decodeToken":{
+      "en": "Error while calling AuthMs to Decode Token",
+      "it": "Errore durante la richiesta di decodifica token al microserviozio AuthMs"
+    },
     "400": {
       "en": "Bad request",
       "it": "Richiesta non valida"
@@ -103,6 +107,10 @@
     "nofullfield":{
       "en":"bad request, due to some missing fields",
       "it":"richiesta non valida, mancano dei campi richiesti"
+    },
+    "notadmin":{
+      "en":"You aren't logged in as application Administrator",
+      "it":"Non sei loggato come utente di tipo amministratore"
     }
   },
   "promotion": {

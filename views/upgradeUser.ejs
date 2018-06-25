@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <title>Profile Settings | Cagliari Port 2020</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+</head>
+
+<body >
+<script type="text/javascript" src="<%=properties.contentUIUrl%>/assets/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<%=properties.contentUIUrl%>/node_modules/async/dist/async.min.js"></script>
+<script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/tokenManager.js"></script>
+<script type="text/javascript" src="<%=properties.contentUIUrl%>/customAssets/js/upgradeUser.js"></script>
+
+<% include config %>
+
+<script src="<%- commonUI.languagemanager %>"></script>
+
+<script type="text/javascript">
+    var userToUpgradeID="<%= userToUpgradeID %>";
+</script>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+        initToken();
+       if(userToken){  //userToken is an access_token reade in config.ejs
+           //check if is admin
+
+           //load disctionary then ckeck checkIfisAdmin
+           $.ajax({
+               cache: false,
+               url: '<%=properties.contentUIUrl%>/customAssets/translations/translation.json',
+               type:"get",
+               contentType:"application/json",
+               success: function(data) {
+                   initDictionary(data,config.commonUIUrl,"promotionLanguageManagerInitialized");
+                   //wai to languageManager to be loaded then check if user is admin
+                    addEventListener('promotionLanguageManagerInitialized', function (e) {
+                        checkIfisAdmin();
+                    }, false);
+               },
+               error: function (xhr, ajaxOptions, thrownError) {
+                   console.log(xhr);
+                   console.error(thrownError);
+               }
+           });
+       }else{
+           //redirect to login
+           redirectToLogin();
+       }
+    });
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

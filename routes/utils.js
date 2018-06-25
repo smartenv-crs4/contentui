@@ -13,9 +13,6 @@ let contentUIUrl= config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' 
 
 
 
-
-
-
 function readStream(allowedMime,req,callback){
 
     var form = new multiparty.Form();
@@ -188,8 +185,6 @@ function isURL(str) {
         '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
     return pattern.test(str);
 }
-
-
 
 module.exports = router;
 

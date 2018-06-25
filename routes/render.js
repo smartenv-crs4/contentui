@@ -1,4 +1,5 @@
 var async=require('async');
+var _=require('underscore');
 var request = require('request');
 var config = require('propertiesmanager').conf;
 var commonFunctions=require('./commonFunctions');
@@ -21,30 +22,60 @@ function render(res,page,model,commonBody) {
 module.exports = {
     renderPage(res, page, model) {
 
+        //  applicationSettings
+        let appConfig={
+            mailFrom:config.contentUiAppAdmin.mailfrom,
+            appBaseUrl:config.contentUIUrl,
+            appAdmins:config.ApplicationTokenTypes.adminTokenType,
+            appName:config.contentUiAppAdmin.applicationName,
+            userTokentypesTranslations:config.ApplicationTokenTypes.userTokentypesTranslations,
+            defaultUserType:config.ApplicationTokenTypes.defaultUserType
+        };
+
+        let applicationTokenTypes=_.difference(config.ApplicationTokenTypes.userTokentypes,config.ApplicationTokenTypes.adminTokenType);
+
+
         let headersConfig=config.headerParams;
-        let commonUiURL=config.commonUIUrl+"/headerAndFooter?";
+        let commonUiURL=config.commonUIUrl+"/headerAndFooter?enableUserUpgrade="+applicationTokenTypes+"&applicationSettings="+JSON.stringify(appConfig)+"&";
         let commonUiURLWithNoToken;
+
+
+        // console.log("APPPPPPPPPPCCCONFIG");
+        // console.log(appConfig);
+
+
+        model.properties.headerParams={};
+        var headerParams=model.properties.headerParams;
+
+
+
         async.eachOf(headersConfig, function(value,key, callback) {
 
 
             if(value && value.startsWith("*")){
                 let plus=value.indexOf("+");
-                if(plus<0)
-                    commonUiURL+=(key+"="+config[value.substr(1)]+"&");
+                if(plus<0) {
+                    commonUiURL += (key + "=" + config[value.substr(1)] + "&");
+                    headerParams[key]=config[value.substr(1)];
+                }
                 else{
                     commonUiURL+=(key+"="+config[value.substring(1,plus)]+ value.substr(plus+1) + "&");
+                    headerParams[key]=config[value.substring(1,plus)]+ value.substr(plus+1);
                 }
 
             }else{
-                if (value)  commonUiURL+=(key+"="+value+"&");
+                if (value) {
+                    commonUiURL += (key + "=" + value + "&");
+                    headerParams[key]=value;
+                }
             }
             callback();
-        }, function(err) {
-            // no error
+        }, function(err) {  // no error
+
 
             commonUiURLWithNoToken=commonUiURL.slice(0,-1); // remove last '&' in the Url
             if(model.access_token)
-                commonUiURL+=("access_token="+model.access_token);
+                commonUiURL+=("access_token="+model.access_token)+"&afterLoginRedirectTo="+headerParams.loginHomeRedirect;
             else
                 commonUiURL=commonUiURLWithNoToken;
 
