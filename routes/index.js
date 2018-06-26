@@ -7,6 +7,9 @@ var multiparty = require('multiparty');
 var magic = require('stream-mmmagic');
 var FormData = require('form-data');
 var renderPage=require('./render');
+var _=require('underscore');
+var commonFunctions=require('./commonFunctions');
+var async=require('async');
 
 let baseUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
 let contentUrl = config.contentUrl + (config.contentUrl.endsWith('/') ? '' : '/');
@@ -35,7 +38,6 @@ router.get('/env', function(req, res) {
 
 router.use(function(req, res, next) {
 
-
     var model={
         properties:{
             contentUIUrl:config.contentUIUrl ,
@@ -57,7 +59,6 @@ router.use(function(req, res, next) {
             res.render('gatewayPage',model);
         }
     }
-
 });
 
 
@@ -72,7 +73,7 @@ router.get('/',  (req, res, next) => {
       scheduleUrl:scheduleUrl,
       uploadUrl:uploadUrl,
       access_token: access_token,
-      contentAdminTypes: config.contentAdminTokenType,
+      contentAdminTypes: config.ApplicationTokenTypes.contentAdminTokenType,
       properties:{
         contentUIUrl:config.contentUIUrl ,
         commonUIUrl:config.commonUIUrl
@@ -84,7 +85,6 @@ router.get('/',  (req, res, next) => {
 
 // logout Page
 router.get('/logoutapp', function(req, res, next) {
-
     renderPage.renderPage(res,'logoutPage',{
         properties:{
             contentUIUrl:config.contentUIUrl ,
@@ -99,10 +99,6 @@ router.get('/logoutapp', function(req, res, next) {
 router.get('/favourites', function(req, res, next) {
 
     var access_token=req.query.access_token || (req.parseHasTagAsQuery && req.parseHasTagAsQuery.access_token) || null;
-
-
-    console.log("Fvourites");
-
 
     renderPage.renderPage(res,'view_favourites',{
         access_token:access_token,
@@ -132,7 +128,7 @@ router.get('/activities/new',       (req, res, next) => {
       commonUIUrl:config.commonUIUrl
     },
     access_token: access_token,
-    contentAdminTypes: config.contentAdminTokenType
+    contentAdminTypes: config.ApplicationTokenTypes.contentAdminTokenType
   });
 });
 
@@ -156,7 +152,7 @@ router.get('/activities/:id',    (req, res, next) => {
             commonUIUrl:config.commonUIUrl
         },
         access_token: access_token,
-        contentAdminTypes: config.contentAdminTokenType
+        contentAdminTypes: config.ApplicationTokenTypes.contentAdminTokenType
     })
 });   
 
@@ -166,8 +162,6 @@ router.get('/activities/:id',    (req, res, next) => {
 router.get('/activities/:aid/promotions/new', function(req, res, next) {
     var activity_id = req.params.aid;
     var access_token=req.query.access_token || null;
-
-
 
     renderPage.renderPage(res,'view_promotion',{
         tz: timezone,
@@ -184,16 +178,12 @@ router.get('/activities/:aid/promotions/new', function(req, res, next) {
 
 
 
-
-
 router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 
 
     var activity_id = req.params.aid;
     var promotion_id = req.params.pid;
     var access_token=req.query.access_token || (req.parseHasTagAsQuery && req.parseHasTagAsQuery.access_token) || null;
-
-
 
     renderPage.renderPage(res,'view_promotion',{
         tz: timezone,
@@ -209,7 +199,98 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
 });
 
 
+router.get('/upgradeuser/:userToUpdate_token', function(req, res, next) {
 
+
+    async.parallel([
+            function(callback) {
+                var decode_token=req.params.userToUpdate_token || null;
+                commonFunctions.decodeToken(decode_token,function(stausCode,response){
+                    if(stausCode==200) {
+                        callback(null, response.token._id);
+                    }
+                    else
+                        callback(response);
+                });
+            },
+            function(callback) {
+                var rqparams = {
+                    url:  config.userUiUrl + "/actions/getcodeforsecurecalls",
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (config.auth_token || "")},
+                    body:JSON.stringify({appAdmins:config.ApplicationTokenTypes.adminTokenType,ApplicationTokenTypes:config.ApplicationTokenTypes.userTokentypes})
+                };
+                request.post(rqparams,function(err,response){
+                    if(err) callback({error:"InternalError", error_message:err});
+                    try {
+                        response.body = JSON.parse(response.body);
+                    }catch (ex) {
+                        response.body="Internal error due to: " + response.body;
+                    }
+                    if(response.statusCode==200){
+                       callback(null,response.body.secret);
+
+                    }else callback(response.body);
+                });
+            }
+        ],
+// optional callback
+        function(err, results) {
+           if(err){
+               commonFunctions.getErrorPage(500,"Internal Server Error",err,function(er,content){
+                   res.status(er).send(content);
+               });
+
+           }else{
+               var access_token=req.query.access_token || null;
+
+               // //  applicationSettings
+               // let appConfig={
+               //     mailFrom:config.contentUiAppAdmin.mailfrom,
+               //     appBaseUrl:config.contentUIUrl,
+               //     appAdmins:config.ApplicationTokenTypes.adminTokenType,
+               //     appName:config.contentUiAppAdmin.applicationName,
+               // };
+
+               let appConfig={
+                   mailFrom:config.contentUiAppAdmin.mailfrom,
+                   appBaseUrl:config.contentUIUrl,
+                   appAdmins:config.ApplicationTokenTypes.adminTokenType,
+                   appName:config.contentUiAppAdmin.applicationName,
+                   userTokentypesTranslations:config.ApplicationTokenTypes.userTokentypesTranslations,
+                   defaultUserType:config.ApplicationTokenTypes.defaultUserType
+               };
+
+               renderPage.renderPage(res,'upgradeUser',{
+                   access_token:access_token,
+                   userToUpgradeID:results[0],
+                   properties:{
+                       contentUIUrl:config.contentUIUrl ,
+                       commonUIUrl:config.commonUIUrl,
+                       userUiUrl:config.userUiUrl,
+                       ApplicationTokenTypes:config.ApplicationTokenTypes,
+                       applicationSettings:appConfig,
+                       secretCode:results[1]
+                   }
+               });
+           }
+
+        });
+
+});
+
+
+
+router.get('/errorPage', function(req, res, next) {
+    var error_code=req.query.error_code || 500;
+    var error_message=req.query.error_message || "Internal Server Error";
+    var error_showmore=req.query.error_showmore || "";
+
+    console.log(error_code + " " + error_message +" " +error_showmore) ;
+
+    commonFunctions.getErrorPage(error_code,error_message,error_showmore,function(er,content){
+        res.status(er).send(content);
+    });
+});
 
 
 module.exports = router;

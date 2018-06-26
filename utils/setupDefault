@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+
+
+var async=require('async');
+var request=require('request');
+var config = require('propertiesmanager').conf;
+
+
+module.exports.setupDefaults=function (callbackResponse){
+
+    async.series([
+            function(callback) {  // create 61Admin token Type
+
+
+
+                var rqparams = {
+                    url:  config.authUrl + "usertypes",
+                    headers: {'content-type': 'application/json','Authorization': "Bearer " + config.auth_token }
+                };
+
+                request.get(rqparams,function(err,response,body){ //check if usert type token exist
+                  if(err) callback("Default Admin User type creation :" + err,null);
+                    var responseBody=JSON.parse(body);
+
+                    for(var index=0;index<responseBody._metadata.totalCount;++index){
+                      if(config.ApplicationTokenTypes.adminTokenType.indexOf(responseBody.userandapptypes[index].name)>=0)
+                        index=responseBody._metadata.totalCount+1;
+                    }
+
+                    if(index==responseBody._metadata.totalCount){ // if not exist create it
+                      //create tokentype
+                        rqparams.body=JSON.stringify({usertype:{name:config.ApplicationTokenTypes.adminTokenType[0],super:true}});
+
+                        request.post(rqparams,function(err,response,body){
+                            if(err) callback("Default Admin User type creation :"+err,null);
+                            if(response.statusCode==201){
+                              callback(null,"done")
+                            }else{
+                              responseBody=JSON.parse(body);
+                              callback("Default Admin User type creation :"+responseBody.error_message);
+                            }
+                        });
+
+                    }else{
+                      callback(null,"done");
+                    }
+                });
+            },
+            function(callback) { // create default Admin User
+
+                var rqparams = {
+                    url:  config.userUrl + "users/actions/search",
+                    headers: {'content-type': 'application/json','Authorization': "Bearer " + config.auth_token },
+                    body:JSON.stringify({searchterm:{email:config.contentUiAppAdmin.defaultAdminUser.adminEmail,type:["all"]}})
+                };
+
+
+
+                request.post(rqparams,function(err,response,body){ //check if default user exist
+                    if(err) callback("Default Admin User creation 1 :"+err,null);
+
+                    var responseBody=JSON.parse(body);
+
+
+
+
+                    if(response.statusCode==200){
+                      if(responseBody._metadata.totalCount==0){ // if not exist create it
+                          //create tokentype
+                          rqparams.body=JSON.stringify({user:{"email": config.contentUiAppAdmin.defaultAdminUser.adminEmail , "password":config.contentUiAppAdmin.defaultAdminUser.adminPasword, "type":config.ApplicationTokenTypes.adminTokenType[0], "name":"default", "surname":"admin"}});
+                          rqparams.url=config.userUrl + "/users/";
+                          request.post(rqparams,function(err,response,body){
+                              if(err) callback("Default Admin User creation 2 :"+err,null);
+                              if(response.statusCode==201){
+                                  callback(null,"done")
+                              }else{
+                                  responseBody=JSON.parse(body);
+                                  callback("Default Admin User creation 3:"+responseBody.error_message);
+                              }
+                          });
+
+                      }else{
+                        if(config.ApplicationTokenTypes.adminTokenType.indexOf(responseBody.users[0].type)>=0)
+                            callback(null,"done");
+                        else
+                          callback("Default Admin User creation : Default Admin username already exists but user type is " +responseBody.users[0].type ,null)
+                      }
+                    }else{
+                        callback("Default Admin User creation 4:"+responseBody.error_message);
+                    }
+                });
+            }
+        ],
+// optional callback
+        function(err, results) {
+           callbackResponse(err);
+        });
+
+
+
+
+}

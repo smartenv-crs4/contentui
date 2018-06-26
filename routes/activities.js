@@ -345,7 +345,7 @@ function getUsersByMail(mail) {
 			body: {
 				searchterm: {
 					email: mail,
-					type: config.contentAdminTokenType
+					type: config.ApplicationTokenTypes.contentAdminTokenType
 				}
 			},
 			headers: {
