@@ -544,10 +544,8 @@ function addNewPromotion(){
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
-
-
-
-
+    initRecurrenceEndPicker(); //ds
+    
     mapInit=initMap(39.2253991,9.0933586,6,true);
 
     if (navigator.geolocation) {
@@ -713,6 +711,7 @@ function updatePromotion(){
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
+        updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
 
@@ -730,6 +729,14 @@ function updatePromotion(){
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
 
+    updateRecurrence(startPicher.data("DateTimePicker").date());
+    initRecurrenceEndPicker();
+
+    i18next.on('languageChanged', function(lng) {
+        updateRecurrence(startPicher.data("DateTimePicker").date());
+    })
+    
+
 
     mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
     autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
@@ -744,6 +751,57 @@ function updatePromotion(){
     //     }
     // });
 
+}
+
+
+//ds
+function updateRecurrence(startDate) {
+    var dayOfWeek = moment(startDate).locale(window.localStorage.lng).format("dddd")
+    var dayOfMonth = moment(startDate).locale(window.localStorage.lng).format("D")
+
+    var el = $("#promoRecurrence option[data-x2='promotion.everymonth']")
+    el.text(i18next.t('promotion.everymonth').replace("xx", dayOfMonth));
+    el = $("#promoRecurrence option[data-x1='promotion.everyweek']")
+    el.text(i18next.t('promotion.everyweek').replace("xx", dayOfWeek));
+
+    $("#promoRecurrence").off("change")
+    $("#promoRecurrence").change(function() {
+        //reset valori salvati per ripetizione promo.............
+        //calcolare distanza tra inizio e fine promo e riportarla sulle nuove a partire dalla nuova data
+        $("#calendarCustomRec").multiDatesPicker('resetDates');
+        $("#recDaysRow").hide();
+        if(this.value == 5) {
+            $("#recEndRow").fadeOut();
+            $("#customRecCal").modal();
+            $("#calendarCustomRec").multiDatesPicker();
+            $("#saveCDBtn").click(function() {
+                $("#recDaysRow").show();
+                $("#recDaysRow").html($("#calendarCustomRec").multiDatesPicker('getDates'));
+            });
+        }
+        else if(this.value != 0) {
+            $("#recEndRow").fadeIn();
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+        }        
+        else $("#recEndRow").fadeOut();
+
+    });
+}
+
+
+//ds
+function initRecurrenceEndPicker() {
+    var recPicker = $("#datetimepickerRecEnd");
+    recPicker.datetimepicker({
+        allowInputToggle : true,
+        format:"DD/MM/YYYY",
+        
+    });
+    recPicker.data("DateTimePicker").date(new Date());
+    recPicker.on("dp.change", function(e) { 
+        //TODO
+        console.log("XXX")
+    });
 }
 
 

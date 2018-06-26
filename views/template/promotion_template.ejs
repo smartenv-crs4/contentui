@@ -59,10 +59,9 @@
                 </div>
             </div>
 
-            <hr class="devider devider-db">
+            <!--hr class="devider devider-db"-->
 
-
-            <div>
+            <div style="margin-top:20px">
                 <!-- Panel with Equal Height -->
                 <div class="panel panel-default equal-height-column">
                     <div class="panel-heading">
@@ -109,7 +108,7 @@
             <!--Save and Delete Start-->
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     {{#if token}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                         <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
@@ -252,6 +251,23 @@
 
 
 <script id="admin_promotion_template" type="text/x-handlebars-template">
+    <div class="modal fade in" id="customRecCal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel4">Responsive Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="calendarCustomRec"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn-u btn-u-primary" id="saveCDBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="masonry-box" style="position: relative; height: 1183.56px;">
 
         <!-- Blog Grid Left -->
@@ -288,10 +304,10 @@
 
 
 
-            <hr class="devider devider-db">
+            <!--hr class="devider devider-db"-->
 
 
-            <div>
+            <div style="margin-top:20px">
                 <!-- Red Panel with Equal Height -->
                 <div class="panel panel-default equal-height-column">
                     <div class="panel-heading">
@@ -435,7 +451,7 @@
                         <label class="label" data-i18n="promotion.textDescription">descrizione</label>
                         <label class="textarea">
                             <i class="icon-append fa fa-comment"></i>
-                            <textarea id="promotionDescription" data-i18n="[placeholder]promotion.descriptionPlaceholder" rows="4" name="description"></textarea>
+                            <textarea id="promotionDescription" data-i18n="[placeholder]promotion.descriptionPlaceholder" rows="8" name="description"></textarea>
                         </label>
                     </section>
                     <!--Description End-->
@@ -472,6 +488,43 @@
                         <!--Stop Date End-->
                     </div>
                     <!--Date Panel End-->
+
+
+
+
+                    <div class="row">
+                        <section class="col col-12" style="width:100%;">
+                            <div class="label" data-i18n="promotion.recurrence">Ricorrenza</div>
+                            <div class="form-group">
+                                <select id="promoRecurrence" class="form-control" style="border-color: #ccc;">
+                                    <option value='0' data-i18n='promotion.norepeat'></option>
+                                    <option value='1' data-i18n='promotion.everyday'></option>
+                                    <option value='3' data-x1='promotion.everyweek'></option>
+                                    <option value='4' data-x2='promotion.everymonth'></option>
+                                    <option value='5' data-i18n='promotion.custom'></option>
+                                </select>
+                            </div>
+                        </section>
+                    </div>
+                    
+                    <div class="row" style="display:none" id="recDaysRow"></div>
+
+
+                    <div class="row" style="display:none" id="recEndRow">
+                        <section class="col col-12">
+                            <label class="label" data-i18n="promotion.recEndDate" for="">Termine ricorrenza</label>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepickerRecEnd'>
+                                    <input id="recEndDate" type='text' class="form-control" data-i18n="[placeholder]promotion.recEndDate" style="border-color: #ccc" />
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+
 
 
                     <!--Price/Where Panel Start-->

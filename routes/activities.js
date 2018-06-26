@@ -35,7 +35,7 @@ router.get('/admins',	 (req, res, next) => {
 
 
 //search for users by mail
-router.get('/users', (req, res, next) => {res.json([])}); //TODO chiedere a ale di convertire da action in search con query string ?q=
+router.get('/users', (req, res, next) => {res.json([])});
 router.get('/users/:q',		 (req, res, next) => {	
 	getUsersByMail(req.params.q)
 	.then(users => {

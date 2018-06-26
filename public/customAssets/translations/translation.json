@@ -281,8 +281,35 @@
     "gotoactivity":{
       "en":"Promotion Owner",
       "it":"Proprietario Promozione"
+    },
+    "recurrence": {
+      "en":"Recurrence",
+      "it":"Ricorrenza"
+    },
+    "recEndDate": {
+      "en":"Recurrence end",
+      "it":"Termine ricorrenza"
+    },
+    "norepeat": {
+      "it":"Non si ripete",
+      "en":"Do not repeat"
+    },
+    "everyday": {
+      "it":"Ogni giorno",
+      "en":"Every day"
+    },
+    "everymonth": {
+      "en":"Every xx of the month",
+      "it":"Ogni xx del mese"
+    },
+    "everyweek": {
+      "en":"Every xx",
+      "it":"Ogni xx"
+    },
+    "custom": {
+      "en":"Custom...",
+      "it":"Personalizzato..."
     }
-
   },
   "search": {
     "searchLabel": {
