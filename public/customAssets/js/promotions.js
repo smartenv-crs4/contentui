@@ -264,72 +264,185 @@ function openModalParticipants(){
 //
 
 
+function addNotValid(element,section,label,em,message){
+    $("#"+label).addClass("state-error");
+    $("#"+section).append('<em id=\"'+em+'\" class=\"invalid\">'+message+'</em>');
+    element.addClass("invalid");
+}
+
+function removeNotValid(element,section,label,em){
+    $("#"+label).removeClass("state-error");
+    $("#"+em).remove();
+    element.removeClass("invalid");
+}
+
+function validateFields(){
+
+    let responseToReturn=true;
+    let promotionTitle=$('#promotionTitle');
+    if(promotionTitle.val()=="") {
+        addNotValid(promotionTitle,'sTitle','lTitle','iTitle',i18next.t("validate.voidTitle"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(promotionTitle,'sTitle','lTitle','iTitle');
+    }
+
+
+    let promotionDescription=$('#promotionDescription');
+    if(promotionDescription.val()=="") {
+        addNotValid(promotionTitle,'sDescription','lDescription','iDescription',i18next.t("validate.voidDescription"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(promotionTitle,'sDescription','lDescription','iDescription');
+    }
+
+
+    let promotionPrice=$('#promotionPrice');
+    if(!((promotionPrice.val().search(/\b\d+\b|^.{0}$/igm)) >= 0)) {
+        addNotValid(promotionPrice,'sPrice','lPrice','iPrice',i18next.t("validate.noNumericPrice"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(promotionPrice,'sPrice','lPrice','iPrice');
+    }
+
+
+    let promotionWhere=$('#promotionWhere');
+    if(promotionWhere.val()=="") {
+        addNotValid(promotionWhere,'sWhere','lWhere','iWhere',i18next.t("validate.voidWhere"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(promotionWhere,'sWhere','lWhere','iWhere');
+    }
+
+
+    var selectedOption = $("#promotype input:radio:checked").val();
+    if(!selectedOption) {
+        $('#dType').show();
+        responseToReturn=false;
+    }else{
+        $('#dType').hide();
+    }
+
+
+    var selectedOptionC =$("input[name='category']:checkbox:checked").val();
+    if(!selectedOptionC) {
+        $('#dType').show();
+        responseToReturn=false;
+    }else{
+        if(selectedOption)
+            $('#dType').hide();
+    }
+
+
+    if((newPromotion.images && (newPromotion.images.length>=0))|| (currentPromotion.images && (currentPromotion.images.length>=0))){
+        $('#dPicture').hide();
+    } else{
+        $('#dPicture').show();
+        responseToReturn=false;
+    }
+
+    var startPicher=$('#promotionStartDate');
+    if((!newPromotion.startDate)&&(!currentPromotion.startDate)) {
+        addNotValid(startPicher,'sStartDate','datetimepickerStart','iStartDate',i18next.t("validate.voidStartDate"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(startPicher,'sStartDate','datetimepickerStart','iStartDate');
+    }
+
+
+    var endPicher=$('#promotionEndDate');
+    if((!newPromotion.endDate)&&(!currentPromotion.endDate)) {
+        addNotValid(endPicher,'sEndDate','datetimepickerEnd','iEndDate',i18next.t("validate.voidEndDate"));
+        responseToReturn=false;
+    }else{
+        removeNotValid(endPicher,'sEndDatee','datetimepickerStart','iEndDate');
+    }
+
+
+    return(responseToReturn);
+
+}
+
 function savePromotion(iSANewPromotion){
 
-    getPositionLatLon(); // align address with lat lon
     newPromotion.startDate  = moment(newPromotion.startDate).utc();
     newPromotion.endDate    = moment(newPromotion.endDate).utc();
-    if(iSANewPromotion){
-        jQuery.ajax({
-            url: config.contentUIUrl + "/contents/" + contentID +"/promotions",
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({promotion: newPromotion, user: userToken}),
-            dataType: "json",
-            success: function (dataResp, textStatus, xhr) {
-                promotionID= dataResp._id;
-                ds_saveRecurrencies(contentID, promotionID); //ds
-                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
-                //compileFavourites();
-            },
-            error: function (xhr, status) {
 
-                var respBlock = jQuery("#responseBlock");
-                var msg;
+    if(validateFields()){
+        getPositionLatLon(); // align address with lat lon
 
-                try {
-                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message || i18next.t("error.nofullfield");
+        if(iSANewPromotion){
+            jQuery.ajax({
+                url: config.contentUIUrl + "/contents/" + contentID +"/promotions",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({promotion: newPromotion, user: userToken}),
+                dataType: "json",
+                success: function (dataResp, textStatus, xhr) {
+                    promotionID= dataResp._id;
+                    ds_saveRecurrencies(contentID, promotionID); //ds
+                    window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    //compileFavourites();
+                },
+                error: function (xhr, status) {
+
+                    var respBlock = jQuery("#responseBlock");
+                    var msg;
+
+                    try {
+                        msg = xhr.responseJSON.error_message || xhr.responseJSON.message || i18next.t("error.nofullfield");
+                    }
+                    catch (err) {
+                        msg = i18next.t("error.internal_server_error");
+                    }
+
+
+                    console.log(xhr);
+                    respBlock.html(msg);
+                    respBlock.removeClass("hidden");
+
+                    return;
                 }
-                catch (err) {
-                    msg = i18next.t("error.internal_server_error");
+            });
+        }else {
+
+            jQuery.ajax({
+                url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({promotion: newPromotion, user: userToken}),
+                dataType: "json",
+                success: function (dataResp, textStatus, xhr) {
+                    compilePromotion();
+                    ds_saveRecurrencies(contentID, promotionID); //ds
+                },
+                error: function (xhr, status) {
+                    var respBlock = jQuery("#responseBlock");
+                    var msg;
+
+                    try {
+                        msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+                    }
+                    catch (err) {
+                        msg = i18next.t("error.internal_server_error");
+                    }
+
+                    respBlock.html(msg);
+                    respBlock.removeClass("hidden");
+
+                    return;
                 }
-
-                respBlock.html(msg);
-                respBlock.removeClass("hidden");
-
-                return;
-            }
-        });
-    }else {
-
-        jQuery.ajax({
-            url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
-            type: "PUT",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({promotion: newPromotion, user: userToken}),
-            dataType: "json",
-            success: function (dataResp, textStatus, xhr) {
-                compilePromotion();
-                ds_saveRecurrencies(contentID, promotionID); //ds
-            },
-            error: function (xhr, status) {
-                var respBlock = jQuery("#responseBlock");
-                var msg;
-
-                try {
-                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
-                }
-                catch (err) {
-                    msg = i18next.t("error.internal_server_error");
-                }
-
-                respBlock.html(msg);
-                respBlock.removeClass("hidden");
-
-                return;
-            }
-        });
+            });
+        }
+    }else{
+        var respBlock = jQuery("#responseBlock");
+        var msg;
+        msg = i18next.t("error.novalidate");
+        respBlock.html(msg);
+        respBlock.removeClass("hidden");
+        return;
     }
+
 }
 
 
@@ -526,34 +639,44 @@ function addNewPromotion(){
 
 
     var startPicher=$('#datetimepickerStart');
+    var endPicher=$('#datetimepickerEnd');
+
     startPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
         allowInputToggle : true
     });
 
-    startPicher.data("DateTimePicker").date(new Date());
-    startPicher.on("dp.change", function (e) {
-        endPicher.data("DateTimePicker").minDate(e.date);
-        let value=e.date.toDate();
-        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
-    });
-
-    var endPicher=$('#datetimepickerEnd');
     endPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
         allowInputToggle : true,
         useCurrent: false
     });
-    endPicher.data("DateTimePicker").date(new Date());
+
+
+    startPicher.on("dp.change", function (e) {
+        endPicher.data("DateTimePicker").minDate(e.date);
+        let value=e.date.toDate();
+        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+    });
+    startPicher.data("DateTimePicker").date(new Date());
+
+
+
+
     endPicher.on("dp.change", function (e) {
         startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
+    endPicher.data("DateTimePicker").date(new Date());
+
+    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
     ds_initRecurrenceEndPicker(); //ds
-    
+
+
     mapInit=initMap(39.2253991,9.0933586,6,true);
 
     if (navigator.geolocation) {
@@ -710,32 +833,38 @@ function updatePromotion(){
 
 
     var startPicher=$('#datetimepickerStart');
+    var endPicher=$('#datetimepickerEnd');
+
     startPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
         allowInputToggle : true
     });
-    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
-    startPicher.on("dp.change", function (e) {
-        endPicher.data("DateTimePicker").minDate(e.date);
-        let value=e.date.toDate();
-        ds_updateRecurrence(value);
-        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
-    });
 
-    var endPicher=$('#datetimepickerEnd');
     endPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
         allowInputToggle : true,
         useCurrent: false
     });
-    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+
+
+    startPicher.on("dp.change", function (e) {
+        endPicher.data("DateTimePicker").minDate(e.date);
+        let value=e.date.toDate();
+        ds_updateRecurrence(value);
+        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+    });
+    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+
     endPicher.on("dp.change", function (e) {
        startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
+    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
 
     /// ds ///
     ds_updateRecurrence(startPicher.data("DateTimePicker").date());
@@ -1152,6 +1281,12 @@ function getPromotionPage(data,token){
 }
 
 
+function exitFromInsertMode(){
+    if(promotionID) compilePromotion();
+    else window.location.replace(config.contentUIUrl + "/activities/"+ contentID);
+
+}
+
 function compilePromotion(){
 
 
@@ -1468,15 +1603,3 @@ function mapZoom(){
     var event = new Event('zoomMap');
     dispatchEvent(event);
 }
-
-
-
-
-
-
-
-
-
-
-
-

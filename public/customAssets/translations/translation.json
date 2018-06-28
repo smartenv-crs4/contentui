@@ -1,5 +1,9 @@
 {
   "error": {
+    "novalidate":{
+      "en": "Some fields are not valid, check it",
+      "it": "Alcuni campi non sono validi, verificali"
+    },
     "decodeToken":{
       "en": "Error while calling AuthMs to Decode Token",
       "it": "Errore durante la richiesta di decodifica token al microserviozio AuthMs"
@@ -489,6 +493,44 @@
     "delConfirmDesc": {
       "it": "Rimuovendo questa attività verranno rimosse anche tutte le promozioni e gli eventi associati e tutte le foto caricate",
       "en": "By removing this content all the related promo and events will be also deleted"
+    }
+  },
+  "validate" : {
+    "warning": {
+      "en": "Warning:",
+      "it": "Attenzione"
+    },
+    "voidOffer": {
+      "en": "Event type and Categories can not be void. Please select one",
+      "it": "La categoria ed il tipo di evento non possono essere vuoti. Seleziona il tipo ed almeno una Categoria"
+    },
+    "noPicture": {
+      "en": "Picture field can not be void. Please select one",
+      "it": "L'immagine descrittiva non puo essere vuota. Inserisci un immagine"
+    },
+    "voidTitle": {
+      "en": "Promotion Title can not be void",
+      "it": "Il titolo della promozione non può essere vuoto"
+    },
+    "voidDescription": {
+      "en": "Promotion Description can not be void",
+      "it": "La Descrizione della promozione non può essere vuoto"
+    },
+    "noNumericPrice": {
+      "en": "Price Must be numeric or void to free",
+      "it": "Il prezzo deve essere un numero o vuoto nel caso sia gratis"
+    },
+    "noWhere": {
+      "en": "Where field can not be void. Please set it",
+      "it": "L'indirizzo non puo essere vuoto"
+    },
+    "voidStartDate": {
+      "en": "Start Date can not be void. Please set it",
+      "it": "La data di inizio non puo essere vuota"
+    },
+    "voidEndDate": {
+      "en": "End Date can not be void. Please set it",
+      "it": "La data di fine non puo essere vuota"
     }
   }
 }

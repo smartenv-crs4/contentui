@@ -302,7 +302,9 @@
             </div>
 
 
-
+            <div id="dPicture" class="alert alert-danger fade in" hidden>
+                <strong data-i18n="validate.warning"></strong> <span data-i18n="validate.noPicture"></span>
+            </div>
 
             <!--hr class="devider devider-db"-->
 
@@ -332,6 +334,7 @@
                                     <input value="2" class="form-check-input" name="grouptype" type="radio">
                                     <label class="form-check-label"><span class="icon-food-004"></span>  <span data-i18n="promotion.event">Option 2</span></label>
                                 </div>
+
                             </div>
                             <!--Radio group-->
 
@@ -403,6 +406,11 @@
 
                 </div>
                 <!-- End Red Panel with Equal Height -->
+
+                <div id="dType" class="alert alert-danger fade in" hidden>
+                    <strong data-i18n="validate.warning"></strong> <span data-i18n="validate.voidOffer"></span>
+                </div>
+
             </div>
 
         </div>
@@ -414,7 +422,6 @@
             <!--<form id="sky-form" class="sky-form">-->
             <div id="sky-form" class="sky-form">
                 <header data-i18n="promotion.manage"></header>
-
 
                 <fieldset>
 
@@ -437,9 +444,9 @@
                     <!--language writing End-->
 
                     <!--title Start-->
-                    <section>
+                    <section id="sTitle">
                         <label class="label" data-i18n="promotion.title">Titolo</label>
-                        <label class="input">
+                        <label id="lTitle" class="input">
                             <i class="icon-append fa fa-ticket"></i>
                             <input id="promotionTitle" data-i18n="[placeholder]promotion.titlePlaceholder" type="text" name="name">
                         </label>
@@ -447,9 +454,9 @@
                     <!--title End-->
 
                     <!--Description Start-->
-                    <section>
+                    <section id="sDescription">
                         <label class="label" data-i18n="promotion.textDescription">descrizione</label>
-                        <label class="textarea">
+                        <label id="lDescription" class="textarea">
                             <i class="icon-append fa fa-comment"></i>
                             <textarea id="promotionDescription" data-i18n="[placeholder]promotion.descriptionPlaceholder" rows="8" name="description"></textarea>
                         </label>
@@ -460,7 +467,7 @@
                     <!--Date Panel Start-->
                     <div class="row">
                         <!--Begin Date Start-->
-                        <section class="col col-6">
+                        <section id="sStartDate" class="col col-6">
                             <div class="label" data-i18n="promotion.startDate">Data Inizio</div>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepickerStart'>
@@ -474,8 +481,8 @@
                         <!--Begin Date End-->
 
                         <!--Stop Date Start-->
-                        <section class="col col-6">
-                            <div class="label" data-i18n="promotion.endDate">Data Inizio</div>
+                        <section id="sEndDate" class="col col-6">
+                            <div class="label" data-i18n="promotion.endDate">Data Fine</div>
                             <div class="form-group">
                                 <div class='input-group date' id='datetimepickerEnd'>
                                     <input id="promotionEndDate" type='text' class="form-control" data-i18n="[placeholder]promotion.endDate" style="border-color: #ccc" />
@@ -532,9 +539,9 @@
                     <!--Price/Where Panel Start-->
                     <div class="row">
                         <!--Price Start-->
-                        <section class="col col-4">
+                        <section id="sPrice" class="col col-4">
                             <label class="label" data-i18n="promotion.price">Prezzo</label>
-                            <label class="input">
+                            <label id="lPrice" class="input">
                                 <i class="icon-append glyphicon glyphicon-euro"></i>
                                 <input id="promotionPrice" placeholder="free" type="text" name="name">
                             </label>
@@ -543,9 +550,9 @@
 
                         <!--Where Start-->
 
-                        <section class="col col-8">
+                        <section id="sWhere" class="col col-8">
                             <label class="label" data-i18n="promotion.where">Dove</label>
-                            <label class="input">
+                            <label id="lWhere" class="input">
                                 <i class="icon-append  icon-compass"></i>
                                 <input data-i18n="[placeholder]promotion.wherePlace" onblur="getPositionLatLon()" id="promotionWhere" type="text" name="name">
                             </label>
@@ -571,10 +578,11 @@
 
                 </fieldset>
 
+
                 <footer>
                     <div id="responseBlock" class="alert alert-danger hidden"></div>
                     <button disabled id="promotionSaveButton" type="button" onclick="savePromotion({{isANewPromotion}})" name="submit" class="btn-u btn-u-default"><span><i class="fa fa-pencil"></i>  </span><span data-i18n="promotion.save">Save</span></button>
-                    <button id="promotionCancelButton" type="button" class="btn-u btn-u-dark-blue" onclick="compilePromotion()"><span><i class="fa fa-history"></i>  </span><span data-i18n="profile.cancel">Save</span></button>
+                    <button id="promotionCancelButton" type="button" class="btn-u btn-u-dark-blue" onclick="exitFromInsertMode()"><span><i class="fa fa-history"></i>  </span><span data-i18n="profile.cancel">Save</span></button>
                 </footer>
 
             </div>
