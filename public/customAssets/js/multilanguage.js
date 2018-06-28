@@ -41,6 +41,9 @@ function MultilanguageEditInit(){
             $('#promotionTitle').val(titleMultilanguage[lang]);
             $('#promotionDescription').val(descriptionMultilanguage[lang]);
 
+            var event = new Event('multilanguageselectchange');
+            dispatchEvent(event);
+
         });
 
         multilanguageselect.val(window.localStorage.lng).change();
