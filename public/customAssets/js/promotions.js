@@ -87,6 +87,7 @@
 
 const lat=1;
 const lon=0;
+const _maxEvents = 10; //ds
 
 let mapInit;
 let autocomplete;
@@ -95,8 +96,6 @@ let currentPromotion=null;
 let newPromotion=null;
 let iLikeIt=false;
 let iParticipateIt=false;
-
-
 
 
 function loadPromotionImage(){
@@ -279,6 +278,7 @@ function savePromotion(iSANewPromotion){
             dataType: "json",
             success: function (dataResp, textStatus, xhr) {
                 promotionID= dataResp._id;
+                ds_saveRecurrencies(contentID, promotionID); //ds
                 window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
                 //compileFavourites();
             },
@@ -310,6 +310,7 @@ function savePromotion(iSANewPromotion){
             dataType: "json",
             success: function (dataResp, textStatus, xhr) {
                 compilePromotion();
+                ds_saveRecurrencies(contentID, promotionID); //ds
             },
             error: function (xhr, status) {
                 var respBlock = jQuery("#responseBlock");
@@ -332,6 +333,13 @@ function savePromotion(iSANewPromotion){
 }
 
 
+function ds_saveRecurrencies(cid, pid) {
+    var recurrency = ds_calculateRecurrency()
+
+    for(var i=0; i<recurrency.length;i++) {
+        console.log(recurrency[i].startDate + "  " + recurrency[i].endDate)
+    }
+}
 
 
 function setSaveCancelButtonEnabled(status){
@@ -544,7 +552,7 @@ function addNewPromotion(){
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
-    initRecurrenceEndPicker(); //ds
+    ds_initRecurrenceEndPicker(); //ds
     
     mapInit=initMap(39.2253991,9.0933586,6,true);
 
@@ -711,7 +719,7 @@ function updatePromotion(){
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
-        updateRecurrence(value);
+        ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
 
@@ -729,13 +737,14 @@ function updatePromotion(){
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
 
-    updateRecurrence(startPicher.data("DateTimePicker").date());
-    initRecurrenceEndPicker();
+    /// ds ///
+    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+    ds_initRecurrenceEndPicker();
 
     i18next.on('languageChanged', function(lng) {
-        updateRecurrence(startPicher.data("DateTimePicker").date());
+        ds_updateRecurrence(startPicher.data("DateTimePicker").date());
     })
-    
+    //////////
 
 
     mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
@@ -755,7 +764,7 @@ function updatePromotion(){
 
 
 //ds
-function updateRecurrence(startDate) {
+function ds_updateRecurrence(startDate) {
     var dayOfWeek = moment(startDate).locale(window.localStorage.lng).format("dddd")
     var dayOfMonth = moment(startDate).locale(window.localStorage.lng).format("D")
 
@@ -766,17 +775,43 @@ function updateRecurrence(startDate) {
 
     $("#promoRecurrence").off("change")
     $("#promoRecurrence").change(function() {
-        //reset valori salvati per ripetizione promo.............
-        //calcolare distanza tra inizio e fine promo e riportarla sulle nuove a partire dalla nuova data
+        //reset valori salvati per ripetizione promo.............        
         $("#calendarCustomRec").multiDatesPicker('resetDates');
         $("#recDaysRow").hide();
-        if(this.value == 5) {
+        if(this.value == 3) {
             $("#recEndRow").fadeOut();
             $("#customRecCal").modal();
-            $("#calendarCustomRec").multiDatesPicker();
+            $("#cancCDBtn").click(function() {
+                //if($("#calendarCustomRec").multiDatesPicker('getDates').length == 0) {
+                if($("#recDaysRow div a").text().split(",")[0].length == 0) {
+                    //$("#calendarCustomRec").multiDatesPicker('resetDates');
+                    $("#recDaysRow div a").empty();
+                    $("#recDaysRow").hide();
+                    $("#promoRecurrence option[value='0']").prop('selected',true);
+                }
+            })
+            $("#calendarCustomRec").multiDatesPicker({
+                dateFormat: "yy-mm-dd",
+                minDate: 0,
+                maxPicks: _maxEvents
+            });
             $("#saveCDBtn").click(function() {
-                $("#recDaysRow").show();
-                $("#recDaysRow").html($("#calendarCustomRec").multiDatesPicker('getDates'));
+                $("#recDaysRow div a").empty();
+                if($("#calendarCustomRec").multiDatesPicker('getDates').length > 0) {
+                    $("#recDaysRow").show();
+                    $("#recDaysRow div a").html($("#calendarCustomRec").multiDatesPicker('getDates').join(", "));
+                    $("#recDaysRow div a").click(function() {                        
+                        $("#customRecCal").modal();
+                        if($("#calendarCustomRec").multiDatesPicker('getDates') == 0) {
+                            $("#calendarCustomRec").multiDatesPicker('addDates', $(this).text().split(", ")) //whitespace!!!
+                        }
+                    });
+                }
+                else {
+                    $("#recDaysRow").hide();
+                    $("#promoRecurrence option[value='0']").prop('selected',true);
+                }
+                $("#customRecCal").modal('hide')
             });
         }
         else if(this.value != 0) {
@@ -784,24 +819,75 @@ function updateRecurrence(startDate) {
             $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
         }        
         else $("#recEndRow").fadeOut();
-
     });
 }
 
 
 //ds
-function initRecurrenceEndPicker() {
+function ds_initRecurrenceEndPicker() {
     var recPicker = $("#datetimepickerRecEnd");
     recPicker.datetimepicker({
         allowInputToggle : true,
         format:"DD/MM/YYYY",
+        minDate: new Date()
+    });
+    var fatherStart = $("#datetimepickerStart").data("DateTimePicker").date();
+    var recEnd = fatherStart.isBefore(new Date()) ? new Date() : fatherStart;
+    recPicker.data("DateTimePicker").date(recEnd);
+}
+
+
+//ds
+function ds_calculateRecurrency() {
+    function addDays(n, type) {
+        var retArr = [];
+        var i = 0;
+        var startDate = $('#datetimepickerStart').data('DateTimePicker').date();
+        var endDate = $('#datetimepickerEnd').data('DateTimePicker').date();
         
-    });
-    recPicker.data("DateTimePicker").date(new Date());
-    recPicker.on("dp.change", function(e) { 
-        //TODO
-        console.log("XXX")
-    });
+        startDate.add(n, type);
+        endDate.add(n,type);
+
+        while(startDate.isBefore(new Date())) {            
+            startDate.add(n,type);
+            endDate.add(n,type);
+        }
+        
+        while(i++<_maxEvents && startDate.isSameOrBefore(endRec)) {
+            retArr.push({startDate: startDate.format(), endDate: endDate.format()}) //format() is important!!!
+            startDate.add(n, type);
+            endDate.add(n, type);
+        }
+        return retArr;        
+    }
+
+    var rectype = $("#promoRecurrence").val();
+    var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")
+    var recurrency = [];
+    switch(rectype) {
+        case "1": //everyday
+            recurrency = addDays(1, "days")
+            break;
+        case "2": //every day of week
+            recurrency = addDays(7, "days")
+            break;
+        case "3": //custom
+            var hstart = $('#datetimepickerStart').data('DateTimePicker').date().format("HH");
+            var mstart = $('#datetimepickerStart').data('DateTimePicker').date().format("mm");
+            var hstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("HH");
+            var mstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("mm");
+            var d = $("#calendarCustomRec").multiDatesPicker('getDates')
+            for(var i=0; i<d.length; i++) {                
+                startDate = moment(d[i]).hour(hstart).minutes(mstart);
+                endDate = moment(d[i]).hour(hstop).minutes(mstop);
+                recurrency.push({startDate:startDate.format(), endDate:endDate.format()});
+            }
+            break;
+        default:
+            break;
+        
+    }
+    return recurrency;
 }
 
 

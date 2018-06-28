@@ -262,8 +262,8 @@
                     <div id="calendarCustomRec"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-u btn-u-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn-u btn-u-primary" id="saveCDBtn">Save changes</button>
+                    <button type="button" class="btn-u btn-u-default" id="cancCDBtn" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn-u btn-u-primary" id="saveCDBtn">Save dates</button>
                 </div>
             </div>
         </div>
@@ -499,16 +499,18 @@
                                 <select id="promoRecurrence" class="form-control" style="border-color: #ccc;">
                                     <option value='0' data-i18n='promotion.norepeat'></option>
                                     <option value='1' data-i18n='promotion.everyday'></option>
-                                    <option value='3' data-x1='promotion.everyweek'></option>
-                                    <option value='4' data-x2='promotion.everymonth'></option>
-                                    <option value='5' data-i18n='promotion.custom'></option>
+                                    <option value='2' data-x1='promotion.everyweek'></option>
+                                    <option value='3' data-i18n='promotion.custom'></option>
                                 </select>
                             </div>
                         </section>
                     </div>
                     
-                    <div class="row" style="display:none" id="recDaysRow"></div>
-
+                    <div class="row" style="display:none;margin-bottom:20px;" id="recDaysRow">
+                        <div class="col col-12">
+                            <i class="fa fa-calendar"></i> <a href="#"></a>
+                        </div>
+                    </div>
 
                     <div class="row" style="display:none" id="recEndRow">
                         <section class="col col-12">
