@@ -380,8 +380,9 @@ function savePromotion(iSANewPromotion){
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     promotionID= dataResp._id;
-                    ds_saveRecurrencies(contentID, promotionID); //ds
-                    window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    ds_saveRecurrencies(promotionID, dataResp, function() {
+                        window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    }); //ds
                     //compileFavourites();
                 },
                 error: function (xhr, status) {
@@ -414,7 +415,7 @@ function savePromotion(iSANewPromotion){
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     compilePromotion();
-                    ds_saveRecurrencies(contentID, promotionID); //ds
+                    ds_saveRecurrencies(promotionID, dataResp); //ds
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
@@ -446,12 +447,38 @@ function savePromotion(iSANewPromotion){
 }
 
 
-function ds_saveRecurrencies(cid, pid) {
+function ds_saveRecurrencies(pid, promo, cb) {
+    function postPromo(newPromo) {
+        jQuery.ajax({
+            url: config.contentUIUrl + "/contents/" + newPromo.idcontent +"/promotions",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({promotion: newPromo, user: userToken}),
+            dataType: "json",
+            success: function (dataResp, textStatus, xhr) {
+                saved.push(dataResp._id);
+            },
+            error: function (xhr, status) {
+                console.log(status)
+            }
+        }); 
+    }
+
+    var saved = [];
     var recurrency = ds_calculateRecurrency()
 
-    for(var i=0; i<recurrency.length;i++) {
-        console.log(recurrency[i].startDate + "  " + recurrency[i].endDate)
+    for(var i=0; i<recurrency.days.length;i++) {
+        var newPromo = JSON.parse(JSON.stringify(promo));
+        
+        newPromo.startDate = recurrency.days[i].startDate;
+        newPromo.endDate = recurrency.days[i].endDate;
+        newPromo.recurrency_group = pid
+        newPromo.recurrency_type = recurrency.type;
+
+        console.log(newPromo)
     }
+
+    if(cb) cb();
 }
 
 
@@ -947,7 +974,10 @@ function ds_updateRecurrence(startDate) {
             $("#recEndRow").fadeIn();
             $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
         }        
-        else $("#recEndRow").fadeOut();
+        else {
+            $("#recEndRow").fadeOut();
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);            
+        }
     });
 }
 
@@ -992,13 +1022,13 @@ function ds_calculateRecurrency() {
 
     var rectype = $("#promoRecurrence").val();
     var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")
-    var recurrency = [];
+    var recurrency = {type:rectype, days:[]};
     switch(rectype) {
         case "1": //everyday
-            recurrency = addDays(1, "days")
+            recurrency.days = addDays(1, "days")
             break;
         case "2": //every day of week
-            recurrency = addDays(7, "days")
+            recurrency.days = addDays(7, "days")
             break;
         case "3": //custom
             var hstart = $('#datetimepickerStart').data('DateTimePicker').date().format("HH");
@@ -1009,7 +1039,7 @@ function ds_calculateRecurrency() {
             for(var i=0; i<d.length; i++) {                
                 startDate = moment(d[i]).hour(hstart).minutes(mstart);
                 endDate = moment(d[i]).hour(hstop).minutes(mstop);
-                recurrency.push({startDate:startDate.format(), endDate:endDate.format()});
+                recurrency.days.push({startDate:startDate.format(), endDate:endDate.format()});
             }
             break;
         default:
