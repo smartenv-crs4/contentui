@@ -67,6 +67,8 @@
 
     <!-- CSS Customization -->
     <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/custom.css">
+    <link rel="stylesheet" href="<%=properties.contentUIUrl%>/customAssets/css/menuSearch.css">
+
     <!-- CSS Page Style Import-->
 
     <link rel="stylesheet" href="<%=properties.contentUIUrl%>/assets/css/pages/page_log_reg_v3.css">
@@ -233,6 +235,7 @@
 
     <!--template-->
     <% include template/promotion_template.ejs %>
+    <% include template/menuSearchJs.ejs %>
 
 
 
@@ -244,6 +247,7 @@
     <script type="text/javascript">
         var canTranslate=false;
         jQuery(document).ready(function() {
+            console.log("INITAPP");
             initApp(); //App.init();
             StyleSwitcher.initStyleSwitcher();
             initToken();

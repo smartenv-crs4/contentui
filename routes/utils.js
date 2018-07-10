@@ -5,6 +5,8 @@ var request = require('request');
 var _=require('underscore');
 var multiparty = require('multiparty');
 var magic = require('stream-mmmagic');
+var responseinterceptor = require('responseinterceptor');
+var renderPage=require('./render');
 
 
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
@@ -176,6 +178,40 @@ router.get('/image', function(req, res, next) {
 });
 
 
+router.get('/users/search/:q',function (req, res, next){
+
+
+    var rqparams = {
+        url:  config.userUrl + "/users/actions/search",
+        headers: {'content-type': 'application/json','Authorization': "Bearer " + config.auth_token },
+        body:JSON.stringify({searchterm:{email:req.params.q, type:config.ApplicationTokenTypes.contentAdminTokenType}})
+    };
+
+    request.post(rqparams,function(err,response,body){ //check if default admin user exist
+        if(err) {
+            return res.status(500).send({error: "InternalError", error_message: err});
+        }
+
+        var responseBody;
+        try {
+            responseBody = JSON.parse(body);
+        }catch (ex) {
+            return res.status(500).send({error: "InternalError", error_message: ex});
+        }
+
+        if(response.statusCode==200){
+            res.status(200).json(responseBody.users);
+
+        }else{
+            responseBody.error_message+=" in " + properties.userUrl + "/users/search/:q";
+            return res.status(response.statusCode).send(responseBody);
+        }
+    });
+
+});
+
+
+
 function isURL(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -185,6 +221,39 @@ function isURL(str) {
         '(\\#[-a-z\\d_]*)?$','i'); // fragment locater
     return pattern.test(str);
 }
+
+
+
+
+var middlewareInterceptor= responseinterceptor.intercept(function(body, bodyContentType ,request, callback){
+    var NewResponse=body;
+    NewResponse=NewResponse.replace('<script type=\"text/javascript\">','');
+    NewResponse=NewResponse.replace('</script>','');
+    callback(NewResponse); // callback function with the new content
+});
+
+
+router.get('/userSearchJS',middlewareInterceptor,function(req, res, next) {
+    let appConfig={
+        mailFrom:config.contentUiAppAdmin.mailfrom,
+        appBaseUrl:config.contentUIUrl,
+        appAdmins:config.ApplicationTokenTypes.adminTokenType,
+        appName:config.contentUiAppAdmin.applicationName,
+        userTokentypesTranslations:config.ApplicationTokenTypes.userTokentypesTranslations,
+        defaultUserType:config.ApplicationTokenTypes.defaultUserType
+    };
+    res.setHeader('content-type', 'application/javascript');
+    renderPage.renderPage(res,'template/menuSearchJs',{
+        properties:{
+            contentUIUrl:config.contentUIUrl,
+            userUiUrl:config.userUiUrl,
+            applicationSettings:encodeURIComponent(JSON.stringify(appConfig)),
+        },
+        access_token:req.query.access_token
+    });
+
+});
+
 
 module.exports = router;
 

@@ -11,7 +11,6 @@ function redirectToErrorPage(error_code,error_message,error_showmore){
 
 function checkIfisAdmin(){
 
-
     jQuery.ajax({
         url: config.contentUIUrl + "/token/decode?decode_token="+ userToken,
         type: "GET",
@@ -19,7 +18,7 @@ function checkIfisAdmin(){
             if(data.valid){
 
                 if(config.ApplicationTokenTypes.adminTokenType.indexOf(data.token.type)>=0){// is user Admin
-                    var userProfilePage=config.userUiUrl+ "/userprofileAsAdmin/"+ userToUpgradeID +"/?access_token=" + userToken + "&logout=" + config.headerParams.userUiLogoutRedirect + "&homeRedirect=" + config.headerParams.loginHomeRedirect + "&loginHomeRedirect=" + config.headerParams.loginHomeRedirect+"&secret="+config.secretCode+ "&redirectTo="+window.location.href+"&applicationSettings="+JSON.stringify(config.applicationSettings);//"&enableUserUpgrade="+config.enableUserUpgrade
+                    var userProfilePage=config.userUiUrl+ "/userprofileAsAdmin/"+ userToUpgradeID +"/?access_token=" + userToken + "&logout=" + config.headerParams.userUiLogoutRedirect + "&homeRedirect=" + config.headerParams.loginHomeRedirect + "&loginHomeRedirect=" + config.headerParams.loginHomeRedirect+"&secret="+config.secretCode+ "&redirectTo="+window.location.href+"&applicationSettings="+JSON.stringify(config.applicationSettings)+"&fastSearchUrl="+JSON.stringify(config.headerParams.fastSearchUrl);//"&enableUserUpgrade="+config.enableUserUpgrade
                     //console.log(userProfilePage);
                     window.location.replace(userProfilePage);
                 }else { //is not Admin

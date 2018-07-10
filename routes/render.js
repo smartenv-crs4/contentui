@@ -19,6 +19,44 @@ function render(res,page,model,commonBody) {
     return res.render(page,model);
 }
 
+
+
+function getValueFromconfig(parameter){
+    let fields=parameter.split(".");
+    let respo=config;
+
+    fields.forEach(function(field){
+        respo=respo[field];
+    });
+
+    return(respo);
+
+}
+
+
+function getValue(value){
+    let plus,configValue;
+
+    console.log(value);
+    if(value && value.startsWith("*")){
+
+        plus=value.indexOf("+");
+        if(plus<0) {
+            configValue=getValueFromconfig(value.substr(1));
+        }
+        else{
+            configValue=getValueFromconfig(value.substring(1,plus));
+            configValue=configValue+ value.substr(plus+1);
+        }
+    }else{
+        configValue=value;
+    }
+    console.log(value);
+    return configValue;
+}
+
+
+
 module.exports = {
     renderPage(res, page, model) {
 
@@ -28,6 +66,7 @@ module.exports = {
             appBaseUrl:config.contentUIUrl,
             appAdmins:config.ApplicationTokenTypes.adminTokenType,
             appName:config.contentUiAppAdmin.applicationName,
+            userTokentypes:config.ApplicationTokenTypes.userTokentypes,
             userTokentypesTranslations:config.ApplicationTokenTypes.userTokentypesTranslations,
             defaultUserType:config.ApplicationTokenTypes.defaultUserType
         };
@@ -39,39 +78,36 @@ module.exports = {
         let commonUiURL=config.commonUIUrl+"/headerAndFooter?enableUserUpgrade="+applicationTokenTypes+"&applicationSettings="+JSON.stringify(appConfig)+"&";
         let commonUiURLWithNoToken;
 
-
-        // console.log("APPPPPPPPPPCCCONFIG");
-        // console.log(appConfig);
-
-
         model.properties.headerParams={};
         var headerParams=model.properties.headerParams;
+        model.properties.userUiUrl=config.userUiUrl; // needed by menuSearchJS.ejs
 
 
+        let configValue,tmpConf;
+
+        console.log(headersConfig);
 
         async.eachOf(headersConfig, function(value,key, callback) {
 
+            if(_.isObject(value)){
+                tmpConf={};
+                _.each(value,function (objValue,objKey) {
+                    configValue=getValue(objValue);
+                    tmpConf[objKey]=configValue;
+                });
 
-            if(value && value.startsWith("*")){
-                let plus=value.indexOf("+");
-                if(plus<0) {
-                    commonUiURL += (key + "=" + config[value.substr(1)] + "&");
-                    headerParams[key]=config[value.substr(1)];
-                }
-                else{
-                    commonUiURL+=(key+"="+config[value.substring(1,plus)]+ value.substr(plus+1) + "&");
-                    headerParams[key]=config[value.substring(1,plus)]+ value.substr(plus+1);
-                }
-
+                headerParams[key]=tmpConf;
+                commonUiURL += (key + "=" +JSON.stringify(tmpConf) + "&");
             }else{
-                if (value) {
-                    commonUiURL += (key + "=" + value + "&");
-                    headerParams[key]=value;
+                configValue=getValue(value);
+                if(configValue){
+                    commonUiURL += (key + "=" + configValue + "&");
+                    headerParams[key]=configValue;
                 }
+
             }
             callback();
         }, function(err) {  // no error
-
 
             commonUiURLWithNoToken=commonUiURL.slice(0,-1); // remove last '&' in the Url
             if(model.access_token)
@@ -83,50 +119,50 @@ module.exports = {
             //console.log(model.access_token);
 
             request.get(commonUiURL,function (error, response, body) {
-                    if(error) {
-                        commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
-                            res.send(content);
-                        });
-                    }else {
-                        var commonBody = undefined;
-                        if(body) {
-                            try {
-                                commonBody = JSON.parse(body);
-                            }
-                            catch(e) {
-                                console.log(e);
-                            }
+                if(error) {
+                    commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
+                        res.send(content);
+                    });
+                }else {
+                    var commonBody = undefined;
+                    if(body) {
+                        try {
+                            commonBody = JSON.parse(body);
                         }
+                        catch(e) {
+                            console.log(e);
+                        }
+                    }
 
-                        if (commonBody && commonBody.error) {
-                            let tmpError=commonBody.error_message;
-                            request.get(commonUiURLWithNoToken, function (error, response, body) {  //resend request to header for not logged in user
-                                if (error){
-                                    commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
+                    if (commonBody && commonBody.error) {
+                        let tmpError=commonBody.error_message;
+                        request.get(commonUiURLWithNoToken, function (error, response, body) {  //resend request to header for not logged in user
+                            if (error){
+                                commonFunctions.getErrorPage(500,"Internal Server Error",error,function(er,content){
+                                    res.send(content);
+                                });
+                            }else {
+
+                                var commonBody = body ? JSON.parse(body) : undefined;
+
+                                if (commonBody && commonBody.error) {
+                                    commonFunctions.getErrorPage(response.statusCode,response.statusCode,commonBody.error,commonBody.error_message,function(er,content){
                                         res.send(content);
                                     });
-                                }else {
 
-                                    var commonBody = body ? JSON.parse(body) : undefined;
-
-                                    if (commonBody && commonBody.error) {
-                                        commonFunctions.getErrorPage(response.statusCode,response.statusCode,commonBody.error,commonBody.error_message,function(er,content){
-                                            res.send(content);
-                                        });
-
-                                    } else {
-                                        model.tokenError=tmpError;
-                                        return render(res, page, model, commonBody);
-                                    }
+                                } else {
+                                    model.tokenError=tmpError;
+                                    return render(res, page, model, commonBody);
                                 }
+                            }
 
-                            });
-                        } else {
-                            model.tokenError=null;
-                            return render(res, page, model, commonBody);
-                        }
-
+                        });
+                    } else {
+                        model.tokenError=null;
+                        return render(res, page, model, commonBody);
                     }
+
+                }
 
             });
         });
