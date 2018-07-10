@@ -276,12 +276,14 @@ function removeNotValid(element,section,label,em){
     element.removeClass("invalid");
 }
 
-function validateFields(){
 
+function validateMultilanguageFields(invalidate){
     let responseToReturn=true;
+
     let promotionTitle=$('#promotionTitle');
     if(promotionTitle.val()=="") {
-        addNotValid(promotionTitle,'sTitle','lTitle','iTitle',i18next.t("validate.voidTitle"));
+        if(invalidate)
+            addNotValid(promotionTitle,'sTitle','lTitle','iTitle',i18next.t("validate.voidTitle"));
         responseToReturn=false;
     }else{
         removeNotValid(promotionTitle,'sTitle','lTitle','iTitle');
@@ -290,11 +292,36 @@ function validateFields(){
 
     let promotionDescription=$('#promotionDescription');
     if(promotionDescription.val()=="") {
-        addNotValid(promotionTitle,'sDescription','lDescription','iDescription',i18next.t("validate.voidDescription"));
+        if(invalidate)
+            addNotValid(promotionTitle,'sDescription','lDescription','iDescription',i18next.t("validate.voidDescription"));
         responseToReturn=false;
     }else{
         removeNotValid(promotionTitle,'sDescription','lDescription','iDescription');
     }
+
+    return responseToReturn;
+
+}
+
+function validateFields(){
+
+    let responseToReturn=validateMultilanguageFields(true);
+    // let promotionTitle=$('#promotionTitle');
+    // if(promotionTitle.val()=="") {
+    //     addNotValid(promotionTitle,'sTitle','lTitle','iTitle',i18next.t("validate.voidTitle"));
+    //     responseToReturn=false;
+    // }else{
+    //     removeNotValid(promotionTitle,'sTitle','lTitle','iTitle');
+    // }
+    //
+    //
+    // let promotionDescription=$('#promotionDescription');
+    // if(promotionDescription.val()=="") {
+    //     addNotValid(promotionTitle,'sDescription','lDescription','iDescription',i18next.t("validate.voidDescription"));
+    //     responseToReturn=false;
+    // }else{
+    //     removeNotValid(promotionTitle,'sDescription','lDescription','iDescription');
+    // }
 
 
     let promotionPrice=$('#promotionPrice');
@@ -414,8 +441,10 @@ function savePromotion(iSANewPromotion){
                 data: JSON.stringify({promotion: newPromotion, user: userToken}),
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
+                    //i18next.reloadResources();
                     compilePromotion();
                     ds_saveRecurrencies(promotionID, dataResp); //ds
+                    // window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
