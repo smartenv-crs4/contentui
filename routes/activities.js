@@ -12,6 +12,7 @@ config.contentUrl = contentUrl;
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
 let _mailerUrl = config.mailerUrl + (config.mailerUrl.endsWith('/') ? '' : '/');
+let _userUIUrl = config.userUIUrl + (config.userUIUrl.endsWith('/') ? '' : '/');
 
 auth.configure({
     authorizationMicroserviceUrl:config.authUrl + '/tokenactions/checkiftokenisauth',
@@ -322,7 +323,7 @@ function getAdmins(admIds) {
 			})
 			.then(users => {
 				for(let i=0; i<users.users.length; i++) {
-					users.users[i].avatar = users.users[i].avatar || "/img/avatar.png"; //TODO parametrizzare
+					users.users[i].avatar = _userUIUrl + "users/actions/getprofileimage/" + users.users[i].avatar;
 				}
 				resolve(users.users)
 			})
