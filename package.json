@@ -22,11 +22,12 @@
     "propertiesmanager": "^2.0.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
+    "responseinterceptor": "^1.1.2",
     "serve-favicon": "~2.3.0",
     "should": "^13.1.3",
     "stream-mmmagic": "^2.0.0",
-    "underscore": "^1.9.1",
     "tokenmanager": "^3.1.0",
+    "underscore": "^1.9.1",
     "uuid": "^3.1.0"
   }
 }

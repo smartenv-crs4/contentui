@@ -31,3 +31,27 @@ exports.decodeToken=function(decode_token,callback){
         return callback(400,{error:"BadRequest", error_message:"decode_token field is mandatory"});
     }
 }
+
+
+
+exports.getSecureCode=function(callback){
+    var rqparams = {
+        url:  properties.userUiUrl + "/actions/getcodeforsecurecalls",
+        headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (properties.auth_token || "")},
+        body:JSON.stringify({appAdmins:properties.ApplicationTokenTypes.adminTokenType,ApplicationTokenTypes:properties.ApplicationTokenTypes.userTokentypes})
+    };
+    request.post(rqparams,function(err,response){
+        if(err) callback({error:"InternalError", error_message:err});
+        try {
+            response.body = JSON.parse(response.body);
+        }catch (ex) {
+            response.body="Internal error due to: " + response.body;
+        }
+        if(response.statusCode==200){
+            callback(null,response.body.secret);
+
+        }else callback(response.body);
+    });
+};
+
+

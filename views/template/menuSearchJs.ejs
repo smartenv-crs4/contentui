@@ -1,0 +1,92 @@
+<script type="text/javascript">
+
+var htpltahmenu=`
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-3">
+            <img src="{{avatar}}" class="tt-avatar" />
+        </div>
+        <div class="col-md-9">
+            <i class="fa fa-envelope-o"></i> <strong>{{email}}</strong><br>
+            {{#if name}}<i class="fa fa-user"></i> {{name}}{{/if}}
+        </div>
+    </div>
+</div>`;
+
+
+
+
+function init(){
+
+    var users = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        //prefetch: '../data/films/post_1960.json',
+        remote: {
+            url: "<%=properties.contentUIUrl%>/utils/users/search/%QUERY",
+            headers : {
+                Authorization: "Bearer <%=access_token%>"
+            },
+            wildcard: '%QUERY',
+            filter: function (users) {
+                $(".tt-dataset").addClass("container-fluid");
+
+                // Map the remote source JSON array to a JavaScript object array
+                return $.map(users, function (user) {
+                    return {
+                        uid: user._id,
+                        email: user.email,
+                        name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
+                        avatar: user.avatar ? ("<%=properties.userUiUrl%>/users/actions/getprofileimage/" + user.avatar) : ("<%=properties.contentUIUrl%>/customAssets/img/avatar.png")
+                    };
+                });
+            }
+        }
+    });
+
+
+    $('#adminusers .typeahead').typeahead(null, {
+        display: 'email',
+        source: users,
+        templates: {
+            suggestion: Handlebars.compile(htpltahmenu)
+        }
+    });
+
+
+    $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+        var uid = suggestion.uid;
+        if(uid) {
+            var userProfilePage="<%=properties.contentUIUrl%>/manageuser/"+ uid ;
+            //console.log(userProfilePage);
+            window.location.replace(userProfilePage);
+        }
+    });
+}
+
+    function initUserSearchTool() {
+
+        if($('script[src*="typeahead.bundle.min.js"]')[0]) { //typeahead.bundle.min.js lib loaded
+         init();
+
+        }else {
+
+
+            tmpScript = document.createElement("script");
+            tmpScript.type = "text/javascript"; // set the type attribute
+            // tmpScript.src = config.commonUIUrl + "/node_modules/async/dist/async.min.js"; // make the script element load file
+            tmpScript.src = "<%= properties.contentUIUrl %>/customAssets/js/typeahead.bundle.min.js"; // make the script element load file
+            tmpScript.onload = function () { // when async  is loaded, load all other script
+                init();
+            };
+            // finally insert the js element to the body element in order to load the script
+            document.body.appendChild(tmpScript);
+        }
+
+    }
+
+    jQuery(document).ready(function() {
+        initUserSearchTool();
+    });
+
+</script>
