@@ -533,7 +533,7 @@ function initAdminTool() {
                       uid: user._id,
                       email: user.email,
                       name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
-                      avatar: userUiUrl + "users/actions/getprofileimage/" + user.avatar
+                      avatar: userUiUrl + (userUiUrl.endsWith('/') ? '' : '/') + "users/actions/getprofileimage/" + user.avatar
                   };
               });
           }
