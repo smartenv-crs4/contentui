@@ -126,7 +126,7 @@ router.get('/activities/new',       (req, res, next) => {
     query: JSON.stringify(req.query),
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
-    userUiUrl:config.userUiUrl,
+    userUiUrl:config.userUIUrl,
     contentUrl:contentUrl,
     isNew: true,
     properties:{
@@ -151,7 +151,7 @@ router.get('/activities/:id',    (req, res, next) => {
         params: JSON.stringify(req.params) || undefined,
         query: JSON.stringify(req.query) || undefined,
         baseUrl: baseUrl,
-        userUiUrl:config.userUiUrl,
+        userUiUrl:config.userUIUrl,
         uploadUrl: uploadUrl,
         contentUrl: contentUrl,
         properties:{
@@ -232,7 +232,7 @@ function renderUserPageAdmin(req,res,userID,secret){
         properties:{
             contentUIUrl:config.contentUIUrl ,
             commonUIUrl:config.commonUIUrl,
-            userUiUrl:config.userUiUrl,
+            userUiUrl:config.userUIUrl,
             ApplicationTokenTypes:config.ApplicationTokenTypes,
             applicationSettings:appConfig,
             secretCode:secret
@@ -258,7 +258,7 @@ router.get('/upgradeuser/:userToUpdate_token', function(req, res, next) {
             function(callback) {
                 commonFunctions.getSecureCode(callback);
                 // var rqparams = {
-                //     url:  config.userUiUrl + "/actions/getcodeforsecurecalls",
+                //     url:  config.userUIUrl + "/actions/getcodeforsecurecalls",
                 //     headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (config.auth_token || "")},
                 //     body:JSON.stringify({appAdmins:config.ApplicationTokenTypes.adminTokenType,ApplicationTokenTypes:config.ApplicationTokenTypes.userTokentypes})
                 // };
