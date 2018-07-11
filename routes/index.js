@@ -126,6 +126,7 @@ router.get('/activities/new',       (req, res, next) => {
     query: JSON.stringify(req.query),
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
+    userUiUrl:config.userUiUrl,
     contentUrl:contentUrl,
     isNew: true,
     properties:{
@@ -150,6 +151,7 @@ router.get('/activities/:id',    (req, res, next) => {
         params: JSON.stringify(req.params) || undefined,
         query: JSON.stringify(req.query) || undefined,
         baseUrl: baseUrl,
+        userUiUrl:config.userUiUrl,
         uploadUrl: uploadUrl,
         contentUrl: contentUrl,
         properties:{
