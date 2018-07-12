@@ -60,10 +60,19 @@ function imageIsPresent(imgid, imgarr) {
     return false;
 }
 
-function loadImagePreview(input) {    
+function loadImagePreview(input) {
+    function translateSize(val) {
+        val = Number(val)
+        if(val > 1000000) {
+            return Math.floor(val/1000000) + "MB";
+        }
+        else if(val > 1000) {
+            return Math.floor(val/1000) + "KB";
+        }
+    }
     if (input.files && input.files[0]) {
-        if(input.files[0].size > 307200) {
-            _growl.error({message: "Image size too big (max 300k)"});
+        if(input.files[0].size > maxImageSize) {
+            _growl.error({message: "Image size too big (max " + translateSize(maxImageSize) + ")"});
             return;
         }
         var imgid = 'img-' + input.files[0].name.replace(/\s/g,'')

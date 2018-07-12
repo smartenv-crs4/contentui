@@ -493,6 +493,14 @@
     "delConfirmDesc": {
       "it": "Rimuovendo questa attività verranno rimosse anche tutte le promozioni e gli eventi associati e tutte le foto caricate",
       "en": "By removing this content all the related promo and events will be also deleted"
+    },
+    "addadmin": {
+      "it":"Amministratori",
+      "en":"Administrators"
+    },
+    "howaddadmin": {
+      "it":"Cerca un utente per email e permettigli di modificare questa pagina",
+      "en":"Search for a user by email and allow him to update this page"
     }
   },
   "validate" : {
