@@ -1095,11 +1095,11 @@ function setParticipate(){
 function  setLikeButton(){
     var likecounticon=$('#likecounticon');
     if(iLikeIt){
-        likecounticon.removeClass("fa-thumbs-up");
-        likecounticon.addClass("fa-thumbs-down")
-    }else{
-        likecounticon.removeClass("fa-thumbs-down");
+        likecounticon.removeClass("fa-thumbs-o-up");
         likecounticon.addClass("fa-thumbs-up")
+    }else{
+        likecounticon.removeClass("fa-thumbs-up");
+        likecounticon.addClass("fa-thumbs-o-up")
     }
 }
 
