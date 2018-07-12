@@ -343,7 +343,7 @@ function positionCheck(cb) {
             cb(result)
         });
     }
-    else if(_addressFound != $("#f_address").val()) {
+    else if(_addressFound && _addressFound != $("#f_address").val()) {
         bootbox.confirm("The inserted address has changed, would you check the coordinates on the map?", function(result){            
             cb(result)
         });
