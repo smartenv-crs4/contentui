@@ -499,6 +499,7 @@ function ds_saveRecurrencies(pid, promo, cb) {
     for(var i=0; i<recurrency.days.length;i++) {
         var newPromo = JSON.parse(JSON.stringify(promo));
         
+        delete newPromo._id;
         newPromo.startDate = recurrency.days[i].startDate;
         newPromo.endDate = recurrency.days[i].endDate;
         newPromo.recurrency_group = pid
