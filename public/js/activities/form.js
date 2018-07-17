@@ -315,6 +315,10 @@ function getFormData() {
 }
 
 function addContent() {
+    if(!$("#activityForm")[0].checkValidity()) {
+        _growl.error({message:"Invalid data, please check the red bordered fields"})
+        return;
+    }
     positionCheck(function(edit) {
         if(!edit) {
             var contentData = getFormData();

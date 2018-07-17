@@ -211,6 +211,12 @@ function newActivity() {
             addContent(); 
         });
 
+        $("input[type='url']").focus(function() {
+            var v = $(this).val();
+            if(!v.startsWith("http"))
+                $(this).val("http://" + v) 
+        });
+
         $("#fileUpload").on("change", function() {
             loadImagePreview(this);
         });
