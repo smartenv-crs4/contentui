@@ -40,7 +40,7 @@
                 </button>
             </li>
             <li>
-                <button id="addPromo" class="btn btn-default loggedonly" title="new promo">
+                <button id="addActivity" class="btn btn-default loggedonly" title="new activity">
                     <i class="fa fa-plus-circle" ></i>
                 </button>
             </li>
@@ -130,8 +130,11 @@
                     <!-- End Team v2 -->
                     {{/each}}
                 </div>
-                <div class="row">
-                    <div class="col-md-12 col-sm-12" style="text-align: center">
+                <div class="row" style="text-align: center">
+                    <button id="addPromo" class="btn-u btn-u-red loggedonly" title="Add a new promotion">
+                        <i class="fa fa-plus-circle"></i> <span data-i18n="search.newpromo"></span>
+                    </button>
+                    <div class="col-md-12 col-sm-12" style="padding-top:10px">
                         <a href="<%= baseUrl %>?type=promo&q=&idcontent={{idcontent}}" data-i18n="activity.allpromo"></a>
                     </div>
                 </div>

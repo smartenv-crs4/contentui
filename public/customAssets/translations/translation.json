@@ -353,8 +353,8 @@
         "en":"Choose"
     },
     "box1titleCA": {
-        "it":"Promuovi",
-        "en":"Promote"
+        "it":"Aggiungi Attività",
+        "en":"Add a new Activity"
     },
     "box1text": {
       "it":"Cerca tra le tante opportunità turistiche, gastronomiche, culturali e sportive offerte dalla città di Cagliari riservate ai crocieristi.",
@@ -385,8 +385,8 @@
         "en":"Enjoy"
     },
     "box3titleCA":{
-        "it":"Le tue Promo & eventi",
-        "en":"Your Deals & events"
+        "it":"Le tue Promo e eventi",
+        "en":"Your Deals and events"
     },
     "box3text": {
         "it":"Esplora le bellezze di Cagliari e fruisci dei servizi esclusivi che hai individuato.",
@@ -449,6 +449,10 @@
     "edit": {
       "en":"Edit Activity",
       "it":"Modifica Attività"
+    },
+    "new": {
+      "it":"Inserisci nuova attività",
+      "en":"Add a new activity"
     },
     "name": {
       "it":"Nome Attività",

@@ -213,8 +213,8 @@ function executeSearch() {
 }
 
 function setPositionSearchLabel(dist, address) {
-    $("#advPosDist").text(dist + "m from ");
-    $("#advPos").text(address);
+    if(dist) $("#advPosDist").text(dist + "m from ");
+    if(address) $("#advPos").text(address);
 }
 
 function initTranslation() {
@@ -343,6 +343,7 @@ function initMap() {
                 });
             }
             _filters.position.radius = ui.value;
+            setPositionSearchLabel(ui.value)
         }
     });
 }
