@@ -246,7 +246,7 @@ router.get('/userSearchJS',middlewareInterceptor,function(req, res, next) {
     renderPage.renderPage(res,'template/menuSearchJs',{
         properties:{
             contentUIUrl:config.contentUIUrl,
-            userUiUrl:config.userUiUrl,
+            userUiUrl:config.userUIUrl,
             applicationSettings:encodeURIComponent(JSON.stringify(appConfig)),
         },
         access_token:req.query.access_token
