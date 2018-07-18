@@ -80,7 +80,7 @@ module.exports = {
 
         model.properties.headerParams={};
         var headerParams=model.properties.headerParams;
-        model.properties.userUiUrl=config.userUIUrl; // needed by menuSearchJS.ejs
+        model.properties.userUIUrl=config.userUIUrl; // needed by menuSearchJS.ejs
 
 
         let configValue,tmpConf;
