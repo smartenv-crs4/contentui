@@ -36,7 +36,7 @@ exports.decodeToken=function(decode_token,callback){
 
 exports.getSecureCode=function(callback){
     var rqparams = {
-        url:  properties.userUiUrl + "/actions/getcodeforsecurecalls",
+        url:  properties.userUIUrl + "/actions/getcodeforsecurecalls",
         headers: {'content-type': 'application/json', 'Authorization': "Bearer " + (properties.auth_token || "")},
         body:JSON.stringify({appAdmins:properties.ApplicationTokenTypes.adminTokenType,ApplicationTokenTypes:properties.ApplicationTokenTypes.userTokentypes})
     };
