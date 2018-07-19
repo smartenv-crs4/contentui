@@ -7,7 +7,7 @@ var multiparty = require('multiparty');
 var magic = require('stream-mmmagic');
 var responseinterceptor = require('responseinterceptor');
 var renderPage=require('./render');
-
+const rendercustomjs = require( "rendercustomjs" );
 
 let uploadUrl = config.uploadUrl + (config.uploadUrl.endsWith('/') ? '' : '/');
 config.uploadUrl=uploadUrl;
@@ -225,15 +225,9 @@ function isURL(str) {
 
 
 
-var middlewareInterceptor= responseinterceptor.intercept(function(body, bodyContentType ,request, callback){
-    var NewResponse=body;
-    NewResponse=NewResponse.replace('<script type=\"text/javascript\">','');
-    NewResponse=NewResponse.replace('</script>','');
-    callback(NewResponse); // callback function with the new content
-});
 
 
-router.get('/userSearchJS',middlewareInterceptor,function(req, res, next) {
+router.get('/userSearchJS',rendercustomjs,function(req, res, next) {
     let appConfig={
         mailFrom:config.contentUiAppAdmin.mailfrom,
         appBaseUrl:config.contentUIUrl,

@@ -20,6 +20,7 @@
     "multiparty": "^4.1.3",
     "node-cache": "^4.1.1",
     "propertiesmanager": "^2.0.1",
+    "rendercustomjs": "^1.1.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "responseinterceptor": "^1.1.2",
