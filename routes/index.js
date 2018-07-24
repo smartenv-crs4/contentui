@@ -89,7 +89,7 @@ router.get('/',  (req, res, next) => {
 
 
 // logout Page
-router.get('/logoutapp', function(req, res, next) {
+router.get('respon/logoutapp', function(req, res, next) {
     renderPage.renderPage(res,'logoutPage',{
         properties:{
             contentUIUrl:config.contentUIUrl ,
