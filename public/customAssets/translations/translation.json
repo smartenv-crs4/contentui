@@ -290,6 +290,10 @@
       "en":"Save",
       "it":"Salva"
     },
+    "delete":{
+      "en":"Delete",
+      "it":"Elimina"
+    },
     "gotoactivity":{
       "en":"Promotion Owner",
       "it":"Proprietario Promozione"

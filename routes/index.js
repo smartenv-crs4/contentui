@@ -201,6 +201,7 @@ router.get('/activities/:aid/promotions/:pid', function(req, res, next) {
             contentUIUrl:config.contentUIUrl ,
             commonUIUrl:config.commonUIUrl
         },
+        contentUrl: contentUrl,
         contentID:activity_id,
         promotionID:promotion_id,
         isANewPromotion:false

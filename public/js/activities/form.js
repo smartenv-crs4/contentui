@@ -542,11 +542,18 @@ function initAdminTool() {
               }
               // Map the remote source JSON array to a JavaScript object array
               return $.map(notAdmins, function (user) {
-                  return {
-                      uid: user._id,
-                      email: user.email,
-                      name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
-                      avatar: userUIUrl + (userUIUrl.endsWith('/') ? '' : '/') + "users/actions/getprofileimage/" + user.avatar
+                var avatar = undefined;
+                    if(!user.avatar) 
+                        avatar = "/customAssets/img/avatar.png"
+                    else if(user.avatar.startsWith("http"))
+                        avatar = user.avatar
+                    else 
+                        avatar = userUIUrl + (userUIUrl.endsWith('/') ? '' : '/') + "users/actions/getprofileimage/" + user.avatar
+                    return {
+                        uid: user._id,
+                        email: user.email,
+                        name: ((user.name ? user.name : '') + (user.surname ? ' ' + user.surname : '')),
+                        avatar: avatar
                   };
               });
           }

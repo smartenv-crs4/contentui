@@ -113,7 +113,7 @@
                     {{#if token}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                         <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
-                        <button class="btn-u btn-u-red" type="button"><i class="fa fa-trash"></i></button>
+                        <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromo();"><i class="fa fa-trash"></i></button>
                     {{else}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                     {{/if}}
@@ -582,8 +582,9 @@
                 
                 <footer>
                     <div id="responseBlock" class="alert alert-danger hidden"></div>
-                    <button disabled id="promotionSaveButton" type="button" onclick="savePromotion({{isANewPromotion}})" name="submit" class="btn-u btn-u-default"><span><i class="fa fa-pencil"></i>  </span><span data-i18n="promotion.save">Save</span></button>
+                    <button disabled id="promotionSaveButton" type="button" onclick="savePromotion({{isANewPromotion}})" name="submit" class="btn-u btn-u-green"><span><i class="fa fa-pencil"></i>  </span><span data-i18n="promotion.save">Save</span></button>
                     <button id="promotionCancelButton" type="button" class="btn-u btn-u-dark-blue" onclick="exitFromInsertMode()"><span><i class="fa fa-history"></i>  </span><span data-i18n="profile.cancel">Save</span></button>
+                    <button id="promotionDeleteButton" type="button" class="btn-u btn-u-red" onclick="ds_deletePromo()"><span><i class="fa fa-eraser"></i>  </span><span data-i18n="promotion.delete">Delete</span></button>
                 </footer>
 
             </div>

@@ -476,8 +476,100 @@ function savePromotion(iSANewPromotion){
 }
 
 
+//cancella promo e batch
+function ds_deletePromo() {
+    var deleted = 0;
+
+    function deletePromo(pid) {
+        jQuery.ajax({
+            url: config.contentUIUrl + "/activities/" + contentID + "/promo/" + pid,
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            headers: {Authorization: "Bearer " + userToken},            
+            success: function (dataResp, textStatus, xhr) {                
+                if(--deleted <= 0) {
+                    jQuery.jGrowl("Promotion deleted", {theme:'bg-color-red', life: 2000});
+                    setTimeout(function() {
+                        window.location.href=config.contentUIUrl + "/activities/" + contentID;
+                    }, 2000)
+                }
+            },
+            error: function (xhr, status) {                
+                var msg;
+    
+                try {
+                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+                }
+                catch (err) {
+                    msg = i18next.t("error.internal_server_error");
+                }
+                jQuery.jGrowl("Promotion deleted", {theme:'bg-color-red', life: 2000});
+                
+                return;
+            }
+        });
+    }
+
+    function getRecurrencies(cb) {
+        var recId = currentPromotion.recurrency_group != null ?  currentPromotion.recurrency_group : promotionID;
+        var recarr = [];
+
+        if(recId == promotionID) recarr.push(promotionID); //recurrency father
+
+        jQuery.ajax({
+            url: contentUrl + "search?t=promo&recurrency=" + recId + "&sdate=" + new Date(currentPromotion.startDate),
+            type: "GET",
+            contentType: "application/json; charset=utf-8",                
+            success: function (dataResp, textStatus, xhr) {
+                
+                for(var i=0; i<dataResp.promos.length; i++) {
+                    recarr.push(dataResp.promos[i]._id);
+                }
+                if(cb) cb(recarr)
+            },
+            error: function (xhr, status) {
+                console.log(status);
+                if(cb) cb([]);
+            }
+        });        
+    }
+
+    bootbox.prompt({
+        title: "Are you sure you want to delete this promotion?",
+        inputType: 'select',
+        value: 0,
+        inputOptions: [
+            {
+                text: 'Only this one',
+                value: '0',
+            },
+            {
+                text: 'All the next recurrences',
+                value: '1',
+            }
+        ],
+        callback: function (result) {
+            if(result == null)
+                return;
+            else if(result == 0) {
+                deletePromo(promotionID);
+            }
+            else if(result == 1) {
+                getRecurrencies(function(result) {
+                    for(var i=0; i<result.length; i++) {
+                        deleted++
+                        deletePromo(result[i]);
+                    }
+                })
+            }
+        }
+    });
+}
+
 function ds_saveRecurrencies(pid, promo, cb) {
+    
     function postPromo(newPromo) {
+        fcounter++;
         jQuery.ajax({
             url: config.contentUIUrl + "/contents/" + newPromo.idcontent +"/promotions",
             type: "POST",
@@ -486,13 +578,23 @@ function ds_saveRecurrencies(pid, promo, cb) {
             dataType: "json",
             success: function (dataResp, textStatus, xhr) {
                 saved.push(dataResp._id);
+                fcounter--;
+                if(fcounter == 0) {
+                    console.log(saved)
+                    if(cb) cb();
+                    //response
+                }
             },
             error: function (xhr, status) {
+                fcounter--;
+                failed++;
                 console.log(status)
             }
         }); 
     }
 
+    var fcounter = 0;
+    var failed = 0;
     var saved = [];
     var recurrency = ds_calculateRecurrency()
 
@@ -504,11 +606,8 @@ function ds_saveRecurrencies(pid, promo, cb) {
         newPromo.endDate = recurrency.days[i].endDate;
         newPromo.recurrency_group = pid
         newPromo.recurrency_type = recurrency.type;
-
-        console.log(newPromo)
+        postPromo(newPromo);
     }
-
-    if(cb) cb();
 }
 
 

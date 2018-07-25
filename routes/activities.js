@@ -138,6 +138,7 @@ router.post('/email', auth.checkAuthorization, (req, res, next) => {
 	})
 })
 
+
 router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	let authHeader = {authorization: req.headers.authorization};
 	let uid = req[authField].token._id;
@@ -246,9 +247,11 @@ function checkContentAuth(admins, uid) {
 	return admins.indexOf(uid) != -1;
 }
 
-//p e' il json di una promo, che deve prima essere aggiornato con p.admins = [admin del content padre]
+//p e' il json di una promo, che prima deve essere stato aggiornato con p.admins = [admin del content padre]
 function deletePromo(p, authHeader) {	
-	deleteImages(p.images, p.admins); //WARN e' inviato asincrono!!!
+	if(p.deleteImages) //solo se non e' evento ricorrente! in quel caso solo il padre può rimuovere (img condivise)
+		deleteImages(p.images, p.admins); //WARN e' inviato asincrono!!!
+
 	return rp({
 		uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
 		method: 'DELETE',
