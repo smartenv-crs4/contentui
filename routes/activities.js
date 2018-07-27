@@ -14,6 +14,8 @@ let _userUrl = config.userUrl + (config.userUrl.endsWith('/') ? '' : '/');
 let _mailerUrl = config.mailerUrl + (config.mailerUrl.endsWith('/') ? '' : '/');
 let _userUIUrl = config.userUIUrl + (config.userUIUrl.endsWith('/') ? '' : '/');
 
+let _contentUIUrl = config.contentUIUrl + (config.contentUIUrl.endsWith('/') ? '' : '/');
+
 auth.configure({
     authorizationMicroserviceUrl:config.authUrl + '/tokenactions/checkiftokenisauth',
     decodedTokenFieldName:config.decodedTokenFieldName,
@@ -193,6 +195,7 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 	})
 	.then(r => {
 	*/
+
 	rp({
 		uri:contentUrl + 'contents/' + id,
 		method: 'GET',
@@ -239,7 +242,57 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 		else
 			res.boom.badImplementation();
 	})
-})
+});
+
+
+
+router.post('/actions/deleteusercontents/:user_id', auth.checkAuthorization, (req, res, next) => {
+    let content = {done:[], pending:[]};
+    let authHeader = {authorization: req.headers.authorization};
+
+    rp({
+        uri:contentUrl + 'search?by_uid=' + req.params.user_id,
+        method: 'GET',
+        json:true
+    })
+        .then(activities => {
+
+        	let cpPromise=[];
+        	if(activities && activities.metadata && (activities.metadata.totalCount>0)){
+                activities.contents.forEach(function(currentActivity){
+                    cpPromise.push(
+                        rp({
+                            uri:_contentUIUrl + 'activities/' + currentActivity._id,
+                            method: 'DELETE',
+                            json:true,
+                            headers: authHeader
+                        })
+                            .then(r => {
+                                content.done.push(currentActivity);
+                            })
+                            .catch(ex => {
+                            	console.log(ex);
+                                content.pending.push(currentActivity);
+                            })
+                    );
+                });
+			}
+        	return Promise.all(cpPromise);
+        })
+        .then(r => {
+            res.json(content);
+        })
+        .catch(ex => {
+            console.log(ex);
+            if(ex.statusCode == 401)
+                res.boom.unauthorized()
+            else if(ex.statusCode == 400)
+                res.boom.badRequest();
+            else
+                res.boom.badImplementation();
+        })
+});
+
 
 function checkContentAuth(admins, uid) {
 	//TODO aggiungere admin agli autorizzati (getSuperusers)

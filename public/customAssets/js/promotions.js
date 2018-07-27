@@ -754,6 +754,35 @@ function handleLocationError(message,InfoWinPosition){
     infoWindow.open(mapInit.map.map,mapInit.marker);
 }
 
+function deletePromotion(){
+    jQuery.ajax({
+        url: config.contentUIUrl + "/contents/" + contentID +"/promotions/" + promotionID + "?access_token=" + userToken,
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        success: function (dataResp, textStatus, xhr) {
+            window.location.href=config.contentUIUrl + "/activities/" + contentID;
+        },
+        error: function (xhr, status) {
+
+            var respBlock = jQuery("#responseBlock");
+            var msg;
+
+            try {
+                msg = xhr.responseJSON.error_message || xhr.responseJSON.message || i18next.t("error.delete");
+            }
+            catch (err) {
+                msg = i18next.t("error.internal_server_error");
+            }
+            // console.log(xhr);
+            respBlock.html(msg);
+            respBlock.removeClass("hidden");
+
+            return;
+        }
+    });
+}
+
+
 function updatePromotion(){
 
     //var currentPromotion=JSON.parse(sessionStorage.getItem("currentPromotion"));

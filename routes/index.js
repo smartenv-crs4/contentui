@@ -89,7 +89,7 @@ router.get('/',  (req, res, next) => {
 
 
 // logout Page
-router.get('respon/logoutapp', function(req, res, next) {
+router.get('/logoutapp', function(req, res, next) {
     renderPage.renderPage(res,'logoutPage',{
         properties:{
             contentUIUrl:config.contentUIUrl ,
@@ -127,7 +127,7 @@ router.get('/activities/new',       (req, res, next) => {
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
     maxImageSize:config.maxImageSize,
-    userUIUrl:config.userUIUrl,
+    userUiUrl:config.userUIUrl,
     contentUrl:contentUrl,
     isNew: true,
     properties:{
@@ -152,7 +152,7 @@ router.get('/activities/:id',    (req, res, next) => {
         params: JSON.stringify(req.params) || undefined,
         query: JSON.stringify(req.query) || undefined,
         baseUrl: baseUrl,
-        userUIUrl:config.userUIUrl,
+        userUiUrl:config.userUIUrl,
         maxImageSize:config.maxImageSize,
         uploadUrl: uploadUrl,
         contentUrl: contentUrl,
@@ -234,7 +234,7 @@ function renderUserPageAdmin(req,res,userID,secret){
         properties:{
             contentUIUrl:config.contentUIUrl ,
             commonUIUrl:config.commonUIUrl,
-            userUIUrl:config.userUIUrl,
+            userUiUrl:config.userUIUrl,
             ApplicationTokenTypes:config.ApplicationTokenTypes,
             applicationSettings:appConfig,
             secretCode:secret

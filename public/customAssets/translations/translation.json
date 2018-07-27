@@ -115,6 +115,10 @@
     "notadmin":{
       "en":"You aren't logged in as application Administrator",
       "it":"Non sei loggato come utente di tipo amministratore"
+    },
+    "delete":{
+      "en":"Internal Server Error in delete promotion",
+      "it":"Errore Interno del server durante la cancellazione della promozione"
     }
   },
   "promotion": {
