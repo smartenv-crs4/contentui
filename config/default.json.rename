@@ -14,8 +14,11 @@
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
     "languageManagerLibUrl":"your_language_manager_lib_url",
-    "contentAdminTokenType": ["contentAdmin"],
     "timezone":"Europe/Rome",
+    "redisCache":{
+      "host": "your_redis_host",
+      "ttl":10
+    },
     "headerParams":{
       "homePage" : "/",
       "pageFaq" :  null,
@@ -66,7 +69,11 @@
     "auth_token":"your_auth_service_token",
     "decodedTokenFieldName": "contentms",
     "languageManagerLibUrl":"your_language_manager_lib_url",
-    "contentAdminTokenType": ["contentAdmin"],
+    "timezone":"Europe/Rome",
+    "redisCache":{
+      "host": "your_redis_host",
+      "ttl":10
+    },
     "headerParams":{
       "homePage" : "/",
       "pageFaq" :  null,

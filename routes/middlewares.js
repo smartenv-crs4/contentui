@@ -19,21 +19,14 @@
  *       along with CMC-Auth.  If not, see <http://www.gnu.org/licenses/>.    *
  * ############################################################################
  */
-
-
-
-
-var async=require('async');
 var jsonDb=require('./jsonDb');
-
 
 exports.parseuuId = function (req, res, next) {
     if(req.query && req.query.uuid){
-        jsonDb.getKey(req.query.uuid,function (err,access_token) {
+        jsonDb.getKey(req.query.uuid,{delete:true},function (err,access_token) {
             if(!err && access_token) {
                 req.query.access_token = access_token;
                 req.gatewayPage=true;
-                jsonDb.deleteKey(req.query.uuid);
             }
            next();
         });
