@@ -11,7 +11,10 @@ var commonFunctions=require('./commonFunctions');
 
 router.post('/actions/setToken', function(req, res, next) {
     jsonDb.setKey(req.query.access_token,function(err,uuId){
-       res.status(200).send({uuId:uuId});
+        if(err)
+            return res.status(500).send({error:"InternalServer Error", error_message:"Error in actions/setToken " + err});
+       else
+           return res.status(200).send({uuId:uuId});
     });
 
 });

@@ -113,7 +113,11 @@
                     {{#if token}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                         <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
+<<<<<<< HEAD
                         <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromotion();"><i class="fa fa-trash"></i></button>
+=======
+                        <button class="btn-u btn-u-red" type="button" onclick="deletePromotion();"><i class="fa fa-trash"></i></button>
+>>>>>>> af256b4458d81b4f220b2b2ddaca73d6f036e74d
                     {{else}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                     {{/if}}

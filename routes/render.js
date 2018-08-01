@@ -37,7 +37,6 @@ function getValueFromconfig(parameter){
 function getValue(value){
     let plus,configValue;
 
-    console.log(value);
     if(value && value.startsWith("*")){
 
         plus=value.indexOf("+");
@@ -68,7 +67,8 @@ module.exports = {
             appName:config.contentUiAppAdmin.applicationName,
             userTokentypes:config.ApplicationTokenTypes.userTokentypes,
             userTokentypesTranslations:config.ApplicationTokenTypes.userTokentypesTranslations,
-            defaultUserType:config.ApplicationTokenTypes.defaultUserType
+            defaultUserType:config.ApplicationTokenTypes.defaultUserType,
+
         };
 
         let applicationTokenTypes=_.difference(config.ApplicationTokenTypes.userTokentypes,config.ApplicationTokenTypes.adminTokenType);

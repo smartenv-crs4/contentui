@@ -200,6 +200,28 @@ router.put('/:pid', function(req, res, next) {
 });
 
 
+
+router.delete('/:pid', function(req, res, next) {
+
+
+    var promotionID=req.params.pid;
+    var contentID= req.contentId;
+    var access_token=req.query.access_token || null;
+
+    if (!access_token) {
+        return res.status(400).send({error: "BadREquest", error_message: 'Query param access_token  missing'});
+    }else{
+
+        var rqparams = {
+            url:  contentUrl + "contents/"+ contentID+ "/promotions/" + promotionID,
+            headers: {'content-type': 'application/json','Authorization': "Bearer " + (access_token)},
+        };
+        request.del(rqparams).pipe(res);
+    }
+});
+
+
+
 router.post('/', function(req, res, next) {
 
     var contentID= req.contentId;
