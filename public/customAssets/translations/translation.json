@@ -325,6 +325,10 @@
     "custom": {
       "en":"Custom...",
       "it":"Personalizzato..."
+    },
+    "recurrence": {
+      "en":"Recurrent Event",
+      "it":"Evento Ricorrente"
     }
   },
   "search": {

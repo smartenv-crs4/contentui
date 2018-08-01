@@ -119,7 +119,7 @@
                         <div class="team-v2">
                             <div style="height:175px;overflow:hidden;"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></div>
                             <div class="inner-team">
-                                <h3><a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/" data-i18n="{{this.promoLangId}}.title"></a></h3>
+                                <h3>{{#if this.recurrency_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/" data-i18n="{{this.promoLangId}}.title"></a></h3>
                                 <small class="color-green">dal {{this.startDate}} al {{this.endDate}}</small>
                                 <p data-i18n="{{this.promoLangId}}.description"></p>
                                 <hr>
@@ -130,20 +130,22 @@
                     <!-- End Team v2 -->
                     {{/each}}
                 </div>
-                <div class="row" style="text-align: center">
-                    <button id="addPromo" class="btn-u btn-u-red loggedonly" title="Add a new promotion">
-                        <i class="fa fa-plus-circle"></i> <span data-i18n="search.newpromo"></span>
-                    </button>
-                    <div class="col-md-12 col-sm-12" style="padding-top:10px">
-                        <a href="<%= baseUrl %>?type=promo&q=&idcontent={{idcontent}}" data-i18n="activity.allpromo"></a>
-                    </div>
-                </div>
+                
             </div>
         </div>
-    {{else}}
-        <hr>
     {{/if}}
-
+    
+    <div class="container content">
+        <div class="row" style="text-align: center; margin-top:20px;">
+            <button id="addPromo" class="btn-u btn-u-red loggedonly" title="Add a new promotion">
+                <i class="fa fa-plus-circle"></i> <span data-i18n="search.newpromo"></span>
+            </button>
+            <div class="col-md-12 col-sm-12" style="padding-top:10px">
+                <a href="<%= baseUrl %>?type=promo&q=&idcontent={{idcontent}}" data-i18n="activity.allpromo"></a>
+            </div>
+        </div>
+    </div>
+    <hr>
 
     <!--=== Contacts ===-->
     <div class="contacts content">

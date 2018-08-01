@@ -65,7 +65,7 @@ router.get('/', (req, res, next) => {
                 + (limit ? '&limit=' + limit : '')
                 + (limit && skip ? '&skip=' + skip : '');
 
-    console.log(url)
+//console.log(url)
 
     let options = {
         method:'GET',

@@ -113,7 +113,7 @@
                     {{#if token}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                         <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
-                        <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromo();"><i class="fa fa-trash"></i></button>
+                        <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromotion();"><i class="fa fa-trash"></i></button>
                     {{else}}
                         <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
                     {{/if}}
@@ -125,7 +125,7 @@
 
 
 
-            <h3 data-i18n="promo_multilanguage.title">{{name}} </h3>
+            <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
             <ul class="blog-grid-info">
                 <li class="blog-grid-like"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
                 <li class="blog-grid-participate participatelisttooltip">
@@ -584,7 +584,7 @@
                     <div id="responseBlock" class="alert alert-danger hidden"></div>
                     <button disabled id="promotionSaveButton" type="button" onclick="savePromotion({{isANewPromotion}})" name="submit" class="btn-u btn-u-green"><span><i class="fa fa-pencil"></i>  </span><span data-i18n="promotion.save">Save</span></button>
                     <button id="promotionCancelButton" type="button" class="btn-u btn-u-dark-blue" onclick="exitFromInsertMode()"><span><i class="fa fa-history"></i>  </span><span data-i18n="profile.cancel">Save</span></button>
-                    <button id="promotionDeleteButton" type="button" class="btn-u btn-u-red" onclick="ds_deletePromo()"><span><i class="fa fa-eraser"></i>  </span><span data-i18n="promotion.delete">Delete</span></button>
+                    <button id="promotionDeleteButton" type="button" class="btn-u btn-u-red" onclick="ds_deletePromotion()"><span><i class="fa fa-eraser"></i>  </span><span data-i18n="promotion.delete">Delete</span></button>
                 </footer>
 
             </div>

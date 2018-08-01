@@ -390,10 +390,30 @@ function validateFields(){
 
 }
 
-function savePromotion(iSANewPromotion){
 
+
+function savePromotion(iSANewPromotion) {
+    if(!iSANewPromotion && currentPromotion.recurrency_group) {
+        bootbox.confirm("This promotion is part of a batch of recurrent events, by changing this content it will exit the batch. Are you sure?", function(r) {
+            if(r) doSavePromotion(iSANewPromotion)
+            else exitFromInsertMode();
+        })
+    }
+    else doSavePromotion(iSANewPromotion)
+}
+
+function doSavePromotion(iSANewPromotion) {
     newPromotion.startDate  = moment(newPromotion.startDate).utc();
     newPromotion.endDate    = moment(newPromotion.endDate).utc();
+    newPromotion.recurrency_group = null; //updating a promo in a batch implies batch exit
+    newPromotion.recurrency_type = $("#promoRecurrence").val();
+
+    switch(newPromotion.recurrency_type) {
+        case "0":
+            newPromotion.recurrency_end = null;
+        case "1" || "2":
+            newPromotion.recurrency_end = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")
+    }
 
     if(validateFields()){
         getPositionLatLon(); // align address with lat lon
@@ -442,9 +462,29 @@ function savePromotion(iSANewPromotion){
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     //i18next.reloadResources();
-                    compilePromotion();
-                    ds_saveRecurrencies(promotionID, dataResp); //ds
-                    // window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    compilePromotion()
+                    ds_getRecurrencies(false, function(result) {
+                        var deleted = result.length;                            
+                        if(result.length > 0) {
+                            for(var i=0; i<result.length; i++) {
+                                ds_deletePromo(result[i], function(e) {                                
+                                    if(e) {
+                                        jQuery.jGrowl("Unable to create batch events", {theme:'bg-color-red', life: 2000});
+                                    }
+                                    else if(--deleted <= 0) {
+                                        ds_saveRecurrencies(promotionID, dataResp, function() {                                            
+                                            window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                        }); //ds
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            ds_saveRecurrencies(promotionID, dataResp, function() {                                
+                                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                            });
+                        }
+                    })
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
@@ -476,62 +516,72 @@ function savePromotion(iSANewPromotion){
 }
 
 
+function ds_getRecurrencies(addFather, cb) {
+    var recId = currentPromotion.recurrency_group != null ?  currentPromotion.recurrency_group : promotionID;
+    var recarr = [];
+
+    if((recId == promotionID) && addFather) recarr.push(promotionID); //recurrency father
+
+    jQuery.ajax({
+        url: contentUrl + "search?t=promo&recurrency=" + recId + "&sdate=" + moment(currentPromotion.startDate).subtract(1,'seconds').toISOString(),
+        type: "GET",
+        contentType: "application/json; charset=utf-8",        success: function (dataResp, textStatus, xhr) {
+            
+            for(var i=0; i<dataResp.promos.length; i++) {
+                recarr.push(dataResp.promos[i]._id);
+            }
+            if(cb) cb(recarr)
+        },
+        error: function (xhr, status) {
+            console.log("Error: " + status);
+            if(cb) cb([]);
+        }
+    });        
+}
+
+
+function ds_deletePromo(pid, cb) {
+    jQuery.ajax({
+        url: config.contentUIUrl + "/activities/" + contentID + "/promo/" + pid,
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        headers: {Authorization: "Bearer " + userToken},            
+        success: function (dataResp, textStatus, xhr) {
+            if(cb) cb();
+        },
+        error: function (xhr, status) {
+            if(cb) cb(xhr);
+        }
+    });
+}
+
+
+
 //cancella promo e batch
-function ds_deletePromo() {
+function ds_deletePromotion() {
     var deleted = 0;
 
-    function deletePromo(pid) {
-        jQuery.ajax({
-            url: config.contentUIUrl + "/activities/" + contentID + "/promo/" + pid,
-            type: "DELETE",
-            contentType: "application/json; charset=utf-8",
-            headers: {Authorization: "Bearer " + userToken},            
-            success: function (dataResp, textStatus, xhr) {                
-                if(--deleted <= 0) {
-                    jQuery.jGrowl("Promotion deleted", {theme:'bg-color-red', life: 2000});
-                    setTimeout(function() {
-                        window.location.href=config.contentUIUrl + "/activities/" + contentID;
-                    }, 2000)
-                }
-            },
-            error: function (xhr, status) {                
-                var msg;
-    
-                try {
-                    msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
-                }
-                catch (err) {
-                    msg = i18next.t("error.internal_server_error");
-                }
-                jQuery.jGrowl("Promotion deleted", {theme:'bg-color-red', life: 2000});
-                
-                return;
+    function cbdel(error) {
+        if(error) {
+            var msg;
+            var xhr = error;
+
+            try {
+                msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
             }
-        });
-    }
-
-    function getRecurrencies(cb) {
-        var recId = currentPromotion.recurrency_group != null ?  currentPromotion.recurrency_group : promotionID;
-        var recarr = [];
-
-        if(recId == promotionID) recarr.push(promotionID); //recurrency father
-
-        jQuery.ajax({
-            url: contentUrl + "search?t=promo&recurrency=" + recId + "&sdate=" + new Date(currentPromotion.startDate),
-            type: "GET",
-            contentType: "application/json; charset=utf-8",                
-            success: function (dataResp, textStatus, xhr) {
-                
-                for(var i=0; i<dataResp.promos.length; i++) {
-                    recarr.push(dataResp.promos[i]._id);
-                }
-                if(cb) cb(recarr)
-            },
-            error: function (xhr, status) {
-                console.log(status);
-                if(cb) cb([]);
+            catch (err) {
+                msg = i18next.t("error.internal_server_error");
             }
-        });        
+            //jQuery.jGrowl("Promotion deleted", {theme:'bg-color-gre', life: 2000});
+        }
+        else {
+            if(--deleted <= 0) {
+                jQuery.jGrowl("Promotion deleted", {theme:'bg-color-green', life: 2000});
+                setTimeout(function() {
+                    window.location.href=config.contentUIUrl + "/activities/" + contentID;
+                }, 1500)
+            }
+        }
     }
 
     bootbox.prompt({
@@ -551,14 +601,15 @@ function ds_deletePromo() {
         callback: function (result) {
             if(result == null)
                 return;
-            else if(result == 0) {
-                deletePromo(promotionID);
+            else if(result == "0") {
+                ds_deletePromo(promotionID, cbdel);
             }
-            else if(result == 1) {
-                getRecurrencies(function(result) {
-                    for(var i=0; i<result.length; i++) {
-                        deleted++
-                        deletePromo(result[i]);
+            else if(result == "1") {                
+                ds_getRecurrencies(true, function(result) {
+                    deleted = result.length;
+                    console.log(deleted)
+                    for(var i=0; i<result.length; i++) {                        
+                        ds_deletePromo(result[i], cbdel);
                     }
                 })
             }
@@ -579,8 +630,7 @@ function ds_saveRecurrencies(pid, promo, cb) {
             success: function (dataResp, textStatus, xhr) {
                 saved.push(dataResp._id);
                 fcounter--;
-                if(fcounter == 0) {
-                    console.log(saved)
+                if(fcounter == 0) {                    
                     if(cb) cb();
                     //response
                 }
@@ -597,17 +647,20 @@ function ds_saveRecurrencies(pid, promo, cb) {
     var failed = 0;
     var saved = [];
     var recurrency = ds_calculateRecurrency()
-
-    for(var i=0; i<recurrency.days.length;i++) {
-        var newPromo = JSON.parse(JSON.stringify(promo));
-        
-        delete newPromo._id;
-        newPromo.startDate = recurrency.days[i].startDate;
-        newPromo.endDate = recurrency.days[i].endDate;
-        newPromo.recurrency_group = pid
-        newPromo.recurrency_type = recurrency.type;
-        postPromo(newPromo);
+    if(recurrency.days.length > 0) {
+        for(var i=0; i<recurrency.days.length;i++) {
+            var newPromo = JSON.parse(JSON.stringify(promo));
+            
+            delete newPromo._id;
+            newPromo.startDate = moment(recurrency.days[i].startDate).utc();
+            newPromo.endDate = moment(recurrency.days[i].endDate).utc();
+            newPromo.recurrency_group = pid
+            newPromo.recurrency_type = 0;
+            newPromo.recurrency_end = null
+            postPromo(newPromo);
+        }
     }
+    else if(cb) cb()
 }
 
 
@@ -979,8 +1032,6 @@ function updatePromotion(){
         updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
     };
 
-
-
     let promotionPicture=$('#updatePicture');
     //promotionPicture.val(currentPromotion.images[0]);
     promotionPicture.get(0).onchange=function(){
@@ -1024,12 +1075,23 @@ function updatePromotion(){
 
     /// ds ///
     ds_updateRecurrence(startPicher.data("DateTimePicker").date());
-    ds_initRecurrenceEndPicker();
+        
 
     i18next.on('languageChanged', function(lng) {
         ds_updateRecurrence(startPicher.data("DateTimePicker").date());
     })
+
+    if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {
+        $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
+        ds_initRecurrenceEndPicker(new Date(currentPromotion.recurrency_end));
+        $("#promoRecurrence").change()
+    }
+    else ds_initRecurrenceEndPicker();
+    
+
     //////////
+
+
 
 
     mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
@@ -1063,7 +1125,8 @@ function ds_updateRecurrence(startDate) {
         //reset valori salvati per ripetizione promo.............        
         $("#calendarCustomRec").multiDatesPicker('resetDates');
         $("#recDaysRow").hide();
-        if(this.value == 3) {
+        var recSel = Number(this.value);
+        if(recSel == 3) {
             $("#recEndRow").fadeOut();
             $("#customRecCal").modal();
             $("#cancCDBtn").click(function() {
@@ -1099,7 +1162,7 @@ function ds_updateRecurrence(startDate) {
                 $("#customRecCal").modal('hide')
             });
         }
-        else if(this.value != 0) {
+        else if(recSel != 0) {
             $("#recEndRow").fadeIn();
             $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
         }        
@@ -1112,15 +1175,21 @@ function ds_updateRecurrence(startDate) {
 
 
 //ds
-function ds_initRecurrenceEndPicker() {
+function ds_initRecurrenceEndPicker(d) {
     var recPicker = $("#datetimepickerRecEnd");
-    recPicker.datetimepicker({
+    var opt = {
         allowInputToggle : true,
         format:"DD/MM/YYYY",
-        minDate: new Date()
-    });
+    }
+    if(d) {        
+        opt.minDate = moment(d).isAfter(new Date()) ? new Date() : new Date(d)
+    }
+    else opt.minDate = new Date();
+
+    recPicker.datetimepicker(opt);
     var fatherStart = $("#datetimepickerStart").data("DateTimePicker").date();
-    var recEnd = fatherStart.isBefore(new Date()) ? new Date() : fatherStart;
+
+    var recEnd = d ? d : (fatherStart.isBefore(new Date()) ? new Date() : fatherStart);
     recPicker.data("DateTimePicker").date(recEnd);
 }
 
@@ -1150,30 +1219,33 @@ function ds_calculateRecurrency() {
     }
 
     var rectype = $("#promoRecurrence").val();
-    var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")
-    var recurrency = {type:rectype, days:[]};
-    switch(rectype) {
-        case "1": //everyday
-            recurrency.days = addDays(1, "days")
-            break;
-        case "2": //every day of week
-            recurrency.days = addDays(7, "days")
-            break;
-        case "3": //custom
-            var hstart = $('#datetimepickerStart').data('DateTimePicker').date().format("HH");
-            var mstart = $('#datetimepickerStart').data('DateTimePicker').date().format("mm");
-            var hstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("HH");
-            var mstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("mm");
-            var d = $("#calendarCustomRec").multiDatesPicker('getDates')
-            for(var i=0; i<d.length; i++) {                
-                startDate = moment(d[i]).hour(hstart).minutes(mstart);
-                endDate = moment(d[i]).hour(hstop).minutes(mstop);
-                recurrency.days.push({startDate:startDate.format(), endDate:endDate.format()});
-            }
-            break;
-        default:
-            break;
-        
+    
+    var recurrency = {type:rectype, days:[]};    
+    if(rectype && rectype != 0) {
+        var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")    
+        switch(rectype) {
+            case "1": //everyday
+                recurrency.days = addDays(1, "days")
+                break;
+            case "2": //every day of week
+                recurrency.days = addDays(7, "days")
+                break;
+            case "3": //custom
+                var hstart = $('#datetimepickerStart').data('DateTimePicker').date().format("HH");
+                var mstart = $('#datetimepickerStart').data('DateTimePicker').date().format("mm");
+                var hstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("HH");
+                var mstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("mm");
+                var d = $("#calendarCustomRec").multiDatesPicker('getDates')
+                for(var i=0; i<d.length; i++) {                
+                    startDate = moment(d[i]).hour(hstart).minutes(mstart);
+                    endDate = moment(d[i]).hour(hstop).minutes(mstop);
+                    recurrency.days.push({startDate:startDate.format(), endDate:endDate.format()});
+                }
+                break;
+            default:
+                break;
+            
+        }
     }
     return recurrency;
 }
@@ -1386,7 +1458,7 @@ function  setParticipateButton(){
     }
 }
 
-function getPromotionPage(data,token){
+function getPromotionPage(data,token, cb){
 
 
     var promotion_template   = $("#promotion_template").html();
@@ -1411,12 +1483,14 @@ function getPromotionPage(data,token){
         participants:(data.participants && data.participants.html) || "",
         participantsDetails:(data.participants && data.participants.htmldetails) || "",
         event_type:"type_" + data.type,
-        categories:data.category
+        categories:data.category,
+        rec_group:data.recurrency_group,
+        rec_type:data.recurrency_type,
+        rec_end:data.recurrency_end
     };
 
-
-
     jQuery('#promotionContent').html(promotionHtml(prom));
+
     $('body').localize();
     getLikes();
     getparticipants();
@@ -1436,7 +1510,7 @@ function getPromotionPage(data,token){
 
     // init tooltip for participants list
     $('[data-toggle="tooltip"]').tooltip();
-
+    if(cb) cb();
 }
 
 
@@ -1446,7 +1520,7 @@ function exitFromInsertMode(){
 
 }
 
-function compilePromotion(){
+function compilePromotion(cb){
 
 
 // <script>
@@ -1602,25 +1676,25 @@ function compilePromotion(){
                 function(err, results) {
                     if(err){
                         //jQuery.jGrowl(err, {theme:'bg-color-red', life: 5000});
-                        getPromotionPage(data,null);
+                        getPromotionPage(data,null, cb);
                     }else{
                         data.participants=results[3];
                         var tokenOwner=results[0].token._id;
 
                         if(results[1].indexOf(results[0].token.type)>=0){
-                            getPromotionPage(data,tokenOwner);
+                            getPromotionPage(data,tokenOwner, cb);
                         }else{
                             if(results[2].indexOf(tokenOwner)>=0){
-                                getPromotionPage(data,tokenOwner);
+                                getPromotionPage(data,tokenOwner, cb);
                             }else{
-                                getPromotionPage(data,null);
+                                getPromotionPage(data,null,cb);
                             }
                         }
                     }
                 });
 
             }else{
-                getPromotionPage(data,null);
+                getPromotionPage(data,null, cb);
             }
         },
         error: function(xhr, status)

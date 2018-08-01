@@ -306,7 +306,7 @@
 	<script id="search-template" type="text/x-handlebars-template">
 		{{#each items}}
 			<div class="inner-results">
-				<h3><a href="{{this.link}}" data-i18n="{{this.titleLangId}}"></a></h3>
+				<h3>{{#if this.recurrency}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <a href="{{this.link}}" data-i18n="{{this.titleLangId}}"></a></h3>
 				<div class="entry-item">
 					<div class="container">
 						<div class="row">
