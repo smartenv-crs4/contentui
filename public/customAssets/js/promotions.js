@@ -452,8 +452,7 @@ function doSavePromotion(iSANewPromotion) {
                     return;
                 }
             });
-        }else {
-
+        }else {            
             jQuery.ajax({
                 url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
                 type: "PUT",
@@ -463,6 +462,7 @@ function doSavePromotion(iSANewPromotion) {
                 success: function (dataResp, textStatus, xhr) {
                     //i18next.reloadResources();
                     compilePromotion()
+                    currentPromotion.recurrency_group = dataResp.recurrency_group; //FIXME compilePromotion didn't initialize yet
                     ds_getRecurrencies(false, function(result) {
                         var deleted = result.length;                            
                         if(result.length > 0) {

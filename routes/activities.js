@@ -155,7 +155,7 @@ router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	})
 	.then(r => {
 		content = r;
-		if(!checkContentAuth(r.admins.concat(r.owner), uid)) throw({statusCode:401});
+		if(!checkContentAuth(r.admins.concat([r.owner]), uid)) throw({statusCode:401});
 		return rp({
 			uri:contentUrl + 'contents/' + id + "/promotions/" + pid,
 			method: 'GET',
@@ -164,7 +164,7 @@ router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	})
 	.then(r => {
 		if(r.idcontent != id) throw({statusCode:400})
-		r.admins = content.admins;
+		r.admins = content.admins.concat([content.owner]);		
 		return deletePromo(r, authHeader);
 	})
 	.then(r => {
@@ -207,7 +207,7 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 		content = cnt;
 		
 		//verifica che il chiamante sia admin del contenuto
-		if(!checkContentAuth(content.admins.concat(content.owner), uid)) throw({statusCode:401});
+		if(!checkContentAuth(content.admins.concat([content.owner]), uid)) throw({statusCode:401});
 		
 		return rp({
 			uri:contentUrl + 'contents/' + id + '/promotions',
@@ -219,7 +219,7 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 	.then(r => {
 		let promoPromiArr = [];
 		for(let i=0; i<r.promos.length; i++) {
-			r.promos[i].admins = content.admins.concat(content.owner);
+			r.promos[i].admins = content.admins.concat([content.owner]);
 			promoPromiArr.push(deletePromo(r.promos[i], authHeader));
 		}
 		return Promise.all(promoPromiArr);
@@ -301,15 +301,36 @@ function checkContentAuth(admins, uid) {
 }
 
 //p e' il json di una promo, che prima deve essere stato aggiornato con p.admins = [admin del content padre]
-function deletePromo(p, authHeader) {	
-	if(p.deleteImages) //solo se non e' evento ricorrente! in quel caso solo il padre può rimuovere (img condivise)
-		deleteImages(p.images, p.admins); //WARN e' inviato asincrono!!!
-
+function deletePromo(p, authHeader) {
 	return rp({
-		uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
-		method: 'DELETE',
+		uri:contentUrl + 'search/?t=promo&recurrency=' + (p.recurrency_group ? p.recurrency_group : p._id),
+		method: 'GET',
 		json:true,
 		headers: authHeader
+	})
+	.then(r => {
+		//WARN la cancellazione delle promo batch è asincrona, quindi è possibile che le immagini 
+		//rimangano orfane a seconda dell'ordine in cui le promo vengono cancellate... i controlli seguenti
+		//serve a garantire che non vengano cancellate immagini di promo ancora esistenti
+		if(!p.recurrency_group && (r.promos.length == 0 || p.deleteImages)) //father without batch
+			deleteImages(p.images, p.admins); 
+		else if(p.recurrency_group && r.promos.length == 1) { //son without brothers, check if father exists
+			rp({
+				uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p.recurrency_group,
+				method: 'GET',
+				json:true				
+			})
+			.catch(e => {
+				if(e.statusCode == 404) deleteImages(p.images, p.admins);
+			})
+		}
+		
+		return rp({
+			uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
+			method: 'DELETE',
+			json:true,
+			headers: authHeader
+		})
 	})
 }
 
@@ -329,7 +350,7 @@ function checkOwnership(ids) {
 function deleteImages(imgIdsArr, admins) {
 	let promiseArr = [];
 	checkOwnership(imgIdsArr)
-	.then(owners => {
+	.then(owners => {		
 		let imgsAllowed = [];
 		for(let i=0; i<owners.length; i++) {
 			//verifica che l'owner della foto sia compreso tra gli admin del content, in tal caso rimuove 
@@ -344,8 +365,8 @@ function deleteImages(imgIdsArr, admins) {
 				}
 			}
 		}
-
-		for(let i=0; i<imgsAllowed.length; i++) {
+		
+		for(let i=0; i<imgsAllowed.length; i++) {	
 			promiseArr.push(
 				rp({
 					uri:uploadUrl + 'file/' + imgsAllowed[i],
