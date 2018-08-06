@@ -452,7 +452,7 @@ function doSavePromotion(iSANewPromotion) {
                     return;
                 }
             });
-        }else {            
+        }else { //PUT            
             jQuery.ajax({
                 url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
                 type: "PUT",
@@ -1192,8 +1192,8 @@ function ds_updateRecurrence(startDate) {
             });
         }
         else if(recSel != 0) {
-            $("#recEndRow").fadeIn();
-            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+            $("#recEndRow").fadeIn();            
+            //$("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
         }        
         else {
             $("#recEndRow").fadeOut();
@@ -1218,7 +1218,7 @@ function ds_initRecurrenceEndPicker(d) {
     recPicker.datetimepicker(opt);
     var fatherStart = $("#datetimepickerStart").data("DateTimePicker").date();
 
-    var recEnd = d ? d : (fatherStart.isBefore(new Date()) ? new Date() : fatherStart);
+    var recEnd = d ? new Date(d) : (fatherStart.isBefore(new Date()) ? new Date() : fatherStart);
     recPicker.data("DateTimePicker").date(recEnd);
 }
 

@@ -312,7 +312,7 @@ function deletePromo(p, authHeader) {
 		//WARN la cancellazione delle promo batch è asincrona, quindi è possibile che le immagini 
 		//rimangano orfane a seconda dell'ordine in cui le promo vengono cancellate... i controlli seguenti
 		//serve a garantire che non vengano cancellate immagini di promo ancora esistenti
-		if(!p.recurrency_group && (r.promos.length == 0 || p.deleteImages)) //father without batch
+		if(!p.recurrency_group && r.promos.length == 0 && p.deleteImages) //father without batch
 			deleteImages(p.images, p.admins); 
 		else if(p.recurrency_group && r.promos.length == 1) { //son without brothers, check if father exists
 			rp({
