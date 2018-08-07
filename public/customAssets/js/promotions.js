@@ -867,6 +867,7 @@ function addNewPromotion(){
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
+        ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
     startPicher.data("DateTimePicker").date(new Date());
