@@ -409,10 +409,19 @@ function doSavePromotion(iSANewPromotion) {
     newPromotion.recurrency_type = $("#promoRecurrence").val();
 
     switch(newPromotion.recurrency_type) {
-        case "0":
+        case "0":        
             newPromotion.recurrency_end = null;
-        case "1" || "2":
-            newPromotion.recurrency_end = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")
+            break;
+        case "1":
+        case "2":        
+            newPromotion.recurrency_end = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")            
+            break;
+        case "3":
+            var recDays = $("#recDaysRow div a").text().split(",") 
+            newPromotion.recurrency_end = moment(recDays[recDays.length-1]).utc();
+            break;
+        default:
+            break;
     }
 
     if(validateFields()){
@@ -463,7 +472,7 @@ function doSavePromotion(iSANewPromotion) {
                     //i18next.reloadResources();
                     compilePromotion()
                     currentPromotion.recurrency_group = dataResp.recurrency_group; //FIXME compilePromotion didn't initialize yet
-                    ds_getRecurrencies(false, function(result) {
+                    ds_getRecurrencies(false, '_id', function(result) {
                         var deleted = result.length;                            
                         if(result.length > 0) {
                             for(var i=0; i<result.length; i++) {
@@ -516,7 +525,7 @@ function doSavePromotion(iSANewPromotion) {
 }
 
 
-function ds_getRecurrencies(addFather, cb) {
+function ds_getRecurrencies(addFather, field, cb) {
     var recId = currentPromotion.recurrency_group != null ?  currentPromotion.recurrency_group : promotionID;
     var recarr = [];
 
@@ -528,7 +537,7 @@ function ds_getRecurrencies(addFather, cb) {
         contentType: "application/json; charset=utf-8",        success: function (dataResp, textStatus, xhr) {
             
             for(var i=0; i<dataResp.promos.length; i++) {
-                recarr.push(dataResp.promos[i]._id);
+                recarr.push(dataResp.promos[i][field]);
             }
             if(cb) cb(recarr)
         },
@@ -605,9 +614,8 @@ function ds_deletePromotion() {
                 ds_deletePromo(promotionID, cbdel);
             }
             else if(result == "1") {                
-                ds_getRecurrencies(true, function(result) {
-                    deleted = result.length;
-                    console.log(deleted)
+                ds_getRecurrencies(true, '_id', function(result) {
+                    deleted = result.length;                    
                     for(var i=0; i<result.length; i++) {                        
                         ds_deletePromo(result[i], cbdel);
                     }
@@ -647,6 +655,7 @@ function ds_saveRecurrencies(pid, promo, cb) {
     var failed = 0;
     var saved = [];
     var recurrency = ds_calculateRecurrency()
+    
     if(recurrency.days.length > 0) {
         for(var i=0; i<recurrency.days.length;i++) {
             var newPromo = JSON.parse(JSON.stringify(promo));
@@ -1111,12 +1120,35 @@ function updatePromotion(){
         ds_updateRecurrence(startPicher.data("DateTimePicker").date());
     })
 
-    if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {
-        $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
+    ds_initRecurrenceEndPicker();
+    $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
+    if(currentPromotion.recurrency_type == '3') {
+        ds_getRecurrencies(false, 'startDate', function(r) {
+            for(var i=0; i<r.length; i++) {
+                r[i] = moment.tz(r[i], _tz).format("YYYY-MM-DD");
+            }
+            $("#recDaysRow div a").empty();
+            
+            if(r.length > 0) {             
+                $("#recDaysRow").show();
+                $("#recDaysRow div a").html(r.join(", "));
+                $("#recDaysRow div a").click(function(e) {
+                    e.preventDefault();
+                    customRecurrencyInit(r)
+                });
+            }
+            else {
+                $("#recDaysRow").hide();
+                $("#promoRecurrence option[value='0']").prop('selected','selected');
+            }
+
+        });
+    }
+    else if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {    
         ds_initRecurrenceEndPicker(new Date(currentPromotion.recurrency_end));
         $("#promoRecurrence").change()
     }
-    else ds_initRecurrenceEndPicker();
+    
     
 
     //////////
@@ -1139,6 +1171,45 @@ function updatePromotion(){
 
 }
 
+function customRecurrencyInit(dates) {
+    $("#calendarCustomRec").multiDatesPicker({
+        dateFormat: "yy-mm-dd",
+        minDate: 0,
+        maxPicks: _maxEvents
+    });
+    $("#customRecCal").modal();                    
+    if(dates) 
+        $("#calendarCustomRec").multiDatesPicker('addDates', dates);
+    $("#cancCDBtn").click(function() {
+        //if($("#calendarCustomRec").multiDatesPicker('getDates').length == 0) {
+        if($("#recDaysRow div a").text().split(",")[0].length == 0) {
+            //$("#calendarCustomRec").multiDatesPicker('resetDates');
+            $("#recDaysRow div a").empty();
+            $("#recDaysRow").hide();
+            $("#promoRecurrence option[value='0']").prop('selected',true);
+        }
+    })
+    
+    $("#saveCDBtn").click(function() {
+        $("#recDaysRow div a").empty();
+        if($("#calendarCustomRec").multiDatesPicker('getDates').length > 0) {
+            $("#recDaysRow").show();
+            $("#recDaysRow div a").html($("#calendarCustomRec").multiDatesPicker('getDates').join(", "));
+            $("#recDaysRow div a").click(function(e) {
+                e.preventDefault()                        
+                $("#customRecCal").modal();
+                if($("#calendarCustomRec").multiDatesPicker('getDates') == 0) {
+                    $("#calendarCustomRec").multiDatesPicker('addDates', $(this).text().split(", ")) //whitespace!!!
+                }
+            });
+        }
+        else {
+            $("#recDaysRow").hide();
+            $("#promoRecurrence option[value='0']").prop('selected',true);
+        }
+        $("#customRecCal").modal('hide')
+    });
+}
 
 //ds
 function ds_updateRecurrence(startDate) {
@@ -1156,49 +1227,17 @@ function ds_updateRecurrence(startDate) {
         $("#calendarCustomRec").multiDatesPicker('resetDates');
         $("#recDaysRow").hide();
         var recSel = Number(this.value);
-        if(recSel == 3) {
+        if(recSel == 3) { //custom
             $("#recEndRow").fadeOut();
-            $("#customRecCal").modal();
-            $("#cancCDBtn").click(function() {
-                //if($("#calendarCustomRec").multiDatesPicker('getDates').length == 0) {
-                if($("#recDaysRow div a").text().split(",")[0].length == 0) {
-                    //$("#calendarCustomRec").multiDatesPicker('resetDates');
-                    $("#recDaysRow div a").empty();
-                    $("#recDaysRow").hide();
-                    $("#promoRecurrence option[value='0']").prop('selected',true);
-                }
-            })
-            $("#calendarCustomRec").multiDatesPicker({
-                dateFormat: "yy-mm-dd",
-                minDate: 0,
-                maxPicks: _maxEvents
-            });
-            $("#saveCDBtn").click(function() {
-                $("#recDaysRow div a").empty();
-                if($("#calendarCustomRec").multiDatesPicker('getDates').length > 0) {
-                    $("#recDaysRow").show();
-                    $("#recDaysRow div a").html($("#calendarCustomRec").multiDatesPicker('getDates').join(", "));
-                    $("#recDaysRow div a").click(function() {                        
-                        $("#customRecCal").modal();
-                        if($("#calendarCustomRec").multiDatesPicker('getDates') == 0) {
-                            $("#calendarCustomRec").multiDatesPicker('addDates', $(this).text().split(", ")) //whitespace!!!
-                        }
-                    });
-                }
-                else {
-                    $("#recDaysRow").hide();
-                    $("#promoRecurrence option[value='0']").prop('selected',true);
-                }
-                $("#customRecCal").modal('hide')
-            });
+            customRecurrencyInit()
         }
         else if(recSel != 0) {
             $("#recEndRow").fadeIn();            
-            //$("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
         }        
         else {
             $("#recEndRow").fadeOut();
-            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);            
+            //$("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);            
         }
     });
 }
@@ -1249,7 +1288,7 @@ function ds_calculateRecurrency() {
     }
 
     var rectype = $("#promoRecurrence").val();
-    
+    alert(rectype)
     var recurrency = {type:rectype, days:[]};    
     if(rectype && rectype != 0) {
         var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")    
@@ -1270,7 +1309,7 @@ function ds_calculateRecurrency() {
                     startDate = moment(d[i]).hour(hstart).minutes(mstart);
                     endDate = moment(d[i]).hour(hstop).minutes(mstop);
                     recurrency.days.push({startDate:startDate.format(), endDate:endDate.format()});
-                }
+                }                
                 break;
             default:
                 break;
