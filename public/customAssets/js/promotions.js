@@ -1288,7 +1288,7 @@ function ds_calculateRecurrency() {
     }
 
     var rectype = $("#promoRecurrence").val();
-    alert(rectype)
+
     var recurrency = {type:rectype, days:[]};    
     if(rectype && rectype != 0) {
         var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")    
