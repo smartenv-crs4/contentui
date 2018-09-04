@@ -225,7 +225,7 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 		return Promise.all(promoPromiArr);
 	})
 	.then(r => {
-		deleteImages(content.images, content.admins.concat([content.owner])) //WARN e' inviato asincrono!!!
+		deleteImages(content.images, content.admins.concat([content.owner])) //WARN e' inviato asincrono!!! sono le immagini del content non delle promo!
 		return rp({
 			uri:contentUrl + 'contents/' + id,
 			method: 'DELETE',
@@ -301,14 +301,24 @@ function checkContentAuth(admins, uid) {
 }
 
 //p e' il json di una promo, che prima deve essere stato aggiornato con p.admins = [admin del content padre]
-function deletePromo(p, authHeader) {
-	return rp({
-		uri:contentUrl + 'search/?t=promo&recurrency=' + (p.recurrency_group ? p.recurrency_group : p._id),
-		method: 'GET',
+function deletePromo(p, authHeader) {			
+	rp({
+		uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
+		method: 'DELETE',
 		json:true,
 		headers: authHeader
 	})
 	.then(r => {
+		return rp({
+			uri:contentUrl + 'search/?t=promo&recurrency=' + (p.recurrency_group ? p.recurrency_group : p._id),
+			method: 'GET',
+			json:true,
+			headers: authHeader
+		})
+	})
+	.then(r => {
+		deleteInvolvements(p.idcontent, p._id, authHeader); //asynchronous, not locking on fail, just for cleaning the db
+
 		//WARN la cancellazione delle promo batch è asincrona, quindi è possibile che le immagini 
 		//rimangano orfane a seconda dell'ordine in cui le promo vengono cancellate... i controlli seguenti
 		//serve a garantire che non vengano cancellate immagini di promo ancora esistenti
@@ -320,17 +330,13 @@ function deletePromo(p, authHeader) {
 				method: 'GET',
 				json:true				
 			})
-			.catch(e => {
-				if(e.statusCode == 404) deleteImages(p.images, p.admins);
+			.catch(e => { 
+				if(e.statusCode == 404) deleteImages(p.images, p.admins); //if does not exists delete images
 			})
 		}
-		
-		return rp({
-			uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
-			method: 'DELETE',
-			json:true,
-			headers: authHeader
-		})
+	})
+	.catch(e => {
+		console.log(e)
 	})
 }
 
@@ -386,13 +392,31 @@ function deleteImages(imgIdsArr, admins) {
 }
 
 
+function deleteInvolvements(cid, pid, authHeader) {
+	console.log(contentUrl + (contentUrl.endsWith("/") ? '' : '/') + "contents/" + cid + "/promotions/" + pid + '/actions/uninvolve/')
+	rp({
+		uri:contentUrl + (contentUrl.endsWith("/") ? '' : '/') + "contents/" + cid + "/promotions/" + pid + '/actions/uninvolve/',
+		method: 'POST',
+		json:true,
+		headers: authHeader
+	})
+	.then(r => {
+		console.log(r)
+	})
+	.catch(e => {
+		console.log("+++ Error deleting involvements +++")
+		console.log(e)		
+	})
+}
+
+
 function getAdmins(admIds) {
 	if(admIds && admIds.length > 0) {
 		return new Promise((resolve, reject) => {
 			let query_users = admIds.join("&usersId=");
 			rp({
 				uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/?usersId=' + query_users,
-				method: 'GET',
+				method: 'POST',
 				json:true,
 				headers: {
 					authorization: "Bearer " + config.auth_token
