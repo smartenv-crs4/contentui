@@ -289,7 +289,7 @@
                                     <img id="promotionImage" class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
                                 </div>
                                 <a class="btn-more hover-effect" onclick="promotionPictureOpenDialog()">
-                                    <span><i class="fa fa-pencil"></i> <span data-i18n="promotion.browse"></span></span>
+                                    <span><i class="fa fa-pencil"></i> <span data-i18n="{{#if promo_image}}promotion.change{{else}}promotion.browse{{/if}}"></span></span>
                                 </a>
                             </div>
                         </div>

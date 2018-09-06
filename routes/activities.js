@@ -416,7 +416,7 @@ function getAdmins(admIds) {
 			let query_users = admIds.join("&usersId=");
 			rp({
 				uri:_userUrl + (_userUrl.endsWith("/") ? '' : '/') + 'users/?usersId=' + query_users,
-				method: 'POST',
+				method: 'GET',
 				json:true,
 				headers: {
 					authorization: "Bearer " + config.auth_token
@@ -424,7 +424,12 @@ function getAdmins(admIds) {
 			})
 			.then(users => {
 				for(let i=0; i<users.users.length; i++) {
-					users.users[i].avatar = _userUIUrl + "users/actions/getprofileimage/" + users.users[i].avatar;
+					let avatar = undefined;
+					if(users.users[i].avatar.startsWith("http"))
+						avatar = users.users[i].avatar
+					else
+						avatar = _userUIUrl + "users/actions/getprofileimage/" + users.users[i].avatar;
+					users.users[i].avatar = avatar;
 				}
 				resolve(users.users)
 			})

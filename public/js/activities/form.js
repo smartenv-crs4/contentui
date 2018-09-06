@@ -542,12 +542,15 @@ function initAdminTool() {
               }
               // Map the remote source JSON array to a JavaScript object array
               return $.map(notAdmins, function (user) {
-                var avatar = undefined;
+                var avatar = undefined;                    
                     if(!user.avatar) 
                         avatar = "/customAssets/img/avatar.png"
+                    /*
                     else if(user.avatar.startsWith("http"))
                         avatar = user.avatar
+                    */
                     else 
+                    
                         avatar = userUIUrl + (userUIUrl.endsWith('/') ? '' : '/') + "users/actions/getprofileimage/" + user.avatar
                     return {
                         uid: user._id,

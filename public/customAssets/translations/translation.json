@@ -230,6 +230,10 @@
       "en": "Browse...",
       "it": "Sfoglia..."
     },
+    "change": {
+      "en": "Change...",
+      "it": "Cambia..."
+    },
     "startDate": {
       "en": "Expected start date",
       "it": "Data Inizio"
@@ -301,10 +305,6 @@
     "gotoactivity":{
       "en":"Promotion Owner",
       "it":"Proprietario Promozione"
-    },
-    "recurrence": {
-      "en":"Recurrence",
-      "it":"Ricorrenza"
     },
     "recEndDate": {
       "en":"Recurrence end",
