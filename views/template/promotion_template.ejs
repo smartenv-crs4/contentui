@@ -35,215 +35,216 @@
 
 
 <script id="promotion_template" type="text/x-handlebars-template">
-    <div class="masonry-box" style="position: relative; height: 1183.56px;">
-
-        <!-- Blog Grid Left -->
-        <div class="blog-grid masonry-box-in col-2" style="position: relative; left: 0px; top: 0px;">
-
-
-            <div class="tab-v2">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#picture" data-toggle="tab" aria-expanded="true"><i class=" icon-picture"></i> <span data-i18n="promotion.poster">Locandina</span></a></li>
-                    <li class=""><a href="#details" data-toggle="tab" aria-expanded="false"><i class="icon-book-open"></i> <span data-i18n="promotion.description">Dettagli</span></a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade active in" id="picture">
-                        <div class="row">
-                            <img class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="details">
-                        <div id="descr" class="row">
-                            <p data-i18n="promo_multilanguage.description">{{description}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--hr class="devider devider-db"-->
-
-            <div style="margin-top:20px">
-                <!-- Panel with Equal Height -->
-                <div class="panel panel-default equal-height-column">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><i class="fa fa-tasks"></i><span data-i18n="promotion.typeandcat"></span></h4>
-                    </div>
-                    <div class="panel-body">
-
-                        <div>
-                            <h5><span data-i18n="promotion.type">Event Type</span><span> :  </span> <span class="{{#image event_type 'type'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.{{event_type}}"></span></h5>
-                        </div>
-
-                        <!--space start-->
-                        <div class="margin-bottom-20"></div>
-                        <hr>
-                        <div class="margin-bottom-20"></div>
-                        <!--space end-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog Grid Left -->
+            <div class="col-sm-6 col-6">
 
 
-                        <!--categorie start-->
-                        <h5>
-                            <span data-i18n="promotion.cats">Categories</span>
-                            <span> : </span>
-                            {{#each categories}}
-                                <span class="{{#image this 'category'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.category_{{this}}"></span> {{#unless @last}} -- {{/unless}}
-                            {{/each}}
-                        </h5>
-
-                        <!--categories end-->
-                    </div>
-
-                </div>
-                <!-- End Red Panel with Equal Height -->
-            </div>
-
-
-
-        </div>
-        <!-- End Blog Grid Left -->
-
-
-        <!-- Blog Grid Right -->
-        <div class="blog-grid masonry-box-in col-2" style="position: relative; left: 585px; top: 0px;">
-
-            <!--Save and Delete Start-->
-
-            <div class="row">
-                <div class="col-sm-12">
-                    {{#if token}}
-                        <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
-                        <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
-                        <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromotion();"><i class="fa fa-trash"></i></button>
-                    {{else}}
-                        <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
-                    {{/if}}
-
-                </div>
-            </div>
-
-            <!--Save and Delete End-->
-
-
-
-            <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
-            <ul class="blog-grid-info">
-                <li class="blog-grid-like"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
-                <li class="blog-grid-participate participatelisttooltip">
-                    <a href="javascript:setParticipate();"><i  id="participatecounticon" class="fa fa-user"></i> <span id="participatecount">0</span></a>
-                    <span data-i18n="promotion.participants">partecipanti</span>
-                    {{#if  participants}}
-                        <a id="participantslist" href="javascript:openModalParticipants();" data-toggle="tooltip" data-html="true" title="{{participants}}" data-placement="bottom"><i  id="participatelisticon" class="fa fa-caret-down"></i></a>
-                    {{/if}}
-                </li>
-            </ul>
-
-
-            <!--Begin modal participants list-->
-            {{#if  participants}}
-                <div id="modalParticipants" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                <h4 id="myLargeModalLabel3" class="modal-title" data-i18n="promotion.participantslist"></h4>
+                <div class="tab-v2">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#picture" data-toggle="tab" aria-expanded="true"><i class=" icon-picture"></i> <span data-i18n="promotion.poster">Locandina</span></a></li>
+                        <li class=""><a href="#details" data-toggle="tab" aria-expanded="false"><i class="icon-book-open"></i> <span data-i18n="promotion.description">Dettagli</span></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="picture">
+                            <div class="row">
+                                <img class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
                             </div>
-                            <div class="modal-body">
-                                <!-- Begin Table Search Panel v2 -->
-                                <div class="table-search-v2 panel panel-dark margin-bottom-50">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped">
-                                            <tbody>{{{participantsDetails}}}</tbody>
-                                        </table>
+                        </div>
+                        <div class="tab-pane fade" id="details">
+                            <div id="descr" class="row">
+                                <p data-i18n="promo_multilanguage.description">{{description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--hr class="devider devider-db"-->
+
+                <div style="margin-top:20px">
+                    <!-- Panel with Equal Height -->
+                    <div class="panel panel-default equal-height-column">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><i class="fa fa-tasks"></i><span data-i18n="promotion.typeandcat"></span></h4>
+                        </div>
+                        <div class="panel-body">
+
+                            <div>
+                                <h5><span data-i18n="promotion.type">Event Type</span><span> :  </span> <span class="{{#image event_type 'type'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.{{event_type}}"></span></h5>
+                            </div>
+
+                            <!--space start-->
+                            <div class="margin-bottom-20"></div>
+                            <hr>
+                            <div class="margin-bottom-20"></div>
+                            <!--space end-->
+
+
+                            <!--categorie start-->
+                            <h5>
+                                <span data-i18n="promotion.cats">Categories</span>
+                                <span> : </span>
+                                {{#each categories}}
+                                    <span class="{{#image this 'category'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.category_{{this}}"></span> {{#unless @last}} -- {{/unless}}
+                                {{/each}}
+                            </h5>
+
+                            <!--categories end-->
+                        </div>
+
+                    </div>
+                    <!-- End Red Panel with Equal Height -->
+                </div>
+
+
+
+            </div>
+            <!-- End Blog Grid Left -->
+
+
+            <!-- Blog Grid Right -->
+            <div class="col-sm-6 col-6">
+
+                <!--Save and Delete Start-->
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{#if token}}
+                            <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/?access_token={{access_token}}'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
+                            <button class="btn-u btn-u-blue" type="button" onclick="updatePromotion();"><i class="fa fa-pencil"></i></button>
+                            <button class="btn-u btn-u-red" type="button" onclick="ds_deletePromotion();"><i class="fa fa-trash"></i></button>
+                        {{else}}
+                            <button class="btn-u btn-u-dark-blue" type="button" onclick="window.location.href='{{baseUrl}}/activities/{{contentId}}/'"><span><i class="fa fa-home"></i>  </span> <span data-i18n="promotion.gotoactivity">activity</span> </button>
+                        {{/if}}
+
+                    </div>
+                </div>
+
+                <!--Save and Delete End-->
+
+
+
+                <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
+                <ul class="actions">
+                    <li class="likeandjoin"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
+                    <li class="likeandjoin" style="padding:0 5px"> / </li>
+                    <li class="likeandjoin blog-grid-participate participatelisttooltip">
+                        <a href="javascript:setParticipate();"><i  id="participatecounticon" class="fa fa-user"></i> <span id="participatecount">0</span></a>
+                        <span data-i18n="promotion.participants">partecipanti</span>
+                        {{#if  participants}}
+                            <a id="participantslist" href="javascript:openModalParticipants();" data-toggle="tooltip" data-html="true" title="{{participants}}" data-placement="bottom"><i  id="participatelisticon" class="fa fa-caret-down"></i></a>
+                        {{/if}}
+                    </li>
+                </ul>
+
+
+                <!--Begin modal participants list-->
+                {{#if  participants}}
+                    <div id="modalParticipants" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                    <h4 id="myLargeModalLabel3" class="modal-title" data-i18n="promotion.participantslist"></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Begin Table Search Panel v2 -->
+                                    <div class="table-search-v2 panel panel-dark margin-bottom-50">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped">
+                                                <tbody>{{{participantsDetails}}}</tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {{/if}}
-            <!--End modal participants list-->
+                {{/if}}
+                <!--End modal participants list-->
 
 
 
-            <div class="row g-mb-20">
-                <!-- Coming Soon Plugn -->
+                <div class="row g-mb-20">
+                    <!-- Coming Soon Plugn -->
 
-                <div class="col-sm-9 g-md-mb-30">
-                    <div class="coming-soon-plugin">
-                        <div id="defaultCountdown"></div>
-                    </div>
-                </div>
-
-                <!-- End Coming Soon Plugin -->
-
-                <!--price start-->
-                <div class="col-sm-3 g-md-mb-30">
-                    <div class="pricediv">
-                        <center>
-                            <h2>
-                                <span>€</span>
-                                <br>
-                                <span>{{#if price}}{{price}}{{else}}Free{{/if}}</span>
-                            </h2>
-                        </center>
+                    <div class="col-sm-9 g-md-mb-30">
+                        <div class="coming-soon-plugin">
+                            <div id="defaultCountdown"></div>
+                        </div>
                     </div>
 
-                </div>
-                <!--price end-->
+                    <!-- End Coming Soon Plugin -->
 
+                    <!--price start-->
+                    <div class="col-sm-3 g-md-mb-30">
+                        <div class="pricediv">
+                            <center>
+                                <h2>
+                                    <span>€</span>
+                                    <br>
+                                    <span>{{#if price}}{{price}}{{else}}Free{{/if}}</span>
+                                </h2>
+                            </center>
+                        </div>
+
+                    </div>
+                    <!--price end-->
+
+                </div>
+
+                <!--events date-->
+                <div class="row g-mb-20">
+                    <!--event Start-->
+                    <div class="col-sm-6 g-md-mb-30">
+                        <div class="media">
+                            <div class="media-left">
+                                <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                            </div>
+                            <div class="media-body">
+                                <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenStart"></span>
+                                <h5 id="whenstart" class="text-uppercase promo-block-media-title">{{start}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End event Start-->
+
+                    <!--event End-->
+                    <div class="col-sm-6 g-md-mb-30">
+                        <div class="media">
+                            <div class="media-left">
+                                <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
+                            </div>
+                            <div class="media-body">
+                                <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenEnd"></span>
+                                <h5 id="whenend" class="text-uppercase promo-block-media-title">{{end}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End event End-->
+
+                    <!--Where   -->
+                    <div class="col-sm-12 g-md-mb-30">
+                        <div class="media">
+                            <div class="media-left">
+                                <span class="promo-block-media-icon fa fa-map-marker g-mr-10"></span>
+                            </div>
+                            <div class="media-body">
+                                <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.where"></span>
+                                <a onclick="mapZoom()"><h5 id="where" class="text-uppercase promo-block-media-title">{{where}}</h5></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Where  End -->
+
+                    <div class="col-sm-12 g-md-mb-30">
+                        <div id="map" class="map margin-bottom-50"></div>
+                    </div>
+                </div>
             </div>
-
-            <!--events date-->
-            <div class="row g-mb-20">
-                <!--event Start-->
-                <div class="col-sm-6 g-md-mb-30">
-                    <div class="media">
-                        <div class="media-left">
-                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
-                        </div>
-                        <div class="media-body">
-                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenStart"></span>
-                            <h5 id="whenstart" class="text-uppercase promo-block-media-title">{{start}}</h5>
-                        </div>
-                    </div>
-                </div>
-                <!-- End event Start-->
-
-                <!--event End-->
-                <div class="col-sm-6 g-md-mb-30">
-                    <div class="media">
-                        <div class="media-left">
-                            <span class="promo-block-media-icon fa fa-calendar g-mr-10"></span>
-                        </div>
-                        <div class="media-body">
-                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.whenEnd"></span>
-                            <h5 id="whenend" class="text-uppercase promo-block-media-title">{{end}}</h5>
-                        </div>
-                    </div>
-                </div>
-                <!-- End event End-->
-
-                <!--Where   -->
-                <div class="col-sm-12 g-md-mb-30">
-                    <div class="media">
-                        <div class="media-left">
-                            <span class="promo-block-media-icon fa fa-map-marker g-mr-10"></span>
-                        </div>
-                        <div class="media-body">
-                            <span class="text-uppercase promo-block-media-subtitle" data-i18n="promotion.where"></span>
-                            <a onclick="mapZoom()"><h5 id="where" class="text-uppercase promo-block-media-title">{{where}}</h5></a>
-                        </div>
-                    </div>
-                </div>
-                <!--Where  End -->
-
-                <div class="col-sm-12 g-md-mb-30">
-                    <div id="map" class="map margin-bottom-50"></div>
-                </div>
-            </div>
+            <!-- End Blog Grid Right-->
         </div>
-        <!-- End Blog Grid Right-->
-
 
 
     </div>
@@ -269,16 +270,18 @@
             </div>
         </div>
     </div>
-    <div class="masonry-box" style="position: relative; height: 1183.56px;">
+
+    <div class="container">
+        <div class="row">
 
         <!-- Blog Grid Left -->
-        <div class="blog-grid masonry-box-in col-2" style="position: relative; left: 0px; top: 0px;">
+        <div class="col-6 col-sm-6">
 
 
             <div class="tab-v2">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#picture" data-toggle="tab" aria-expanded="true"><i class=" icon-picture"></i> <span data-i18n="promotion.poster">Locandina</span></a></li>
-                    <li class=""><a href="#details" data-toggle="tab" aria-expanded="false"><i class="icon-book-open"></i> <span data-i18n="promotion.description">Dettagli</span></a></li>
+                    <!--li class=""><a href="#details" data-toggle="tab" aria-expanded="false"><i class="icon-book-open"></i> <span data-i18n="promotion.description">Dettagli</span></a></li-->
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade active in" id="picture">
@@ -294,11 +297,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="details">
+                    <!--div class="tab-pane fade" id="details">
                         <div id="descr" class="row">
                             <p>{{description}}</p>
                         </div>
-                    </div>
+                    </div-->
                 </div>
             </div>
 
@@ -419,7 +422,7 @@
 
 
         <!-- Blog Grid Right -->
-        <div class="blog-grid masonry-box-in col-2" style="position: relative; left: 585px; top: 0px;">
+        <div class="col-6 col-sm-6">
             <!--<form id="sky-form" class="sky-form">-->
             <div id="sky-form" class="sky-form">
                 <header data-i18n="promotion.manage"></header>
@@ -588,6 +591,7 @@
                 </footer>
 
             </div>
+        </div>
         </div>
     </div>
 </script>

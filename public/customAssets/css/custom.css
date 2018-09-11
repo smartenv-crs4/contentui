@@ -84,7 +84,15 @@
     color: #1D4976;
 }
 
+.likeandjoin {
+    font-size: 18px;
+    color: #0c74b1;
+    display: inline-block;
+}
 
-
+.actions {
+    padding-left: 0;
+    list-style: none;
+}
 
 /*like and partecipate css end*/

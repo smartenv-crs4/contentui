@@ -786,7 +786,7 @@ function addNewPromotion(){
 
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     //Datepicker.initDatepicker();
 
@@ -1003,7 +1003,7 @@ function updatePromotion(){
     stopComingSoon();
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     //Datepicker.initDatepicker();
 
@@ -1572,7 +1572,7 @@ function getPromotionPage(data,token, cb){
             }
         });
     }
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     initPageComingSoon(data.startDate);
     initMap(data.position[lat],data.position[lon],12,false);
