@@ -282,6 +282,9 @@ router.get('/upgradeuser/:userToUpdate_token', function(req, res, next) {
 // optional callback
         function(err, results) {
            if(err){
+               if(_.isObject(err))
+                   err= err.error_message || JSON.stringify(err);
+
                commonFunctions.getErrorPage(500,"Internal Server Error",err,function(er,content){
                    res.status(er).send(content);
                });

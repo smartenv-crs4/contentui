@@ -72,7 +72,7 @@ module.exports.setupDefaults=function (callbackResponse){
                     if(response.statusCode==200){
                       if(responseBody._metadata.totalCount==0){ // if not exist create it
                           //create tokentype
-                          rqparams.body=JSON.stringify({user:{"email": config.contentUiAppAdmin.defaultAdminUser.adminEmail , "password":config.contentUiAppAdmin.defaultAdminUser.adminPasword, "type":config.ApplicationTokenTypes.adminTokenType[0], "name":"default", "surname":"admin"}});
+                          rqparams.body=JSON.stringify({user:{"email": config.contentUiAppAdmin.defaultAdminUser.adminEmail , "password":config.contentUiAppAdmin.defaultAdminUser.adminPassword, "type":config.ApplicationTokenTypes.adminTokenType[0], "name":"default", "surname":"admin"}});
                           rqparams.url=config.userUrl + "/users/";
                           request.post(rqparams,function(err,response,body){
                               if(err) callback("Default Admin User creation 2 :"+err,null);

@@ -49,7 +49,7 @@
       "mailfrom":{"name":"Cagliari Port", "address":"cport2020@gmail.com"},
       "defaultAdminUser":{
         "adminEmail":"cport2020@gmail.com",
-        "adminPasword":"admin"
+        "adminPassword":"admin"
       }
 
     }
@@ -104,7 +104,7 @@
       "mailfrom":{"name":"Cagliari Port", "address":"cport2020@gmail.com"},
       "defaultAdminUser":{
         "adminEmail":"cport2020@gmail.com",
-        "adminPasword":"admin"
+        "adminPassword":"admin"
       }
 
     }

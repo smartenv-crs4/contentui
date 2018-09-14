@@ -113,8 +113,8 @@
       "it":"richiesta non valida, mancano dei campi richiesti"
     },
     "notadmin":{
-      "en":"You aren't logged in as application Administrator",
-      "it":"Non sei loggato come utente di tipo amministratore"
+      "en":"You aren't logged in as application Administrator. Logout and then login as user administrator",
+      "it":"Non sei loggato come utente di tipo amministratore. Fai il logout e poi il login come utente amministratore"
     },
     "delete":{
       "en":"Internal Server Error in delete promotion",
