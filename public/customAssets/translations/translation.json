@@ -230,6 +230,10 @@
       "en": "Browse...",
       "it": "Sfoglia..."
     },
+    "change": {
+      "en": "Change...",
+      "it": "Cambia..."
+    },
     "startDate": {
       "en": "Expected start date",
       "it": "Data Inizio"
@@ -294,11 +298,42 @@
       "en":"Save",
       "it":"Salva"
     },
+    "delete":{
+      "en":"Delete",
+      "it":"Elimina"
+    },
     "gotoactivity":{
       "en":"Promotion Owner",
       "it":"Proprietario Promozione"
+    },
+    "recEndDate": {
+      "en":"Recurrence end",
+      "it":"Termine ricorrenza"
+    },
+    "norepeat": {
+      "it":"Non si ripete",
+      "en":"Do not repeat"
+    },
+    "everyday": {
+      "it":"Ogni giorno",
+      "en":"Every day"
+    },
+    "everymonth": {
+      "en":"Every xx of the month",
+      "it":"Ogni xx del mese"
+    },
+    "everyweek": {
+      "en":"Every xx",
+      "it":"Ogni xx"
+    },
+    "custom": {
+      "en":"Custom...",
+      "it":"Personalizzato..."
+    },
+    "recurrence": {
+      "en":"Recurrent Event",
+      "it":"Evento Ricorrente"
     }
-
   },
   "search": {
     "searchLabel": {

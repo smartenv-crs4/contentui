@@ -38,7 +38,7 @@ router.get('/admins',	 (req, res, next) => {
 
 
 //search for users by mail
-router.get('/users', (req, res, next) => {res.json([])}); //TODO chiedere a ale di convertire da action in search con query string ?q=
+router.get('/users', (req, res, next) => {res.json([])});
 router.get('/users/:q',		 (req, res, next) => {	
 	getUsersByMail(req.params.q)
 	.then(users => {
@@ -140,6 +140,7 @@ router.post('/email', auth.checkAuthorization, (req, res, next) => {
 	})
 })
 
+
 router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	let authHeader = {authorization: req.headers.authorization};
 	let uid = req[authField].token._id;
@@ -154,7 +155,7 @@ router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	})
 	.then(r => {
 		content = r;
-		if(!checkContentAuth(r.admins.concat(r.owner), uid)) throw({statusCode:401});
+		if(!checkContentAuth(r.admins.concat([r.owner]), uid)) throw({statusCode:401});
 		return rp({
 			uri:contentUrl + 'contents/' + id + "/promotions/" + pid,
 			method: 'GET',
@@ -163,7 +164,7 @@ router.delete('/:id/promo/:pid', auth.checkAuthorization, (req, res, next) => {
 	})
 	.then(r => {
 		if(r.idcontent != id) throw({statusCode:400})
-		r.admins = content.admins;
+		r.admins = content.admins.concat([content.owner]);		
 		return deletePromo(r, authHeader);
 	})
 	.then(r => {
@@ -206,7 +207,7 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 		content = cnt;
 		
 		//verifica che il chiamante sia admin del contenuto
-		if(!checkContentAuth(content.admins.concat(content.owner), uid)) throw({statusCode:401});
+		if(!checkContentAuth(content.admins.concat([content.owner]), uid)) throw({statusCode:401});
 		
 		return rp({
 			uri:contentUrl + 'contents/' + id + '/promotions',
@@ -218,13 +219,13 @@ router.delete('/:id', auth.checkAuthorization, (req, res, next) => {
 	.then(r => {
 		let promoPromiArr = [];
 		for(let i=0; i<r.promos.length; i++) {
-			r.promos[i].admins = content.admins.concat(content.owner);
+			r.promos[i].admins = content.admins.concat([content.owner]);
 			promoPromiArr.push(deletePromo(r.promos[i], authHeader));
 		}
 		return Promise.all(promoPromiArr);
 	})
 	.then(r => {
-		deleteImages(content.images, content.admins.concat([content.owner])) //WARN e' inviato asincrono!!!
+		deleteImages(content.images, content.admins.concat([content.owner])) //WARN e' inviato asincrono!!! sono le immagini del content non delle promo!
 		return rp({
 			uri:contentUrl + 'contents/' + id,
 			method: 'DELETE',
@@ -299,14 +300,43 @@ function checkContentAuth(admins, uid) {
 	return admins.indexOf(uid) != -1;
 }
 
-//p e' il json di una promo, che deve prima essere aggiornato con p.admins = [admin del content padre]
-function deletePromo(p, authHeader) {	
-	deleteImages(p.images, p.admins); //WARN e' inviato asincrono!!!
-	return rp({
+//p e' il json di una promo, che prima deve essere stato aggiornato con p.admins = [admin del content padre]
+function deletePromo(p, authHeader) {			
+	rp({
 		uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p._id,
 		method: 'DELETE',
 		json:true,
 		headers: authHeader
+	})
+	.then(r => {
+		return rp({
+			uri:contentUrl + 'search/?t=promo&recurrency=' + (p.recurrency_group ? p.recurrency_group : p._id),
+			method: 'GET',
+			json:true,
+			headers: authHeader
+		})
+	})
+	.then(r => {
+		deleteInvolvements(p.idcontent, p._id, authHeader); //asynchronous, not locking on fail, just for cleaning the db
+
+		//WARN la cancellazione delle promo batch è asincrona, quindi è possibile che le immagini 
+		//rimangano orfane a seconda dell'ordine in cui le promo vengono cancellate... i controlli seguenti
+		//serve a garantire che non vengano cancellate immagini di promo ancora esistenti
+		if(!p.recurrency_group && r.promos.length == 0 && p.deleteImages) //father without batch
+			deleteImages(p.images, p.admins); 
+		else if(p.recurrency_group && r.promos.length == 1) { //son without brothers, check if father exists
+			rp({
+				uri:contentUrl + 'contents/' + p.idcontent + '/promotions/' + p.recurrency_group,
+				method: 'GET',
+				json:true				
+			})
+			.catch(e => { 
+				if(e.statusCode == 404) deleteImages(p.images, p.admins); //if does not exists delete images
+			})
+		}
+	})
+	.catch(e => {
+		console.log(e)
 	})
 }
 
@@ -326,7 +356,7 @@ function checkOwnership(ids) {
 function deleteImages(imgIdsArr, admins) {
 	let promiseArr = [];
 	checkOwnership(imgIdsArr)
-	.then(owners => {
+	.then(owners => {		
 		let imgsAllowed = [];
 		for(let i=0; i<owners.length; i++) {
 			//verifica che l'owner della foto sia compreso tra gli admin del content, in tal caso rimuove 
@@ -341,8 +371,8 @@ function deleteImages(imgIdsArr, admins) {
 				}
 			}
 		}
-
-		for(let i=0; i<imgsAllowed.length; i++) {
+		
+		for(let i=0; i<imgsAllowed.length; i++) {	
 			promiseArr.push(
 				rp({
 					uri:uploadUrl + 'file/' + imgsAllowed[i],
@@ -362,6 +392,24 @@ function deleteImages(imgIdsArr, admins) {
 }
 
 
+function deleteInvolvements(cid, pid, authHeader) {
+	console.log(contentUrl + (contentUrl.endsWith("/") ? '' : '/') + "contents/" + cid + "/promotions/" + pid + '/actions/uninvolve/')
+	rp({
+		uri:contentUrl + (contentUrl.endsWith("/") ? '' : '/') + "contents/" + cid + "/promotions/" + pid + '/actions/uninvolve/',
+		method: 'POST',
+		json:true,
+		headers: authHeader
+	})
+	.then(r => {
+		console.log(r)
+	})
+	.catch(e => {
+		console.log("+++ Error deleting involvements +++")
+		console.log(e)		
+	})
+}
+
+
 function getAdmins(admIds) {
 	if(admIds && admIds.length > 0) {
 		return new Promise((resolve, reject) => {
@@ -376,7 +424,12 @@ function getAdmins(admIds) {
 			})
 			.then(users => {
 				for(let i=0; i<users.users.length; i++) {
-					users.users[i].avatar = _userUIUrl + "users/actions/getprofileimage/" + users.users[i].avatar;
+					let avatar = undefined;
+					if(users.users[i].avatar.startsWith("http"))
+						avatar = users.users[i].avatar
+					else
+						avatar = _userUIUrl + "users/actions/getprofileimage/" + users.users[i].avatar;
+					users.users[i].avatar = avatar;
 				}
 				resolve(users.users)
 			})

@@ -6,6 +6,7 @@
     <% if(typeof properties != 'undefined') { %>          var config=JSON.parse('<%- JSON.stringify(properties) %>'); <% } %>
     <% if(typeof contentID != 'undefined') { %>           var contentID=JSON.parse('<%- JSON.stringify(contentID) %>'); <% } %>
     <% if(typeof promotionID != 'undefined') { %>         var promotionID=JSON.parse('<%- JSON.stringify(promotionID) %>'); <% } %>
+    <% if(typeof recurrencyGroup != 'undefined') { %>     var promotionID=JSON.parse('<%- JSON.stringify(recurrencyGroup) %>'); <% } %>
     <% if(typeof baseUrl != 'undefined') { %>             var baseUrl = '<%= baseUrl %>'; <% } %>
     <% if(typeof contentUrl != 'undefined') { %>          var contentUrl = '<%= contentUrl %>'; <% } %>
     <% if(typeof userUIUrl != 'undefined') { %>           var userUIUrl = '<%= userUIUrl %>'; <% } %>

@@ -124,7 +124,7 @@ function renderBoxes() {
 function getMyPromos(uid) {
     
     jQuery.ajax({
-        url: contentUrl + "/search?type=content&by_uid=" + uid,
+        url: (contentUrl.endsWith("/") ? contentUrl : contentUrl + '/') + "search?type=content&by_uid=" + uid,
         type: "GET",
         success: function(data, textStatus, xhr){
             var cts = data.contents;
@@ -132,7 +132,7 @@ function getMyPromos(uid) {
             for(var i=0; i<cts.length; i++) {
                 cntIds.push(cts[i]._id);
             }
-            window.location.href = baseUrl + "?type=promo&&q=&idcontent=" + cntIds.join(',');
+            window.location.href = baseUrl + "?type=promo&q=&idcontent=" + cntIds.join(',');
         }
     })
 }
@@ -682,7 +682,8 @@ function search(cb) {
                 if(promo) {
                     hcontext.idcontent = item.idcontent||undefined,
                     hcontext.startDate = moment(item.startDate).format(dateFmt)||undefined, //converte da UTC a locale
-                    hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined
+                    hcontext.endDate = moment(item.endDate).format(dateFmt)||undefined,
+                    hcontext.recurrency = item.recurrency_group && item.recurrency_group != null
                 }
                 if(item.position) {
                     hcontext.lat = item.position[1];

@@ -87,6 +87,7 @@
 
 const lat=1;
 const lon=0;
+const _maxEvents = 10; //ds
 
 let mapInit;
 let autocomplete;
@@ -95,8 +96,6 @@ let currentPromotion=null;
 let newPromotion=null;
 let iLikeIt=false;
 let iParticipateIt=false;
-
-
 
 
 function loadPromotionImage(){
@@ -391,10 +390,39 @@ function validateFields(){
 
 }
 
-function savePromotion(iSANewPromotion){
 
+
+function savePromotion(iSANewPromotion) {
+    if(!iSANewPromotion && currentPromotion.recurrency_group) {
+        bootbox.confirm("This promotion is part of a batch of recurrent events, by changing this content it will exit the batch. Are you sure?", function(r) {
+            if(r) doSavePromotion(iSANewPromotion)
+            else exitFromInsertMode();
+        })
+    }
+    else doSavePromotion(iSANewPromotion)
+}
+
+function doSavePromotion(iSANewPromotion) {
     newPromotion.startDate  = moment(newPromotion.startDate).utc();
     newPromotion.endDate    = moment(newPromotion.endDate).utc();
+    newPromotion.recurrency_group = null; //updating a promo in a batch implies batch exit
+    newPromotion.recurrency_type = $("#promoRecurrence").val();
+
+    switch(newPromotion.recurrency_type) {
+        case "0":        
+            newPromotion.recurrency_end = null;
+            break;
+        case "1":
+        case "2":        
+            newPromotion.recurrency_end = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")            
+            break;
+        case "3":
+            var recDays = $("#recDaysRow div a").text().split(",") 
+            newPromotion.recurrency_end = moment(recDays[recDays.length-1]).utc();
+            break;
+        default:
+            break;
+    }
 
     if(validateFields()){
         getPositionLatLon(); // align address with lat lon
@@ -408,7 +436,9 @@ function savePromotion(iSANewPromotion){
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     promotionID= dataResp._id;
-                    window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    ds_saveRecurrencies(promotionID, dataResp, function() {
+                        window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    }); //ds
                     //compileFavourites();
                 },
                 error: function (xhr, status) {
@@ -431,8 +461,7 @@ function savePromotion(iSANewPromotion){
                     return;
                 }
             });
-        }else {
-
+        }else { //PUT            
             jQuery.ajax({
                 url: config.contentUIUrl + "/contents/" + contentID + "/promotions/" + promotionID,
                 type: "PUT",
@@ -441,8 +470,30 @@ function savePromotion(iSANewPromotion){
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     //i18next.reloadResources();
-                    compilePromotion();
-                    // window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                    compilePromotion()
+                    currentPromotion.recurrency_group = dataResp.recurrency_group; //FIXME compilePromotion didn't initialize yet
+                    ds_getRecurrencies(false, '_id', function(result) {
+                        var deleted = result.length;                            
+                        if(result.length > 0) {
+                            for(var i=0; i<result.length; i++) {
+                                ds_deletePromo(result[i], function(e) {                                
+                                    if(e) {
+                                        jQuery.jGrowl("Unable to create batch events", {theme:'bg-color-red', life: 2000});
+                                    }
+                                    else if(--deleted <= 0) {
+                                        ds_saveRecurrencies(promotionID, dataResp, function() {                                            
+                                            window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                        }); //ds
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            ds_saveRecurrencies(promotionID, dataResp, function() {                                
+                                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                            });
+                        }
+                    })
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
@@ -474,6 +525,152 @@ function savePromotion(iSANewPromotion){
 }
 
 
+function ds_getRecurrencies(addFather, field, cb) {
+    var recId = currentPromotion.recurrency_group != null ?  currentPromotion.recurrency_group : promotionID;
+    var recarr = [];
+
+    if((recId == promotionID) && addFather) recarr.push(promotionID); //recurrency father
+
+    jQuery.ajax({
+        url: contentUrl + "search?t=promo&recurrency=" + recId + "&sdate=" + moment(currentPromotion.startDate).subtract(1,'seconds').toISOString(),
+        type: "GET",
+        contentType: "application/json; charset=utf-8",        success: function (dataResp, textStatus, xhr) {
+            
+            for(var i=0; i<dataResp.promos.length; i++) {
+                recarr.push(dataResp.promos[i][field]);
+            }
+            if(cb) cb(recarr)
+        },
+        error: function (xhr, status) {
+            console.log("Error: " + status);
+            if(cb) cb([]);
+        }
+    });        
+}
+
+
+function ds_deletePromo(pid, cb) {
+    jQuery.ajax({
+        url: config.contentUIUrl + "/activities/" + contentID + "/promo/" + pid,
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        headers: {Authorization: "Bearer " + userToken},            
+        success: function (dataResp, textStatus, xhr) {
+            if(cb) cb();
+        },
+        error: function (xhr, status) {
+            if(cb) cb(xhr);
+        }
+    });
+}
+
+
+
+//cancella promo e batch
+function ds_deletePromotion() {
+    var deleted = 0;
+
+    function cbdel(error) {
+        if(error) {
+            var msg;
+            var xhr = error;
+
+            try {
+                msg = xhr.responseJSON.error_message || xhr.responseJSON.message;
+            }
+            catch (err) {
+                msg = i18next.t("error.internal_server_error");
+            }
+            //jQuery.jGrowl("Promotion deleted", {theme:'bg-color-gre', life: 2000});
+        }
+        else {
+            if(--deleted <= 0) {
+                jQuery.jGrowl("Promotion deleted", {theme:'bg-color-green', life: 2000});
+                setTimeout(function() {
+                    window.location.href=config.contentUIUrl + "/activities/" + contentID;
+                }, 1500)
+            }
+        }
+    }
+
+    bootbox.prompt({
+        title: "Are you sure you want to delete this promotion?",
+        inputType: 'select',
+        value: 0,
+        inputOptions: [
+            {
+                text: 'Only this one',
+                value: '0',
+            },
+            {
+                text: 'All the next recurrences',
+                value: '1',
+            }
+        ],
+        callback: function (result) {
+            if(result == null)
+                return;
+            else if(result == "0") {
+                ds_deletePromo(promotionID, cbdel);
+            }
+            else if(result == "1") {                
+                ds_getRecurrencies(true, '_id', function(result) {
+                    deleted = result.length;                    
+                    for(var i=0; i<result.length; i++) {                        
+                        ds_deletePromo(result[i], cbdel);
+                    }
+                })
+            }
+        }
+    });
+}
+
+function ds_saveRecurrencies(pid, promo, cb) {
+    
+    function postPromo(newPromo) {
+        fcounter++;
+        jQuery.ajax({
+            url: config.contentUIUrl + "/contents/" + newPromo.idcontent +"/promotions",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({promotion: newPromo, user: userToken}),
+            dataType: "json",
+            success: function (dataResp, textStatus, xhr) {
+                saved.push(dataResp._id);
+                fcounter--;
+                if(fcounter == 0) {                    
+                    if(cb) cb();
+                    //response
+                }
+            },
+            error: function (xhr, status) {
+                fcounter--;
+                failed++;
+                console.log(status)
+            }
+        }); 
+    }
+
+    var fcounter = 0;
+    var failed = 0;
+    var saved = [];
+    var recurrency = ds_calculateRecurrency()
+    
+    if(recurrency.days.length > 0) {
+        for(var i=0; i<recurrency.days.length;i++) {
+            var newPromo = JSON.parse(JSON.stringify(promo));
+            
+            delete newPromo._id;
+            newPromo.startDate = moment(recurrency.days[i].startDate).utc();
+            newPromo.endDate = moment(recurrency.days[i].endDate).utc();
+            newPromo.recurrency_group = pid
+            newPromo.recurrency_type = 0;
+            newPromo.recurrency_end = null
+            postPromo(newPromo);
+        }
+    }
+    else if(cb) cb()
+}
 
 
 function setSaveCancelButtonEnabled(status){
@@ -589,7 +786,7 @@ function addNewPromotion(){
 
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     //Datepicker.initDatepicker();
 
@@ -679,6 +876,7 @@ function addNewPromotion(){
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
+        ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
     startPicher.data("DateTimePicker").date(new Date());
@@ -695,7 +893,7 @@ function addNewPromotion(){
 
     endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
     startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
-
+    ds_initRecurrenceEndPicker(); //ds
 
 
     mapInit=initMap(39.2253991,9.0933586,6,true);
@@ -805,7 +1003,7 @@ function updatePromotion(){
     stopComingSoon();
     jQuery('#promotionContent').html(promotionHtml(prom));
     $('body').localize();
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     //Datepicker.initDatepicker();
 
@@ -873,8 +1071,6 @@ function updatePromotion(){
         updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
     };
 
-
-
     let promotionPicture=$('#updatePicture');
     //promotionPicture.val(currentPromotion.images[0]);
     promotionPicture.get(0).onchange=function(){
@@ -899,11 +1095,10 @@ function updatePromotion(){
     });
 
 
-
-
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
+        ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
     startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
@@ -914,11 +1109,52 @@ function updatePromotion(){
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
     endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
-
-
-
     endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
     startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+
+    /// ds ///
+    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+        
+
+    i18next.on('languageChanged', function(lng) {
+        ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+    })
+
+    ds_initRecurrenceEndPicker();
+    $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
+    if(currentPromotion.recurrency_type == '3') {
+        ds_getRecurrencies(false, 'startDate', function(r) {
+            for(var i=0; i<r.length; i++) {
+                r[i] = moment.tz(r[i], _tz).format("YYYY-MM-DD");
+            }
+            $("#recDaysRow div a").empty();
+            
+            if(r.length > 0) {             
+                $("#recDaysRow").show();
+                $("#recDaysRow div a").html(r.join(", "));
+                $("#recDaysRow div a").click(function(e) {
+                    e.preventDefault();
+                    customRecurrencyInit(r)
+                });
+            }
+            else {
+                $("#recDaysRow").hide();
+                $("#promoRecurrence option[value='0']").prop('selected','selected');
+            }
+
+        });
+    }
+    else if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {    
+        ds_initRecurrenceEndPicker(new Date(currentPromotion.recurrency_end));
+        $("#promoRecurrence").change()
+    }
+    
+    
+
+    //////////
+
+
+
 
     mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
     autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
@@ -933,6 +1169,154 @@ function updatePromotion(){
     //     }
     // });
 
+}
+
+function customRecurrencyInit(dates) {
+    $("#calendarCustomRec").multiDatesPicker({
+        dateFormat: "yy-mm-dd",
+        minDate: 0,
+        maxPicks: _maxEvents
+    });
+    $("#customRecCal").modal();                    
+    if(dates) 
+        $("#calendarCustomRec").multiDatesPicker('addDates', dates);
+    $("#cancCDBtn").click(function() {
+        //if($("#calendarCustomRec").multiDatesPicker('getDates').length == 0) {
+        if($("#recDaysRow div a").text().split(",")[0].length == 0) {
+            //$("#calendarCustomRec").multiDatesPicker('resetDates');
+            $("#recDaysRow div a").empty();
+            $("#recDaysRow").hide();
+            $("#promoRecurrence option[value='0']").prop('selected',true);
+        }
+    })
+    
+    $("#saveCDBtn").click(function() {
+        $("#recDaysRow div a").empty();
+        if($("#calendarCustomRec").multiDatesPicker('getDates').length > 0) {
+            $("#recDaysRow").show();
+            $("#recDaysRow div a").html($("#calendarCustomRec").multiDatesPicker('getDates').join(", "));
+            $("#recDaysRow div a").click(function(e) {
+                e.preventDefault()                        
+                $("#customRecCal").modal();
+                if($("#calendarCustomRec").multiDatesPicker('getDates') == 0) {
+                    $("#calendarCustomRec").multiDatesPicker('addDates', $(this).text().split(", ")) //whitespace!!!
+                }
+            });
+        }
+        else {
+            $("#recDaysRow").hide();
+            $("#promoRecurrence option[value='0']").prop('selected',true);
+        }
+        $("#customRecCal").modal('hide')
+    });
+}
+
+//ds
+function ds_updateRecurrence(startDate) {
+    var dayOfWeek = moment(startDate).locale(window.localStorage.lng).format("dddd")
+    var dayOfMonth = moment(startDate).locale(window.localStorage.lng).format("D")
+
+    var el = $("#promoRecurrence option[data-x2='promotion.everymonth']")
+    el.text(i18next.t('promotion.everymonth').replace("xx", dayOfMonth));
+    el = $("#promoRecurrence option[data-x1='promotion.everyweek']")
+    el.text(i18next.t('promotion.everyweek').replace("xx", dayOfWeek));
+
+    $("#promoRecurrence").off("change")
+    $("#promoRecurrence").change(function() {
+        //reset valori salvati per ripetizione promo.............        
+        $("#calendarCustomRec").multiDatesPicker('resetDates');
+        $("#recDaysRow").hide();
+        var recSel = Number(this.value);
+        if(recSel == 3) { //custom
+            $("#recEndRow").fadeOut();
+            customRecurrencyInit()
+        }
+        else if(recSel != 0) {
+            $("#recEndRow").fadeIn();            
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+        }        
+        else {
+            $("#recEndRow").fadeOut();
+            //$("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);            
+        }
+    });
+}
+
+
+//ds
+function ds_initRecurrenceEndPicker(d) {
+    var recPicker = $("#datetimepickerRecEnd");
+    var opt = {
+        allowInputToggle : true,
+        format:"DD/MM/YYYY",
+    }
+    if(d) {        
+        opt.minDate = moment(d).isAfter(new Date()) ? new Date() : new Date(d)
+    }
+    else opt.minDate = new Date();
+
+    recPicker.datetimepicker(opt);
+    var fatherStart = $("#datetimepickerStart").data("DateTimePicker").date();
+
+    var recEnd = d ? new Date(d) : (fatherStart.isBefore(new Date()) ? new Date() : fatherStart);
+    recPicker.data("DateTimePicker").date(recEnd);
+}
+
+
+//ds
+function ds_calculateRecurrency() {
+    function addDays(n, type) {
+        var retArr = [];
+        var i = 0;
+        var startDate = $('#datetimepickerStart').data('DateTimePicker').date();
+        var endDate = $('#datetimepickerEnd').data('DateTimePicker').date();
+        
+        startDate.add(n, type);
+        endDate.add(n,type);
+
+        while(startDate.isBefore(new Date())) {            
+            startDate.add(n,type);
+            endDate.add(n,type);
+        }
+        
+        while(i++<_maxEvents && startDate.isSameOrBefore(endRec)) {
+            retArr.push({startDate: startDate.format(), endDate: endDate.format()}) //format() is important!!!
+            startDate.add(n, type);
+            endDate.add(n, type);
+        }
+        return retArr;        
+    }
+
+    var rectype = $("#promoRecurrence").val();
+
+    var recurrency = {type:rectype, days:[]};    
+    if(rectype && rectype != 0) {
+        var endRec = $("#datetimepickerRecEnd").data("DateTimePicker").date().endOf("day")    
+        switch(rectype) {
+            case "1": //everyday
+                recurrency.days = addDays(1, "days")
+                break;
+            case "2": //every day of week
+                recurrency.days = addDays(7, "days")
+                break;
+            case "3": //custom
+                var hstart = $('#datetimepickerStart').data('DateTimePicker').date().format("HH");
+                var mstart = $('#datetimepickerStart').data('DateTimePicker').date().format("mm");
+                var hstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("HH");
+                var mstop = $('#datetimepickerEnd').data('DateTimePicker').date().format("mm");
+                var d = $("#calendarCustomRec").multiDatesPicker('getDates')
+                for(var i=0; i<d.length; i++) {                
+                    startDate = moment(d[i]).hour(hstart).minutes(mstart);
+                    endDate = moment(d[i]).hour(hstop).minutes(mstop);
+                    recurrency.days.push({startDate:startDate.format(), endDate:endDate.format()});
+                }                
+                break;
+            default:
+                break;
+            
+        }
+    }
+    return recurrency;
 }
 
 
@@ -1143,7 +1527,7 @@ function  setParticipateButton(){
     }
 }
 
-function getPromotionPage(data,token){
+function getPromotionPage(data,token, cb){
 
 
     var promotion_template   = $("#promotion_template").html();
@@ -1168,12 +1552,14 @@ function getPromotionPage(data,token){
         participants:(data.participants && data.participants.html) || "",
         participantsDetails:(data.participants && data.participants.htmldetails) || "",
         event_type:"type_" + data.type,
-        categories:data.category
+        categories:data.category,
+        rec_group:data.recurrency_group,
+        rec_type:data.recurrency_type,
+        rec_end:data.recurrency_end
     };
 
-
-
     jQuery('#promotionContent').html(promotionHtml(prom));
+
     $('body').localize();
     getLikes();
     getparticipants();
@@ -1186,14 +1572,14 @@ function getPromotionPage(data,token){
             }
         });
     }
-    MasonryBox.initMasonryBox();
+    //MasonryBox.initMasonryBox();
     StyleSwitcher.initStyleSwitcher();
     initPageComingSoon(data.startDate);
     initMap(data.position[lat],data.position[lon],12,false);
 
     // init tooltip for participants list
     $('[data-toggle="tooltip"]').tooltip();
-
+    if(cb) cb();
 }
 
 
@@ -1203,7 +1589,7 @@ function exitFromInsertMode(){
 
 }
 
-function compilePromotion(){
+function compilePromotion(cb){
 
 
 // <script>
@@ -1359,25 +1745,25 @@ function compilePromotion(){
                 function(err, results) {
                     if(err){
                         //jQuery.jGrowl(err, {theme:'bg-color-red', life: 5000});
-                        getPromotionPage(data,null);
+                        getPromotionPage(data,null, cb);
                     }else{
                         data.participants=results[3];
                         var tokenOwner=results[0].token._id;
 
                         if(results[1].indexOf(results[0].token.type)>=0){
-                            getPromotionPage(data,tokenOwner);
+                            getPromotionPage(data,tokenOwner, cb);
                         }else{
                             if(results[2].indexOf(tokenOwner)>=0){
-                                getPromotionPage(data,tokenOwner);
+                                getPromotionPage(data,tokenOwner, cb);
                             }else{
-                                getPromotionPage(data,null);
+                                getPromotionPage(data,null,cb);
                             }
                         }
                     }
                 });
 
             }else{
-                getPromotionPage(data,null);
+                getPromotionPage(data,null, cb);
             }
         },
         error: function(xhr, status)
@@ -1519,15 +1905,3 @@ function mapZoom(){
     var event = new Event('zoomMap');
     dispatchEvent(event);
 }
-
-
-
-
-
-
-
-
-
-
-
-
