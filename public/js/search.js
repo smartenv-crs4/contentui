@@ -22,7 +22,7 @@ $(document).ready(function() {
     addEventListener('promotionLanguageManagerInitialized', function (e) {
         var source   = $("#search-template").html();
         _searchTemplate = Handlebars.compile(source);
-        renderBoxes()
+        renderBoxes();
         showToolShips();
         showToolDates();
         executeSearch()
@@ -100,7 +100,7 @@ function renderBoxes() {
     var model = {
         uid:undefined,
         contentAdmin:false
-    }
+    };
     
     jQuery.ajax({
         url: config.contentUIUrl + "/token/decode?decode_token="+ userToken,
