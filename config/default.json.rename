@@ -60,7 +60,7 @@
     "userUrl":"your_user_service_url",
     "userUIUrl":"your_user_ui_service_url",
     "uploadUrl":"your_upload_service_url",
-    "maxImageSize":"3000000",
+    "maxImageSize":"10000000",
     "mailerUrl":"your_mail_service_url",
     "contentUrl":"your_content_service_url",
     "commonUIUrl":"your_common_ui_url",
