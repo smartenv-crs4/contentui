@@ -17,7 +17,6 @@ var _queryResults = [];
 
 $(document).ready(function() {
     initToken();
-    initTranslation();
 
     addEventListener('promotionLanguageManagerInitialized', function (e) {
         var source   = $("#search-template").html();
@@ -81,7 +80,9 @@ $(document).ready(function() {
                 })
             }
         })
-    }, false); 
+    }, false);
+    
+    initTranslation();
 });
 
 $("#collapse-Map").on("shown.bs.collapse", function() {

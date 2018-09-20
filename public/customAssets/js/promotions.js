@@ -470,7 +470,7 @@ function doSavePromotion(iSANewPromotion) {
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     //i18next.reloadResources();
-                    compilePromotion()
+                    //compilePromotion()
                     currentPromotion.recurrency_group = dataResp.recurrency_group; //FIXME compilePromotion didn't initialize yet
                     ds_getRecurrencies(false, '_id', function(result) {
                         var deleted = result.length;                            
@@ -482,18 +482,20 @@ function doSavePromotion(iSANewPromotion) {
                                     }
                                     else if(--deleted <= 0) {
                                         ds_saveRecurrencies(promotionID, dataResp, function() {                                            
-                                            window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                            //window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                            compilePromotion();
                                         }); //ds
                                     }
                                 });
                             }
                         }
                         else {
-                            ds_saveRecurrencies(promotionID, dataResp, function() {                                
-                                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                            ds_saveRecurrencies(promotionID, dataResp, function() {
+                                //window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                compilePromotion()
                             });
                         }
-                    })
+                    })                        
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
@@ -1113,7 +1115,7 @@ function updatePromotion(){
     startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
 
     /// ds ///
-    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+    ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
         
 
     i18next.on('languageChanged', function(lng) {
