@@ -864,37 +864,38 @@ function addNewPromotion(){
     startPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true
+        allowInputToggle : true,
+        minDate: new Date()
     });
+    startPicher.data("DateTimePicker").date(new Date());
 
     endPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
         allowInputToggle : true,
+        minDate: new Date(),
         useCurrent: false
     });
-
-
+    endPicher.data("DateTimePicker").date(new Date());
+    
+    //startPicher.data("DateTimePicker").maxDate(e.date);
+    
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
         let value=e.date.toDate();
         ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
-    startPicher.data("DateTimePicker").date(new Date());
-
-
-
-
+    
     endPicher.on("dp.change", function (e) {
         startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
-    endPicher.data("DateTimePicker").date(new Date());
+    
 
-    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
-    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+//    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+//    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
     ds_initRecurrenceEndPicker(); //ds
 
 
