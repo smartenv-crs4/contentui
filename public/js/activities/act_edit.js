@@ -48,7 +48,7 @@ function initToolbar() {
         window.location.href = baseUrl + "activities/new";
     });
 
-    $("#addPromo").click(function() {
+    $("#addPromo, #addPromoTop").click(function() {
         window.location.href = baseUrl + "activities/" + activityBody._id + "/promotions/new";
     });
 

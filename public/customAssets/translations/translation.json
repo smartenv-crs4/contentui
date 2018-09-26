@@ -530,7 +530,7 @@
     },
     "noPicture": {
       "en": "Picture field can not be void. Please select one",
-      "it": "L'immagine descrittiva non puo essere vuota. Inserisci un immagine"
+      "it": "L'immagine descrittiva non puo essere vuota. Inserisci un'immagine"
     },
     "voidTitle": {
       "en": "Promotion Title can not be void",

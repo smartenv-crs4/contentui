@@ -868,7 +868,8 @@ function addNewPromotion(){
         minDate: new Date()
     });
     startPicher.data("DateTimePicker").date(new Date());
-
+    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+    
     endPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
@@ -1097,6 +1098,8 @@ function updatePromotion(){
         useCurrent: false
     });
 
+    
+    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
 
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
@@ -1104,19 +1107,21 @@ function updatePromotion(){
         ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
-    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
-
+    
+    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
     endPicher.on("dp.change", function (e) {
        startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
-    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+    
+
     endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
     startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
 
     /// ds ///
-    ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
+    //ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
+    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
         
 
     i18next.on('languageChanged', function(lng) {
@@ -1236,7 +1241,7 @@ function ds_updateRecurrence(startDate) {
         }
         else if(recSel != 0) {
             $("#recEndRow").fadeIn();            
-            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(new Date(startDate));
         }        
         else {
             $("#recEndRow").fadeOut();
