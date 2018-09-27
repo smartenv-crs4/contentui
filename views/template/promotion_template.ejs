@@ -125,7 +125,7 @@
 
 
 
-                <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
+                <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightskyblue; vertical-align: super;font-size:small;" data-i18n="[title]promotion.recurrence"></i>{{/if}}<span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
                 <ul class="actions">
                     <li class="likeandjoin"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
                     <li class="likeandjoin" style="padding:0 5px"> / </li>
@@ -169,17 +169,17 @@
                 <div class="row g-mb-20">
                     <!-- Coming Soon Plugn -->
 
-                    <div class="col-sm-9 g-md-mb-30">
+                    <div class="col-sm-8 g-md-mb-30">
                         <div class="coming-soon-plugin">
-                            <div id="defaultCountdown"></div>
+                            <div id="defaultCountdown" style="padding-left:12px;"></div>
                         </div>
                     </div>
 
                     <!-- End Coming Soon Plugin -->
 
-                    <!--price start-->
-                    <div class="col-sm-3 g-md-mb-30">
-                        <div class="pricediv">
+                    <!--price -->
+                    <div class="col-sm-4 g-md-mb-30">
+                        <!--div class="pricediv>
                             <center>
                                 <h2>
                                     <span>€</span>
@@ -187,7 +187,8 @@
                                     <span>{{#if price}}{{price}}{{else}}Free{{/if}}</span>
                                 </h2>
                             </center>
-                        </div>
+                        </div-->
+                        <h2 style="text-align:center; font-size:40px; color:rgba(71,101,160, 1);"><i><b>{{#if price}}€ {{price}}{{else}}Free{{/if}}</b></i></h2>
 
                     </div>
                     <!--price end-->

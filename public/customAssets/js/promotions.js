@@ -360,14 +360,14 @@ function validateFields(){
             $('#dType').hide();
     }
 
-
+/*
     if((newPromotion.images && (newPromotion.images.length>=0))|| (currentPromotion.images && (currentPromotion.images.length>=0))){
         $('#dPicture').hide();
-    } else{
+    } else{        
         $('#dPicture').show();
         responseToReturn=false;
     }
-
+*/
     var startPicher=$('#promotionStartDate');
     if((!newPromotion.startDate)&&(!currentPromotion.startDate)) {
         addNotValid(startPicher,'sStartDate','datetimepickerStart','iStartDate',i18next.t("validate.voidStartDate"));
@@ -1102,8 +1102,11 @@ function updatePromotion(){
 
     
     startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+    updatePromotionField('startDate',currentPromotion.startDate,true);
+
     endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
-    
+    updatePromotionField('endDate',currentPromotion.endDate,true);
+
     endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
     //startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
 

@@ -360,6 +360,18 @@
       "en" : "New Promotion",
       "it" : "Nuova Promozione"
     },
+    "promoowner" : {
+      "en":"Owner",
+      "it":"Promotore"
+    },
+    "promovalidity": {
+      "en":"Validity: ",
+      "it":"Validità: "
+    },
+    "promoins": {
+      "it":"Inserito il: ",
+      "en":"Published: "
+    },
     "box1title": {
         "it":"Scegli",
         "en":"Choose"
