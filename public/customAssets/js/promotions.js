@@ -1090,7 +1090,8 @@ function updatePromotion(){
     startPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true
+        allowInputToggle : true,
+        minDate: new Date()
     });
 
     endPicher.datetimepicker({
