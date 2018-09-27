@@ -1090,8 +1090,7 @@ function updatePromotion(){
     startPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true,
-        minDate: new Date()
+        allowInputToggle : true
     });
 
     endPicher.datetimepicker({
@@ -1104,6 +1103,7 @@ function updatePromotion(){
     
     startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
     updatePromotionField('startDate',currentPromotion.startDate,true);
+    //startPicher.data("DateTimePicker").minDate(new Date());
 
     endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
     updatePromotionField('endDate',currentPromotion.endDate,true);
