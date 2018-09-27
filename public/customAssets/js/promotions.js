@@ -869,7 +869,7 @@ function addNewPromotion(){
     });
     startPicher.data("DateTimePicker").date(new Date());
     ds_updateRecurrence(startPicher.data("DateTimePicker").date());
-    
+
     endPicher.datetimepicker({
         sideBySide:true,
         format:"DD/MM/YYYY - HH:mm",
@@ -883,13 +883,15 @@ function addNewPromotion(){
     
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
+        if(endPicher.data("DateTimePicker").date().isBefore(startPicher.data("DateTimePicker").date()))
+            endPicher.data("DateTimePicker").date(startPicher.data("DateTimePicker").date());
         let value=e.date.toDate();
         ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
     
     endPicher.on("dp.change", function (e) {
-        startPicher.data("DateTimePicker").maxDate(e.date);
+        //startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
@@ -1100,24 +1102,28 @@ function updatePromotion(){
 
     
     startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+    
+    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+    //startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
 
     startPicher.on("dp.change", function (e) {
         endPicher.data("DateTimePicker").minDate(e.date);
+        if(endPicher.data("DateTimePicker").date().isBefore(startPicher.data("DateTimePicker").date()))
+            endPicher.data("DateTimePicker").date(startPicher.data("DateTimePicker").date());
         let value=e.date.toDate();
         ds_updateRecurrence(value);
         updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
     });
     
-    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
     endPicher.on("dp.change", function (e) {
-       startPicher.data("DateTimePicker").maxDate(e.date);
+       //startPicher.data("DateTimePicker").maxDate(e.date);
         let value=e.date.toDate();
         updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
     });
     
 
-    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
-    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+
 
     /// ds ///
     //ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
@@ -1878,7 +1884,7 @@ function initMap(latitude,longitude,zoom,editable) {
     marker.mrk = map.addMarker({
         lat: latitude,
         lng: longitude,
-        icon:config.contentUIUrl+"/customAssets/img/marker/port.png",
+        //icon:config.contentUIUrl+"/customAssets/img/marker/port.png",
         draggable:editable,
         dragend:function(){
             if(editable) {
