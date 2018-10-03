@@ -1,5 +1,6 @@
 <!--categories(label) images dictionary-->
 <script>
+/*
  var imagedictionary={
      1:"icon-hotel-restaurant-001",
      2:"icon-hotel-restaurant-020",
@@ -15,7 +16,7 @@
      12:"glyphicon glyphicon-leaf",
      13:"icon-travel-050"
  }
-
+*/
  var imageTypedictionary={
      type_1:"icon-finance-202",
      type_2:"icon-food-004"
@@ -86,7 +87,7 @@
                                 <span data-i18n="promotion.cats">Categories</span>
                                 <span> : </span>
                                 {{#each categories}}
-                                    <span class="{{#image this 'category'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.category_{{this}}"></span> {{#unless @last}} -- {{/unless}}
+                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px">{{this.name}}</span>
                                 {{/each}}
                             </h5>
 
@@ -357,7 +358,13 @@
                         <!--sategorie start-->
                         <h5><span data-i18n="promotion.cats">Categories</span><span> : </span></h5>
                         <div id="categories" class="row" id="f_catDrop">
-                            <div class="col-md-4">
+                            {{#each categories}}
+                                <div class="col-md-4">
+                                    <input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span>{{this.name}}</span></label>
+                                </div>
+                            {{/each}}
+                            <!--div class="col-md-4">
                                 <input id="cbox_1" type="checkbox" value="1" name="category" class="ibtn">
                                 <label for="cbox_1">&nbsp;<span class="icon-hotel-restaurant-001"></span> - <span>Hotel</span></label>
                             </div>
@@ -404,7 +411,7 @@
                             <div class="col-md-4">
                                 <input id="cbox_12" type="checkbox" value="12" name="category" class="ibtn">
                                 <label for="cbox_12">&nbsp;<span class="glyphicon glyphicon-leaf"></span> - <span>Natura</span></label>
-                            </div>
+                            </div-->
                         </div>
                         <!--categories end-->
                     </div>
