@@ -35,7 +35,12 @@
                 </button>
             </li>
             <li>
-                <button id="editContent" class="btn btn-default loggedonly" title="edit content">
+                <button id="addPromoTop" class="btn btn-default loggedonly" title="new promotion">
+                    <i class="fa fa-calendar-plus-o" ></i>
+                </button>
+            </li>
+            <li>
+                <button id="editContent" class="btn btn-default loggedonly" title="edit activity">
                     <i class="fa fa-pencil" ></i>
                 </button>
             </li>
@@ -45,7 +50,7 @@
                 </button>
             </li>
             <li>
-                <button id="delContent" class="btn btn-default owner" title="delete content">
+                <button id="delContent" class="btn btn-default owner" title="delete activity">
                     <i class="fa fa-remove"></i>
                 </button>
             </li>
@@ -117,13 +122,13 @@
                     <!-- Team v2 -->
                     <div class="col-md-3 col-sm-6">
                         <div class="team-v2">
-                            <div style="height:175px;overflow:hidden;"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></div>
+                            <div style="height:175px;overflow:hidden;"><a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/"><img class="img-responsive" src="{{this.images.[0]}}" alt=""></a></div>
                             <div class="inner-team">
-                                <h3>{{#if this.recurrency_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/" data-i18n="{{this.promoLangId}}.title"></a></h3>
-                                <small class="color-green">dal {{this.startDate}} al {{this.endDate}}</small>
+                                <h3>{{#if this.recurrency_group}}<i class="fa fa-history" style="color:lightskyblue; vertical-align: super;font-size:small;" data-i18n="[title]promotion.recurrence"></i>{{/if}}<a href="<%= baseUrl %>activities/{{this.idcontent}}/promotions/{{this._id}}/" data-i18n="{{this.promoLangId}}.title"></a></h3>
+                                <small class="color-green">dal <b>{{this.startDate}}</b> al <b>{{this.endDate}}</b></small>
                                 <p data-i18n="{{this.promoLangId}}.description"></p>
                                 <hr>
-                                <small>Last Update: {{this.lastUpdate}}</small>
+                                <small><i>Last Update: {{this.lastUpdate}}</i></small>
                             </div>
                         </div>
                     </div>

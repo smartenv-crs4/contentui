@@ -179,6 +179,7 @@ router.get('/activities/:aid/promotions/new', function(req, res, next) {
             contentUIUrl:config.contentUIUrl ,
             commonUIUrl:config.commonUIUrl
         },
+        contentUrl:contentUrl,
         contentID:activity_id,
         promotionID:null,
         isANewPromotion:true

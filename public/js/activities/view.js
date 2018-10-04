@@ -2,7 +2,6 @@ var activityBody = undefined; //TODO rimuovere
 
 $(document).ready(function () {
     initToken();
-    initTranslation();
 
     addEventListener('promotionLanguageManagerInitialized', function (e) {
         if(typeof activityId != "undefined") {    
@@ -11,7 +10,9 @@ $(document).ready(function () {
         else { //new activity
             newActivity();
         }
-    }, false); 
+    }, false);
+
+    initTranslation();
 });
 
 function initTranslation() {
@@ -203,8 +204,6 @@ function newActivity() {
         $(".insertmode").show();
         initMapEdit();
         initAutocompletePlaces();
-
-        $(".headline h3").html("Inserimento Attivit&agrave;")
         
         $("#addContentButton").off("click");
         $("#addContentButton").click(function(e) { 

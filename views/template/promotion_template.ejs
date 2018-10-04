@@ -1,5 +1,6 @@
 <!--categories(label) images dictionary-->
 <script>
+/*
  var imagedictionary={
      1:"icon-hotel-restaurant-001",
      2:"icon-hotel-restaurant-020",
@@ -15,7 +16,7 @@
      12:"glyphicon glyphicon-leaf",
      13:"icon-travel-050"
  }
-
+*/
  var imageTypedictionary={
      type_1:"icon-finance-202",
      type_2:"icon-food-004"
@@ -86,7 +87,7 @@
                                 <span data-i18n="promotion.cats">Categories</span>
                                 <span> : </span>
                                 {{#each categories}}
-                                    <span class="{{#image this 'category'}}{{/image}}"></span>&nbsp;<span data-i18n="promotion.category_{{this}}"></span> {{#unless @last}} -- {{/unless}}
+                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px">{{this.name}}</span>
                                 {{/each}}
                             </h5>
 
@@ -125,7 +126,7 @@
 
 
 
-                <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightslategray;" data-i18n="[title]promotion.recurrence"></i>{{/if}} <span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
+                <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightskyblue; vertical-align: super;font-size:small;" data-i18n="[title]promotion.recurrence"></i>{{/if}}<span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
                 <ul class="actions">
                     <li class="likeandjoin"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
                     <li class="likeandjoin" style="padding:0 5px"> / </li>
@@ -169,17 +170,17 @@
                 <div class="row g-mb-20">
                     <!-- Coming Soon Plugn -->
 
-                    <div class="col-sm-9 g-md-mb-30">
+                    <div class="col-sm-8 g-md-mb-30">
                         <div class="coming-soon-plugin">
-                            <div id="defaultCountdown"></div>
+                            <div id="defaultCountdown" style="padding-left:12px;"></div>
                         </div>
                     </div>
 
                     <!-- End Coming Soon Plugin -->
 
-                    <!--price start-->
-                    <div class="col-sm-3 g-md-mb-30">
-                        <div class="pricediv">
+                    <!--price -->
+                    <div class="col-sm-4 g-md-mb-30">
+                        <!--div class="pricediv>
                             <center>
                                 <h2>
                                     <span>€</span>
@@ -187,7 +188,8 @@
                                     <span>{{#if price}}{{price}}{{else}}Free{{/if}}</span>
                                 </h2>
                             </center>
-                        </div>
+                        </div-->
+                        <h2 style="text-align:center; font-size:40px; color:rgba(71,101,160, 1);"><i><b>{{#if price}}€ {{price}}{{else}}Free{{/if}}</b></i></h2>
 
                     </div>
                     <!--price end-->
@@ -356,7 +358,13 @@
                         <!--sategorie start-->
                         <h5><span data-i18n="promotion.cats">Categories</span><span> : </span></h5>
                         <div id="categories" class="row" id="f_catDrop">
-                            <div class="col-md-4">
+                            {{#each categories}}
+                                <div class="col-md-4">
+                                    <input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
+                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span>{{this.name}}</span></label>
+                                </div>
+                            {{/each}}
+                            <!--div class="col-md-4">
                                 <input id="cbox_1" type="checkbox" value="1" name="category" class="ibtn">
                                 <label for="cbox_1">&nbsp;<span class="icon-hotel-restaurant-001"></span> - <span>Hotel</span></label>
                             </div>
@@ -403,7 +411,7 @@
                             <div class="col-md-4">
                                 <input id="cbox_12" type="checkbox" value="12" name="category" class="ibtn">
                                 <label for="cbox_12">&nbsp;<span class="glyphicon glyphicon-leaf"></span> - <span>Natura</span></label>
-                            </div>
+                            </div-->
                         </div>
                         <!--categories end-->
                     </div>

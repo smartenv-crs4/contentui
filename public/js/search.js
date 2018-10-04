@@ -17,7 +17,6 @@ var _queryResults = [];
 
 $(document).ready(function() {
     initToken();
-    initTranslation();
 
     addEventListener('promotionLanguageManagerInitialized', function (e) {
         var source   = $("#search-template").html();
@@ -81,7 +80,9 @@ $(document).ready(function() {
                 })
             }
         })
-    }, false); 
+    }, false);
+    
+    initTranslation();
 });
 
 $("#collapse-Map").on("shown.bs.collapse", function() {
@@ -536,7 +537,7 @@ function getShips(cb) {
 
 function getLastSchedule(name, company, cb) {
     var qs = "?ship=" + name + "&company=" + company;
-    qs += "&sdate=" + encodeURIComponent(new Date());
+    qs += "&sdate=" + encodeURIComponent(moment().startOf('day'));
     qs += "&limit=1&ord=asc"
 
     $.ajax({

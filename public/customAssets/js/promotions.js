@@ -360,14 +360,14 @@ function validateFields(){
             $('#dType').hide();
     }
 
-
+/*
     if((newPromotion.images && (newPromotion.images.length>=0))|| (currentPromotion.images && (currentPromotion.images.length>=0))){
         $('#dPicture').hide();
-    } else{
+    } else{        
         $('#dPicture').show();
         responseToReturn=false;
     }
-
+*/
     var startPicher=$('#promotionStartDate');
     if((!newPromotion.startDate)&&(!currentPromotion.startDate)) {
         addNotValid(startPicher,'sStartDate','datetimepickerStart','iStartDate',i18next.t("validate.voidStartDate"));
@@ -470,7 +470,7 @@ function doSavePromotion(iSANewPromotion) {
                 dataType: "json",
                 success: function (dataResp, textStatus, xhr) {
                     //i18next.reloadResources();
-                    compilePromotion()
+                    //compilePromotion()
                     currentPromotion.recurrency_group = dataResp.recurrency_group; //FIXME compilePromotion didn't initialize yet
                     ds_getRecurrencies(false, '_id', function(result) {
                         var deleted = result.length;                            
@@ -482,18 +482,20 @@ function doSavePromotion(iSANewPromotion) {
                                     }
                                     else if(--deleted <= 0) {
                                         ds_saveRecurrencies(promotionID, dataResp, function() {                                            
-                                            window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                            //window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                            compilePromotion();
                                         }); //ds
                                     }
                                 });
                             }
                         }
                         else {
-                            ds_saveRecurrencies(promotionID, dataResp, function() {                                
-                                window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                            ds_saveRecurrencies(promotionID, dataResp, function() {
+                                //window.location.href=config.contentUIUrl + "/activities/" + contentID +"/promotions/"+promotionID;
+                                compilePromotion()
                             });
                         }
-                    })
+                    })                        
                 },
                 error: function (xhr, status) {
                     var respBlock = jQuery("#responseBlock");
@@ -777,168 +779,174 @@ function addNewPromotion(){
 
     var promotion_admin_template   = $("#admin_promotion_template").html();
     var promotionHtml = Handlebars.compile(promotion_admin_template);
+    
+    ds_getCategories(function(cats) {
+        var prom={
+            image:config.contentUIUrl+"/assets/img/team/img32-md.jpg",
+            isANewPromotion:true,
+            baseUrl:config.contentUIUrl,
+            categories: cats
+        };
 
-    var prom={
-        image:config.contentUIUrl+"/assets/img/team/img32-md.jpg",
-        isANewPromotion:true,
-        baseUrl:config.contentUIUrl
-    };
+        jQuery('#promotionContent').html(promotionHtml(prom));
+        $('body').localize();
+        //MasonryBox.initMasonryBox();
+        StyleSwitcher.initStyleSwitcher();
+        //Datepicker.initDatepicker();
 
-    jQuery('#promotionContent').html(promotionHtml(prom));
-    $('body').localize();
-    //MasonryBox.initMasonryBox();
-    StyleSwitcher.initStyleSwitcher();
-    //Datepicker.initDatepicker();
-
-    currentPromotion={};
-    newPromotion={};
-    // set Title
-    let promotionTitle=$('#promotionTitle');
-    promotionTitle.get(0).oninput=function(){
-        let nameValue=promotionTitle.val();
-        titleWithTags=getmultilanguageTitle(nameValue);
-        updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
-
-
-    };
-
-    let promotionDescription=$('#promotionDescription');
-    promotionDescription.get(0).oninput=function(){
-        let value=promotionDescription.val();
-        descriptionWithTags=getmultilanguageDescription(value);
-        updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
-
-    };
+        currentPromotion={};
+        newPromotion={};
+        // set Title
+        let promotionTitle=$('#promotionTitle');
+        promotionTitle.get(0).oninput=function(){
+            let nameValue=promotionTitle.val();
+            titleWithTags=getmultilanguageTitle(nameValue);
+            updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
 
 
-    let promotionPrice=$('#promotionPrice');
-    promotionPrice.get(0).oninput=function(){
-        let value=promotionPrice.val();
-        updatePromotionField('price',value==currentPromotion.price?null:value,true);
-    };
+        };
 
-    let promotionWhere=$('#promotionWhere');
-    // promotionWhere.val(currentPromotion.address);
-    promotionWhere.get(0).oninput=function(){
-        setPositionValidity(false);
-        let value=promotionWhere.val();
-        updatePromotionField('address',value==currentPromotion.address?null:value,true);
-    };
+        let promotionDescription=$('#promotionDescription');
+        promotionDescription.get(0).oninput=function(){
+            let value=promotionDescription.val();
+            descriptionWithTags=getmultilanguageDescription(value);
+            updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
+
+        };
 
 
+        let promotionPrice=$('#promotionPrice');
+        promotionPrice.get(0).oninput=function(){
+            let value=promotionPrice.val();
+            updatePromotionField('price',value==currentPromotion.price?null:value,true);
+        };
 
-    let promotype=$('#promotype');
-    // promotionWhere.val(currentPromotion.address);
-    promotype.get(0).onchange=function(){
-        var selectedOption = $("#promotype input:radio:checked").val();
-        let value="1"; // offer
-        if(selectedOption=="event")
-            value="2";
-        updatePromotionField('type',value==currentPromotion.type?null:value,true);
-    };
+        let promotionWhere=$('#promotionWhere');
+        // promotionWhere.val(currentPromotion.address);
+        promotionWhere.get(0).oninput=function(){
+            setPositionValidity(false);
+            let value=promotionWhere.val();
+            updatePromotionField('address',value==currentPromotion.address?null:value,true);
+        };
 
-    let categories=$('#categories');
-    // promotionWhere.val(currentPromotion.address);
-    categories.get(0).onchange=function(){
-        let value=[]; // offer
-        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
-            value.push(this.value);
 
+
+        let promotype=$('#promotype');
+        // promotionWhere.val(currentPromotion.address);
+        promotype.get(0).onchange=function(){
+            var selectedOption = $("#promotype input:radio:checked").val();
+            let value="1"; // offer
+            if(selectedOption=="event")
+                value="2";
+            updatePromotionField('type',value==currentPromotion.type?null:value,true);
+        };
+
+        let categories=$('#categories');
+        // promotionWhere.val(currentPromotion.address);
+        categories.get(0).onchange=function(){
+            let value=[]; // offer
+            var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+                value.push(this.value);
+
+            });
+            updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+        };
+
+
+        let promotionPicture=$('#updatePicture');
+        //promotionPicture.val(currentPromotion.images[0]);
+        promotionPicture.get(0).onchange=function(){
+            loadPromotionImage();
+        };
+
+
+        var startPicher=$('#datetimepickerStart');
+        var endPicher=$('#datetimepickerEnd');
+
+        startPicher.datetimepicker({
+            sideBySide:true,
+            format:"DD/MM/YYYY - HH:mm",
+            allowInputToggle : true,
+            minDate: new Date()
         });
-        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
-    };
+        startPicher.data("DateTimePicker").date(new Date());
+        ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+
+        endPicher.datetimepicker({
+            sideBySide:true,
+            format:"DD/MM/YYYY - HH:mm",
+            allowInputToggle : true,
+            minDate: new Date(),
+            useCurrent: false
+        });
+        endPicher.data("DateTimePicker").date(new Date());
+        
+        //startPicher.data("DateTimePicker").maxDate(e.date);
+        
+        startPicher.on("dp.change", function (e) {
+            endPicher.data("DateTimePicker").minDate(e.date);
+            if(endPicher.data("DateTimePicker").date().isBefore(startPicher.data("DateTimePicker").date()))
+                endPicher.data("DateTimePicker").date(startPicher.data("DateTimePicker").date());
+            let value=e.date.toDate();
+            ds_updateRecurrence(value);
+            updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+        });
+        
+        endPicher.on("dp.change", function (e) {
+            //startPicher.data("DateTimePicker").maxDate(e.date);
+            let value=e.date.toDate();
+            updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
+        });
+        
+
+    //    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+    //    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+        ds_initRecurrenceEndPicker(); //ds
 
 
-    let promotionPicture=$('#updatePicture');
-    //promotionPicture.val(currentPromotion.images[0]);
-    promotionPicture.get(0).onchange=function(){
-        loadPromotionImage();
-    };
+        mapInit=initMap(39.2253991,9.0933586,6,true);
 
-
-    var startPicher=$('#datetimepickerStart');
-    var endPicher=$('#datetimepickerEnd');
-
-    startPicher.datetimepicker({
-        sideBySide:true,
-        format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true
-    });
-
-    endPicher.datetimepicker({
-        sideBySide:true,
-        format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true,
-        useCurrent: false
-    });
-
-
-    startPicher.on("dp.change", function (e) {
-        endPicher.data("DateTimePicker").minDate(e.date);
-        let value=e.date.toDate();
-        ds_updateRecurrence(value);
-        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
-    });
-    startPicher.data("DateTimePicker").date(new Date());
-
-
-
-
-    endPicher.on("dp.change", function (e) {
-        startPicher.data("DateTimePicker").maxDate(e.date);
-        let value=e.date.toDate();
-        updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
-    });
-    endPicher.data("DateTimePicker").date(new Date());
-
-    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
-    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
-    ds_initRecurrenceEndPicker(); //ds
-
-
-    mapInit=initMap(39.2253991,9.0933586,6,true);
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            mapInit=initMap(position.coords.latitude,position.coords.longitude,12,true);
-            updatePromotionWhere(position.coords.latitude,position.coords.longitude,false);
-            let pos=[null,null];
-            pos[lat]=position.coords.latitude;
-            pos[lon]=position.coords.longitude;
-            updatePromotionField('position',pos,false);
-        },function(){
-            //The Geolocation service failed
-            handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                mapInit=initMap(position.coords.latitude,position.coords.longitude,12,true);
+                updatePromotionWhere(position.coords.latitude,position.coords.longitude,false);
+                let pos=[null,null];
+                pos[lat]=position.coords.latitude;
+                pos[lon]=position.coords.longitude;
+                updatePromotionField('position',pos,false);
+            },function(){
+                //The Geolocation service failed
+                handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
+                updatePromotionWhere(39.2253991,9.0933586,false);
+                // updatePromotionField('position',[39.2253991,9.0933586],false);
+                updatePromotionField('position',[9.0933586,39.2253991],false);
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
             updatePromotionWhere(39.2253991,9.0933586,false);
-            // updatePromotionField('position',[39.2253991,9.0933586],false);
+            //updatePromotionField('position',[39.2253991,9.0933586],false);
             updatePromotionField('position',[9.0933586,39.2253991],false);
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
-        updatePromotionWhere(39.2253991,9.0933586,false);
-        //updatePromotionField('position',[39.2253991,9.0933586],false);
-        updatePromotionField('position',[9.0933586,39.2253991],false);
-    }
+        }
 
 
-    autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
-    // When the user selects an address from the dropdown, populate the address
-    // fields in the form.
-    autocomplete.addListener('place_changed', fillInAddress);
+        autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
 
 
 
 
-    MultilanguageEditInit();
+        MultilanguageEditInit();
 
-    //
-    // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
-    //     if(!err){
-    //         $('#promotionWhere').val(position);
-    //     }
-    // });
-
+        //
+        // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
+        //     if(!err){
+        //         $('#promotionWhere').val(position);
+        //     }
+        // });
+    });
 }
 
 function handleLocationError(message,InfoWinPosition){
@@ -980,6 +988,21 @@ function deletePromotion(){
     });
 }
 
+function ds_getCategories(cb){
+    jQuery.ajax({
+        url: contentUrl + "categories/",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        success: function (data, textStatus, xhr) {            
+            if(cb) cb(data.categories)
+        },
+        error: function (xhr, status) {
+            console.log(xhr.responseJSON.error_message || xhr.responseJSON.message)
+            if(cb) cb([])
+        }
+    });
+}
+
 
 function updatePromotion(){
 
@@ -988,187 +1011,189 @@ function updatePromotion(){
     var promotion_admin_template   = $("#admin_promotion_template").html();
     var promotionHtml = Handlebars.compile(promotion_admin_template);
 
-    var prom={
-        promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
-        start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
-        end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
-        where:"Location",
-        name:currentPromotion.name,
-        description:currentPromotion.description,
-        price:currentPromotion.price,
-        isANewPromotion:false,
-        baseUrl:config.contentUIUrl
-    };
+    ds_getCategories(function(cats) {
+        var prom={
+            promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
+            start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
+            end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
+            where:"Location",
+            name:currentPromotion.name,
+            description:currentPromotion.description,
+            price:currentPromotion.price,
+            isANewPromotion:false,
+            baseUrl:config.contentUIUrl,
+            categories: cats
+        };
 
-    stopComingSoon();
-    jQuery('#promotionContent').html(promotionHtml(prom));
-    $('body').localize();
-    //MasonryBox.initMasonryBox();
-    StyleSwitcher.initStyleSwitcher();
-    //Datepicker.initDatepicker();
-
-
-    MultilanguageEditInit();
-    newPromotion={};
-
-    // set Title
-    initTitleJsonMultilanguage(currentPromotion.name);
-    let promotionTitle=$('#promotionTitle');
-    promotionTitle.val(getCurrentLanguageTitle());
-    promotionTitle.get(0).oninput=function(){
-        let nameValue=promotionTitle.val();
-        titleWithTags=getmultilanguageTitle(nameValue);
-        updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
-    };
+        stopComingSoon();
+        jQuery('#promotionContent').html(promotionHtml(prom));
+    
+        $('body').localize();
+        //MasonryBox.initMasonryBox();
+        StyleSwitcher.initStyleSwitcher();
+        //Datepicker.initDatepicker();
 
 
-    initDescriptionJsonMultilanguage(currentPromotion.description);
-    let promotionDescription=$('#promotionDescription');
-    promotionDescription.val(getCurrentLanguageDescription());
-    promotionDescription.get(0).oninput=function(){
-        let value=promotionDescription.val();
-        descriptionWithTags=getmultilanguageDescription(value);
-        updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
-    };
+        MultilanguageEditInit();
+        newPromotion={};
+
+        // set Title
+        initTitleJsonMultilanguage(currentPromotion.name);
+        let promotionTitle=$('#promotionTitle');
+        promotionTitle.val(getCurrentLanguageTitle());
+        promotionTitle.get(0).oninput=function(){
+            let nameValue=promotionTitle.val();
+            titleWithTags=getmultilanguageTitle(nameValue);
+            updatePromotionField('name', titleWithTags == currentPromotion.name ? null : titleWithTags, true);
+        };
 
 
-    let promotionPrice=$('#promotionPrice');
-    promotionPrice.val(currentPromotion.price);
-    promotionPrice.get(0).oninput=function(){
-        let value=promotionPrice.val();
-        updatePromotionField('price',value==currentPromotion.price?null:value,true);
-    };
-
-    let promotionWhere=$('#promotionWhere');
-    promotionWhere.val(currentPromotion.address);
-    promotionWhere.get(0).oninput=function(){
-        setPositionValidity(false);
-        let value=promotionWhere.val();
-        updatePromotionField('address',value==currentPromotion.address?null:value,true);
-    };
+        initDescriptionJsonMultilanguage(currentPromotion.description);
+        let promotionDescription=$('#promotionDescription');
+        promotionDescription.val(getCurrentLanguageDescription());
+        promotionDescription.get(0).oninput=function(){
+            let value=promotionDescription.val();
+            descriptionWithTags=getmultilanguageDescription(value);
+            updatePromotionField('description',descriptionWithTags==currentPromotion.description?null:descriptionWithTags,true);
+        };
 
 
-    let promotype=$('#promotype');
-    let tmpv=$("#promotype input[value='"+currentPromotion.type+"']:radio");
-    tmpv.prop('checked', true);
+        let promotionPrice=$('#promotionPrice');
+        promotionPrice.val(currentPromotion.price);
+        promotionPrice.get(0).oninput=function(){
+            let value=promotionPrice.val();
+            updatePromotionField('price',value==currentPromotion.price?null:value,true);
+        };
 
-    promotype.get(0).onchange=function(){
-        var value = $("#promotype input:radio:checked").val();
-        updatePromotionField('type',value==currentPromotion.type?null:value,true);
-    };
+        let promotionWhere=$('#promotionWhere');
+        promotionWhere.val(currentPromotion.address);
+        promotionWhere.get(0).oninput=function(){
+            setPositionValidity(false);
+            let value=promotionWhere.val();
+            updatePromotionField('address',value==currentPromotion.address?null:value,true);
+        };
 
-    let categories=$('#categories');
-    currentPromotion.category.forEach(function(catValue){
-        $("input[name='category'][value='"+ catValue +"']:checkbox").prop('checked', true);
-    });
 
-    categories.get(0).onchange=function(){
-        let value=[]; // offer
-        var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
-            value.push(this.value);
+        let promotype=$('#promotype');
+        let tmpv=$("#promotype input[value='"+currentPromotion.type+"']:radio");
+        tmpv.prop('checked', true);
 
+        promotype.get(0).onchange=function(){
+            var value = $("#promotype input:radio:checked").val();
+            updatePromotionField('type',value==currentPromotion.type?null:value,true);
+        };
+
+        let categories=$('#categories');
+        currentPromotion.category.forEach(function(catValue){
+            $("input[name='category'][value='"+ catValue._id +"']:checkbox").prop('checked', true);
         });
-        updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
-    };
 
-    let promotionPicture=$('#updatePicture');
-    //promotionPicture.val(currentPromotion.images[0]);
-    promotionPicture.get(0).onchange=function(){
-        loadPromotionImage();
-    };
+        categories.get(0).onchange=function(){
+            let value=[]; // offer
+            var selectedOption = $("input[name='category']:checkbox:checked").each(function () {
+                value.push(this.value);
 
+            });
+            updatePromotionField('category',_.isEqual(value,currentPromotion.category)?null:value,true);
+        };
 
-    var startPicher=$('#datetimepickerStart');
-    var endPicher=$('#datetimepickerEnd');
-
-    startPicher.datetimepicker({
-        sideBySide:true,
-        format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true
-    });
-
-    endPicher.datetimepicker({
-        sideBySide:true,
-        format:"DD/MM/YYYY - HH:mm",
-        allowInputToggle : true,
-        useCurrent: false
-    });
+        let promotionPicture=$('#updatePicture');
+        //promotionPicture.val(currentPromotion.images[0]);
+        promotionPicture.get(0).onchange=function(){
+            loadPromotionImage();
+        };
 
 
-    startPicher.on("dp.change", function (e) {
-        endPicher.data("DateTimePicker").minDate(e.date);
-        let value=e.date.toDate();
-        ds_updateRecurrence(value);
-        updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
-    });
-    startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+        var startPicher=$('#datetimepickerStart');
+        var endPicher=$('#datetimepickerEnd');
 
-    endPicher.on("dp.change", function (e) {
-       startPicher.data("DateTimePicker").maxDate(e.date);
-        let value=e.date.toDate();
-        updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
-    });
-    endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
-    endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
-    startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+        startPicher.datetimepicker({
+            sideBySide:true,
+            format:"DD/MM/YYYY - HH:mm",
+            allowInputToggle : true
+        });
 
-    /// ds ///
-    ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+        endPicher.datetimepicker({
+            sideBySide:true,
+            format:"DD/MM/YYYY - HH:mm",
+            allowInputToggle : true,
+            useCurrent: false
+        });
+
+        
+        startPicher.data("DateTimePicker").date(new Date(currentPromotion.startDate));
+        updatePromotionField('startDate',currentPromotion.startDate,true);
+        //startPicher.data("DateTimePicker").minDate(new Date());
+
+        endPicher.data("DateTimePicker").date(new Date(currentPromotion.endDate));
+        updatePromotionField('endDate',currentPromotion.endDate,true);
+
+        endPicher.data("DateTimePicker").minDate(startPicher.data("DateTimePicker").date());
+        //startPicher.data("DateTimePicker").maxDate(endPicher.data("DateTimePicker").date());
+
+        startPicher.on("dp.change", function (e) {
+            endPicher.data("DateTimePicker").minDate(e.date);
+            if(endPicher.data("DateTimePicker").date().isBefore(startPicher.data("DateTimePicker").date()))
+                endPicher.data("DateTimePicker").date(startPicher.data("DateTimePicker").date());
+            let value=e.date.toDate();
+            ds_updateRecurrence(value);
+            updatePromotionField('startDate',value==currentPromotion.startDate?null:value,true);
+        });
+        
+        endPicher.on("dp.change", function (e) {
+        //startPicher.data("DateTimePicker").maxDate(e.date);
+            let value=e.date.toDate();
+            updatePromotionField('endDate',value==currentPromotion.endDate?null:value,true);
+        });
         
 
-    i18next.on('languageChanged', function(lng) {
+
+
+        /// ds ///
+        //ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
         ds_updateRecurrence(startPicher.data("DateTimePicker").date());
-    })
-
-    ds_initRecurrenceEndPicker();
-    $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
-    if(currentPromotion.recurrency_type == '3') {
-        ds_getRecurrencies(false, 'startDate', function(r) {
-            for(var i=0; i<r.length; i++) {
-                r[i] = moment.tz(r[i], _tz).format("YYYY-MM-DD");
-            }
-            $("#recDaysRow div a").empty();
             
-            if(r.length > 0) {             
-                $("#recDaysRow").show();
-                $("#recDaysRow div a").html(r.join(", "));
-                $("#recDaysRow div a").click(function(e) {
-                    e.preventDefault();
-                    customRecurrencyInit(r)
-                });
-            }
-            else {
-                $("#recDaysRow").hide();
-                $("#promoRecurrence option[value='0']").prop('selected','selected');
-            }
 
-        });
-    }
-    else if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {    
-        ds_initRecurrenceEndPicker(new Date(currentPromotion.recurrency_end));
-        $("#promoRecurrence").change()
-    }
-    
-    
+        i18next.on('languageChanged', function(lng) {
+            ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+        })
 
-    //////////
+        ds_initRecurrenceEndPicker();
+        $("#promoRecurrence option[value=" + currentPromotion.recurrency_type +"]").attr('selected','selected');
+        if(currentPromotion.recurrency_type == '3') {
+            ds_getRecurrencies(false, 'startDate', function(r) {
+                for(var i=0; i<r.length; i++) {
+                    r[i] = moment.tz(r[i], _tz).format("YYYY-MM-DD");
+                }
+                $("#recDaysRow div a").empty();
+                
+                if(r.length > 0) {             
+                    $("#recDaysRow").show();
+                    $("#recDaysRow div a").html(r.join(", "));
+                    $("#recDaysRow div a").click(function(e) {
+                        e.preventDefault();
+                        customRecurrencyInit(r)
+                    });
+                }
+                else {
+                    $("#recDaysRow").hide();
+                    $("#promoRecurrence option[value='0']").prop('selected','selected');
+                }
 
-
-
-
-    mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
-    autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
-    // When the user selects an address from the dropdown, populate the address
-    // fields in the form.
-    autocomplete.addListener('place_changed', fillInAddress);
-
-    //
-    // geocodeLatLng(currentPromotion.position[lat],currentPromotion.position[lon],function(err,position){
-    //     if(!err){
-    //         $('#promotionWhere').val(position);
-    //     }
-    // });
-
+            });
+        }
+        else if(currentPromotion.recurrency_end && currentPromotion.recurrency_type != 0) {    
+            ds_initRecurrenceEndPicker(new Date(currentPromotion.recurrency_end));
+            $("#promoRecurrence").change()
+        }
+        
+ 
+        mapInit=initMap(currentPromotion.position[lat],currentPromotion.position[lon],6,true);
+        autocomplete = new google.maps.places.Autocomplete((document.getElementById('promotionWhere')),{types: ['geocode']});
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
+    });
 }
 
 function customRecurrencyInit(dates) {
@@ -1233,7 +1258,7 @@ function ds_updateRecurrence(startDate) {
         }
         else if(recSel != 0) {
             $("#recEndRow").fadeIn();            
-            $("#datetimepickerRecEnd").data("DateTimePicker").date(startDate);
+            $("#datetimepickerRecEnd").data("DateTimePicker").date(new Date(startDate));
         }        
         else {
             $("#recEndRow").fadeOut();
@@ -1870,7 +1895,7 @@ function initMap(latitude,longitude,zoom,editable) {
     marker.mrk = map.addMarker({
         lat: latitude,
         lng: longitude,
-        icon:config.contentUIUrl+"/customAssets/img/marker/port.png",
+        //icon:config.contentUIUrl+"/customAssets/img/marker/port.png",
         draggable:editable,
         dragend:function(){
             if(editable) {
