@@ -537,7 +537,7 @@ function getShips(cb) {
 
 function getLastSchedule(name, company, cb) {
     var qs = "?ship=" + name + "&company=" + company;
-    qs += "&sdate=" + encodeURIComponent(new Date());
+    qs += "&sdate=" + encodeURIComponent(moment().startOf('day'));
     qs += "&limit=1&ord=asc"
 
     $.ajax({
