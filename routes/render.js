@@ -133,7 +133,6 @@ module.exports = {
                             console.log(e);
                         }
                     }
-
                     if (commonBody && commonBody.error) {
                         let tmpError=commonBody.error_message;
                         request.get(commonUiURLWithNoToken, function (error, response, body) {  //resend request to header for not logged in user
@@ -155,7 +154,6 @@ module.exports = {
                                     return render(res, page, model, commonBody);
                                 }
                             }
-
                         });
                     } else {
                         model.tokenError=null;

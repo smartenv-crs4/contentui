@@ -60,13 +60,10 @@ module.exports.setupDefaults=function (callbackResponse){
                 };
 
 
-
                 request.post(rqparams,function(err,response,body){ //check if default user exist
                     if(err) callback("Default Admin User creation 1 :"+err,null);
 
                     var responseBody=JSON.parse(body);
-
-
 
 
                     if(response.statusCode==200){

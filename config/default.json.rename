@@ -45,8 +45,8 @@
       "contentAdminTokenType": ["contentAdmin"]
     },
     "contentUiAppAdmin":{
-      "applicationName":"Cagliari Port",
-      "mailfrom":{"name":"Cagliari Port", "address":"cport2020@gmail.com"},
+      "applicationName":"Cagliari Port: Nice Time in Cagliari",
+      "mailfrom":{"name":"Cagliari Port: Nice Time in Cagliari", "address":"cport2020@gmail.com"},
       "defaultAdminUser":{
         "adminEmail":"cport2020@gmail.com",
         "adminPassword":"admin"
@@ -100,8 +100,8 @@
       "contentAdminTokenType": ["contentAdmin"]
     },
     "contentUiAppAdmin":{
-      "applicationName":"Cagliari Port",
-      "mailfrom":{"name":"Cagliari Port", "address":"cport2020@gmail.com"},
+      "applicationName":"Cagliari Port: Nice Time in Cagliari",
+      "mailfrom":{"name":"Cagliari Port: Nice Time in Cagliari", "address":"cport2020@gmail.com"},
       "defaultAdminUser":{
         "adminEmail":"cport2020@gmail.com",
         "adminPassword":"admin"
