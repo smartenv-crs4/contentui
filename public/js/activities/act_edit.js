@@ -101,30 +101,32 @@ function initToolbar() {
         else lockContent(doLock, lockContentCB);
     })
 
-    $("#delContent").click(function() {
-        var delmsg = document.getElementById("confirmDelSnpt").innerText;
-        //TODO i18next non traduce su modal hidden (funziona solo al primo fire)
-        bootbox.confirm(delmsg, function(result){
-            if(result) {
-                $.ajax({
-                    url: baseUrl + "activities/" + activityBody._id,
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: "Bearer " + userToken
-                    },
-                    success: function(){
-                        _growl.notice({message: "Content Deleted"});
-                        window.setTimeout(function() {
-                            window.location.href = baseUrl
-                        }, 2000);
-                    },
-                    error: function(e) {
-                        console.log(e);
-                        _growl.error({message: "Error deleting content"});
-                    }
-                });
+    $("#delContent").click(function() {        
+        bootbox.confirm({
+            title: i18next.t("activity.delConfirmTitle"),
+            message: i18next.t("activity.delConfirmDesc"),
+            callback: function(result){
+                if(result)   {
+                    $.ajax({
+                        url: baseUrl + "activities/" + activityBody._id,
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: "Bearer " + userToken
+                        },
+                        success: function(){
+                            _growl.notice({message: "Content Deleted"});
+                            window.setTimeout(function() {
+                                window.location.href = baseUrl
+                            }, 2000);
+                        },
+                        error: function(e) {
+                            console.log(e);
+                            _growl.error({message: "Error deleting content"});
+                        }
+                    });
+                }
             }
-        });
+        })
     })
 }
 

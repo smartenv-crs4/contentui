@@ -130,6 +130,18 @@
       "en": "In your favourite list there isn't any promotion",
       "it": "Nella tua lista dei favoriti non ci sono promozioni a cui parteciperai"
     },
+    "new":{
+      "en":"Add a new promotion for this activity",
+      "it":"Nuova promozione per questa attività"
+    },
+    "delConfirmTitle": {
+      "en":"Are you sure you want delete this promotion?",
+      "it":"Sei sicuro di voler rimuovere questa promozione?"
+    },
+    "delConfirmBatch": {
+      "en":"This promotion is part of a batch of recurrent events, by changing this content it will exit the batch. Are you sure?",
+      "it":"Questa promozione è parte di una serie di eventi ricorrenti, modificandola uscirà dalla serie, sei sicuro?"
+    },
     "type":{
       "en": "Type",
       "it": "Tipo"
@@ -470,6 +482,10 @@
       "en":"Address",
       "it":"Indirizzo"
     },
+    "lock": {
+      "it":"Blocca Attività",
+      "en":"Lock Activity"
+    },
     "edit": {
       "en":"Edit Activity",
       "it":"Modifica Attività"
@@ -477,6 +493,10 @@
     "new": {
       "it":"Inserisci nuova attività",
       "en":"Add a new activity"
+    },
+    "delete": {
+      "it":"Elimina questa attività",
+      "en":"Delete this activity"
     },
     "name": {
       "it":"Nome Attività",
@@ -519,8 +539,8 @@
       "en":"Are you sure you want delete this activity?"
     },
     "delConfirmDesc": {
-      "it": "Rimuovendo questa attività verranno rimosse anche tutte le promozioni e gli eventi associati e tutte le foto caricate",
-      "en": "By removing this content all the related promo and events will be also deleted"
+      "it": "<p style='color:red;'>Rimuovendo questa attività verranno rimosse anche tutte le promozioni e gli eventi associati e tutte le foto caricate</p>",
+      "en": "<p style='color:red;'>By removing this content all the related promo and events will be deleted too</p>"
     },
     "addadmin": {
       "it":"Amministratori",
