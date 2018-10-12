@@ -88,6 +88,7 @@
 const lat=1;
 const lon=0;
 const _maxEvents = 10; //ds
+const _startendfmt = 'e MMMM YYYY, H:mm';
 
 let mapInit;
 let autocomplete;
@@ -398,7 +399,7 @@ function validateFields(){
 
 function savePromotion(iSANewPromotion) {
     if(!iSANewPromotion && currentPromotion.recurrency_group) {
-        bootbox.confirm("This promotion is part of a batch of recurrent events, by changing this content it will exit the batch. Are you sure?", function(r) {
+        bootbox.confirm(i18next.t("promotion.delConfirmBatch"), function(r) {
             if(r) doSavePromotion(iSANewPromotion)
             else exitFromInsertMode();
         })
@@ -600,7 +601,7 @@ function ds_deletePromotion() {
     }
 
     bootbox.prompt({
-        title: "Are you sure you want to delete this promotion?",
+        title: i18next.t('promotion.delConfirmTitle'),
         inputType: 'select',
         value: 0,
         inputOptions: [
@@ -1019,8 +1020,8 @@ function updatePromotion(){
     ds_getCategories(function(cats) {
         var prom={
             promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(currentPromotion.images[0]),
-            start:moment(currentPromotion.startDate).format('MMMM Do YYYY, h:mm:ss a'),
-            end:moment(currentPromotion.endDate).format('MMMM Do YYYY, h:mm:ss a'),
+            start:moment(currentPromotion.startDate).format(_startendfmt),
+            end:moment(currentPromotion.endDate).format(_startendfmt),
             where:"Location",
             name:currentPromotion.name,
             description:currentPromotion.description,
@@ -1158,9 +1159,10 @@ function updatePromotion(){
         //ds_updateRecurrence(startPicher.data("DateTimePicker").date(new Date(currentPromotion.recurrencyEnd||null)));
         ds_updateRecurrence(startPicher.data("DateTimePicker").date());
             
-
         i18next.on('languageChanged', function(lng) {
-            ds_updateRecurrence(startPicher.data("DateTimePicker").date());
+            if($('#datetimepickerStart').is(":visible")) {                
+                ds_updateRecurrence($('#datetimepickerStart').data("DateTimePicker").date());
+            }
         })
 
         ds_initRecurrenceEndPicker();
@@ -1558,7 +1560,13 @@ function  setParticipateButton(){
 }
 
 function getPromotionPage(data,token, cb){
-
+    
+    i18next.on('languageChanged', function(lng) {
+        if($("#whenstart").is(":visible")) {
+            $("#whenstart").html(moment(data.startDate).locale(window.localStorage.lng).format(_startendfmt))
+            $("#whenend").html(moment(data.endDate).locale(window.localStorage.lng).format(_startendfmt))
+        }
+    });
 
     var promotion_template   = $("#promotion_template").html();
     var promotionHtml = Handlebars.compile(promotion_template);
@@ -1566,11 +1574,10 @@ function getPromotionPage(data,token, cb){
 
     initDescriptionJsonMultilanguage(data.description);
     initTitleJsonMultilanguage(data.name);
-
     var prom={
         promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
-        start:moment(data.startDate).format('MMMM Do YYYY, h:mm:ss a'),
-        end:moment(data.endDate).format('MMMM Do YYYY, h:mm:ss a'),
+        start:moment(data.startDate).locale(window.localStorage.lng).format(_startendfmt),
+        end:moment(data.endDate).locale(window.localStorage.lng).format(_startendfmt),
         where:"Location",
         name:data.name,
         description:data.description,
@@ -1587,6 +1594,7 @@ function getPromotionPage(data,token, cb){
         rec_type:data.recurrency_type,
         rec_end:data.recurrency_end
     };
+
 
     jQuery('#promotionContent').html(promotionHtml(prom));
 
@@ -1834,17 +1842,15 @@ function openPromotionPage(isANewPromotion){
 
 
 function initPromotionsPage(isANewPromotion)
-{
-   if(canTranslate){
+{    
+    if(canTranslate){
        openPromotionPage(isANewPromotion);
-   } else{
+    } else{
        addEventListener('promotionLanguageManagerInitialized', function (e) {
            canTranslate=true;
            openPromotionPage(isANewPromotion);
        }, false);
-   }
-
-
+    }
 }
 
 function updatePromotionWhere(lat,lng,updateSaveCancelButtonStatus){
