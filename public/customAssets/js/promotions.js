@@ -114,6 +114,8 @@ function loadPromotionImage(){
         success: function(data){
             $('#promotionImage').attr("src",data.resourceUrl);
             updatePromotionField('images',data.filecode==(currentPromotion.images && currentPromotion.images[0]) ? null:[data.filecode],true);
+            $('#modalimageSave').modal();
+
 
         },
         error: function(xhr, status)
@@ -145,11 +147,13 @@ function geocodeLatLng(lat, lng,callback) {
             if (results[0]) {
                 address = results[0].formatted_address;
             } else {
-                window.alert('No results found');
+                // window.alert(i18next.t("promotion.ensureposition"));
+                $('#modalgeo').modal();
                 return callback('No results found',null);
             }
         } else {
-            window.alert('Geocoder failed due to: ' + status);
+            // window.alert(i18next.t("promotion.ensureposition"));
+            $('#modalgeo').modal();
             return callback('Geocoder failed due to: ' + status,null);
         }
         return callback(null,address);
@@ -906,6 +910,7 @@ function addNewPromotion(){
 
         mapInit=initMap(39.2253991,9.0933586,6,true);
 
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 mapInit=initMap(position.coords.latitude,position.coords.longitude,12,true);
@@ -916,14 +921,14 @@ function addNewPromotion(){
                 updatePromotionField('position',pos,false);
             },function(){
                 //The Geolocation service failed
-                handleLocationError("The Geolocation service failed",[39.2253991,9.0933586]);
+                handleLocationError(i18next.t("promotion.enablegeo"),[39.2253991,9.0933586]);
                 updatePromotionWhere(39.2253991,9.0933586,false);
                 // updatePromotionField('position',[39.2253991,9.0933586],false);
                 updatePromotionField('position',[9.0933586,39.2253991],false);
             });
         } else {
             // Browser doesn't support Geolocation
-            handleLocationError("Browser doesn't support Geolocation",[39.2253991,9.0933586]);
+            handleLocationError(i18next.t("promotion.enablegeo"),[39.2253991,9.0933586]);
             updatePromotionWhere(39.2253991,9.0933586,false);
             //updatePromotionField('position',[39.2253991,9.0933586],false);
             updatePromotionField('position',[9.0933586,39.2253991],false);
@@ -1793,17 +1798,21 @@ function compilePromotion(cb){
         },
         error: function(xhr, status)
         {
+            if(xhr.status==404){
+                return redirectUserToErrorPage(config.contentUIUrl,404,i18next.t("error.404"),i18next.t("error.NotFoundMore")+ " " + promotionID );
+            }else {
 
-            var msg;
-            try{
-                msg = ((xhr.responseJSON!=null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.internal_server_error");
-            }
-            catch(err){
-                msg = "invalid Token";
-            }
-            jQuery.jGrowl(msg, {theme:'bg-color-red', life: 5000});
+                var msg;
+                try {
+                    msg = ((xhr.responseJSON != null) && (xhr.responseJSON.error_message || xhr.responseJSON.message)) || i18next.t("error.internal_server_error");
+                }
+                catch (err) {
+                    msg = "invalid Token";
+                }
+                jQuery.jGrowl(msg, {theme: 'bg-color-red', life: 5000});
 
-            return;
+                return;
+            }
         }
     });
 

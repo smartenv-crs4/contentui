@@ -30,7 +30,8 @@
       "loginHomeRedirect": "*contentUIUrl",
       "whoWeAre" : null,
       "fastSearchUrl" : {"toUser":"*ApplicationTokenTypes.userSearchToUser", "searchJS":"*contentUIUrl+/utils/userSearchJS", "searchCss":"*contentUIUrl+/customAssets/css/menuSearch.css", "icon":"fa-users"},
-      "favourite":"*contentUIUrl+/favourites"
+      "favourite":"*contentUIUrl+/favourites",
+      "customMenu":{"new Activity":"*contentUIUrl","new promo":"*contentUIUrl"}
     },
     "ApplicationTokenTypes":{
       "userTokentypes":["contentAdmin","cruiser","61Admin"],
@@ -85,7 +86,8 @@
       "loginHomeRedirect": "*contentUIUrl",
       "whoWeAre" : null,
       "fastSearchUrl" : {"toUser":"*ApplicationTokenTypes.userSearchToUser", "searchJS":"*contentUIUrl+/utils/userSearchJS", "searchCss":"*contentUIUrl+/customAssets/css/menuSearch.css", "icon":"fa-users"},
-      "favourite":"*contentUIUrl+/favourites"
+      "favourite":"*contentUIUrl+/favourites",
+      "customMenu":{"new Activity":"*contentUIUrl","new promo":"*contentUIUrl"}
     },
     "ApplicationTokenTypes":{
       "userTokentypes":["contentAdmin","cruiser","61Admin"],

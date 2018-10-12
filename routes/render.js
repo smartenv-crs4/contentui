@@ -34,23 +34,68 @@ function getValueFromconfig(parameter){
 }
 
 
+// function getValue(value){
+//     let plus,configValue;
+//
+//     if(value && value.startsWith("*")){
+//
+//         plus=value.indexOf("+");
+//         if(plus<0) {
+//             configValue=getValueFromconfig(value.substr(1));
+//         }
+//         else{
+//             configValue=getValueFromconfig(value.substring(1,plus));
+//             configValue=configValue+ value.substr(plus+1);
+//         }
+//     }else{
+//         configValue=value;
+//     }
+//     console.log("-----------------Value Old-----------------------");
+//     console.log(value);
+//     console.log(configValue);
+//     getValue1(value);
+//     return configValue;
+// }
+
+function assignValue(configValue,item){
+    if(_.isUndefined(configValue) || _.isNaN(configValue) || _.isNull(configValue)) {
+        configValue = item;
+    }
+    else{
+        if(_.isArray(configValue)){
+            configValue=_.union(configValue,item);
+        }else{
+            if(_.isObject(configValue)){
+                configValue=_.extend(configValue,item);
+            }else{
+                configValue=configValue+item
+            }
+        }
+    }
+
+    return configValue;
+}
+
 function getValue(value){
-    let plus,configValue;
+    let configValue;
 
-    if(value && value.startsWith("*")){
-
-        plus=value.indexOf("+");
-        if(plus<0) {
-            configValue=getValueFromconfig(value.substr(1));
-        }
-        else{
-            configValue=getValueFromconfig(value.substring(1,plus));
-            configValue=configValue+ value.substr(plus+1);
-        }
+    if(value){
+        //  configValue="";
+       let splitedItems=value.split("+");
+        _.each(splitedItems,function(item,index){
+            if(item && item.startsWith("*")){
+                configValue=assignValue(configValue,getValueFromconfig(item.substr(1)));
+            }else{
+                configValue=assignValue(configValue,(item || ""));
+            }
+        });
     }else{
         configValue=value;
     }
+
+    console.log("-----------------Value1-----------------------");
     console.log(value);
+    console.log(configValue);
     return configValue;
 }
 
@@ -116,7 +161,8 @@ module.exports = {
                 commonUiURL=commonUiURLWithNoToken;
 
 
-            //console.log(model.access_token);
+            // console.log("???????????????????????????????????????????????????????????");
+            // console.log(commonUiURL);
 
             request.get(commonUiURL,function (error, response, body) {
                 if(error) {

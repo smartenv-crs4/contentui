@@ -140,9 +140,44 @@
              <!--see promontion content in promotion.js -->
         </div>
 
+    <!--modal geolocation -->
+    <div id="modalgeo" class="modal fade bs-example-modal-lg in" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 id="modaltitle" class="modal-title" data-i18n="promotion.modaltitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="ensureposition" data-i18n="promotion.ensureposition"></p>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn-u btn-u-default" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/modal geolocation-->
 
 
-
+    <!--modal saveimage -->
+    <div id="modalimageSave" class="modal fade bs-example-modal-lg in" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 id="modaltitle" class="modal-title" data-i18n="promotion.modaltitleImg"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="ensureposition" data-i18n="promotion.ensureSaveImg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn-u btn-u-default" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/modal saveimage-->
 
     <!--=== Footer Version 1 ===-->
     <div id="footer_p_HT"> <%- commonUI.footer %> </div>

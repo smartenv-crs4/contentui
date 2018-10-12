@@ -8,6 +8,10 @@
       "en": "Error while calling AuthMs to Decode Token",
       "it": "Errore durante la richiesta di decodifica token al microserviozio AuthMs"
     },
+    "NotFoundMore":{
+      "en": "The resource that you search not exist. resource id:",
+      "it": "La risorsa che cerchi non esiste. Id delle risorsa:"
+    },
     "400": {
       "en": "Bad request",
       "it": "Richiesta non valida"
@@ -125,6 +129,26 @@
     "language":{
       "en": "Description and Title Language",
       "it": "Lingua Descrizione e Titolo"
+    },
+    "enablegeo":{
+      "en": "To enable auto geolocalization, enable Browser to support geolocation",
+      "it": "per Abilitare l'autoposizionamento, abilita il browser a supportare la geolocalizzazione"
+    },
+    "ensureposition":{
+      "en": "Seem you selected a not valid position. Ensure that it is valid and that it is the position what you want",
+      "it": "Sembra che tu abbia selezionato una posizione non valida. Assicurati che sia valido e che sia quella che desideri"
+    },
+    "modaltitle":{
+      "en": "Attention Please: Possible not valid position",
+      "it": "Attenzione: Possibile posizione errata"
+    },
+    "modaltitleImg":{
+      "en": "Attention Please: Image preview",
+      "it": "Attenzione: Anteprima Immagine"
+    },
+    "ensureSaveImg":{
+      "en": "The image loaded that you can see is only a preview. To save Image changes click on save button below.",
+      "it": "L'immagine caricata è solo un'anteprima. Per salvare le modifiche clicca sul pulsante Salva qui sotto"
     },
     "nopromo":{
       "en": "In your favourite list there isn't any promotion",
@@ -567,6 +591,16 @@
     "voidEndDate": {
       "en": "End Date can not be void. Please set it",
       "it": "La data di fine non puo essere vuota"
+    }
+  },
+  "customMenu":{
+    "new Activity": {
+      "en": "new Act",
+      "it": "Nuova Attività"
+    },
+    "new promo": {
+      "en": "new Promo",
+      "it": "Nuova Promozione"
     }
   }
 }

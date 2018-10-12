@@ -113,3 +113,6 @@ function logOut(acturl){
     window.location.replace(removeQueryParameter(acturl,"access_token"));
 }
 
+function redirectUserToErrorPage(contentUIUrl,error_code,error_message,error_showmore){
+    window.location.replace(contentUIUrl+"/errorPage?error_code="+error_code+"&error_message="+error_message+ "&error_showmore="+error_showmore);
+}
