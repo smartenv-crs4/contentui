@@ -100,6 +100,29 @@ function getValue(value){
 }
 
 
+function extractValues(headersConfig,returnValues){
+    let headerParams={},configValue;
+    async.eachOf(headersConfig, function(value,key, callback) {
+
+        if(_.isObject(value)){
+            extractValues(value,function(extractedValues){
+                headerParams[key]=extractedValues;
+                callback();
+            });
+        }else{
+            configValue=getValue(value);
+            if(!(_.isNull(configValue) || _.isUndefined(configValue))){
+                headerParams[key]=configValue;
+            }
+            callback();
+        }
+
+    }, function (err) {
+        returnValues(headerParams);
+    });
+}
+
+
 
 module.exports = {
     renderPage(res, page, model) {
@@ -130,39 +153,30 @@ module.exports = {
 
         let configValue,tmpConf;
 
-        console.log(headersConfig);
+        // console.log(headersConfig);
 
-        async.eachOf(headersConfig, function(value,key, callback) {
 
-            if(_.isObject(value)){
-                tmpConf={};
-                _.each(value,function (objValue,objKey) {
-                    configValue=getValue(objValue);
-                    tmpConf[objKey]=configValue;
-                });
-
-                headerParams[key]=tmpConf;
-                commonUiURL += (key + "=" +JSON.stringify(tmpConf) + "&");
-            }else{
-                configValue=getValue(value);
-                if(configValue){
-                    commonUiURL += (key + "=" + configValue + "&");
-                    headerParams[key]=configValue;
+        extractValues(headersConfig,function(headerParams){
+            let valueString;
+            _.each(headerParams,function(value,key){
+                if(_.isObject(value)) {
+                    valueString = JSON.stringify(value);
+                    headerParams[key]=valueString;
                 }
-
-            }
-            callback();
-        }, function(err) {  // no error
+                else
+                    valueString=value;
+                commonUiURL += (key + "=" + valueString + "&");
+            });
 
             commonUiURLWithNoToken=commonUiURL.slice(0,-1); // remove last '&' in the Url
-            if(model.access_token)
-                commonUiURL+=("access_token="+model.access_token)+"&afterLoginRedirectTo="+headerParams.loginHomeRedirect;
-            else
-                commonUiURL=commonUiURLWithNoToken;
+            if(model.access_token) {
+                commonUiURL += ("access_token=" + model.access_token) + "&afterLoginRedirectTo=" + headerParams.loginHomeRedirect;
+            }
+            else {
+                commonUiURL = commonUiURLWithNoToken;
+            }
 
-
-            // console.log("???????????????????????????????????????????????????????????");
-            // console.log(commonUiURL);
+            console.log(commonUiURL);
 
             request.get(commonUiURL,function (error, response, body) {
                 if(error) {
@@ -209,6 +223,9 @@ module.exports = {
                 }
 
             });
+
+
+
         });
     }
 };

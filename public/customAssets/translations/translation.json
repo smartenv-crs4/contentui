@@ -615,12 +615,8 @@
   },
   "customMenu":{
     "new Activity": {
-      "en": "new Act",
+      "en": "new Activity",
       "it": "Nuova Attività"
-    },
-    "new promo": {
-      "en": "new Promo",
-      "it": "Nuova Promozione"
     }
   }
 }

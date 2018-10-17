@@ -31,7 +31,7 @@
       "whoWeAre" : null,
       "fastSearchUrl" : {"toUser":"*ApplicationTokenTypes.userSearchToUser", "searchJS":"*contentUIUrl+/utils/userSearchJS", "searchCss":"*contentUIUrl+/customAssets/css/menuSearch.css", "icon":"fa-users"},
       "favourite":"*contentUIUrl+/favourites",
-      "customMenu":{"new Activity":"*contentUIUrl","new promo":"*contentUIUrl"}
+      "customMenu":{"new Activity":{"tag":"href=+*contentUIUrl+/activities/new", "showOnly":"*ApplicationTokenTypes.contentAdminTokenType"}}
     },
     "ApplicationTokenTypes":{
       "userTokentypes":["contentAdmin","cruiser","61Admin"],
@@ -87,7 +87,7 @@
       "whoWeAre" : null,
       "fastSearchUrl" : {"toUser":"*ApplicationTokenTypes.userSearchToUser", "searchJS":"*contentUIUrl+/utils/userSearchJS", "searchCss":"*contentUIUrl+/customAssets/css/menuSearch.css", "icon":"fa-users"},
       "favourite":"*contentUIUrl+/favourites",
-      "customMenu":{"new Activity":"*contentUIUrl","new promo":"*contentUIUrl"}
+      "customMenu":{"new Activity":{"tag":"href=+*contentUIUrl+/activities/new", "showOnly":"*ApplicationTokenTypes.contentAdminTokenType"}}
     },
     "ApplicationTokenTypes":{
       "userTokentypes":["contentAdmin","cruiser","61Admin"],
