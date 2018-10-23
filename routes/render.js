@@ -176,7 +176,7 @@ module.exports = {
                 commonUiURL = commonUiURLWithNoToken;
             }
 
-            console.log(commonUiURL);
+            //console.log(commonUiURL);
 
             request.get(commonUiURL,function (error, response, body) {
                 if(error) {
