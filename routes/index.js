@@ -127,7 +127,7 @@ router.get('/activities/new',       (req, res, next) => {
     baseUrl:baseUrl,
     uploadUrl:uploadUrl,
     maxImageSize:config.maxImageSize,
-    userUiUrl:config.userUIUrl,
+    userUIUrl:config.userUIUrl,
     contentUrl:contentUrl,
     isNew: true,
     properties:{
@@ -152,7 +152,7 @@ router.get('/activities/:id',    (req, res, next) => {
         params: JSON.stringify(req.params) || undefined,
         query: JSON.stringify(req.query) || undefined,
         baseUrl: baseUrl,
-        userUiUrl:config.userUIUrl,
+        userUIUrl:config.userUIUrl,
         maxImageSize:config.maxImageSize,
         uploadUrl: uploadUrl,
         contentUrl: contentUrl,
