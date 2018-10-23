@@ -88,7 +88,7 @@
 const lat=1;
 const lon=0;
 const _maxEvents = 10; //ds
-const _startendfmt = 'e MMMM YYYY, H:mm';
+const _startendfmt = 'D MMMM YYYY, H:mm';
 
 let mapInit;
 let autocomplete;
