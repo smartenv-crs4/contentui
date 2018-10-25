@@ -156,6 +156,10 @@ function initView(cb) {
     if(activityBody.tripadvisor) contacts.push({icon:"fa fa-tripadvisor", url:activityBody.tripadvisor, alt:"Tripadvisor"});
     if(activityBody.instagram) contacts.push({icon:"fa fa-instagram", url:activityBody.instagram, alt:"Instagram"});
     
+    for(var i=0; i<activityBody.category.length; i++) {
+        initGenericContentJsonMultilanguage(activityBody.category[i].name, "cat_"+activityBody.category[i]._id, "cat_name")
+    }
+
     var model = {
         //name:activityBody.name,
         //description:common.markup(activityBody.description),

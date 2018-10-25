@@ -225,6 +225,7 @@ function loadCat(cb) {
             
             if(typeof activityBody != "undefined") {
                 for(var j=0; j<cats.length; j++) {
+                    initGenericContentJsonMultilanguage(cats[j].name, "cat_"+cats[j]._id, "cat_name")
                     cats[j].checked = false;
                     for(var i=0; i<activityBody.category.length; i++) {
                         if(activityBody.category[i]._id == cats[j]._id) {

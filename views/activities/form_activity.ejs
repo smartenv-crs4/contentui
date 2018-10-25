@@ -84,7 +84,7 @@
                 {{#each cats}}
                 <div class="col-md-3">
                     <input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn" {{#if this.checked}} checked {{/if}}>
-                    <label for="cbox_{{this._id}}">{{this.name}}</label>
+                    <label for="cbox_{{this._id}}" data-i18n="cat_{{this._id}}.cat_name"></label>
                 </div>
                 {{/each}}
             </div>
