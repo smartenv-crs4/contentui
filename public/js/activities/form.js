@@ -544,7 +544,7 @@ function initAdminTool() {
               return $.map(notAdmins, function (user) {
                 var avatar = undefined;                    
                     if(!user.avatar) 
-                        avatar = "/customAssets/img/avatar.png"
+                        avatar = baseUrl + (baseUrl.endsWith("/") ? '' : '/') + "customAssets/img/avatar.png"
                     /*
                     else if(user.avatar.startsWith("http"))
                         avatar = user.avatar
