@@ -87,7 +87,7 @@
                                 <span data-i18n="promotion.cats">Categories</span>
                                 <span> : </span>
                                 {{#each categories}}
-                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px">{{this.name}}</span>
+                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px" data-i18n="cat_{{this._id}}.cat_name"></span>
                                 {{/each}}
                             </h5>
 
@@ -361,7 +361,7 @@
                             {{#each categories}}
                                 <div class="col-md-4">
                                     <input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
-                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span>{{this.name}}</span></label>
+                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span data-i18n="cat_{{this._id}}.cat_name">{{this.name}}</span></label>
                                 </div>
                             {{/each}}
                             <!--div class="col-md-4">
