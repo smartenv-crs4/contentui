@@ -223,10 +223,10 @@ function loadCat(cb) {
         success: function(data) {
             var cats = data.categories;
             
-            if(typeof activityBody != "undefined") {
-                for(var j=0; j<cats.length; j++) {
-                    initGenericContentJsonMultilanguage(cats[j].name, "cat_"+cats[j]._id, "cat_name")
-                    cats[j].checked = false;
+            for(var j=0; j<cats.length; j++) {
+                initGenericContentJsonMultilanguage(cats[j].name, "cat_"+cats[j]._id, "cat_name")
+                cats[j].checked = false;
+                if(typeof activityBody != "undefined") {
                     for(var i=0; i<activityBody.category.length; i++) {
                         if(activityBody.category[i]._id == cats[j]._id) {
                             cats[j].checked = true;
@@ -265,7 +265,7 @@ function loadContent(cb) {
         });
     }
     else loadCat(function(cats) {
-        hmodel.cats = cats;
+        hmodel.cats = cats;        
         $("#formbox").html(formcontent(hmodel));
         if(cb) cb()
     });

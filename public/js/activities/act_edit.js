@@ -31,7 +31,7 @@ function initToolbar() {
             //http must be set here, not in the backend, to ensure html5 validation
             $("input[type='url']").focusout(function() {
                 var v = $(this).val();
-                if(v.length > 0 && !v.startsWith("http"))
+                if(v.length > 0 && !(v.startsWith("http://") || v.startsWith("http://")))
                     $(this).val("http://" + v)
             });
 
