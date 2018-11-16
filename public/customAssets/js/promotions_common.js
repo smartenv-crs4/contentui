@@ -1,5 +1,7 @@
 
 function getPromotionParticipants(contentID,promotionID,callback){
+    return callback({users:[]}) //DPO_CHANGE remove this line
+    
     jQuery.ajax({
         url: config.contentUIUrl + (config.contentUIUrl.endsWith('/')? "":"/")+ 'contents/'+ contentID + "/promotions/" + promotionID+"/actions/participants",
         type: "POST",

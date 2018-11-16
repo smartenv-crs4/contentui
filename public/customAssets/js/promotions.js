@@ -1594,8 +1594,9 @@ function getPromotionPage(data,token, cb){
         contentId:contentID,
         access_token:userToken,
         baseUrl:config.contentUIUrl,
-        participants:(data.participants && data.participants.html) || "",
-        participantsDetails:(data.participants && data.participants.htmldetails) || "",
+        //DPO_CHANGE uncomment lines below
+        //participants:(data.participants && data.participants.html) || "",
+        //participantsDetails:(data.participants && data.participants.htmldetails) || "",
         event_type:"type_" + data.type,
         categories:data.category,
         rec_group:data.recurrency_group,
