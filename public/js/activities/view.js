@@ -156,6 +156,10 @@ function initView(cb) {
     if(activityBody.tripadvisor) contacts.push({icon:"fa fa-tripadvisor", url:activityBody.tripadvisor, alt:"Tripadvisor"});
     if(activityBody.instagram) contacts.push({icon:"fa fa-instagram", url:activityBody.instagram, alt:"Instagram"});
     
+    for(var i=0; i<activityBody.category.length; i++) {
+        initGenericContentJsonMultilanguage(activityBody.category[i].name, "cat_"+activityBody.category[i]._id, "cat_name")
+    }
+
     var model = {
         //name:activityBody.name,
         //description:common.markup(activityBody.description),
@@ -210,10 +214,18 @@ function newActivity() {
             addContent(); 
         });
 
+        /*
         $("input[type='url']").focus(function() {
             var v = $(this).val();
             if(!v.startsWith("http"))
                 $(this).val("http://" + v) 
+        });
+        */
+        //http must be set here, not in the backend, to ensure html5 validation
+        $("input[type='url']").focusout(function() {
+            var v = $(this).val();
+            if(v.length > 0 && !(v.startsWith("http://") || v.startsWith("http://")))
+                $(this).val("http://" + v)
         });
 
         $("#fileUpload").on("change", function() {

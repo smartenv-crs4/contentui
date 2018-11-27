@@ -25,6 +25,8 @@ $(document).ready(function() {
         showToolShips();
         showToolDates();
         executeSearch()
+        
+        loadCat();
 
         $("#mapview").click(function() {
             $(this).toggleClass("btn-success")
@@ -57,7 +59,6 @@ $(document).ready(function() {
             }
             else {
                 $("#adv").show();
-                loadCat();
 
                 $(".rst").click(function(e) {
                     var f=this.getAttribute('data-rst-field');
@@ -576,10 +577,10 @@ function loadCat() {
 	.done(function(data) {
         var cats = data.categories;
 
-        if(_filters.category && _filters.category.length > 0) {
-            for(var i=0; i<cats.length; i++) {
-                if(_filters.category.indexOf(cats[i]._id) > -1) 
-                    cats[i].checked = true;
+        for(var i=0; i<cats.length; i++) {
+            initGenericContentJsonMultilanguage(cats[i].name, "cat_"+cats[i]._id, "cat_name")
+            if(_filters.category && _filters.category.length > 0 && _filters.category.indexOf(cats[i]._id) > -1) {
+                cats[i].checked = true;
             }
         }
 
@@ -605,12 +606,13 @@ function loadCat() {
 
 
 function showCatString(cats) {
-    var evcats = toDict(cats, '_id');
+    //var evcats = toDict(cats, '_id');
     if(_filters.category && _filters.category.length > 0) {
         var catStr = '';
         var subCats = _filters.category.slice(0, 2)
         for(var c in subCats) {
-            catStr += (catStr.length > 0 ? ', ' : '') + evcats[subCats[c]].name
+            //catStr += (catStr.length > 0 ? ', ' : '') + evcats[subCats[c]].name
+            catStr += (catStr.length > 0 ? ', ' : '') + i18next.t("cat_"+subCats[c]+".cat_name")
         }
         if(catStr.length > 0 && _filters.category.length > subCats.length)
             catStr += '... +' + (_filters.category.length - subCats.length)

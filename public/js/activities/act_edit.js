@@ -21,11 +21,18 @@ function initToolbar() {
             $("#updateContentButton").click(function(e) {
                 updateContent();
             });
-
+/*
             $("input[type='url']").focus(function() {
                 var v = $(this).val();
                 if(!v.startsWith("http"))
                     $(this).val("http://" + v) 
+            });
+*/
+            //http must be set here, not in the backend, to ensure html5 validation
+            $("input[type='url']").focusout(function() {
+                var v = $(this).val();
+                if(v.length > 0 && !(v.startsWith("http://") || v.startsWith("http://")))
+                    $(this).val("http://" + v)
             });
 
             $("#fileUpload").on("change", function() {

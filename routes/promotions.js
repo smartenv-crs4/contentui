@@ -76,6 +76,9 @@ router.post('/:pid/actions/doilike', function(req, res, next) {
 
 router.post('/:pid/actions/participants', function(req, res, next) {
 
+    return res.status(403).send({error:"forbidden",error_message:"forbidden"}); //DPO_CHANGE comment this line
+
+/* DPO_CHANGE uncomment this block
     var promotionID=req.params.pid;
     var contentID= req.contentId;
 
@@ -84,6 +87,7 @@ router.post('/:pid/actions/participants', function(req, res, next) {
         headers: {'Authorization': "Bearer " + (config.auth_token || "")},
     };
     request.post(rqparams).pipe(res);
+*/
 });
 
 
@@ -133,7 +137,9 @@ router.post('/:pid/actions/doiparticipate', function(req, res, next) {
 // http://[contentms]/contents/XYZ/promotions/HKJ/participants
 //get promotion participate list
 router.get('/:pid/participants', function(req, res, next) {
+    res.json({users:[]}); //DPO_CHANGE comment this line
 
+/* DPO_CHANGE uncomment this block
     var promotionID=req.params.pid;
     var contentID= req.contentId;
     var access_token=(req.query && req.query.access_token)||"";
@@ -143,6 +149,7 @@ router.get('/:pid/participants', function(req, res, next) {
         headers: {'Authorization': "Bearer " + access_token }
     };
     request.get(rqparams,function(error,response,body){
+
         if(error){
             return res.status(500).send({error:"InternalServerError",error_message:error});
         }else{
@@ -161,6 +168,8 @@ router.get('/:pid/participants', function(req, res, next) {
             }
         }
     });
+*/
+
 });
 
 

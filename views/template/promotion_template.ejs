@@ -87,7 +87,7 @@
                                 <span data-i18n="promotion.cats">Categories</span>
                                 <span> : </span>
                                 {{#each categories}}
-                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px">{{this.name}}</span>
+                                    <span class="{{this.icon}}"></span> <span style="margin-right:20px" data-i18n="cat_{{this._id}}.cat_name"></span>
                                 {{/each}}
                             </h5>
 
@@ -127,7 +127,7 @@
 
 
                 <h3>{{#if rec_group}}<i class="fa fa-history" style="color:lightskyblue; vertical-align: super;font-size:small;" data-i18n="[title]promotion.recurrence"></i>{{/if}}<span data-i18n="promo_multilanguage.title">{{name}}</span> </h3>
-                <ul class="actions">
+                <!-- DPO_CHANGE ul class="actions">
                     <li class="likeandjoin"><a href="javascript:setLike();"><i id="likecounticon" class="fa fa-thumbs-up"></i> <span id="likecount">0</span></a> <span data-i18n="promotion.likes">mi piace</span></li>
                     <li class="likeandjoin" style="padding:0 5px"> / </li>
                     <li class="likeandjoin blog-grid-participate participatelisttooltip">
@@ -137,11 +137,11 @@
                             <a id="participantslist" href="javascript:openModalParticipants();" data-toggle="tooltip" data-html="true" title="{{participants}}" data-placement="bottom"><i  id="participatelisticon" class="fa fa-caret-down"></i></a>
                         {{/if}}
                     </li>
-                </ul>
+                </ul-->
 
 
                 <!--Begin modal participants list-->
-                {{#if  participants}}
+                {{#if participants}}
                     <div id="modalParticipants" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
@@ -361,7 +361,7 @@
                             {{#each categories}}
                                 <div class="col-md-4">
                                     <input id="cbox_{{this._id}}" type="checkbox" value="{{this._id}}" name="category" class="ibtn">
-                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span>{{this.name}}</span></label>
+                                    <label for="cbox_{{this._id}}">&nbsp;<span class="{{this.icon}}"></span> - <span data-i18n="cat_{{this._id}}.cat_name">{{this.name}}</span></label>
                                 </div>
                             {{/each}}
                             <!--div class="col-md-4">

@@ -88,7 +88,7 @@
 const lat=1;
 const lon=0;
 const _maxEvents = 10; //ds
-const _startendfmt = 'e MMMM YYYY, H:mm';
+const _startendfmt = 'D MMMM YYYY, H:mm';
 
 let mapInit;
 let autocomplete;
@@ -999,7 +999,12 @@ function ds_getCategories(cb){
         url: contentUrl + "categories/",
         type: "GET",
         contentType: "application/json; charset=utf-8",
-        success: function (data, textStatus, xhr) {            
+        success: function (data, textStatus, xhr) {
+            //multilanguage
+            for(var i=0; i<data.categories.length; i++) {
+                initGenericContentJsonMultilanguage(data.categories[i].name,"cat_"+data.categories[i]._id,"cat_name");
+            }
+            
             if(cb) cb(data.categories)
         },
         error: function (xhr, status) {
@@ -1574,6 +1579,9 @@ function getPromotionPage(data,token, cb){
 
     initDescriptionJsonMultilanguage(data.description);
     initTitleJsonMultilanguage(data.name);
+    for(var i=0; i<data.category.length; i++) {
+        initGenericContentJsonMultilanguage(data.category[i].name, "cat_"+data.category[i]._id, "cat_name")
+    }
     var prom={
         promo_image:config.contentUIUrl+"/utils/image?imageUrl="+encodeURIComponent(data.images[0]),
         start:moment(data.startDate).locale(window.localStorage.lng).format(_startendfmt),
@@ -1586,8 +1594,9 @@ function getPromotionPage(data,token, cb){
         contentId:contentID,
         access_token:userToken,
         baseUrl:config.contentUIUrl,
-        participants:(data.participants && data.participants.html) || "",
-        participantsDetails:(data.participants && data.participants.htmldetails) || "",
+        //DPO_CHANGE uncomment lines below
+        //participants:(data.participants && data.participants.html) || "",
+        //participantsDetails:(data.participants && data.participants.htmldetails) || "",
         event_type:"type_" + data.type,
         categories:data.category,
         rec_group:data.recurrency_group,
