@@ -156,12 +156,14 @@ module.exports = {
         // console.log(headersConfig);
 
 
-        extractValues(headersConfig,function(headerParams){
+        extractValues(headersConfig,function(headerParam){
             let valueString;
-            _.each(headerParams,function(value,key){
+
+            _.each(headerParam,function(value,key){
+                headerParams[key]=value;
                 if(_.isObject(value)) {
                     valueString = JSON.stringify(value);
-                    headerParams[key]=valueString;
+                    headerParam[key]=valueString;
                 }
                 else
                     valueString=value;
@@ -170,13 +172,14 @@ module.exports = {
 
             commonUiURLWithNoToken=commonUiURL.slice(0,-1); // remove last '&' in the Url
             if(model.access_token) {
-                commonUiURL += ("access_token=" + model.access_token) + "&afterLoginRedirectTo=" + headerParams.loginHomeRedirect;
+                commonUiURL += ("access_token=" + model.access_token) + "&afterLoginRedirectTo=" + headerParam.loginHomeRedirect;
             }
             else {
                 commonUiURL = commonUiURLWithNoToken;
             }
 
             //console.log(commonUiURL);
+
 
             request.get(commonUiURL,function (error, response, body) {
                 if(error) {
