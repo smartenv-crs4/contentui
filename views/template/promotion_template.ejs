@@ -290,12 +290,13 @@
 
                         <div class="row thumbnails thumbnail-style">
                             <div class="thumbnail-img">
+                                <a class="btn-more" style="position:relative;top:30px;left:5px;" onclick="promotionPictureOpenDialog()">
+                                    <span><i class="fa fa-pencil"></i> <span data-i18n="{{#if promo_image}}promotion.change{{else}}promotion.addposter{{/if}}"></span></span>
+                                </a>
                                 <div class="overflow-hidden">
                                     <img id="promotionImage" class="img-responsive" src="{{promo_image}}" alt="" style='height: 100%; width: 100%;'>
                                 </div>
-                                <a class="btn-more hover-effect" onclick="promotionPictureOpenDialog()">
-                                    <span><i class="fa fa-pencil"></i> <span data-i18n="{{#if promo_image}}promotion.change{{else}}promotion.browse{{/if}}"></span></span>
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
