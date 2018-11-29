@@ -343,8 +343,8 @@
       "it":"Elimina"
     },
     "gotoactivity":{
-      "en":"Promotion Owner",
-      "it":"Proprietario Promozione"
+      "en":"Back to activity",
+      "it":"Torna all'attività"
     },
     "recEndDate": {
       "en":"Recurrence end",
