@@ -343,8 +343,8 @@
       "it":"Elimina"
     },
     "gotoactivity":{
-      "en":"Back to activity",
-      "it":"Torna all'attività"
+      "en":"Go to the promoter's page",
+      "it":"Vai alla pagina del promotore"
     },
     "recEndDate": {
       "en":"Recurrence end",
